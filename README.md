@@ -25,6 +25,7 @@ mvn archetype:generate \
 ```
 
 2. use `mvn clean javafx:run` to complie and run the code
+3. use `mvn clean package` to generate the java docs. (under `docs/project/`)
 
 > Note: we can savely delete module-info.java if we are not developing a modular program.
 
