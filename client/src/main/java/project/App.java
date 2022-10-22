@@ -1,4 +1,4 @@
-package project.m3;
+package project;
 
 import java.io.IOException;
 import javafx.application.Application;
