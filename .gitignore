@@ -3,8 +3,8 @@
 
 ### Java ###
 # .mvn and .idea in subdirectories
-client/SplendorGuiM3/.idea
-client/SplendorGuiM3/.mvn
+client/.idea
+client/.mvn
 
 # Compiled class file
 *.class
