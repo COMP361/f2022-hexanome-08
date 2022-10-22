@@ -5,6 +5,7 @@
 # .mvn and .idea in subdirectories
 client/.idea
 client/target/
+.idea
 
 # Compiled class file
 *.class
