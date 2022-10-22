@@ -9,8 +9,7 @@
 - Then `cd client`, run `mvn clean javafx:run` to run the program.
 
 #### Create a maven javafx project (For future reference)
-1.https://github.com/openjfx/javafx-maven-archetypes
-follow the instruction to install all the archetypes in your local repository
+1.[Follow the instruction](https://github.com/openjfx/javafx-maven-archetypes) to install all the archetypes in your local repository
 Use the following code to create a new maven project with the `pom.xml` file 
 (correct javafx-version)
 ```
@@ -25,7 +24,17 @@ mvn archetype:generate \
 ```
 
 2. use `mvn clean javafx:run` to complie and run the code
-3. use `mvn clean package` to generate the java docs. (under `docs/project/`)
+
+#### Download The Pictures
+Since we are not allowed to push the picture files into our repo, we have to download them somewhere locally.
+1. Download `pictures.zip` in [this link](https://drive.google.com/file/d/1zu5xSG-dPu_UwCm6VvusWM9FBiN613iW/view?usp=sharing)
+2. Unzip it and put it under `client/src/main/resources/project`, and its location should be `client/src/main/resources/project/projects`
+3. Now once you run `mvn clean javafx:run`, you can see the pictures showing up accurately in the app.
+
+#### Other useful things
+1. use `mvn clean package` to generate the java docs. (you can access the `html file` under `docs/project/`)
+
+
 
 > Note: we can savely delete module-info.java if we are not developing a modular program.
 
