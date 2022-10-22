@@ -4,7 +4,7 @@
 ### Java ###
 # .mvn and .idea in subdirectories
 client/.idea
-client/.mvn
+client/target/
 
 # Compiled class file
 *.class
