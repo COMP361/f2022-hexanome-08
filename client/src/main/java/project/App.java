@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 
 /**
- * JavaFX App.
+ * Splendor Game App.
  */
 public class App extends Application {
 
