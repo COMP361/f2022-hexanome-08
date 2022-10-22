@@ -6,7 +6,7 @@
 
 #### Run the template
 - `git pull` first to make sure your repo is up to date.
-- Then `cd client`, run `mvn javafx:run` to run the program.
+- Then `cd client`, run `mvn clean javafx:run` to run the program.
 
 #### Create a maven javafx project (For future reference)
 1.https://github.com/openjfx/javafx-maven-archetypes
@@ -24,7 +24,7 @@ mvn archetype:generate \
         -Djavafx-version=18.0.1
 ```
 
-2. use `mvn javafx:run` to complie and run the code
+2. use `mvn clean javafx:run` to complie and run the code
 
 > Note: we can savely delete module-info.java if we are not developing a modular program.
 
