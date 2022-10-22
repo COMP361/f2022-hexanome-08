@@ -109,7 +109,7 @@ public class PrimaryController {
   @FXML
   protected void madeReserve() throws IOException {
     //Stage curStage = (Stage) purchaseContent.getScene().getWindow();
-    Scene curScene = (Scene) purchaseContent.getScene();
+    Scene curScene = purchaseContent.getScene();
     App.setPopUpRoot("splendor", curScene);
     //TODO: Check condition if the reserve can be done successfully
     // then close the window
