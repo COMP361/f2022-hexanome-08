@@ -7,6 +7,7 @@ client/.idea
 client/target/
 .*
 !/.gitignore
+client/src/main/resources/project/pictures
 
 # Compiled class file
 *.class
