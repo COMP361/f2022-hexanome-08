@@ -2,6 +2,10 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos,java,vim
 
 ### Java ###
+# .mvn and .idea in subdirectories
+client/SplendorGuiM3/.idea
+client/SplendorGuiM3/.mvn
+
 # Compiled class file
 *.class
 
