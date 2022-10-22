@@ -1,6 +1,33 @@
 # COMP 361 Project
 
- > See also [my video instuctions](https://www.cs.mcgill.ca/~mschie3/COMP361/Repository-Best-Practices.mp4) in the screencasts section on MyCourses.
+## Ruoyu's README
+
+### M3 start-up template related
+
+#### Run the template
+- `git pull` first to make sure your repo is up to date.
+- Then `cd client`, run `mvn javafx:run` to run the program.
+
+#### Create a maven javafx project (For future reference)
+1.https://github.com/openjfx/javafx-maven-archetypes
+follow the instruction to install all the archetypes in your local repository
+Use the following code to create a new maven project with the `pom.xml` file 
+(correct javafx-version)
+```
+mvn archetype:generate \
+        -DarchetypeGroupId=org.openjfx \
+        -DarchetypeArtifactId=javafx-archetype-fxml \
+        -DarchetypeVersion=0.0.6 \
+        -DgroupId=group08 \
+        -DartifactId=client \
+        -Dversion=version \
+        -Djavafx-version=18.0.1
+```
+
+2. use `mvn javafx:run` to complie and run the code
+
+> Note: we can savely delete module-info.java if we are not developing a modular program.
+
 
 ## The Rules
 
