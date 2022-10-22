@@ -24,7 +24,7 @@ public class App extends Application {
    */
   @Override
   public void start(Stage stage) throws IOException {
-    scene = new Scene(loadFxml("splendor"), 640, 400);
+    scene = new Scene(loadFxml("splendor"), 1000, 800);
     stage.setTitle("Welcome to Splendor!");
     stage.setScene(scene);
     stage.show();
@@ -44,10 +44,10 @@ public class App extends Application {
   /**
    * Load a Scene from the fxml file to a new Stage with input height and width and title.
    *
-   * @param fxml The fxml file where we read the GUI setup
+   * @param fxml   The fxml file where we read the GUI setup
    * @param height Height of the new stage
-   * @param width Width of the new stage
-   * @param title Title of the new stage
+   * @param width  Width of the new stage
+   * @param title  Title of the new stage
    * @throws IOException when fxml not found
    */
   static void setRootWithSizeTitle(String fxml, int height, int width, String title)
@@ -56,6 +56,17 @@ public class App extends Application {
     newStage.setTitle(title);
     newStage.setScene(new Scene(loadFxml(fxml), height, width));
     newStage.show();
+  }
+
+  /**
+   * Set the scene of the pop-up stage into a new scene loaded from fxml.
+   *
+   * @param fxml     The fxml file where we read the GUI setup
+   * @param curScene The current scene of the pop-up
+   * @throws IOException when fxml not found
+   */
+  static void setPopUpRoot(String fxml, Scene curScene) throws IOException {
+    curScene.setRoot(loadFxml(fxml));
   }
 
   /**

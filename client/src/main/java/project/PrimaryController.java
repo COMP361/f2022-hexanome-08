@@ -3,6 +3,7 @@ package project;
 import java.io.IOException;
 import java.util.Objects;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -106,10 +107,12 @@ public class PrimaryController {
    * The logic to handle Reserving Card (both orient and normal card can use this method).
    */
   @FXML
-  protected void madeReserve() {
-    Stage curStage = (Stage) purchaseContent.getScene().getWindow();
+  protected void madeReserve() throws IOException {
+    //Stage curStage = (Stage) purchaseContent.getScene().getWindow();
+    Scene curScene = (Scene) purchaseContent.getScene();
+    App.setPopUpRoot("splendor", curScene);
     //TODO: Check condition if the reserve can be done successfully
     // then close the window
-    curStage.close();
+
   }
 }

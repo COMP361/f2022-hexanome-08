@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="gameBoardContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
+<BorderPane fx:id="gameBoardContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -22,17 +32,222 @@
       </MenuBar>
    </top>
    <center>
-      <AnchorPane prefHeight="278.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <AnchorPane accessibleText="test" prefHeight="278.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Rectangle fx:id="developmentCard" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="70.0" layoutX="223.0" layoutY="107.0" onMouseClicked="#onDevelopmentCardShapeClick" stroke="BLACK" strokeType="INSIDE" width="54.0" />
+            <VBox layoutX="115.0" layoutY="51.0" prefHeight="364.0" prefWidth="516.0">
+               <children>
+                  <HBox prefHeight="121.0" prefWidth="472.0">
+                     <children>
+                        <ImageView fitHeight="160.0" fitWidth="116.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" layoutX="124.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="210.0" prefHeight="164.0" prefWidth="614.0">
+                     <children>
+                        <ImageView fitHeight="160.0" fitWidth="116.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" layoutX="124.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="54.0" prefHeight="139.0" prefWidth="445.0">
+                     <children>
+                        <ImageView fitHeight="160.0" fitWidth="116.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" layoutX="124.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox layoutX="609.0" layoutY="52.0" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fitHeight="160.0" fitWidth="160.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/level1/b1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox layoutX="846.0" layoutY="56.0">
+               <children>
+                  <ImageView fitHeight="112.0" fitWidth="129.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@pictures/noble/noble2.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="112.0" fitWidth="129.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@pictures/noble/noble2.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="112.0" fitWidth="129.0" layoutX="10.0" layoutY="122.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@pictures/noble/noble2.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="112.0" fitWidth="129.0" layoutX="10.0" layoutY="122.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@pictures/noble/noble2.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="112.0" fitWidth="129.0" layoutX="10.0" layoutY="234.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@pictures/noble/noble2.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </VBox>
          </children>
       </AnchorPane>
    </center>
    <bottom>
-      <AnchorPane prefHeight="108.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="155.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
          <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="85.0" layoutX="35.0" layoutY="58.0" stroke="BLACK" strokeType="INSIDE" width="88.0" />
-            <Label layoutX="52.0" layoutY="78.0" prefHeight="45.0" prefWidth="54.0" text="Tokens" />
+            <ImageView fitHeight="125.0" fitWidth="123.0" layoutX="-4.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@pictures/noble/noble1.png" />
+               </image>
+            </ImageView>
+            <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="29.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label layoutX="90.0" layoutY="15.0" prefHeight="30.0" prefWidth="32.0" text="0/15" />
+            <Circle fill="DODGERBLUE" layoutX="132.0" layoutY="49.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" />
+            <Label layoutX="119.0" layoutY="34.0" prefHeight="30.0" prefWidth="32.0" text="0 | 0" />
+            <HBox layoutX="254.0" layoutY="43.0" prefHeight="113.0" prefWidth="583.0" spacing="10.0">
+               <children>
+                  <StackPane prefHeight="113.0" prefWidth="88.0">
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f1f" height="113.0" stroke="BLACK" strokeType="INSIDE" width="93.0" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0 | 0" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="10.0" layoutY="10.0" prefHeight="113.0" prefWidth="88.0">
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="113.0" stroke="BLACK" strokeType="INSIDE" width="93.0" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0 | 0" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="10.0" layoutY="10.0" prefHeight="113.0" prefWidth="88.0">
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" height="113.0" stroke="BLACK" strokeType="INSIDE" width="93.0" />
+                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="0 | 0" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="10.0" layoutY="10.0" prefHeight="113.0" prefWidth="88.0">
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="113.0" stroke="BLACK" strokeType="INSIDE" width="93.0" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0 | 0" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="10.0" layoutY="10.0" prefHeight="113.0" prefWidth="88.0">
+                     <children>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fffe1f" height="113.0" stroke="BLACK" strokeType="INSIDE" width="93.0" />
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0 " />
+                     </children>
+                  </StackPane>
+               </children>
+            </HBox>
+            <Button layoutX="256.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="82.0" text="My Cards" />
+            <TitledPane animated="false" layoutX="809.0" layoutY="-25.0" text="Reserved">
+               <content>
+                  <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <VBox layoutX="3.0" layoutY="-4.0" prefHeight="200.0" prefWidth="100.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </ScrollPane>
+               </content>
+            </TitledPane>
          </children>
       </AnchorPane>
    </bottom>
