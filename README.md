@@ -1,6 +1,75 @@
 # COMP 361 Project
 
- > See also [my video instuctions](https://www.cs.mcgill.ca/~mschie3/COMP361/Repository-Best-Practices.mp4) in the screencasts section on MyCourses.
+## Ruoyu's README
+
+### M3 start-up template related
+
+#### Compile and Run the template (mvn clean javafx:run)
+1. `git pull` first to make sure your repo is up to date.
+2. Then `cd client`, run `mvn clean javafx:run` to run the program.
+
+#### Compile and Run the template (shaded jar file)
+1. [Based on this instruction](https://www.youtube.com/watch?v=EyYb0GmtEX4&ab_channel=Randomcode), we can compile the code into a special jar file (shaded jar). Add it the following plugin to `<plugins></plugins>`:
+
+```
+<plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-shade-plugin</artifactId>
+               <version>3.2.4</version>
+               <executions>
+                   <execution>
+                       <goals>
+                           <goal>shade</goal>
+                       </goals>
+                       <configuration>
+                           <shadedArtifactAttached>true</shadedArtifactAttached>
+                           <transformers>
+                               <transformer implementation=
+                                                    "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                   <mainClass>com.game.hangman.Main</mainClass>
+                               </transformer>
+                           </transformers>
+                       </configuration>
+                   </execution>
+               </executions>
+           </plugin>
+```
+2. run `mvn clean package`, then `java -jar target/client-v1.0-shaded.jar` to start the application.
+
+> Make sure you are in `client` directory before you run step 2.
+
+
+
+#### Create a maven javafx project (For future reference)
+1.[Follow the instruction](https://github.com/openjfx/javafx-maven-archetypes) to install all the archetypes in your local repository
+Use the following code to create a new maven project with the `pom.xml` file 
+(correct javafx-version)
+```
+mvn archetype:generate \
+        -DarchetypeGroupId=org.openjfx \
+        -DarchetypeArtifactId=javafx-archetype-fxml \
+        -DarchetypeVersion=0.0.6 \
+        -DgroupId=group08 \
+        -DartifactId=client \
+        -Dversion=version \
+        -Djavafx-version=18.0.1
+```
+
+2. use `mvn clean javafx:run` to complie and run the code
+
+#### Download The Pictures
+Since we are not allowed to push the picture files into our repo, we have to download them somewhere locally.
+1. Download `pictures.zip` in [this link](https://drive.google.com/file/d/1zu5xSG-dPu_UwCm6VvusWM9FBiN613iW/view?usp=sharing)
+2. Unzip it and put it under `client/src/main/resources/project`, and its location should be `client/src/main/resources/project/projects`
+3. Now once you run `mvn clean javafx:run`, you can see the pictures showing up accurately in the app.
+
+#### Other useful things
+1. use `mvn clean package` to generate the java docs. (you can access the `html file` under `docs/project/`)
+
+
+
+> Note: we can savely delete module-info.java if we are not developing a modular program.
+
 
 ## The Rules
 
