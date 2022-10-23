@@ -5,6 +5,7 @@
 # .mvn and .idea in subdirectories
 client/.idea
 client/target/
+client/src/main/resources/project/pictures
 .*
 !/.gitignore
 
