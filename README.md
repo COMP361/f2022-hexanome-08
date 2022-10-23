@@ -4,9 +4,41 @@
 
 ### M3 start-up template related
 
-#### Run the template
-- `git pull` first to make sure your repo is up to date.
-- Then `cd client`, run `mvn clean javafx:run` to run the program.
+#### Compile and Run the template (mvn clean javafx:run)
+1. `git pull` first to make sure your repo is up to date.
+2. Then `cd client`, run `mvn clean javafx:run` to run the program.
+
+#### Compile and Run the template (shaded jar file)
+1. [Based on this instruction](https://www.youtube.com/watch?v=EyYb0GmtEX4&ab_channel=Randomcode), we can compile the code into a special jar file (shaded jar). Add it the following plugin to `<plugins></plugins>`:
+
+```
+<plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-shade-plugin</artifactId>
+               <version>3.2.4</version>
+               <executions>
+                   <execution>
+                       <goals>
+                           <goal>shade</goal>
+                       </goals>
+                       <configuration>
+                           <shadedArtifactAttached>true</shadedArtifactAttached>
+                           <transformers>
+                               <transformer implementation=
+                                                    "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                   <mainClass>com.game.hangman.Main</mainClass>
+                               </transformer>
+                           </transformers>
+                       </configuration>
+                   </execution>
+               </executions>
+           </plugin>
+```
+2. run `mvn clean package`, then `java -jar target/client-v1.0-shaded.jar` to start the application.
+
+> Make sure you are in `client` directory before you run step 2.
+
+
 
 #### Create a maven javafx project (For future reference)
 1.[Follow the instruction](https://github.com/openjfx/javafx-maven-archetypes) to install all the archetypes in your local repository
