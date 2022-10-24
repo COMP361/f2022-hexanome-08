@@ -243,7 +243,7 @@
          <children>
             <ImageView fitHeight="90.0" fitWidth="90.0" layoutX="5.0" layoutY="-65.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@pictures/noble/noble1.png" />
+                  <Image url="@pictures/noble/noble8.png" />
                </image>
             </ImageView>
             <Circle fill="DODGERBLUE" layoutX="70.0" layoutY="-70.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" />
