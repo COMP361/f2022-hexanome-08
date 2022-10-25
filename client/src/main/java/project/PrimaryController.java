@@ -10,6 +10,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.w3c.dom.Text;
 
 /**
  * The PrimaryController use to manage the general flow of the program.
@@ -115,6 +116,9 @@ public class PrimaryController {
     // then close the window
 
   }
+
+
+
 
 
 }

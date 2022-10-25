@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,6 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.TextField?>
 <BorderPane fx:id="gameBoardContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
    <center>
       <AnchorPane accessibleText="test" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="800.0" BorderPane.alignment="CENTER">
@@ -452,41 +452,16 @@
                                     <Image url="@pictures/token/gold_tokens.png" />
                                  </image>
                               </ImageView>
-                              <Button id="minusRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <Button id="minusRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false"  text="-" />
                               <Button id="plusWhite" layoutX="295.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="minusWhite" layoutX="245.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="plusBlue" layoutX="466.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="plusBlack" layoutX="378.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="plusGreen" layoutX="550.0" layoutY="40.0" mnemonicParsing="false" text="+" />
-                              <Button id="plusRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="plusRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false"  text="+" />
                               <Button id="minusBlue" layoutX="412.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="minusBlack" layoutX="330.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="minusGreen" layoutX="500.0" layoutY="40.0" mnemonicParsing="false" text="-" />
-                              <TextField id="counterRed" layoutX="186.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
-                                 <font>
-                                    <Font size="11.0" />
-                                 </font>
-                              </TextField>
-                              <TextField id="counterWhite" layoutX="270.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
-                                 <font>
-                                    <Font size="11.0" />
-                                 </font>
-                              </TextField>
-                              <TextField id="counterBlack" layoutX="354.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
-                                 <font>
-                                    <Font size="11.0" />
-                                 </font>
-                              </TextField>
-                              <TextField id="counterBlue" layoutX="440.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
-                                 <font>
-                                    <Font size="11.0" />
-                                 </font>
-                              </TextField>
-                              <TextField id="counterGreen" layoutX="525.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
-                                 <font>
-                                    <Font size="11.0" />
-                                 </font>
-                              </TextField>
                               <Text id="totalRed" fill="WHITE" layoutX="187.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
                                  <font>
                                     <Font size="36.0" />
@@ -517,6 +492,16 @@
                                     <Font size="36.0" />
                                  </font>
                               </Text>
+                              <Circle fill="WHITE" layoutX="197.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Text id="counterRed" layoutX="193.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                              <Circle fill="WHITE" layoutX="281.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Circle fill="WHITE" layoutX="365.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Circle fill="WHITE" layoutX="452.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Circle fill="WHITE" layoutX="537.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Text id="counterWhite" layoutX="277.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                              <Text id="counterBlack" layoutX="361.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                              <Text id="counterBlue" layoutX="449.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                              <Text id="counterGreen" layoutX="533.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                            </children>
                         </AnchorPane>
                      </children>
