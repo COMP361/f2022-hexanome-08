@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -14,6 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <BorderPane fx:id="gameBoardContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
@@ -412,6 +414,125 @@
                         </StackPane>
                      </children>
                   </HBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane>
+               <children>
+                  <StackPane>
+                     <children>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="85.0" fitWidth="85.0" layoutX="155.0" layoutY="35.0">
+                                 <image>
+                                    <Image url="@pictures/token/red_tokens.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="85.0" fitWidth="85.0" layoutX="240.0" layoutY="35.0">
+                                 <image>
+                                    <Image url="@pictures/token/white_tokens.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="85.0" fitWidth="85.0" layoutX="325.0" layoutY="35.0">
+                                 <image>
+                                    <Image url="@pictures/token/black_tokens.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="85.0" fitWidth="85.0" layoutX="410.0" layoutY="35.0">
+                                 <image>
+                                    <Image url="@pictures/token/blue_tokens.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="85.0" fitWidth="85.0" layoutX="495.0" layoutY="35.0">
+                                 <image>
+                                    <Image url="@pictures/token/green_tokens.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="85.0" fitWidth="85.0" layoutX="580.0" layoutY="35.0">
+                                 <image>
+                                    <Image url="@pictures/token/gold_tokens.png" />
+                                 </image>
+                              </ImageView>
+                              <Button id="minusRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <Button id="plusWhite" layoutX="295.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="minusWhite" layoutX="245.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <Button id="plusBlue" layoutX="466.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="plusBlack" layoutX="378.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="plusGold" layoutX="635.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="plusGreen" layoutX="550.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="plusRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="minusBlue" layoutX="412.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <Button id="minusBlack" layoutX="330.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <Button id="minusGreen" layoutX="500.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <Button id="minusGold" layoutX="585.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <TextField id="counterRed" layoutX="186.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                              </TextField>
+                              <TextField id="counterWhite" layoutX="270.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                              </TextField>
+                              <TextField id="counterBlack" layoutX="354.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                              </TextField>
+                              <TextField id="counterBlue" layoutX="440.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                              </TextField>
+                              <TextField id="counterGreen" layoutX="525.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                              </TextField>
+                              <TextField id="counterGold" layoutX="610.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                              </TextField>
+                              <Text id="totalRed" fill="WHITE" layoutX="187.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+                                 <font>
+                                    <Font size="36.0" />
+                                 </font>
+                              </Text>
+                              <Text id="totalWhite" layoutX="272.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+                                 <font>
+                                    <Font name="System Bold" size="36.0" />
+                                 </font>
+                              </Text>
+                              <Text id="totalBlack" fill="WHITE" layoutX="356.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+                                 <font>
+                                    <Font size="36.0" />
+                                 </font>
+                              </Text>
+                              <Text id="totalBlue" fill="WHITE" layoutX="442.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+                                 <font>
+                                    <Font size="36.0" />
+                                 </font>
+                              </Text>
+                              <Text id="totalGreen" fill="WHITE" layoutX="527.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+                                 <font>
+                                    <Font size="36.0" />
+                                 </font>
+                              </Text>
+                              <Text id="totalGold" fill="WHITE" layoutX="612.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4">
+                                 <font>
+                                    <Font size="36.0" />
+                                 </font>
+                              </Text>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </StackPane>
+                  <Button id="confirmButton" layoutX="672.0" layoutY="36.0" mnemonicParsing="false" text="Confirm">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
                </children>
             </AnchorPane>
          </children>

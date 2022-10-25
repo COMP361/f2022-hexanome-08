@@ -8,20 +8,19 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="group08.PrimaryController">
    <children>
       <ImageView fitHeight="175.0" fitWidth="175.0">
          <image>
             <Image url="@pictures/token/black_tokens.png" />
          </image>
       </ImageView>
-      <Button layoutX="122.0" layoutY="24.0" mnemonicParsing="false" text="+">
+      <Button layoutX="122.0" layoutY="24.0" fx:id="plus" mnemonicParsing="false" text="+">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button layoutX="20.0" layoutY="24.0" mnemonicParsing="false" text="-">
+      <Button layoutX="20.0" layoutY="24.0" fx:id="minus"  mnemonicParsing="false" text="-">
          <font>
             <Font size="18.0" />
          </font>
