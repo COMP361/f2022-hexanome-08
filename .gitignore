@@ -8,6 +8,7 @@ client/target/
 client/src/main/resources/project/pictures
 .*
 !/.gitignore
+client/src/main/resources/project/pictures
 
 # Compiled class file
 *.class
