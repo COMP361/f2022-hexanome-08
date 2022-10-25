@@ -5,7 +5,6 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -15,21 +14,22 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.java_fx_project_361.MainLobbyController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
    <top>
       <HBox alignment="TOP_CENTER" prefHeight="35.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <Region prefHeight="91.0" prefWidth="245.0" HBox.hgrow="ALWAYS" />
-            <Label prefHeight="120.0" prefWidth="140.0" text="Game">
+            <Label prefHeight="120.0" prefWidth="140.0" text="Lobby">
                <font>
                   <Font name="Axiforma-SemiBold" size="40.0" />
                </font>
             </Label>
             <Region prefHeight="120.0" prefWidth="101.0" HBox.hgrow="ALWAYS" />
             <ImageView fx:id="Settings_Button" fitHeight="65.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@icon-settings.png" />
-               </image>
+
+<!--               <image>-->
+<!--                  <Image url="@icon-settings.png" />-->
+<!--               </image>-->
                <HBox.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="15.0" />
                </HBox.margin>
@@ -56,7 +56,7 @@
             <HBox fx:id="gameOptions" minHeight="-Infinity" prefHeight="60.0" prefWidth="1100.0" spacing="10.0">
                <children>
                   <Region prefHeight="27.0" prefWidth="137.0" />
-                  <ChoiceBox fx:id="newGameChoices" prefHeight="41.0" prefWidth="686.0" />
+                  <ChoiceBox fx:id="gameChoices" onMouseClicked="#initialize" prefHeight="41.0" prefWidth="686.0" />
                   <Button fx:id="create" minHeight="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="129.0" text="Create">
                      <font>
                         <Font name="Axiforma-Regular" size="12.0" />
@@ -109,7 +109,7 @@
                                              </children>
                                           </VBox>
                                           <Region prefHeight="42.0" prefWidth="161.0" />
-                                          <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="45.0" prefWidth="82.0" text="Join">
+                                          <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#joinGame" prefHeight="45.0" prefWidth="82.0" text="Join">
                                              <font>
                                                 <Font name="Axiforma-Regular" size="12.0" />
                                              </font>
