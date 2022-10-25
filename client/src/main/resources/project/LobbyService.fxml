@@ -369,7 +369,7 @@
                                                       </Label>
                                                       <HBox prefHeight="24.0" prefWidth="572.0">
                                                          <children>
-                                                            <Label prefHeight="15.0" prefWidth="88.0" text="Host: Player 1">
+                                                            <Label prefHeight="15.0" prefWidth="88.0" text="Host: Player 4">
                                                                <font>
                                                                   <Font name="Axiforma-Regular" size="12.0" />
                                                                </font>
