@@ -116,23 +116,5 @@ public class PrimaryController {
 
   }
 
-  //Youngnam
-  //for buttons, hardcoded atm
-  public Button plusRed;
-  public Button minusRed;
-  public TextField counterRed;
-  public TextField TotalRed;
-  public int num =0;
-
-  //decreases red
-  public void decrementRed() {
-    num--;
-    counterRed.setText(String.valueOf(num));
-  }
-  //increased red
-  public void incrementRed() {
-    num++;
-    counterRed.setText(String.valueOf(num));
-  }
 
 }

@@ -452,18 +452,16 @@
                                     <Image url="@pictures/token/gold_tokens.png" />
                                  </image>
                               </ImageView>
-                              <Button id="minusRed" onAction="#decrementRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <Button id="minusRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="plusWhite" layoutX="295.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="minusWhite" layoutX="245.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="plusBlue" layoutX="466.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="plusBlack" layoutX="378.0" layoutY="40.0" mnemonicParsing="false" text="+" />
-                              <Button id="plusGold" layoutX="635.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="plusGreen" layoutX="550.0" layoutY="40.0" mnemonicParsing="false" text="+" />
-                              <Button id="plusRed" onAction="#decrementRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="plusRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="minusBlue" layoutX="412.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="minusBlack" layoutX="330.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="minusGreen" layoutX="500.0" layoutY="40.0" mnemonicParsing="false" text="-" />
-                              <Button id="minusGold" layoutX="585.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <TextField id="counterRed" layoutX="186.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
                                  <font>
                                     <Font size="11.0" />
@@ -485,11 +483,6 @@
                                  </font>
                               </TextField>
                               <TextField id="counterGreen" layoutX="525.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
-                                 <font>
-                                    <Font size="11.0" />
-                                 </font>
-                              </TextField>
-                              <TextField id="counterGold" layoutX="610.0" layoutY="30.0" prefHeight="23.0" prefWidth="23.0" promptText="0">
                                  <font>
                                     <Font size="11.0" />
                                  </font>
