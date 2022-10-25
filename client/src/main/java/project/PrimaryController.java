@@ -2,12 +2,11 @@ package project;
 
 import java.io.IOException;
 import java.util.Objects;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -15,6 +14,10 @@ import javafx.stage.Stage;
  * The PrimaryController use to manage the general flow of the program.
  */
 public class PrimaryController {
+
+
+  @FXML
+  private ChoiceBox<String> gameChoices;
 
   @FXML
   private Pane purchaseContent;
@@ -46,7 +49,7 @@ public class PrimaryController {
     if (Objects.equals(userNameStr, "") || Objects.equals(userPasswordStr, "")) {
       logInPageErrorMessage.setText("Please enter a username and password");
     } else {
-      App.setRoot("splendor_game_board");
+      App.setRoot("LobbyService");
     }
 
   }
@@ -115,4 +118,27 @@ public class PrimaryController {
     // then close the window
 
   }
+
+  @FXML
+  protected void joinGame() throws IOException {
+    App.setRootWithSizeTitle("splendor_game_board", 1100, 800, "Splendor Game");
+  }
+
+  /**
+   * Sets up the Choice Box options in Main Lobby.
+   */
+  @FXML
+  public void initialize() {
+    //Create observable list for game options drop down (choice box)
+    ObservableList<String> gameOptionsList = FXCollections
+            .observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
+    //gameChoices will be null until the main lobby stage is launched
+    if (gameChoices != null) {
+      gameChoices.setItems(gameOptionsList);
+    }
+  }
+
+
+
+
 }
