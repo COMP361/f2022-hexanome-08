@@ -452,14 +452,14 @@
                                     <Image url="@pictures/token/gold_tokens.png" />
                                  </image>
                               </ImageView>
-                              <Button id="minusRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <Button id="minusRed" onAction="#decrementRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="plusWhite" layoutX="295.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="minusWhite" layoutX="245.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="plusBlue" layoutX="466.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="plusBlack" layoutX="378.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="plusGold" layoutX="635.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="plusGreen" layoutX="550.0" layoutY="40.0" mnemonicParsing="false" text="+" />
-                              <Button id="plusRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="plusRed" onAction="#decrementRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="minusBlue" layoutX="412.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="minusBlack" layoutX="330.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="minusGreen" layoutX="500.0" layoutY="40.0" mnemonicParsing="false" text="-" />
