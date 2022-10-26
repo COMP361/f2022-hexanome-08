@@ -1,6 +1,6 @@
 # COMP 361 Project
 
-## Ruoyu's README
+## Ruoyu's README is great
 
 ### M3 start-up template related
 
