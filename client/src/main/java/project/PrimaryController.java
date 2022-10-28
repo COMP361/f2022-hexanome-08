@@ -20,6 +20,9 @@ public class PrimaryController {
   private Pane purchaseContent;
 
   @FXML
+  private Pane confirmPane;
+
+  @FXML
   private Button quitGameButton;
 
   @FXML
@@ -30,6 +33,12 @@ public class PrimaryController {
 
   @FXML
   private Label logInPageErrorMessage;
+
+  @FXML
+  private Button Confirm;
+
+  @FXML
+  private Button Back;
 
   /**
    * The logic of handling log in. The methods check if
@@ -86,10 +95,8 @@ public class PrimaryController {
    * The logic to handle player purchasing a regular development card (not orient).
    */
   @FXML
-  protected void madePurchase() {
-    Stage curStage = (Stage) purchaseContent.getScene().getWindow();
-    // TODO: implement the logic of handling purchase (fail or success)
-    curStage.close();
+  protected void madePurchase() throws IOException {
+    App.setPopUpRoot("splendor_purchase_confirm", purchaseContent.getScene());
   }
 
   /**
@@ -115,4 +122,26 @@ public class PrimaryController {
     // then close the window
 
   }
+
+  /**
+   * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card
+   */
+
+  public void confirmClick(){
+    Stage curStage = (Stage) confirmPane.getScene().getWindow();
+    curStage.close();
+
+  }
+
+  /**
+   * Getting rid of the confirmation pop up once "back" is pressed when purchasing a card
+   */
+
+  public void backClick(){
+    Stage curStage = (Stage) confirmPane.getScene().getWindow();
+    curStage.close();
+  }
+
+
+
 }
