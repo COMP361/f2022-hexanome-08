@@ -117,7 +117,7 @@ public class PrimaryController {
   protected void madeReserve() throws IOException {
     //Stage curStage = (Stage) purchaseContent.getScene().getWindow();
     Scene curScene = purchaseContent.getScene();
-    App.setPopUpRoot("splendor", curScene);
+    App.setPopUpRoot("splendor_reserve", curScene);
     //TODO: Check condition if the reserve can be done successfully
     // then close the window
 
