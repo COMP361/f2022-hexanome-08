@@ -128,6 +128,11 @@ public class PrimaryController {
     App.setRootWithSizeTitle("splendor_game_board", 1100, 800, "Splendor Game");
   }
 
+  @FXML
+  protected void joinWaitingRoom() throws IOException {
+    App.setRootWithSizeTitle("splendor_waiting_room", 1100, 800, "Waiting Room");
+  }
+
   /**
    * Sets up the Choice Box options in Main Lobby.
    */
