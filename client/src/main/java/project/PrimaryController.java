@@ -130,7 +130,7 @@ public class PrimaryController {
 
   @FXML
   protected void joinWaitingRoom() throws IOException {
-    App.setRootWithSizeTitle("splendor_waiting_room", 1100, 800, "Waiting Room");
+    App.setRootWithSizeTitle("splendor_waiting_room", 1000, 500, "Waiting Room");
   }
 
   /**
