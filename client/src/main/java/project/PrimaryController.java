@@ -27,6 +27,9 @@ public class PrimaryController {
   private Pane purchaseContent;
 
   @FXML
+  private Pane waitingRoom;
+
+  @FXML
   private Button quitGameButton;
 
   @FXML
@@ -125,7 +128,9 @@ public class PrimaryController {
 
   @FXML
   protected void joinGame() throws IOException {
+    Stage curStage = (Stage) waitingRoom.getScene().getWindow();
     App.setRootWithSizeTitle("splendor_game_board", 1100, 800, "Splendor Game");
+    curStage.close();
   }
 
   @FXML
@@ -146,8 +151,5 @@ public class PrimaryController {
       gameChoices.setItems(gameOptionsList);
     }
   }
-
-
-
 
 }
