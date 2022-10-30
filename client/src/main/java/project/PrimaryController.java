@@ -1,6 +1,9 @@
 package project;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,8 +14,11 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
 
 /**
  * The PrimaryController use to manage the general flow of the program.
@@ -34,6 +40,9 @@ public class PrimaryController {
 
   @FXML
   private TextField userName;
+
+  @FXML
+  private ImageView purchasedCard;
 
   @FXML
   private PasswordField userPassword;
@@ -111,6 +120,14 @@ public class PrimaryController {
     // Just close the window without doing anything
     curStage.close();
 
+  }
+
+
+  @FXML
+  protected void purchased() throws FileNotFoundException {
+    InputStream stream = new FileInputStream("client/src/main/resources/project/pictures/level3/w1.png");
+    Image img = new Image(stream);
+    purchasedCard.setImage(img);
   }
 
   /**

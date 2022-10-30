@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="gameBoardContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
+<BorderPane fx:id="gameBoardContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
    <center>
       <AnchorPane accessibleText="test" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
@@ -29,7 +40,7 @@
                               <Image url="@pictures/level3/b3.png" />
                            </image>
                         </ImageView>
-                        <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="purchasedCard" fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@pictures/level3/b4.png" />
                            </image>
@@ -499,6 +510,7 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
+                  <Button layoutX="683.0" layoutY="117.0" mnemonicParsing="false" onMouseClicked="#purchased" text="purchase" />
                </children>
             </AnchorPane>
          </children>
