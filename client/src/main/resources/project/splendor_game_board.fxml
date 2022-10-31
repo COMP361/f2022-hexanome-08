@@ -21,7 +21,7 @@
 <AnchorPane style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
    <children>
       <BorderPane fx:id="gameBoardContent" layoutY="4.666666507720947" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
-      
+
          <bottom>
             <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
                <children>
