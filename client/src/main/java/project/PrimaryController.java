@@ -14,42 +14,30 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-/**
- * The PrimaryController use to manage the general flow of the program.
- */
+/** The PrimaryController use to manage the general flow of the program. */
 public class PrimaryController {
 
+  @FXML private ChoiceBox<String> gameChoices;
 
-  @FXML
-  private ChoiceBox<String> gameChoices;
+  @FXML private Pane purchaseContent;
 
-  @FXML
-  private Pane purchaseContent;
+  @FXML private Pane confirmPane;
 
-  @FXML
-  private Pane confirmPane;
+  @FXML private Button quitGameButton;
 
-  @FXML
-  private Button quitGameButton;
+  @FXML private TextField userName;
 
-  @FXML
-  private TextField userName;
+  @FXML private PasswordField userPassword;
 
-  @FXML
-  private PasswordField userPassword;
+  @FXML private Label logInPageErrorMessage;
 
-  @FXML
-  private Label logInPageErrorMessage;
+  @FXML private Button confirm;
 
-  @FXML
-  private Button Confirm;
-
-  @FXML
-  private Button Back;
+  @FXML private Button back;
 
   /**
-   * The logic of handling log in. The methods check if
-   * the user has input both username and user password or not
+   * The logic of handling log in. The methods check if the user has input both username and user
+   * password or not
    *
    * @throws IOException IOException if fxml file not found
    */
@@ -64,7 +52,6 @@ public class PrimaryController {
     } else {
       App.setRoot("LobbyService");
     }
-
   }
 
   /**
@@ -77,9 +64,7 @@ public class PrimaryController {
     App.setRoot("splendor");
   }
 
-  /**
-   * Close the current stage once the quitGameButton has been clicked.
-   */
+  /** Close the current stage once the quitGameButton has been clicked. */
   @FXML
   protected void onQuitGameButtonClick() {
     Stage curStage = (Stage) quitGameButton.getScene().getWindow();
@@ -87,45 +72,37 @@ public class PrimaryController {
   }
 
   /**
-   * Displays the options of actions the player can do once
-   * they click on a regular development card (not orient).
+   * Displays the options of actions the player can do once they click on a regular development card
+   * (not orient).
    *
    * @throws IOException IOException if fxml file not found
    */
   @FXML
   protected void onDevelopmentCardShapeClick() throws IOException {
     App.setRootWithSizeTitle("splendor_card_action", 360, 170, "Make your decision");
-
   }
 
-  /**
-   * The logic to handle player purchasing a regular development card (not orient).
-   */
+  /** The logic to handle player purchasing a regular development card (not orient). */
   @FXML
   protected void madePurchase() throws IOException {
     App.setPopUpRoot("splendor_purchase_confirm", purchaseContent.getScene());
   }
 
-  /**
-   * The logic to handle player close the pop-up Stage when they want to cancel their action.
-   */
+  /** The logic to handle player close the pop-up Stage when they want to cancel their action. */
   @FXML
   protected void cancelAction() {
     Stage curStage = (Stage) purchaseContent.getScene().getWindow();
     // Just close the window without doing anything
     curStage.close();
-
   }
 
-  /**
-   * The logic to handle Reserving Card (both orient and normal card can use this method).
-   */
+  /** The logic to handle Reserving Card (both orient and normal card can use this method). */
   @FXML
   protected void madeReserve() throws IOException {
-    //Stage curStage = (Stage) purchaseContent.getScene().getWindow();
+    // Stage curStage = (Stage) purchaseContent.getScene().getWindow();
     Scene curScene = purchaseContent.getScene();
     App.setPopUpRoot("splendor", curScene);
-    //TODO: Check condition if the reserve can be done successfully
+    // TODO: Check condition if the reserve can be done successfully
     // then close the window
 
   }
@@ -135,41 +112,27 @@ public class PrimaryController {
     App.setRootWithSizeTitle("splendor_game_board", 1100, 800, "Splendor Game");
   }
 
-  /**
-   * Sets up the Choice Box options in Main Lobby.
-   */
+  /** Sets up the Choice Box options in Main Lobby. */
   @FXML
   public void initialize() {
-    //Create observable list for game options drop down (choice box)
-    ObservableList<String> gameOptionsList = FXCollections
-            .observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
-    //gameChoices will be null until the main lobby stage is launched
+    // Create observable list for game options drop down (choice box)
+    ObservableList<String> gameOptionsList =
+        FXCollections.observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
+    // gameChoices will be null until the main lobby stage is launched
     if (gameChoices != null) {
       gameChoices.setItems(gameOptionsList);
     }
   }
 
-
-  /**
-   * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card
-   */
-
-  public void confirmClick(){
-    Stage curStage = (Stage) confirmPane.getScene().getWindow();
-    curStage.close();
-
-  }
-
-  /**
-   * Getting rid of the confirmation pop up once "back" is pressed when purchasing a card
-   */
-
-  public void backClick(){
+  /** Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card. */
+  public void confirmClick() {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
   }
 
-
-
-
+  /** Getting rid of the confirmation pop up once "back" is pressed when purchasing a card. */
+  public void backClick() {
+    Stage curStage = (Stage) confirmPane.getScene().getWindow();
+    curStage.close();
+  }
 }
