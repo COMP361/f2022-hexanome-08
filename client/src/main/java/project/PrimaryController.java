@@ -182,7 +182,7 @@ public class PrimaryController {
   public void initialize() {
     //Create observable list for game options drop down (choice box)
     ObservableList<String> gameOptionsList = FXCollections
-            .observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
+        .observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
     //gameChoices will be null until the main lobby stage is launched
     if (gameChoices != null) {
       gameChoices.setItems(gameOptionsList);
@@ -207,6 +207,7 @@ public class PrimaryController {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
   }
+
   /**
    * Getting rid of the development cards pop up once "x" is pressed when purchasing a card.
    */
@@ -230,7 +231,7 @@ public class PrimaryController {
    */
 
   public void openMyReservedCards() throws IOException {
-    App.setRootWithSizeTitle("my_reserved_cards",789, 406, "My Reserved Cards");
+    App.setRootWithSizeTitle("my_reserved_cards", 789, 406, "My Reserved Cards");
   }
 
   /**
@@ -242,7 +243,6 @@ public class PrimaryController {
     curStage.close();
 
   }
-
 
 
 }
