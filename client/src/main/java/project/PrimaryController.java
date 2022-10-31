@@ -317,7 +317,7 @@ public class PrimaryController {
    * increment white.
    */
   public void incrementW() {
-    if ((numW + 1) <= num2W && numW < 2) {
+    if ((numW + 1) <= num2W && numW < 2 && numR < 2) {
       numW = numW + 1;
       counterWhite.setText(String.valueOf(numW));
     }
@@ -327,7 +327,7 @@ public class PrimaryController {
    * increment black.
    */
   public void incrementB() {
-    if ((numB + 1) <= num2B && numB < 2) {
+    if ((numB + 1) <= num2B && numB < 2 && numR < 2) {
       numB = numB + 1;
       counterBlack.setText(String.valueOf(numB));
     }
