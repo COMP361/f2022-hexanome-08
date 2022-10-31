@@ -1,6 +1,9 @@
 package project;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +14,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -39,7 +44,7 @@ public class PrimaryController {
   private TextField userName;
 
   @FXML
-  private ImageView purchasedCard;
+  public ImageView purchasedCard;
 
   @FXML
   private PasswordField userPassword;
@@ -174,18 +179,17 @@ public class PrimaryController {
   /**
    * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card
    */
-
-  public void confirmClick(){
+  @FXML
+  public void confirmClick() throws IOException {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
-
   }
 
   /**
    * Getting rid of the confirmation pop up once "back" is pressed when purchasing a card
    */
-
-  public void backClick(){
+  @FXML
+  protected void backClick(){
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
   }
