@@ -476,27 +476,27 @@
                                     <Image url="@pictures/token/gold_tokens.png" />
                                  </image>
                               </ImageView>
-                              <Button id="minusRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false" text="-" />
-                              <Button id="plusWhite" layoutX="295.0" layoutY="40.0" mnemonicParsing="false" text="+" />
-                              <Button id="minusWhite" layoutX="245.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <Button id="minusRed" onAction="#decrementR" layoutX="160.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <Button id="plusWhite" onAction="#incrementW" layoutX="295.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="minusWhite" onAction="#decrementW" layoutX="245.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="plusBlue" layoutX="466.0" layoutY="40.0" mnemonicParsing="false" text="+" />
-                              <Button id="plusBlack" layoutX="378.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="plusBlack" onAction="#incrementB" layoutX="378.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="plusGreen" layoutX="550.0" layoutY="40.0" mnemonicParsing="false" text="+" />
-                              <Button id="plusRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                              <Button id="plusRed" onAction="#incrementR" layoutX="210.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="minusBlue" layoutX="412.0" layoutY="40.0" mnemonicParsing="false" text="-" />
-                              <Button id="minusBlack" layoutX="330.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                              <Button id="minusBlack" onAction="#decrementB" layoutX="330.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="minusGreen" layoutX="500.0" layoutY="40.0" mnemonicParsing="false" text="-" />
-                              <Text id="totalRed" fill="WHITE" layoutX="187.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+                              <Text fx:id="totalRed" fill="WHITE" layoutX="187.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
                                  <font>
                                     <Font size="36.0" />
                                  </font>
                               </Text>
-                              <Text id="totalWhite" layoutX="272.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+                              <Text fx:id="totalWhite" layoutX="272.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
                                  <font>
                                     <Font name="System Bold" size="36.0" />
                                  </font>
                               </Text>
-                              <Text id="totalBlack" fill="WHITE" layoutX="356.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+                              <Text fx:id="totalBlack" fill="WHITE" layoutX="356.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
                                  <font>
                                     <Font size="36.0" />
                                  </font>
@@ -517,13 +517,13 @@
                                  </font>
                               </Text>
                               <Circle fill="WHITE" layoutX="197.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Text id="counterRed" layoutX="193.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                              <Text fx:id="counterRed" layoutX="193.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                               <Circle fill="WHITE" layoutX="281.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
                               <Circle fill="WHITE" layoutX="365.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
                               <Circle fill="WHITE" layoutX="452.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
                               <Circle fill="WHITE" layoutX="537.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Text id="counterWhite" layoutX="277.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-                              <Text id="counterBlack" layoutX="361.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                              <Text fx:id="counterWhite" layoutX="277.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                              <Text fx:id="counterBlack" layoutX="361.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                               <Text id="counterBlue" layoutX="449.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                               <Text id="counterGreen" layoutX="533.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                               <Group layoutX="119.0" layoutY="188.0">
@@ -541,7 +541,7 @@
                         </AnchorPane>
                      </children>
                   </StackPane>
-                  <Button id="confirmButton" layoutX="672.0" layoutY="36.0" mnemonicParsing="false" text="Confirm">
+                  <Button fx:id="confirmButton" onAction="#gemConfirm" layoutX="672.0" layoutY="36.0" mnemonicParsing="false" text="Confirm">
                      <font>
                         <Font size="15.0" />
                      </font>
