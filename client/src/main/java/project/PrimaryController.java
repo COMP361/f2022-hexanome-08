@@ -1,22 +1,13 @@
 package project;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Objects;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -25,18 +16,17 @@ import javafx.stage.Stage;
  */
 public class PrimaryController {
 
-
-  @FXML
-  private ChoiceBox<String> gameChoices;
-
   @FXML
   private Pane purchaseContent;
 
   @FXML
-  private BorderPane waitingRoom;
+  private Pane confirmPane;
 
   @FXML
-  private Pane confirmPane;
+  private Pane devCardPane;
+
+  @FXML
+  private Pane resCardPane;
 
   @FXML
   private Button quitGameButton;
@@ -45,22 +35,13 @@ public class PrimaryController {
   private TextField userName;
 
   @FXML
-  private ImageView purchasedCard;
-
-  @FXML
   private PasswordField userPassword;
-
-  @FXML
-  private BorderPane lobbyPane;
 
   @FXML
   private Label logInPageErrorMessage;
 
   @FXML
-  private Button confirmButton;
-
-  @FXML
-  private Button backButton;
+  private Button myCardsButton;
 
   /**
    * The logic of handling log in. The methods check if
@@ -77,7 +58,7 @@ public class PrimaryController {
     if (Objects.equals(userNameStr, "") || Objects.equals(userPasswordStr, "")) {
       logInPageErrorMessage.setText("Please enter a username and password");
     } else {
-      App.setRoot("LobbyService");
+      App.setRoot("splendor_game_board");
     }
 
   }
@@ -109,7 +90,7 @@ public class PrimaryController {
    */
   @FXML
   protected void onDevelopmentCardShapeClick() throws IOException {
-    App.setRootWithSizeTitle("splendor_card_action", 360, 170, "Make your decision");
+    App.setRootWithSizeTitle("splendor_card_action",  170, 360,"Make your decision");
 
   }
 
@@ -132,15 +113,6 @@ public class PrimaryController {
 
   }
 
-
-  @FXML
-  protected void purchased() throws FileNotFoundException {
-    InputStream stream = new FileInputStream(
-        "src/main/resources/project/pictures/level3/w1.png");
-    Image img = new Image(stream);
-    purchasedCard.setImage(img);
-  }
-
   /**
    * The logic to handle Reserving Card (both orient and normal card can use this method).
    */
@@ -148,7 +120,7 @@ public class PrimaryController {
   protected void madeReserve() throws IOException {
     //Stage curStage = (Stage) purchaseContent.getScene().getWindow();
     Scene curScene = purchaseContent.getScene();
-    App.setPopUpRoot("splendor_reserve", curScene);
+    App.setPopUpRoot("splendor", curScene);
     //TODO: Check condition if the reserve can be done successfully
     // then close the window
 
@@ -156,17 +128,7 @@ public class PrimaryController {
 
   @FXML
   protected void joinGame() throws IOException {
-    Stage curStage = (Stage) waitingRoom.getScene().getWindow();
-    App.setRootWithSizeTitle("splendor_game_board", 1100, 800, "Splendor Game");
-    curStage.close();
-
-  }
-
-  @FXML
-  protected void joinWaitingRoom() throws IOException {
-    Stage lobbyStage = (Stage) lobbyPane.getScene().getWindow();
-    App.setRootWithSizeTitle("splendor_waiting_room", 1000, 500, "Waiting Room");
-    lobbyStage.close();
+    App.setRootWithSizeTitle("splendor_game_board",  800, 1100,"Splendor Game");
   }
 
   /**
@@ -182,27 +144,61 @@ public class PrimaryController {
       gameChoices.setItems(gameOptionsList);
     }
   }
-
-
+  
   /**
    * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card.
    */
-  @FXML
+
   public void confirmClick() {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
+
   }
 
   /**
    * Getting rid of the confirmation pop up once "back" is pressed when purchasing a card.
    */
-  @FXML
-  protected void backClick() {
+
+  public void backClick() {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
   }
 
+  /**
+   * Getting rid of the development cards pop up once "x" is pressed when purchasing a card.
+   */
 
+  public void exitDevCard() {
+    Stage curStage = (Stage) devCardPane.getScene().getWindow();
+    curStage.close();
+  }
+
+  /**
+   * Opening the development cards pop up once "My Cards" button is pressed.
+   */
+
+  public void openMyCards() throws IOException {
+    App.setRootWithSizeTitle("my_development_cards", 406, 789, "My Development Cards");
+
+  }
+
+  /**
+   * Opening the reserve card pop up once reserved card button is pressed.
+   */
+
+  public void openMyReservedCards() throws IOException {
+    App.setRootWithSizeTitle("my_reserved_cards", 406, 789, "My Reserved Cards");
+  }
+
+  /**
+   * Getting rid of the reserved cards pop up once "back" is pressed when purchasing a card.
+   */
+
+  public void exitReserved() {
+    Stage curStage = (Stage) resCardPane.getScene().getWindow();
+    curStage.close();
+
+  }
 
 
 }
