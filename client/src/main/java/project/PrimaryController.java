@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -62,6 +63,32 @@ public class PrimaryController {
   @FXML
   private Button backButton;
 
+  @FXML
+  private Pane resCardPane;
+
+  @FXML
+  private Pane devCardPane;
+
+  @FXML
+  public Button plusR;
+  public Button plusW;
+  public Button plusB;
+
+  @FXML
+  public Button minusR;
+  public Button minusW;
+  public Button minusB;
+
+  @FXML
+  public Text counterRed = new Text();
+  public Text counterWhite = new Text();
+  public Text counterBlack = new Text();
+
+  @FXML
+  public Text totalRed = new Text();
+  public Text totalWhite = new Text();
+  public Text totalBlack = new Text();
+
   /**
    * The logic of handling log in. The methods check if
    * the user has input both username and user password or not
@@ -75,7 +102,7 @@ public class PrimaryController {
 
     // For the sake of simplicity, we only check if password and username exist
     if (Objects.equals(userNameStr, "") || Objects.equals(userPasswordStr, "")) {
-      logInPageErrorMessage.setText("Please enter a username and password");
+      logInPageErrorMessage.setText("Please enter both valid username and password");
     } else {
       App.setRoot("LobbyService");
     }
@@ -176,7 +203,7 @@ public class PrimaryController {
   public void initialize() {
     //Create observable list for game options drop down (choice box)
     ObservableList<String> gameOptionsList = FXCollections
-            .observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
+        .observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
     //gameChoices will be null until the main lobby stage is launched
     if (gameChoices != null) {
       gameChoices.setItems(gameOptionsList);
@@ -202,7 +229,128 @@ public class PrimaryController {
     curStage.close();
   }
 
+  /**
+   * Getting rid of the development cards pop up once "x" is pressed when purchasing a card.
+   */
+
+  public void exitDevCard() {
+    Stage curStage = (Stage) devCardPane.getScene().getWindow();
+    curStage.close();
+  }
+
+  /**
+   * Opening the development cards pop up once "My Cards" button is pressed.
+   */
+
+  public void openMyCards() throws IOException {
+    App.setRootWithSizeTitle("my_development_cards", 789, 406, "My Development Cards");
+
+  }
+
+  /**
+   * Opening the reserve card pop up once reserved card button is pressed.
+   */
+
+  public void openMyReservedCards() throws IOException {
+    App.setRootWithSizeTitle("my_reserved_cards", 789, 406, "My Reserved Cards");
+  }
+
+  /**
+   * Getting rid of the reserved cards pop up once "back" is pressed when purchasing a card.
+   */
+
+  public void exitReserved() {
+    Stage curStage = (Stage) resCardPane.getScene().getWindow();
+    curStage.close();
+
+  }
 
 
+  public int numR = 0;
+  public int num2R = 7;
+  public int numW = 0;
+  public int num2W = 7;
+  public int numB = 0;
+  public int num2B = 7;
+
+  /**
+   * decrement red.
+   */
+  public void decrementR() {
+    if ((numR - 1) >= 0) {
+      numR = numR - 1;
+      counterRed.setText(String.valueOf(numR));
+    }
+  }
+
+  /**
+   * decrement white.
+   */
+  public void decrementW() {
+    if ((numW - 1) >= 0) {
+      numW = numW - 1;
+      counterWhite.setText(String.valueOf(numW));
+    }
+  }
+
+  /**
+   * decrement black.
+   */
+  public void decrementB() {
+    if ((numB - 1) >= 0) {
+      numB = numB - 1;
+      counterBlack.setText(String.valueOf(numB));
+    }
+  }
+
+  /**
+   * increment red.
+   */
+  public void incrementR() {
+    if ((numR + 1) <= num2R && numR < 2) {
+      numR = numR + 1;
+      counterRed.setText(String.valueOf(numR));
+    }
+  }
+
+  /**
+   * increment white.
+   */
+  public void incrementW() {
+    if ((numW + 1) <= num2W && numW < 2 && numR < 2) {
+      numW = numW + 1;
+      counterWhite.setText(String.valueOf(numW));
+    }
+  }
+
+  /**
+   * increment black.
+   */
+  public void incrementB() {
+    if ((numB + 1) <= num2B && numB < 2 && numR < 2) {
+      numB = numB + 1;
+      counterBlack.setText(String.valueOf(numB));
+    }
+  }
+
+  /**
+   * confirm/ update total gems.
+   */
+  public void gemConfirm() {
+    num2R = num2R - numR;
+    totalRed.setText(String.valueOf(num2R));
+    numR = 0;
+    counterRed.setText(String.valueOf(numR));
+
+    num2W = num2W - numW;
+    totalWhite.setText(String.valueOf(num2W));
+    numW = 0;
+    counterWhite.setText(String.valueOf(numW));
+
+    num2B = num2B - numB;
+    totalBlack.setText(String.valueOf(num2B));
+    numB = 0;
+    counterBlack.setText(String.valueOf(numB));
+  }
 
 }
