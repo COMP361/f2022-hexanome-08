@@ -10,7 +10,7 @@
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="Settings">
+          <Menu mnemonicParsing="false" text="Reserve">
             <items>
               <MenuItem mnemonicParsing="false" text="Log out" />
             </items>

@@ -5,17 +5,38 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-/** Splendor Game App. */
+
+/**
+ * Splendor Game App.
+ */
 public class App extends Application {
 
   // The default scene used to display the initial window
   private static Scene scene;
 
   /**
-   * Replace the current scene with the scene loaded from input fxml file with the same layout
-   * ([640,400] by default).
+   * Override the start() method to launch the whole project.
+   *
+   * @param stage The default stage to display
+   * @throws IOException when fxml not found
+   */
+  @Override
+  public void start(Stage stage) throws IOException {
+    scene = new Scene(loadFxml("splendor"), 1000, 800);
+    stage.setTitle("Welcome to Splendor!");
+    stage.setScene(scene);
+    stage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+    stage.show();
+  }
+
+  /**
+   * Replace the current scene with the scene loaded from input fxml
+   * file with the same layout ([640,400] by default).
    *
    * @param fxml The fxml file where we read the GUI setup
    * @throws IOException when fxml not found
@@ -27,10 +48,10 @@ public class App extends Application {
   /**
    * Load a Scene from the fxml file to a new Stage with input height and width and title.
    *
-   * @param fxml The fxml file where we read the GUI setup
+   * @param fxml   The fxml file where we read the GUI setup
    * @param height Height of the new stage
-   * @param width Width of the new stage
-   * @param title Title of the new stage
+   * @param width  Width of the new stage
+   * @param title  Title of the new stage
    * @throws IOException when fxml not found
    */
   static void setRootWithSizeTitle(String fxml, int height, int width, String title)
@@ -38,13 +59,14 @@ public class App extends Application {
     Stage newStage = new Stage();
     newStage.setTitle(title);
     newStage.setScene(new Scene(loadFxml(fxml), height, width));
+    newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     newStage.show();
   }
 
   /**
    * Set the scene of the pop-up stage into a new scene loaded from fxml.
    *
-   * @param fxml The fxml file where we read the GUI setup
+   * @param fxml     The fxml file where we read the GUI setup
    * @param curScene The current scene of the pop-up
    * @throws IOException when fxml not found
    */
@@ -65,21 +87,9 @@ public class App extends Application {
     return fxmlLoader.load();
   }
 
+
   public static void main(String[] args) {
     launch();
   }
 
-  /**
-   * Override the start() method to launch the whole project.
-   *
-   * @param stage The default stage to display
-   * @throws IOException when fxml not found
-   */
-  @Override
-  public void start(Stage stage) throws IOException {
-    scene = new Scene(loadFxml("splendor"), 1000, 800);
-    stage.setTitle("Welcome to Splendor!");
-    stage.setScene(scene);
-    stage.show();
-  }
 }

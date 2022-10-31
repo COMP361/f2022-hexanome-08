@@ -59,7 +59,7 @@ mvn archetype:generate \
 
 #### Download The Pictures
 Since we are not allowed to push the picture files into our repo, we have to download them somewhere locally.
-1. Download `pictures.zip` in [this link](https://drive.google.com/file/d/1zu5xSG-dPu_UwCm6VvusWM9FBiN613iW/view?usp=sharing)
+1. Download `pictures.zip` in [this link](https://drive.google.com/drive/folders/1_qFamQnAU4fEEZqE0P-e6zrqeNkG2nRD)
 2. Unzip it and put it under `client/src/main/resources/project`, and its location should be `client/src/main/resources/project/projects`
 3. Now once you run `mvn clean javafx:run`, you can see the pictures showing up accurately in the app.
 
