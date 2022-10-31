@@ -16,6 +16,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -32,7 +33,7 @@ public class PrimaryController {
   private Pane purchaseContent;
 
   @FXML
-  private Pane waitingRoom;
+  private BorderPane waitingRoom;
 
   @FXML
   private Pane confirmPane;
@@ -44,19 +45,22 @@ public class PrimaryController {
   private TextField userName;
 
   @FXML
-  public ImageView purchasedCard;
+  private ImageView purchasedCard;
 
   @FXML
   private PasswordField userPassword;
 
   @FXML
+  private BorderPane lobbyPane;
+
+  @FXML
   private Label logInPageErrorMessage;
 
   @FXML
-  private Button Confirm;
+  private Button confirmButton;
 
   @FXML
-  private Button Back;
+  private Button backButton;
 
   /**
    * The logic of handling log in. The methods check if
@@ -131,7 +135,8 @@ public class PrimaryController {
 
   @FXML
   protected void purchased() throws FileNotFoundException {
-    InputStream stream = new FileInputStream("client/src/main/resources/project/pictures/level3/w1.png");
+    InputStream stream = new FileInputStream(
+        "src/main/resources/project/pictures/level3/w1.png");
     Image img = new Image(stream);
     purchasedCard.setImage(img);
   }
@@ -154,11 +159,14 @@ public class PrimaryController {
     Stage curStage = (Stage) waitingRoom.getScene().getWindow();
     App.setRootWithSizeTitle("splendor_game_board", 1100, 800, "Splendor Game");
     curStage.close();
+
   }
 
   @FXML
   protected void joinWaitingRoom() throws IOException {
+    Stage lobbyStage = (Stage) lobbyPane.getScene().getWindow();
     App.setRootWithSizeTitle("splendor_waiting_room", 1000, 500, "Waiting Room");
+    lobbyStage.close();
   }
 
   /**
@@ -177,7 +185,7 @@ public class PrimaryController {
 
 
   /**
-   * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card
+   * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card.
    */
   @FXML
   public void confirmClick() {
@@ -186,10 +194,10 @@ public class PrimaryController {
   }
 
   /**
-   * Getting rid of the confirmation pop up once "back" is pressed when purchasing a card
+   * Getting rid of the confirmation pop up once "back" is pressed when purchasing a card.
    */
   @FXML
-  protected void backClick(){
+  protected void backClick() {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
   }
