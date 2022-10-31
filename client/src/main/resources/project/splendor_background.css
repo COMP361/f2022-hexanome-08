@@ -1,0 +1,4 @@
+.bodyback {
+    -fx-background-image: url("/project/pictures/back/splendor_background.jpg");
+    -fx-background-size: 100% 100%;
+}
