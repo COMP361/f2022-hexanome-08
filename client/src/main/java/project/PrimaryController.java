@@ -81,7 +81,7 @@ public class PrimaryController {
 
     // For the sake of simplicity, we only check if password and username exist
     if (Objects.equals(userNameStr, "") || Objects.equals(userPasswordStr, "")) {
-      logInPageErrorMessage.setText("Please enter a username and password");
+      logInPageErrorMessage.setText("Please enter both valid username and password");
     } else {
       App.setRoot("LobbyService");
     }
