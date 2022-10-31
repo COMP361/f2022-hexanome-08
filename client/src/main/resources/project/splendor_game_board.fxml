@@ -272,7 +272,7 @@
                   </StackPane>
                   <StackPane prefHeight="113.0" prefWidth="88.0">
                      <children>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="80.0" stroke="BLACK" strokeType="INSIDE" width="80.0" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#49a6fd" height="80.0" stroke="BLACK" strokeType="INSIDE" width="80.0" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0 / 0" />
                      </children>
                   </StackPane>
@@ -290,6 +290,28 @@
                   </StackPane>
                </children>
             </VBox>
+            <Group layoutX="127.0" layoutY="321.0">
+               <children>
+                  <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#ef950d" height="52.0" layoutX="-6.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
+                  <Text layoutX="-1.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="26" />
+                  <Text layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="..">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Group>
+            <Group layoutX="117.0" layoutY="441.0">
+               <children>
+                  <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#63d447" height="52.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
+                  <Text layoutX="5.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="26" />
+                  <Text layoutX="9.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text=".">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Group>
          </children>
       </AnchorPane>
    </left>
@@ -504,6 +526,17 @@
                               <Text id="counterBlack" layoutX="361.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                               <Text id="counterBlue" layoutX="449.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                               <Text id="counterGreen" layoutX="533.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                              <Group layoutX="119.0" layoutY="188.0">
+                                 <children>
+                                    <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#3c98ed" height="52.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
+                                    <Text layoutX="5.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="26" />
+                                    <Text layoutX="3.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="...">
+                                       <font>
+                                          <Font size="26.0" />
+                                       </font>
+                                    </Text>
+                                 </children>
+                              </Group>
                            </children>
                         </AnchorPane>
                      </children>
@@ -514,6 +547,17 @@
                      </font>
                   </Button>
                   <Button layoutX="683.0" layoutY="117.0" mnemonicParsing="false" onMouseClicked="#purchased" text="purchase" />
+                  <Group layoutX="713.0" layoutY="189.0">
+                     <children>
+                        <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#3c98ed" height="52.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
+                        <Text layoutX="5.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="26" />
+                        <Text layoutX="3.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="...">
+                           <font>
+                              <Font size="26.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </Group>
                </children>
             </AnchorPane>
          </children>
