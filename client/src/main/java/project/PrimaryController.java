@@ -1,9 +1,6 @@
 package project;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Objects;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,11 +11,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
 
 /**
  * The PrimaryController use to manage the general flow of the program.
@@ -36,6 +30,9 @@ public class PrimaryController {
   private Pane waitingRoom;
 
   @FXML
+  private Pane confirmPane;
+
+  @FXML
   private Button quitGameButton;
 
   @FXML
@@ -49,6 +46,12 @@ public class PrimaryController {
 
   @FXML
   private Label logInPageErrorMessage;
+
+  @FXML
+  private Button Confirm;
+
+  @FXML
+  private Button Back;
 
   /**
    * The logic of handling log in. The methods check if
@@ -105,10 +108,8 @@ public class PrimaryController {
    * The logic to handle player purchasing a regular development card (not orient).
    */
   @FXML
-  protected void madePurchase() {
-    Stage curStage = (Stage) purchaseContent.getScene().getWindow();
-    // TODO: implement the logic of handling purchase (fail or success)
-    curStage.close();
+  protected void madePurchase() throws IOException {
+    App.setPopUpRoot("splendor_purchase_confirm", purchaseContent.getScene());
   }
 
   /**
@@ -168,5 +169,28 @@ public class PrimaryController {
       gameChoices.setItems(gameOptionsList);
     }
   }
+
+
+  /**
+   * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card
+   */
+
+  public void confirmClick(){
+    Stage curStage = (Stage) confirmPane.getScene().getWindow();
+    curStage.close();
+
+  }
+
+  /**
+   * Getting rid of the confirmation pop up once "back" is pressed when purchasing a card
+   */
+
+  public void backClick(){
+    Stage curStage = (Stage) confirmPane.getScene().getWindow();
+    curStage.close();
+  }
+
+
+
 
 }
