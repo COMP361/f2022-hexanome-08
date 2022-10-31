@@ -233,8 +233,8 @@
                   </StackPane>
                </children>
             </HBox>
-            <Button layoutX="185.0" layoutY="15.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="82.0" text="My Cards" />
-            <Button layoutX="850.0" layoutY="100.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="150.0" text="Reserved Cards" />
+            <Button layoutX="185.0" layoutY="15.0" mnemonicParsing="false" onAction="#openMyCards" prefHeight="32.0" prefWidth="82.0" text="My Cards" />
+            <Button layoutX="850.0" layoutY="100.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openMyReservedCards" prefHeight="32.0" prefWidth="150.0" text="Reserved Cards" />
          </children>
       </AnchorPane>
    </bottom>
