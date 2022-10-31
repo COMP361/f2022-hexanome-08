@@ -266,65 +266,88 @@ public class PrimaryController {
   }
 
 
-  public int numR =0;
-  public int num2R =7;
-  public int numW =0;
-  public int num2W =7;
-  public int numB =0;
-  public int num2B =7;
+  public int numR = 0;
+  public int num2R = 7;
+  public int numW = 0;
+  public int num2W = 7;
+  public int numB = 0;
+  public int num2B = 7;
 
-  public void decrementR(){
-    if((numR-1)>=0) {
+  /**
+   * decrement red.
+   */
+  public void decrementR() {
+    if ((numR - 1) >= 0) {
       numR = numR - 1;
       counterRed.setText(String.valueOf(numR));
     }
   }
-  public void decrementW(){
-    if((numW-1)>=0) {
+
+  /**
+   * decrement white.
+   */
+  public void decrementW() {
+    if ((numW - 1) >= 0) {
       numW = numW - 1;
       counterWhite.setText(String.valueOf(numW));
     }
   }
 
-  public void decrementB(){
-    if((numB-1)>=0) {
+  /**
+   * decrement black.
+   */
+  public void decrementB() {
+    if ((numB - 1) >= 0) {
       numB = numB - 1;
       counterBlack.setText(String.valueOf(numB));
     }
   }
-  public void incrementR(){
-    if((numR+1)<=num2R && numR <2) {
+
+  /**
+   * increment red.
+   */
+  public void incrementR() {
+    if ((numR + 1) <= num2R && numR < 2) {
       numR = numR + 1;
       counterRed.setText(String.valueOf(numR));
     }
   }
 
-  public void incrementW(){
-    if((numW+1)<=num2W && numW <2) {
+  /**
+   * increment white.
+   */
+  public void incrementW() {
+    if ((numW + 1) <= num2W && numW < 2) {
       numW = numW + 1;
       counterWhite.setText(String.valueOf(numW));
     }
   }
 
-  public void incrementB(){
-    if((numB+1)<=num2B && numB <2) {
+  /**
+   * increment black.
+   */
+  public void incrementB() {
+    if ((numB + 1) <= num2B && numB < 2) {
       numB = numB + 1;
       counterBlack.setText(String.valueOf(numB));
     }
   }
 
-  public void gemConfirm(){
-    num2R=num2R-numR;
+  /**
+   * confirm/ update total gems.
+   */
+  public void gemConfirm() {
+    num2R = num2R - numR;
     totalRed.setText(String.valueOf(num2R));
     numR = 0;
     counterRed.setText(String.valueOf(numR));
 
-    num2W=num2W-numW;
+    num2W = num2W - numW;
     totalWhite.setText(String.valueOf(num2W));
     numW = 0;
     counterWhite.setText(String.valueOf(numW));
 
-    num2B=num2B-numB;
+    num2B = num2B - numB;
     totalBlack.setText(String.valueOf(num2B));
     numB = 0;
     counterBlack.setText(String.valueOf(numB));
