@@ -62,6 +62,12 @@ public class PrimaryController {
   @FXML
   private Button backButton;
 
+  @FXML
+  private Pane resCardPane;
+
+  @FXML
+  private Pane devCardPane;
+
   /**
    * The logic of handling log in. The methods check if
    * the user has input both username and user password or not
@@ -176,7 +182,7 @@ public class PrimaryController {
   public void initialize() {
     //Create observable list for game options drop down (choice box)
     ObservableList<String> gameOptionsList = FXCollections
-            .observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
+        .observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
     //gameChoices will be null until the main lobby stage is launched
     if (gameChoices != null) {
       gameChoices.setItems(gameOptionsList);
@@ -202,7 +208,41 @@ public class PrimaryController {
     curStage.close();
   }
 
+  /**
+   * Getting rid of the development cards pop up once "x" is pressed when purchasing a card.
+   */
 
+  public void exitDevCard() {
+    Stage curStage = (Stage) devCardPane.getScene().getWindow();
+    curStage.close();
+  }
+
+  /**
+   * Opening the development cards pop up once "My Cards" button is pressed.
+   */
+
+  public void openMyCards() throws IOException {
+    App.setRootWithSizeTitle("my_development_cards", 789, 406, "My Development Cards");
+
+  }
+
+  /**
+   * Opening the reserve card pop up once reserved card button is pressed.
+   */
+
+  public void openMyReservedCards() throws IOException {
+    App.setRootWithSizeTitle("my_reserved_cards", 789, 406, "My Reserved Cards");
+  }
+
+  /**
+   * Getting rid of the reserved cards pop up once "back" is pressed when purchasing a card.
+   */
+
+  public void exitReserved() {
+    Stage curStage = (Stage) resCardPane.getScene().getWindow();
+    curStage.close();
+
+  }
 
 
 }
