@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 
@@ -29,6 +30,7 @@ public class App extends Application {
     scene = new Scene(loadFxml("splendor"), 1000, 800);
     stage.setTitle("Welcome to Splendor!");
     stage.setScene(scene);
+    stage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     stage.show();
   }
 
@@ -57,6 +59,7 @@ public class App extends Application {
     Stage newStage = new Stage();
     newStage.setTitle(title);
     newStage.setScene(new Scene(loadFxml(fxml), height, width));
+    newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     newStage.show();
   }
 

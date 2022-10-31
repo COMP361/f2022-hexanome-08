@@ -17,7 +17,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import javafx.scene.control.TextField?>
 <BorderPane fx:id="gameBoardContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
    <center>
       <AnchorPane accessibleText="test" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="800.0" BorderPane.alignment="CENTER">
@@ -41,7 +40,7 @@
                               <Image url="@pictures/level3/b3.png" />
                            </image>
                         </ImageView>
-                        <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="purchasedCard" fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@pictures/level3/b4.png" />
                            </image>
@@ -452,13 +451,13 @@
                                     <Image url="@pictures/token/gold_tokens.png" />
                                  </image>
                               </ImageView>
-                              <Button id="minusRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false"  text="-" />
+                              <Button id="minusRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="plusWhite" layoutX="295.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="minusWhite" layoutX="245.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="plusBlue" layoutX="466.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="plusBlack" layoutX="378.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="plusGreen" layoutX="550.0" layoutY="40.0" mnemonicParsing="false" text="+" />
-                              <Button id="plusRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false"  text="+" />
+                              <Button id="plusRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                               <Button id="minusBlue" layoutX="412.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="minusBlack" layoutX="330.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                               <Button id="minusGreen" layoutX="500.0" layoutY="40.0" mnemonicParsing="false" text="-" />
@@ -487,7 +486,7 @@
                                     <Font size="36.0" />
                                  </font>
                               </Text>
-                              <Text id="totalGold" fill="WHITE" layoutX="612.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4">
+                              <Text id="totalGold" fill="WHITE" layoutX="612.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                                  <font>
                                     <Font size="36.0" />
                                  </font>
@@ -511,6 +510,7 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
+                  <Button layoutX="683.0" layoutY="117.0" mnemonicParsing="false" onMouseClicked="#purchased" text="purchase" />
                </children>
             </AnchorPane>
          </children>

@@ -1,6 +1,9 @@
 package project;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +14,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -27,6 +32,9 @@ public class PrimaryController {
   private Pane purchaseContent;
 
   @FXML
+  private Pane waitingRoom;
+
+  @FXML
   private Pane confirmPane;
 
   @FXML
@@ -34,6 +42,9 @@ public class PrimaryController {
 
   @FXML
   private TextField userName;
+
+  @FXML
+  public ImageView purchasedCard;
 
   @FXML
   private PasswordField userPassword;
@@ -117,6 +128,14 @@ public class PrimaryController {
 
   }
 
+
+  @FXML
+  protected void purchased() throws FileNotFoundException {
+    InputStream stream = new FileInputStream("client/src/main/resources/project/pictures/level3/w1.png");
+    Image img = new Image(stream);
+    purchasedCard.setImage(img);
+  }
+
   /**
    * The logic to handle Reserving Card (both orient and normal card can use this method).
    */
@@ -124,7 +143,7 @@ public class PrimaryController {
   protected void madeReserve() throws IOException {
     //Stage curStage = (Stage) purchaseContent.getScene().getWindow();
     Scene curScene = purchaseContent.getScene();
-    App.setPopUpRoot("splendor", curScene);
+    App.setPopUpRoot("splendor_reserve", curScene);
     //TODO: Check condition if the reserve can be done successfully
     // then close the window
 
@@ -132,7 +151,14 @@ public class PrimaryController {
 
   @FXML
   protected void joinGame() throws IOException {
+    Stage curStage = (Stage) waitingRoom.getScene().getWindow();
     App.setRootWithSizeTitle("splendor_game_board", 1100, 800, "Splendor Game");
+    curStage.close();
+  }
+
+  @FXML
+  protected void joinWaitingRoom() throws IOException {
+    App.setRootWithSizeTitle("splendor_waiting_room", 1000, 500, "Waiting Room");
   }
 
   /**
@@ -153,18 +179,17 @@ public class PrimaryController {
   /**
    * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card
    */
-
-  public void confirmClick(){
+  @FXML
+  public void confirmClick() {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
-
   }
 
   /**
    * Getting rid of the confirmation pop up once "back" is pressed when purchasing a card
    */
-
-  public void backClick(){
+  @FXML
+  protected void backClick(){
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
   }
