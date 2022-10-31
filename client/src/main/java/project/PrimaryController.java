@@ -180,7 +180,7 @@ public class PrimaryController {
    * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card
    */
   @FXML
-  public void confirmClick() throws IOException {
+  public void confirmClick() {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
   }
