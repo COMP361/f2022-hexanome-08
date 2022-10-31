@@ -41,7 +41,7 @@
                               <Image url="@pictures/level3/b3.png" />
                            </image>
                         </ImageView>
-                        <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="purchasedCard" fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@pictures/level3/b4.png" />
                            </image>
@@ -489,7 +489,7 @@
                                     <Font size="36.0" />
                                  </font>
                               </Text>
-                              <Text id="totalGold" fill="WHITE" layoutX="612.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="4">
+                              <Text id="totalGold" fill="WHITE" layoutX="612.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">
                                  <font>
                                     <Font size="36.0" />
                                  </font>
@@ -513,6 +513,7 @@
                         <Font size="15.0" />
                      </font>
                   </Button>
+                  <Button layoutX="683.0" layoutY="117.0" mnemonicParsing="false" onMouseClicked="#purchased" text="purchase" />
                </children>
             </AnchorPane>
          </children>
