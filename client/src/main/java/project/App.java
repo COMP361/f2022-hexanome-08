@@ -18,6 +18,7 @@ public class App extends Application {
 
   // The default scene used to display the initial window
   private static Scene scene;
+  private static Scene handCard;
 
   /**
    * Override the start() method to launch the whole project.
@@ -28,6 +29,7 @@ public class App extends Application {
   @Override
   public void start(Stage stage) throws IOException {
     scene = new Scene(loadFxml("splendor"), 1000, 800);
+    handCard = new Scene(loadFxml("my_development_cards"),789,406);
     stage.setTitle("Welcome to Splendor!");
     stage.setScene(scene);
     stage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
@@ -87,6 +89,17 @@ public class App extends Application {
     return fxmlLoader.load();
   }
 
+  public static Scene getScene() {
+    return scene;
+  }
+
+  static void setHandCard(String fxml) throws IOException {
+    handCard.setRoot(loadFxml(fxml));
+  }
+
+  public static Scene getHandCard() {
+    return handCard;
+  }
 
   public static void main(String[] args) {
     launch();

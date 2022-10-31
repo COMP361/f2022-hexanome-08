@@ -8,6 +8,8 @@ import java.util.Objects;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -27,6 +29,8 @@ import javafx.stage.Stage;
 public class PrimaryController {
 
 
+  public ImageView purchasedCard;
+
   @FXML
   private ChoiceBox<String> gameChoices;
 
@@ -45,8 +49,6 @@ public class PrimaryController {
   @FXML
   private TextField userName;
 
-  @FXML
-  private ImageView purchasedCard;
 
   @FXML
   private PasswordField userPassword;
@@ -88,6 +90,11 @@ public class PrimaryController {
   public Text totalRed = new Text();
   public Text totalWhite = new Text();
   public Text totalBlack = new Text();
+
+  @FXML
+  private BorderPane gameBoardContent = new BorderPane();
+
+  private ImageView newCrad;
 
   /**
    * The logic of handling log in. The methods check if
@@ -145,6 +152,7 @@ public class PrimaryController {
    */
   @FXML
   protected void madePurchase() throws IOException {
+    gameBoardContent.getChildren();
     App.setPopUpRoot("splendor_purchase_confirm", purchaseContent.getScene());
   }
 
@@ -162,8 +170,7 @@ public class PrimaryController {
 
   @FXML
   protected void purchased() throws FileNotFoundException {
-    InputStream stream = new FileInputStream(
-        "src/main/resources/project/pictures/level3/w1.png");
+    InputStream stream = new FileInputStream("client/src/main/resources/project/pictures/level3/w1.png");
     Image img = new Image(stream);
     purchasedCard.setImage(img);
   }
@@ -184,16 +191,15 @@ public class PrimaryController {
   @FXML
   protected void joinGame() throws IOException {
     Stage curStage = (Stage) waitingRoom.getScene().getWindow();
-    App.setRootWithSizeTitle("splendor_game_board", 1100, 800, "Splendor Game");
+    App.setRoot("splendor_game_board");
+    App.setHandCard("my_development_cards");
     curStage.close();
 
   }
 
   @FXML
   protected void joinWaitingRoom() throws IOException {
-    Stage lobbyStage = (Stage) lobbyPane.getScene().getWindow();
     App.setRootWithSizeTitle("splendor_waiting_room", 1000, 500, "Waiting Room");
-    lobbyStage.close();
   }
 
   /**
@@ -215,8 +221,16 @@ public class PrimaryController {
    * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card.
    */
   @FXML
-  public void confirmClick() {
+  public void confirmClick() throws FileNotFoundException {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
+    purchasedCard = (ImageView) App.getScene().lookup("#purchasedCard");
+    InputStream stream1 = new FileInputStream("client/src/main/resources/project/pictures/level3/w1.png");
+    Image img1 = new Image(stream1);
+    purchasedCard.setImage(img1);
+    newCrad = (ImageView) App.getHandCard().lookup("#newCard");
+    InputStream stream2 = new FileInputStream("client/src/main/resources/project/pictures/level3/b4.png");
+    Image img2 = new Image(stream2);
+    newCrad.setImage(img2);
     curStage.close();
   }
 
@@ -242,9 +256,12 @@ public class PrimaryController {
    * Opening the development cards pop up once "My Cards" button is pressed.
    */
 
-  public void openMyCards() throws IOException {
-    App.setRootWithSizeTitle("my_development_cards", 789, 406, "My Development Cards");
-
+  public void openMyCards() {
+    Stage newStage = new Stage();
+    newStage.setTitle("My Development Cards");
+    newStage.setScene(App.getHandCard());
+    newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+    newStage.show();
   }
 
   /**
