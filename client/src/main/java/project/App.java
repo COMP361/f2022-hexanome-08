@@ -20,6 +20,8 @@ public class App extends Application {
   private static Scene scene;
   private static Scene handCard;
 
+  private static Scene reservedCards;
+
   /**
    * Override the start() method to launch the whole project.
    *
@@ -30,6 +32,7 @@ public class App extends Application {
   public void start(Stage stage) throws IOException {
     scene = new Scene(loadFxml("splendor"), 1000, 800);
     handCard = new Scene(loadFxml("my_development_cards"), 789, 406);
+    reservedCards = new Scene(loadFxml("my_reserved_cards"), 789, 406);
     stage.setTitle("Welcome to Splendor!");
     stage.setScene(scene);
     stage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
@@ -93,12 +96,20 @@ public class App extends Application {
     return scene;
   }
 
-  static void setHandCard(String fxml) throws IOException {
-    handCard.setRoot(loadFxml(fxml));
+  public static void setHandCard() throws IOException {
+    handCard.setRoot(loadFxml("my_development_cards"));
+  }
+
+  public static void setReserveCard() throws IOException {
+    reservedCards.setRoot(loadFxml("my_reserved_cards"));
   }
 
   public static Scene getHandCard() {
     return handCard;
+  }
+
+  public static Scene getReservedCards() {
+    return reservedCards;
   }
 
   public static void main(String[] args) {

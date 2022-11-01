@@ -26,9 +26,6 @@ import javafx.stage.Stage;
  */
 public class PrimaryController {
 
-
-  public ImageView purchasedCard;
-
   @FXML
   private ChoiceBox<String> gameChoices;
 
@@ -70,6 +67,9 @@ public class PrimaryController {
   private Pane devCardPane;
 
   @FXML
+  private ImageView reservedCard;
+
+  @FXML
   public Button plusR;
   public Button plusW;
   public Button plusB;
@@ -95,9 +95,8 @@ public class PrimaryController {
   public Text blackHand = new Text();
 
   @FXML
-  private BorderPane gameBoardContent = new BorderPane();
+  public Pane reserveConfirmPane;
 
-  private ImageView newCard;
 
   /**
    * The logic of handling log in. The methods check if
@@ -170,14 +169,6 @@ public class PrimaryController {
   }
 
 
-  @FXML
-  protected void purchased() throws FileNotFoundException {
-    InputStream stream =
-            new FileInputStream("client/src/main/resources/project/pictures/level3/w1.png");
-    Image img = new Image(stream);
-    purchasedCard.setImage(img);
-  }
-
   /**
    * The logic to handle Reserving Card (both orient and normal card can use this method).
    */
@@ -193,9 +184,10 @@ public class PrimaryController {
 
   @FXML
   protected void joinGame() throws IOException {
-    Stage curStage = (Stage) waitingRoom.getScene().getWindow();
     App.setRoot("splendor_game_board");
-    App.setHandCard("my_development_cards");
+    App.setHandCard();
+    App.setReserveCard();
+    Stage curStage = (Stage) waitingRoom.getScene().getWindow();
     curStage.close();
     curStage = (Stage) App.getScene().getWindow();
     curStage.show();
@@ -234,16 +226,17 @@ public class PrimaryController {
 
 
   /**
+   * TODO: HARDCODED!
    * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card.
    */
   @FXML
   public void confirmClick() throws FileNotFoundException {
-    purchasedCard = (ImageView) App.getScene().lookup("#purchasedCard");
+    ImageView purchasedCard = (ImageView) App.getScene().lookup("#purchasedCard");
     InputStream stream1 =
             new FileInputStream("src/main/resources/project/pictures/level3/w1.png");
     Image img1 = new Image(stream1);
     purchasedCard.setImage(img1);
-    newCard = (ImageView) App.getHandCard().lookup("#newCard");
+    ImageView newCard = (ImageView) App.getHandCard().lookup("#newCard");
     InputStream stream2 =
             new FileInputStream("src/main/resources/project/pictures/level3/b4.png");
     Image img2 = new Image(stream2);
@@ -253,11 +246,37 @@ public class PrimaryController {
   }
 
   /**
+   * TODO: HARDCODED!
+   * Reserve the pictures/level2/b4.png card, replace it by pictures/level2/b5.png
+   */
+  @FXML
+  public void reserveConfirmClick() throws FileNotFoundException {
+    ImageView reservedCard = (ImageView) App.getScene().lookup("#reservedCard");
+    InputStream stream1 =
+        new FileInputStream("src/main/resources/project/pictures/level2/b5.png");
+    Image img1 = new Image(stream1);
+    reservedCard.setImage(img1);
+    ImageView newCard = (ImageView) App.getReservedCards().lookup("#newCard");
+    InputStream stream2 =
+        new FileInputStream("src/main/resources/project/pictures/level3/b4.png");
+    Image img2 = new Image(stream2);
+    newCard.setImage(img2);
+    Stage curStage = (Stage) reserveConfirmPane.getScene().getWindow();
+    curStage.close();
+  }
+
+  /**
    * Getting rid of the confirmation pop up once "back" is pressed when purchasing a card.
    */
   @FXML
   protected void backClick() {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
+    curStage.close();
+  }
+
+  @FXML
+  protected void reserveBackClick() {
+    Stage curStage = (Stage) reserveConfirmPane.getScene().getWindow();
     curStage.close();
   }
 
