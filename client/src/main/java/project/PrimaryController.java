@@ -373,14 +373,14 @@ public class PrimaryController {
     totalRed.setText(String.valueOf(num2R));
     numR = 0;
     counterRed.setText(String.valueOf(numR));
-    redHand.setText(String.valueOf(num3R)+"/0");
+    redHand.setText(String.valueOf(num3R)+" / 0");
 
     num2W = num2W - numW;
     num3W = num3W + numW;
     totalWhite.setText(String.valueOf(num2W));
     numW = 0;
     counterWhite.setText(String.valueOf(numW));
-    whiteHand.setText(String.valueOf(num3W)+"/0");
+    whiteHand.setText(String.valueOf(num3W)+" / 0");
 
 
     num2B = num2B - numB;
@@ -388,7 +388,7 @@ public class PrimaryController {
     totalBlack.setText(String.valueOf(num2B));
     numB = 0;
     counterBlack.setText(String.valueOf(numB));
-    blackHand.setText(String.valueOf(num3B)+"/0");
+    blackHand.setText(String.valueOf(num3B)+" / 0");
   }
 
 }
