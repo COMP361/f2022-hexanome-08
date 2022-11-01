@@ -563,8 +563,7 @@
         <menus>
             <Menu mnemonicParsing="false" text="Settings">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Volume" />
-                  <MenuItem fx:id="logOutMenuItem" mnemonicParsing="false" onAction="#onLogOutMenuItemClick" text="Exit game" />
+                  <MenuItem fx:id="exitGame" mnemonicParsing="false" onAction="#onExitGameMenuClick" text="Exit Game" />
                </items>
             </Menu>
         </menus>
