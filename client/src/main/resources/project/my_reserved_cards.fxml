@@ -8,17 +8,13 @@
 
 <Pane fx:id="resCardPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="406.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
    <children>
+      <ImageView id="newReserveCard" fitHeight="150.0" fitWidth="113.0" layoutX="454.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="218.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@pictures/level1/b3.png" />
-         </image>
+         <Image url="@pictures/level1/b3.png" />
       </ImageView>
-      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="339.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@pictures/level1/bl3.png" />
-         </image>
+      <ImageView id="card" fitHeight="138.0" fitWidth="72.0" layoutX="339.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
+         <Image url="@pictures/level1/bl3.png" />
       </ImageView>
-      <ImageView id="newCard" fitHeight="138.0" fitWidth="72.0" layoutX="458.0" layoutY="126.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="326.0" layoutY="29.0" text="My Reserved Cards" />
       <Button layoutX="13.0" layoutY="13.0" mnemonicParsing="false" onAction="#exitReserved" prefHeight="18.0" prefWidth="30.0" text="x" />
    </children>

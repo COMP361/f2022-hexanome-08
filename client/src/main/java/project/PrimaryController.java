@@ -66,8 +66,6 @@ public class PrimaryController {
   @FXML
   private Pane devCardPane;
 
-  @FXML
-  private ImageView reservedCard;
 
   @FXML
   public Button plusR;
@@ -236,6 +234,7 @@ public class PrimaryController {
             new FileInputStream("src/main/resources/project/pictures/level3/w1.png");
     Image img1 = new Image(stream1);
     purchasedCard.setImage(img1);
+
     ImageView newCard = (ImageView) App.getHandCard().lookup("#newCard");
     InputStream stream2 =
             new FileInputStream("src/main/resources/project/pictures/level3/b4.png");
@@ -247,20 +246,23 @@ public class PrimaryController {
 
   /**
    * TODO: HARDCODED!
-   * Reserve the pictures/level2/b4.png card, replace it by pictures/level2/b5.png
+   * Reserve the pictures/level2/b4.png card, replace it by pictures/level2/w1.png
    */
   @FXML
   public void reserveConfirmClick() throws FileNotFoundException {
     ImageView reservedCard = (ImageView) App.getScene().lookup("#reservedCard");
     InputStream stream1 =
-        new FileInputStream("src/main/resources/project/pictures/level2/b5.png");
+        new FileInputStream("src/main/resources/project/pictures/level2/w1.png");
     Image img1 = new Image(stream1);
     reservedCard.setImage(img1);
-    ImageView newCard = (ImageView) App.getReservedCards().lookup("#newCard");
+    System.out.println(reservedCard.getImage());
+    ImageView newReserveCard = (ImageView) App.getReservedCards().lookup("#newReserveCard");
+    System.out.println(newReserveCard.getImage());
     InputStream stream2 =
-        new FileInputStream("src/main/resources/project/pictures/level3/b4.png");
+        new FileInputStream("src/main/resources/project/pictures/level2/b4.png");
     Image img2 = new Image(stream2);
-    newCard.setImage(img2);
+    newReserveCard.setImage(img2);
+    System.out.println(newReserveCard.getImage());
     Stage curStage = (Stage) reserveConfirmPane.getScene().getWindow();
     curStage.close();
   }
