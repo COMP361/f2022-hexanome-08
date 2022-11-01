@@ -92,6 +92,11 @@ public class PrimaryController {
   public Text totalBlack = new Text();
 
   @FXML
+  public Text redHand = new Text();
+  public Text whiteHand = new Text();
+  public Text blackHand = new Text();
+
+  @FXML
   private BorderPane gameBoardContent = new BorderPane();
 
   private ImageView newCrad;
@@ -285,10 +290,19 @@ public class PrimaryController {
 
   public int numR = 0;
   public int num2R = 7;
+
+  public int num3R = 0;
+
   public int numW = 0;
   public int num2W = 7;
+
+  public int num3W = 0;
+
   public int numB = 0;
   public int num2B = 7;
+
+  public int num3B = 0;
+
 
   /**
    * decrement red.
@@ -355,19 +369,26 @@ public class PrimaryController {
    */
   public void gemConfirm() {
     num2R = num2R - numR;
+    num3R = num3R + numR;
     totalRed.setText(String.valueOf(num2R));
     numR = 0;
     counterRed.setText(String.valueOf(numR));
+    redHand.setText(String.valueOf(num3R)+"/0");
 
     num2W = num2W - numW;
+    num3W = num3W + numW;
     totalWhite.setText(String.valueOf(num2W));
     numW = 0;
     counterWhite.setText(String.valueOf(numW));
+    whiteHand.setText(String.valueOf(num3W)+"/0");
+
 
     num2B = num2B - numB;
+    num3B = num3B + numB;
     totalBlack.setText(String.valueOf(num2B));
     numB = 0;
     counterBlack.setText(String.valueOf(numB));
+    blackHand.setText(String.valueOf(num3B)+"/0");
   }
 
 }
