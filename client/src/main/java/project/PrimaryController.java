@@ -4,28 +4,35 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-/**
- * The PrimaryController use to manage the general flow of the program.
- */
+/** The PrimaryController use to manage the general flow of the program. */
 public class PrimaryController {
 
+<<<<<<< Updated upstream
   @FXML
   private ChoiceBox<String> gameChoices;
 
@@ -71,23 +78,49 @@ public class PrimaryController {
 
   @FXML
   public Button plusR;
+=======
+  @FXML public Button plusR;
+>>>>>>> Stashed changes
   public Button plusW;
   public Button plusB;
-
-  @FXML
-  public Button minusR;
+  @FXML public Button minusR;
   public Button minusW;
   public Button minusB;
-
-  @FXML
-  public Text counterRed = new Text();
+  @FXML public Text counterRed = new Text();
   public Text counterWhite = new Text();
   public Text counterBlack = new Text();
-
-  @FXML
-  public Text totalRed = new Text();
+  @FXML public Text totalRed = new Text();
   public Text totalWhite = new Text();
   public Text totalBlack = new Text();
+  public int numR = 0;
+  public int num2R = 7;
+  public int numW = 0;
+  public int num2W = 7;
+  public int numB = 0;
+  public int num2B = 7;
+  @FXML private ChoiceBox<String> gameChoices;
+  @FXML private Pane purchaseContent;
+  @FXML private BorderPane waitingRoom;
+  @FXML private Pane confirmPane;
+  @FXML private Button quitGameButton;
+  @FXML private TextField userName;
+  @FXML private ImageView purchasedCard;
+  @FXML private PasswordField userPassword;
+  @FXML private BorderPane lobbyPane;
+  @FXML private Label logInPageErrorMessage;
+  @FXML private Button confirmButton;
+  @FXML private Button backButton;
+  @FXML private Pane resCardPane;
+  @FXML private Pane devCardPane;
+  @FXML private MenuItem exitGame;
+  @FXML private MenuItem exitWaitingRoom;
+  @FXML private MenuItem logOutFromWaitingRoom;
+  @FXML private MenuItem logOutFromLobby;
+  @FXML private Button confirmExitGame;
+  @FXML private Button backExitGame;
+  @FXML private Menu gameMenu;
+  private Stage helper;
+
 
   @FXML
   public Text redHand = new Text();
@@ -99,8 +132,8 @@ public class PrimaryController {
 
 
   /**
-   * The logic of handling log in. The methods check if
-   * the user has input both username and user password or not
+   * The logic of handling log in. The methods check if the user has input both username and user
+   * password or not
    *
    * @throws IOException IOException if fxml file not found
    */
@@ -115,7 +148,6 @@ public class PrimaryController {
     } else {
       App.setRoot("LobbyService");
     }
-
   }
 
   /**
@@ -128,56 +160,110 @@ public class PrimaryController {
     App.setRoot("splendor");
   }
 
-  /**
-   * Close the current stage once the quitGameButton has been clicked.
-   */
+  /** Close the current stage once the quitGameButton has been clicked. */
   @FXML
-  protected void onQuitGameButtonClick() {
+  protected void onQuitGameButtonClick() throws IOException {
     Stage curStage = (Stage) quitGameButton.getScene().getWindow();
+    //App.setRoot("LobbyService");
+    curStage.close();
+  }
+
+  /** Produce confirm pop-up once said menu item has been selected. */
+  @FXML
+  protected void onExitGameMenuClick() throws IOException {
+    helper = (Stage) exitGame.getParentPopup().getOwnerWindow();
+    App.setRootWithSizeTitle("LobbyService", 1100, 800, "Lobby Service");
+    helper.close();
+    //App.setRootWithSizeTitle("exit_game_confirm", 300, 150, "Confirm exit");
+
+  }
+
+  /** Exit game once said confirmed in popup has been selected. */
+  @FXML
+  protected void onConfirmExitGame() throws IOException {
+    helper.close();
+    Stage curStage2 = (Stage) confirmExitGame.getScene().getWindow();
+    curStage2.close();
+    App.setRootWithSizeTitle("LobbyService", 1100, 800, "Lobby Service");
+  }
+
+  /** Exit game once said confirmed in popup has been selected. */
+  @FXML
+  protected void onBackGameExit() throws IOException {
+    Stage curStage = (Stage) backExitGame.getScene().getWindow();
+    curStage.close();
+  }
+
+  /** Exit waiting room once said menu item has been selected. */
+  @FXML
+  protected void onExitWaitingRoomMenu() throws IOException {
+    Stage curStage = (Stage) exitWaitingRoom.getParentPopup().getOwnerWindow();
+    App.setRootWithSizeTitle("LobbyService", 1100, 800, "Lobby Service");
+    curStage.close();
+  }
+
+  /** Log out from waiting room once said menu item has been selected. */
+  @FXML
+  protected void onLogOutFromWaitingRoomMenu() throws IOException {
+    Stage curStage = (Stage) logOutFromWaitingRoom.getParentPopup().getOwnerWindow();
+    App.setRootWithSizeTitle("splendor", 1000, 800, "Splendor");
+    curStage.close();
+  }
+
+  /** Log out from lobby once said menu item has been selected. */
+  @FXML
+  protected void onLogOutFromLobbyMenu() throws IOException {
+    Stage curStage = (Stage) logOutFromLobby.getParentPopup().getOwnerWindow();
+    App.setRootWithSizeTitle("splendor", 1000, 800, "Splendor");
     curStage.close();
   }
 
   /**
-   * Displays the options of actions the player can do once
-   * they click on a regular development card (not orient).
+   * Displays the options of actions the player can do once they click on a regular development card
+   * (not orient).
    *
    * @throws IOException IOException if fxml file not found
    */
   @FXML
   protected void onDevelopmentCardShapeClick() throws IOException {
     App.setRootWithSizeTitle("splendor_card_action", 360, 170, "Make your decision");
-
   }
 
-  /**
-   * The logic to handle player purchasing a regular development card (not orient).
-   */
+  /** The logic to handle player purchasing a regular development card (not orient). */
   @FXML
   protected void madePurchase() throws IOException {
     App.setPopUpRoot("splendor_purchase_confirm", purchaseContent.getScene());
   }
 
-  /**
-   * The logic to handle player close the pop-up Stage when they want to cancel their action.
-   */
+  /** The logic to handle player close the pop-up Stage when they want to cancel their action. */
   @FXML
   protected void cancelAction() {
     Stage curStage = (Stage) purchaseContent.getScene().getWindow();
     // Just close the window without doing anything
     curStage.close();
-
   }
 
+<<<<<<< Updated upstream
 
   /**
    * The logic to handle Reserving Card (both orient and normal card can use this method).
    */
+=======
+  @FXML
+  protected void purchased() throws FileNotFoundException {
+    InputStream stream = new FileInputStream("src/main/resources/project/pictures/level3/w1.png");
+    Image img = new Image(stream);
+    purchasedCard.setImage(img);
+  }
+
+  /** The logic to handle Reserving Card (both orient and normal card can use this method). */
+>>>>>>> Stashed changes
   @FXML
   protected void madeReserve() throws IOException {
-    //Stage curStage = (Stage) purchaseContent.getScene().getWindow();
+    // Stage curStage = (Stage) purchaseContent.getScene().getWindow();
     Scene curScene = purchaseContent.getScene();
     App.setPopUpRoot("splendor_reserve", curScene);
-    //TODO: Check condition if the reserve can be done successfully
+    // TODO: Check condition if the reserve can be done successfully
     // then close the window
 
   }
@@ -189,9 +275,12 @@ public class PrimaryController {
     App.setReserveCard();
     Stage curStage = (Stage) waitingRoom.getScene().getWindow();
     curStage.close();
+<<<<<<< Updated upstream
     curStage = (Stage) App.getScene().getWindow();
     curStage.show();
 
+=======
+>>>>>>> Stashed changes
   }
 
   @FXML
@@ -210,25 +299,27 @@ public class PrimaryController {
     curStage.show();
   }
 
-  /**
-   * Sets up the Choice Box options in Main Lobby.
-   */
+  /** Sets up the Choice Box options in Main Lobby. */
   @FXML
-  public void initialize() {
-    //Create observable list for game options drop down (choice box)
-    ObservableList<String> gameOptionsList = FXCollections
-        .observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
-    //gameChoices will be null until the main lobby stage is launched
+  public void dropDownLobby() {
+    // Create observable list for game options drop down (choice box)
+    ObservableList<String> gameOptionsList =
+        FXCollections.observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
+    // gameChoices will be null until the main lobby stage is launched
     if (gameChoices != null) {
       gameChoices.setItems(gameOptionsList);
     }
   }
 
+<<<<<<< Updated upstream
 
   /**
    * TODO: HARDCODED!
    * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card.
    */
+=======
+  /** Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card. */
+>>>>>>> Stashed changes
   @FXML
   public void confirmClick() throws FileNotFoundException {
     ImageView purchasedCard = (ImageView) App.getScene().lookup("#purchasedCard");
@@ -245,6 +336,7 @@ public class PrimaryController {
     curStage.close();
   }
 
+<<<<<<< Updated upstream
   /**
    * TODO: HARDCODED!
    * Reserve the pictures/level2/b4.png card, replace it by pictures/level2/b5.png
@@ -268,12 +360,16 @@ public class PrimaryController {
   /**
    * Getting rid of the confirmation pop up once "back" is pressed when purchasing a card.
    */
+=======
+  /** Getting rid of the confirmation pop up once "back" is pressed when purchasing a card. */
+>>>>>>> Stashed changes
   @FXML
   protected void backClick() {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
   }
 
+<<<<<<< Updated upstream
   @FXML
   protected void reserveBackClick() {
     Stage curStage = (Stage) reserveConfirmPane.getScene().getWindow();
@@ -284,11 +380,15 @@ public class PrimaryController {
    * Getting rid of the development cards pop up once "x" is pressed when purchasing a card.
    */
 
+=======
+  /** Getting rid of the development cards pop up once "x" is pressed when purchasing a card. */
+>>>>>>> Stashed changes
   public void exitDevCard() {
     Stage curStage = (Stage) devCardPane.getScene().getWindow();
     curStage.close();
   }
 
+<<<<<<< Updated upstream
   /**
    * Opening the development cards pop up once "My Cards" button is pressed.
    */
@@ -299,26 +399,25 @@ public class PrimaryController {
     newStage.setScene(App.getHandCard());
     newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     newStage.show();
+=======
+  /** Opening the development cards pop up once "My Cards" button is pressed. */
+  public void openMyCards() throws IOException {
+    App.setRootWithSizeTitle("my_development_cards", 789, 406, "My Development Cards");
+>>>>>>> Stashed changes
   }
 
-  /**
-   * Opening the reserve card pop up once reserved card button is pressed.
-   */
-
+  /** Opening the reserve card pop up once reserved card button is pressed. */
   public void openMyReservedCards() throws IOException {
     App.setRootWithSizeTitle("my_reserved_cards", 789, 406, "My Reserved Cards");
   }
 
-  /**
-   * Getting rid of the reserved cards pop up once "back" is pressed when purchasing a card.
-   */
-
+  /** Getting rid of the reserved cards pop up once "back" is pressed when purchasing a card. */
   public void exitReserved() {
     Stage curStage = (Stage) resCardPane.getScene().getWindow();
     curStage.close();
-
   }
 
+<<<<<<< Updated upstream
   public int gloCount = 0;
   public int numR = 0;
   public int num2R = 7;
@@ -334,6 +433,9 @@ public class PrimaryController {
   /**
    * decrement red.
    */
+=======
+  /** decrement red. */
+>>>>>>> Stashed changes
   public void decrementR() {
     if ((numR - 1) >= 0) {
       numR = numR - 1;
@@ -342,9 +444,7 @@ public class PrimaryController {
     }
   }
 
-  /**
-   * decrement white.
-   */
+  /** decrement white. */
   public void decrementW() {
     if ((numW - 1) >= 0) {
       gloCount--;
@@ -353,9 +453,7 @@ public class PrimaryController {
     }
   }
 
-  /**
-   * decrement black.
-   */
+  /** decrement black. */
   public void decrementB() {
     if ((numB - 1) >= 0) {
       gloCount--;
@@ -364,9 +462,7 @@ public class PrimaryController {
     }
   }
 
-  /**
-   * increment red.
-   */
+  /** increment red. */
   public void incrementR() {
     if ((numR + 1) <= num2R && numR < 2 && gloCount < 3) {
       gloCount++;
@@ -375,9 +471,7 @@ public class PrimaryController {
     }
   }
 
-  /**
-   * increment white.
-   */
+  /** increment white. */
   public void incrementW() {
     if ((numW + 1) <= num2W && numW < 2 && numR < 2 && gloCount < 3) {
       gloCount++;
@@ -386,9 +480,7 @@ public class PrimaryController {
     }
   }
 
-  /**
-   * increment black.
-   */
+  /** increment black. */
   public void incrementB() {
     if ((numB + 1) <= num2B && numB < 2 && numR < 2 && gloCount < 3) {
       gloCount++;
@@ -397,9 +489,7 @@ public class PrimaryController {
     }
   }
 
-  /**
-   * confirm/ update total gems.
-   */
+  /** confirm/ update total gems. */
   public void gemConfirm() {
     gloCount = 0;
     num2R = num2R - numR;
@@ -424,5 +514,4 @@ public class PrimaryController {
     counterBlack.setText(String.valueOf(numB));
     blackHand.setText(String.valueOf(num3B) + " / 0");
   }
-
 }
