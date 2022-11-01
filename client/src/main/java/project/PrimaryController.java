@@ -290,20 +290,15 @@ public class PrimaryController {
 
   }
 
-
+  public int gloCount = 0;
   public int numR = 0;
   public int num2R = 7;
-
   public int num3R = 0;
-
   public int numW = 0;
   public int num2W = 7;
-
   public int num3W = 0;
-
   public int numB = 0;
   public int num2B = 7;
-
   public int num3B = 0;
 
 
@@ -313,6 +308,7 @@ public class PrimaryController {
   public void decrementR() {
     if ((numR - 1) >= 0) {
       numR = numR - 1;
+      gloCount--;
       counterRed.setText(String.valueOf(numR));
     }
   }
@@ -322,6 +318,7 @@ public class PrimaryController {
    */
   public void decrementW() {
     if ((numW - 1) >= 0) {
+      gloCount--;
       numW = numW - 1;
       counterWhite.setText(String.valueOf(numW));
     }
@@ -332,6 +329,7 @@ public class PrimaryController {
    */
   public void decrementB() {
     if ((numB - 1) >= 0) {
+      gloCount--;
       numB = numB - 1;
       counterBlack.setText(String.valueOf(numB));
     }
@@ -341,7 +339,8 @@ public class PrimaryController {
    * increment red.
    */
   public void incrementR() {
-    if ((numR + 1) <= num2R && numR < 2) {
+    if ((numR + 1) <= num2R && numR < 2 && gloCount < 3) {
+      gloCount++;
       numR = numR + 1;
       counterRed.setText(String.valueOf(numR));
     }
@@ -351,7 +350,8 @@ public class PrimaryController {
    * increment white.
    */
   public void incrementW() {
-    if ((numW + 1) <= num2W && numW < 2 && numR < 2) {
+    if ((numW + 1) <= num2W && numW < 2 && numR < 2 && gloCount < 3) {
+      gloCount++;
       numW = numW + 1;
       counterWhite.setText(String.valueOf(numW));
     }
@@ -361,7 +361,8 @@ public class PrimaryController {
    * increment black.
    */
   public void incrementB() {
-    if ((numB + 1) <= num2B && numB < 2 && numR < 2) {
+    if ((numB + 1) <= num2B && numB < 2 && numR < 2 && gloCount < 3) {
+      gloCount++;
       numB = numB + 1;
       counterBlack.setText(String.valueOf(numB));
     }
@@ -371,6 +372,7 @@ public class PrimaryController {
    * confirm/ update total gems.
    */
   public void gemConfirm() {
+    gloCount = 0;
     num2R = num2R - numR;
     num3R = num3R + numR;
     totalRed.setText(String.valueOf(num2R));
