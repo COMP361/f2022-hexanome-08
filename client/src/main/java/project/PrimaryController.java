@@ -97,7 +97,7 @@ public class PrimaryController {
   @FXML
   private BorderPane gameBoardContent = new BorderPane();
 
-  private ImageView newCrad;
+  private ImageView newCard;
 
   /**
    * The logic of handling log in. The methods check if
@@ -155,7 +155,6 @@ public class PrimaryController {
    */
   @FXML
   protected void madePurchase() throws IOException {
-    gameBoardContent.getChildren();
     App.setPopUpRoot("splendor_purchase_confirm", purchaseContent.getScene());
   }
 
@@ -198,12 +197,25 @@ public class PrimaryController {
     App.setRoot("splendor_game_board");
     App.setHandCard("my_development_cards");
     curStage.close();
+    curStage = (Stage) App.getScene().getWindow();
+    curStage.show();
 
   }
 
   @FXML
   protected void joinWaitingRoom() throws IOException {
+    Stage curStage = (Stage) App.getScene().getWindow();
+    curStage.close();
     App.setRootWithSizeTitle("splendor_waiting_room", 1000, 500, "Waiting Room");
+  }
+
+
+  @FXML
+  protected void backToLobby() {
+    Stage curStage = (Stage) waitingRoom.getScene().getWindow();
+    curStage.close();
+    curStage = (Stage) App.getScene().getWindow();
+    curStage.show();
   }
 
   /**
@@ -231,11 +243,11 @@ public class PrimaryController {
             new FileInputStream("src/main/resources/project/pictures/level3/w1.png");
     Image img1 = new Image(stream1);
     purchasedCard.setImage(img1);
-    newCrad = (ImageView) App.getHandCard().lookup("#newCard");
+    newCard = (ImageView) App.getHandCard().lookup("#newCard");
     InputStream stream2 =
             new FileInputStream("src/main/resources/project/pictures/level3/b4.png");
     Image img2 = new Image(stream2);
-    newCrad.setImage(img2);
+    newCard.setImage(img2);
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
   }
