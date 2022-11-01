@@ -29,7 +29,7 @@ public class App extends Application {
   @Override
   public void start(Stage stage) throws IOException {
     scene = new Scene(loadFxml("splendor"), 1000, 800);
-    handCard = new Scene(loadFxml("my_development_cards"),789,406);
+    handCard = new Scene(loadFxml("my_development_cards"), 789, 406);
     stage.setTitle("Welcome to Splendor!");
     stage.setScene(scene);
     stage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
