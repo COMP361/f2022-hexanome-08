@@ -18,11 +18,7 @@
             <Image url="@pictures/level1/bl3.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="458.0" layoutY="126.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@pictures/level1/r7.png" />
-         </image>
-      </ImageView>
+      <ImageView id="newCard" fitHeight="138.0" fitWidth="72.0" layoutX="458.0" layoutY="126.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="326.0" layoutY="29.0" text="My Reserved Cards" />
       <Button layoutX="13.0" layoutY="13.0" mnemonicParsing="false" onAction="#exitReserved" prefHeight="18.0" prefWidth="30.0" text="x" />
    </children>
