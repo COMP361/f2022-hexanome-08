@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 /** The PrimaryController use to manage the general flow of the program. */
 public class PrimaryController {
 
-<<<<<<< Updated upstream
+
   @FXML
   private ChoiceBox<String> gameChoices;
 
@@ -76,9 +76,6 @@ public class PrimaryController {
 
   @FXML
   public Button plusR;
-=======
-  @FXML public Button plusR;
->>>>>>> Stashed changes
   public Button plusW;
   public Button plusB;
   @FXML public Button minusR;
@@ -96,20 +93,6 @@ public class PrimaryController {
   public int num2W = 7;
   public int numB = 0;
   public int num2B = 7;
-  @FXML private ChoiceBox<String> gameChoices;
-  @FXML private Pane purchaseContent;
-  @FXML private BorderPane waitingRoom;
-  @FXML private Pane confirmPane;
-  @FXML private Button quitGameButton;
-  @FXML private TextField userName;
-  @FXML private ImageView purchasedCard;
-  @FXML private PasswordField userPassword;
-  @FXML private BorderPane lobbyPane;
-  @FXML private Label logInPageErrorMessage;
-  @FXML private Button confirmButton;
-  @FXML private Button backButton;
-  @FXML private Pane resCardPane;
-  @FXML private Pane devCardPane;
   @FXML private MenuItem exitGame;
   @FXML private MenuItem exitWaitingRoom;
   @FXML private MenuItem logOutFromWaitingRoom;
@@ -241,21 +224,12 @@ public class PrimaryController {
     curStage.close();
   }
 
-<<<<<<< Updated upstream
+
 
   /**
    * The logic to handle Reserving Card (both orient and normal card can use this method).
    */
-=======
-  @FXML
-  protected void purchased() throws FileNotFoundException {
-    InputStream stream = new FileInputStream("src/main/resources/project/pictures/level3/w1.png");
-    Image img = new Image(stream);
-    purchasedCard.setImage(img);
-  }
 
-  /** The logic to handle Reserving Card (both orient and normal card can use this method). */
->>>>>>> Stashed changes
   @FXML
   protected void madeReserve() throws IOException {
     // Stage curStage = (Stage) purchaseContent.getScene().getWindow();
@@ -273,12 +247,9 @@ public class PrimaryController {
     App.setReserveCard();
     Stage curStage = (Stage) waitingRoom.getScene().getWindow();
     curStage.close();
-<<<<<<< Updated upstream
     curStage = (Stage) App.getScene().getWindow();
     curStage.show();
 
-=======
->>>>>>> Stashed changes
   }
 
   @FXML
@@ -309,15 +280,11 @@ public class PrimaryController {
     }
   }
 
-<<<<<<< Updated upstream
 
   /**
    * TODO: HARDCODED!
    * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card.
    */
-=======
-  /** Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card. */
->>>>>>> Stashed changes
   @FXML
   public void confirmClick() throws FileNotFoundException {
     ImageView purchasedCard = (ImageView) App.getScene().lookup("#purchasedCard");
@@ -335,7 +302,6 @@ public class PrimaryController {
     curStage.close();
   }
 
-<<<<<<< Updated upstream
   /**
    * TODO: HARDCODED!
    * Reserve the pictures/level2/b4.png card, replace it by pictures/level2/w1.png
@@ -362,16 +328,13 @@ public class PrimaryController {
   /**
    * Getting rid of the confirmation pop up once "back" is pressed when purchasing a card.
    */
-=======
-  /** Getting rid of the confirmation pop up once "back" is pressed when purchasing a card. */
->>>>>>> Stashed changes
   @FXML
   protected void backClick() {
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
   }
 
-<<<<<<< Updated upstream
+
   @FXML
   protected void reserveBackClick() {
     Stage curStage = (Stage) reserveConfirmPane.getScene().getWindow();
@@ -382,15 +345,12 @@ public class PrimaryController {
    * Getting rid of the development cards pop up once "x" is pressed when purchasing a card.
    */
 
-=======
-  /** Getting rid of the development cards pop up once "x" is pressed when purchasing a card. */
->>>>>>> Stashed changes
   public void exitDevCard() {
     Stage curStage = (Stage) devCardPane.getScene().getWindow();
     curStage.close();
   }
 
-<<<<<<< Updated upstream
+
   /**
    * Opening the development cards pop up once "My Cards" button is pressed.
    */
@@ -401,11 +361,6 @@ public class PrimaryController {
     newStage.setScene(App.getHandCard());
     newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     newStage.show();
-=======
-  /** Opening the development cards pop up once "My Cards" button is pressed. */
-  public void openMyCards() throws IOException {
-    App.setRootWithSizeTitle("my_development_cards", 789, 406, "My Development Cards");
->>>>>>> Stashed changes
   }
 
   /** Opening the reserve card pop up once reserved card button is pressed. */
@@ -419,25 +374,20 @@ public class PrimaryController {
     curStage.close();
   }
 
-<<<<<<< Updated upstream
+
   public int gloCount = 0;
-  public int numR = 0;
-  public int num2R = 7;
+
   public int num3R = 0;
-  public int numW = 0;
-  public int num2W = 7;
+
   public int num3W = 0;
-  public int numB = 0;
-  public int num2B = 7;
+
   public int num3B = 0;
 
 
   /**
    * decrement red.
    */
-=======
-  /** decrement red. */
->>>>>>> Stashed changes
+
   public void decrementR() {
     if ((numR - 1) >= 0) {
       numR = numR - 1;
