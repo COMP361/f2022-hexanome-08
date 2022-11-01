@@ -8,8 +8,6 @@ import java.util.Objects;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -228,17 +226,17 @@ public class PrimaryController {
    */
   @FXML
   public void confirmClick() throws FileNotFoundException {
-    Stage curStage = (Stage) confirmPane.getScene().getWindow();
     purchasedCard = (ImageView) App.getScene().lookup("#purchasedCard");
     InputStream stream1 =
-            new FileInputStream("client/src/main/resources/project/pictures/level3/w1.png");
+            new FileInputStream("src/main/resources/project/pictures/level3/w1.png");
     Image img1 = new Image(stream1);
     purchasedCard.setImage(img1);
     newCrad = (ImageView) App.getHandCard().lookup("#newCard");
     InputStream stream2 =
-            new FileInputStream("client/src/main/resources/project/pictures/level3/b4.png");
+            new FileInputStream("src/main/resources/project/pictures/level3/b4.png");
     Image img2 = new Image(stream2);
     newCrad.setImage(img2);
+    Stage curStage = (Stage) confirmPane.getScene().getWindow();
     curStage.close();
   }
 
