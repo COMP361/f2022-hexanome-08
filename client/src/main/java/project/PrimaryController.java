@@ -28,11 +28,15 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-/** The PrimaryController use to manage the general flow of the program. */
+/**
+ * The PrimaryController use to manage the general flow of the program.
+ */
 public class PrimaryController {
 
-
+  private static final Logger logger = LogManager.getLogger(Main.class);
 
   @FXML
   private ChoiceBox<String> gameChoices;
@@ -75,18 +79,20 @@ public class PrimaryController {
   private Pane devCardPane;
 
 
-
   @FXML
   public Button plusR;
   public Button plusW;
   public Button plusB;
-  @FXML public Button minusR;
+  @FXML
+  public Button minusR;
   public Button minusW;
   public Button minusB;
-  @FXML public Text counterRed = new Text();
+  @FXML
+  public Text counterRed = new Text();
   public Text counterWhite = new Text();
   public Text counterBlack = new Text();
-  @FXML public Text totalRed = new Text();
+  @FXML
+  public Text totalRed = new Text();
   public Text totalWhite = new Text();
   public Text totalBlack = new Text();
 
@@ -103,14 +109,22 @@ public class PrimaryController {
   //  public int num2W = 7;
   //  public int numB = 0;
   //  public int num2B = 7;
-  @FXML private ImageView purchasedCard;
-  @FXML private MenuItem exitGame;
-  @FXML private MenuItem exitWaitingRoom;
-  @FXML private MenuItem logOutFromWaitingRoom;
-  @FXML private MenuItem logOutFromLobby;
-  @FXML private Button confirmExitGame;
-  @FXML private Button backExitGame;
-  @FXML private Menu gameMenu;
+  @FXML
+  private ImageView purchasedCard;
+  @FXML
+  private MenuItem exitGame;
+  @FXML
+  private MenuItem exitWaitingRoom;
+  @FXML
+  private MenuItem logOutFromWaitingRoom;
+  @FXML
+  private MenuItem logOutFromLobby;
+  @FXML
+  private Button confirmExitGame;
+  @FXML
+  private Button backExitGame;
+  @FXML
+  private Menu gameMenu;
   private Stage helper;
 
 
@@ -137,6 +151,7 @@ public class PrimaryController {
     // For the sake of simplicity, we only check if password and username exist
     if (Objects.equals(userNameStr, "") || Objects.equals(userPasswordStr, "")) {
       logInPageErrorMessage.setText("Please enter both valid username and password");
+      logger.debug("Wrong user info entered");
     } else {
       App.setRoot("LobbyService");
     }
@@ -152,7 +167,9 @@ public class PrimaryController {
     App.setRoot("splendor");
   }
 
-  /** Close the current stage once the quitGameButton has been clicked. */
+  /**
+   * Close the current stage once the quitGameButton has been clicked.
+   */
   @FXML
   protected void onQuitGameButtonClick() throws IOException {
     Stage curStage = (Stage) quitGameButton.getScene().getWindow();
@@ -160,7 +177,9 @@ public class PrimaryController {
     curStage.close();
   }
 
-  /** Produce confirm pop-up once said menu item has been selected. */
+  /**
+   * Produce confirm pop-up once said menu item has been selected.
+   */
   @FXML
   protected void onExitGameMenuClick() throws IOException {
     helper = (Stage) exitGame.getParentPopup().getOwnerWindow();
@@ -170,7 +189,9 @@ public class PrimaryController {
 
   }
 
-  /** Exit game once said confirmed in popup has been selected. */
+  /**
+   * Exit game once said confirmed in popup has been selected.
+   */
   @FXML
   protected void onConfirmExitGame() throws IOException {
     helper.close();
@@ -179,14 +200,18 @@ public class PrimaryController {
     App.setRootWithSizeTitle("LobbyService", 1100, 800, "Lobby Service");
   }
 
-  /** Exit game once said confirmed in popup has been selected. */
+  /**
+   * Exit game once said confirmed in popup has been selected.
+   */
   @FXML
   protected void onBackGameExit() throws IOException {
     Stage curStage = (Stage) backExitGame.getScene().getWindow();
     curStage.close();
   }
 
-  /** Exit waiting room once said menu item has been selected. */
+  /**
+   * Exit waiting room once said menu item has been selected.
+   */
   @FXML
   protected void onExitWaitingRoomMenu() throws IOException {
     Stage curStage = (Stage) exitWaitingRoom.getParentPopup().getOwnerWindow();
@@ -194,7 +219,9 @@ public class PrimaryController {
     curStage.close();
   }
 
-  /** Log out from waiting room once said menu item has been selected. */
+  /**
+   * Log out from waiting room once said menu item has been selected.
+   */
   @FXML
   protected void onLogOutFromWaitingRoomMenu() throws IOException {
     Stage curStage = (Stage) logOutFromWaitingRoom.getParentPopup().getOwnerWindow();
@@ -202,7 +229,9 @@ public class PrimaryController {
     curStage.close();
   }
 
-  /** Log out from lobby once said menu item has been selected. */
+  /**
+   * Log out from lobby once said menu item has been selected.
+   */
   @FXML
   protected void onLogOutFromLobbyMenu() throws IOException {
     Stage curStage = (Stage) logOutFromLobby.getParentPopup().getOwnerWindow();
@@ -221,20 +250,23 @@ public class PrimaryController {
     App.setRootWithSizeTitle("splendor_card_action", 360, 170, "Make your decision");
   }
 
-  /** The logic to handle player purchasing a regular development card (not orient). */
+  /**
+   * The logic to handle player purchasing a regular development card (not orient).
+   */
   @FXML
   protected void madePurchase() throws IOException {
     App.setPopUpRoot("splendor_purchase_confirm", purchaseContent.getScene());
   }
 
-  /** The logic to handle player close the pop-up Stage when they want to cancel their action. */
+  /**
+   * The logic to handle player close the pop-up Stage when they want to cancel their action.
+   */
   @FXML
   protected void cancelAction() {
     Stage curStage = (Stage) purchaseContent.getScene().getWindow();
     // Just close the window without doing anything
     curStage.close();
   }
-
 
 
   /**
@@ -248,7 +280,9 @@ public class PrimaryController {
     purchasedCard.setImage(img);
   }
 
-  /** The logic to handle Reserving Card (both orient and normal card can use this method). */
+  /**
+   * The logic to handle Reserving Card (both orient and normal card can use this method).
+   */
   @FXML
   protected void madeReserve() throws IOException {
     // Stage curStage = (Stage) purchaseContent.getScene().getWindow();
@@ -286,7 +320,9 @@ public class PrimaryController {
     curStage.show();
   }
 
-  /** Sets up the Choice Box options in Main Lobby. */
+  /**
+   * Sets up the Choice Box options in Main Lobby.
+   */
   @FXML
   public void dropDownLobby() {
     // Create observable list for game options drop down (choice box)
@@ -309,13 +345,13 @@ public class PrimaryController {
   public void confirmClick() throws FileNotFoundException {
     ImageView purchasedCard = (ImageView) App.getScene().lookup("#purchasedCard");
     InputStream stream1 =
-            new FileInputStream("src/main/resources/project/pictures/level3/w1.png");
+        new FileInputStream("src/main/resources/project/pictures/level3/w1.png");
     Image img1 = new Image(stream1);
     purchasedCard.setImage(img1);
 
     ImageView newCard = (ImageView) App.getHandCard().lookup("#newCard");
     InputStream stream2 =
-            new FileInputStream("src/main/resources/project/pictures/level3/b4.png");
+        new FileInputStream("src/main/resources/project/pictures/level3/b4.png");
     Image img2 = new Image(stream2);
     newCard.setImage(img2);
     Stage curStage = (Stage) confirmPane.getScene().getWindow();
@@ -388,12 +424,16 @@ public class PrimaryController {
   //
   //  }
 
-  /** Opening the reserve card pop up once reserved card button is pressed. */
+  /**
+   * Opening the reserve card pop up once reserved card button is pressed.
+   */
   public void openMyReservedCards() throws IOException {
     App.setRootWithSizeTitle("my_reserved_cards", 789, 406, "My Reserved Cards");
   }
 
-  /** Getting rid of the reserved cards pop up once "back" is pressed when purchasing a card. */
+  /**
+   * Getting rid of the reserved cards pop up once "back" is pressed when purchasing a card.
+   */
   public void exitReserved() {
     Stage curStage = (Stage) resCardPane.getScene().getWindow();
     curStage.close();
@@ -420,7 +460,9 @@ public class PrimaryController {
     }
   }
 
-  /** decrement white. */
+  /**
+   * decrement white.
+   */
   public void decrementW() {
     if ((numW - 1) >= 0) {
       gloCount--;
@@ -429,7 +471,9 @@ public class PrimaryController {
     }
   }
 
-  /** decrement black. */
+  /**
+   * decrement black.
+   */
   public void decrementB() {
     if ((numB - 1) >= 0) {
       gloCount--;
@@ -438,7 +482,9 @@ public class PrimaryController {
     }
   }
 
-  /** increment red. */
+  /**
+   * increment red.
+   */
   public void incrementR() {
     if ((numR + 1) <= num2R && numR < 2 && gloCount < 3) {
       gloCount++;
@@ -447,7 +493,9 @@ public class PrimaryController {
     }
   }
 
-  /** increment white. */
+  /**
+   * increment white.
+   */
   public void incrementW() {
     if ((numW + 1) <= num2W && numW < 2 && numR < 2 && gloCount < 3) {
       gloCount++;
@@ -456,7 +504,9 @@ public class PrimaryController {
     }
   }
 
-  /** increment black. */
+  /**
+   * increment black.
+   */
   public void incrementB() {
     if ((numB + 1) <= num2B && numB < 2 && numR < 2 && gloCount < 3) {
       gloCount++;
@@ -465,7 +515,9 @@ public class PrimaryController {
     }
   }
 
-  /** confirm/ update total gems. */
+  /**
+   * confirm/ update total gems.
+   */
   public void gemConfirm() {
     gloCount = 0;
     num2R = num2R - numR;
