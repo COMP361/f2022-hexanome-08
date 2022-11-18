@@ -1,5 +1,9 @@
 package project;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,6 +34,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
 /**
  * The PrimaryController use to manage the general flow of the program.
@@ -144,16 +149,29 @@ public class PrimaryController {
    * @throws IOException IOException if fxml file not found
    */
   @FXML
-  protected void onLogInButtonClick() throws IOException {
+  protected void onLogInButtonClick() throws IOException, UnirestException {
     String userNameStr = userName.getText();
     String userPasswordStr = userPassword.getText();
 
-    // For the sake of simplicity, we only check if password and username exist
-    if (Objects.equals(userNameStr, "") || Objects.equals(userPasswordStr, "")) {
-      logInPageErrorMessage.setText("Please enter both valid username and password");
-      logger.debug("Wrong user info entered");
-    } else {
+    HttpResponse<JsonNode> logInResponse = Unirest.post("http://76.66.139.161:4242/oauth/token")
+        .basicAuth("bgp-client-name", "bgp-client-pw")
+        .field("grant_type", "password")
+        .field("username", userNameStr)
+        .field("password", userPasswordStr)
+        .asJson();
+
+    // retrieve the parsed JSONObject from the response
+    JSONObject logInResponseJson = logInResponse.getBody().getObject();
+
+    // extract fields from the object
+    try {
+      String accessToken = logInResponseJson.getString("access_token");
       App.setRoot("LobbyService");
+    } catch (Exception e) {
+      logInPageErrorMessage.setText("Please enter both valid username and password");
+      userName.setText("");
+      userPassword.setText("");
+      logger.debug("Wrong user info entered");
     }
   }
 
