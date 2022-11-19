@@ -1,5 +1,6 @@
 package project;
 
+import com.google.gson.Gson;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.json.JSONObject;
@@ -100,53 +102,112 @@ public class LobbyController {
                                    Label sessionInfoContent) {
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     User user = App.getUser();
+    String curUserName = user.getUsername();
 
-    EventHandler<ActionEvent> deleteSessionHandler = event -> {
-      for (Node n : sessionVbox.getChildren()) {
-        String paneSessionId = n.getAccessibleText();
-        if (paneSessionId != null && paneSessionId.equals(sessionId)) {
-          /* TODO: If the onAction method involves GUI changes, defer this change by using
-              Platform.runLater(() -> { methods_you_want_to_call }) */
-          Platform.runLater(() -> {
-            sessionVbox.getChildren().remove(n);
-            try {
-              lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
-              lobbyRequestSender.updateSessionMapping();
-              App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
-            } catch (UnirestException e) {
-              throw new RuntimeException(e);
-            }
-          });
-        }
-      }
-
-    };
-
-    EventHandler<ActionEvent> launchSessionHandler = event -> {
-      // TODO: add the request of launching session here
-      System.out.println("Launch Session");
-    };
     // give different buttons depending on username and creator name
-    //    String sessionCreatorName =
-    //    lobbyRequestSender.getSessionIdMap().get(sessionId).getCreator();
-    //    String curUserName = user.getUsername();
-    //    if (curUserName.equals(sessionCreatorName)) {
-    //      Button deleteButton = new Button("Delete");
-    //      Button launchButton = new Button("Launch");
-    //      deleteButton.setOnAction(deleteSessionHandler);
-    //      launchButton.setOnAction(launchSessionHandler);
-    //      HBox hb = new HBox(sessionInfoContent, deleteButton, launchButton);
-    //    } else {
-    //      Button joinButton = new Button("Join");
-    //      HBox hb = new HBox(sessionInfoContent, joinButton);
-    //    }
+
+    HBox hb;
+    String sessionCreatorName =
+        lobbyRequestSender.getSessionIdMap().get(sessionId).getCreator();
 
 
-    Button deleteButton = new Button("Delete");
-    Button launchButton = new Button("Launch");
-    deleteButton.setOnAction(deleteSessionHandler);
-    launchButton.setOnAction(launchSessionHandler);
-    HBox hb = new HBox(sessionInfoContent, deleteButton, launchButton);
+    // Can be changed for better visualization
+    Region spaceBetween = new Region();
+    spaceBetween.setPrefWidth(200);
+    spaceBetween.setPrefHeight(30);
+
+    // if the user is the creator, provides delete and launch button
+    if (curUserName.equals(sessionCreatorName)) {
+      EventHandler<ActionEvent> deleteSessionHandler = event -> {
+        for (Node n : sessionVbox.getChildren()) {
+          String paneSessionId = n.getAccessibleText();
+          if (paneSessionId != null && paneSessionId.equals(sessionId)) {
+            // TODO: If the onAction method involves GUI changes, defer this change by using
+            //  Platform.runLater(() -> { methods_you_want_to_call })
+            Platform.runLater(() -> {
+              sessionVbox.getChildren().remove(n);
+              try {
+                lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
+                lobbyRequestSender.updateSessionMapping();
+                App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
+              } catch (UnirestException e) {
+                throw new RuntimeException(e);
+              }
+            });
+          }
+        }
+
+      };
+      EventHandler<ActionEvent> launchSessionHandler = event -> {
+        // TODO: add the request of launching session here
+        //  (need to have the game server logic ready)
+        System.out.println("Launch Session");
+      };
+      Button deleteButton = new Button("Delete");
+      Button launchButton = new Button("Launch");
+      deleteButton.setOnAction(deleteSessionHandler);
+      launchButton.setOnAction(launchSessionHandler);
+      hb = new HBox(sessionInfoContent, spaceBetween, deleteButton, launchButton);
+    } else {
+      EventHandler<ActionEvent> joinAndLeaveSessionHandler = event -> {
+        // TODO: add the request of joining / leaving session here
+
+        Button joinAndLeaveButton = (Button) event.getSource();
+
+        // If the button says "Join", send join request
+
+        if (joinAndLeaveButton.getText().equals("Join")) {
+          // First thing, a request
+          joinAndLeaveButton.setText("Leave");
+          try {
+            lobbyRequestSender.sendAddPlayerRequest(accessToken, sessionId, curUserName);
+          } catch (UnirestException e) {
+            throw new RuntimeException(e);
+          }
+        } else { // otherwise, send leave request
+          joinAndLeaveButton.setText("Join");
+          try {
+            lobbyRequestSender.sendRemovePlayerRequest(accessToken, sessionId, curUserName);
+          } catch (UnirestException e) {
+            throw new RuntimeException(e);
+          }
+        }
+
+        // Then, obtain the result from either join/leave request
+        JSONObject getSessionDetailResponse;
+        try {
+          getSessionDetailResponse = lobbyRequestSender.sendGetSessionDetailRequest(sessionId);
+        } catch (UnirestException e) {
+          throw new RuntimeException(e);
+        }
+        Platform.runLater(() -> {
+          Gson gson = new Gson();
+          Session joinedSession = gson.fromJson(getSessionDetailResponse.toString(), Session.class);
+          List<String> curPlayers = joinedSession.getPlayers();
+          String curPlayerStr = curPlayers.toString();
+          String creatorName = joinedSession.getCreator();
+          int curPlayersCount = curPlayers.size();
+          int maxPlayerCount = joinedSession.getGameParameters().getMaxSessionPlayers();
+          String displayGameName = joinedSession.getGameParameters().getDisplayName();
+          String newSessionInfo =
+              String.format(
+                  "%s, [%d/%d] players %s: \n",
+                  displayGameName,
+                  curPlayersCount,
+                  maxPlayerCount,
+                  curPlayerStr)
+                  + String.format("creator: %s", creatorName);
+          HBox infoHbox = (HBox) joinAndLeaveButton.getParent();
+          Label infoLabel = (Label) infoHbox.getChildren().get(0);
+          infoLabel.setText(newSessionInfo);
+        });
+
+      };
+      Button joinAndLeaveButton = new Button("Join");
+      joinAndLeaveButton.setOnAction(joinAndLeaveSessionHandler);
+      hb = new HBox(sessionInfoContent, spaceBetween, joinAndLeaveButton);
+    }
+
     Pane p = new Pane(hb);
     p.setAccessibleText(sessionId);
     return p;
@@ -160,7 +221,6 @@ public class LobbyController {
   public void initialize() throws UnirestException {
     // Get all available games and pre-set the ChoiceBox
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
-    User user = App.getUser();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
 
@@ -175,6 +235,7 @@ public class LobbyController {
 
     // Busy waiting with backend javaFX thread to get lobby main page update
     // Similar thing with splendor game board
+    // TODO: Deletion of Session is not visible on other client's side!
     Thread lobbyMainPageUpdateThread = new Thread(() -> {
       while (true) {
         // Start busy waiting by trying to update with the latest session info
@@ -206,6 +267,7 @@ public class LobbyController {
           int maxSessionPlayers = missingSession.getGameParameters().getMaxSessionPlayers();
           Label sessionInfo = new Label(
               gameDisplayName + " max player: " + maxSessionPlayers + " creator: " + creator);
+          User user = App.getUser();
           if (user != null) {
             String accessToken = user.getAccessToken();
             Pane newPane = generateSessionPane(accessToken, missingSessionId, sessionInfo);
