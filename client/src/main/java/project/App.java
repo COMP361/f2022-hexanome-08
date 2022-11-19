@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -23,6 +24,8 @@ public class App extends Application {
 
   private static Scene reservedCards;
 
+  private static Scene lobby;
+
   // One and the only one requestSender
   private static final LobbyServiceRequestSender lobbyRequestSender =
       new LobbyServiceRequestSender("http://76.66.139.161:4242");
@@ -35,7 +38,8 @@ public class App extends Application {
    */
   @Override
   public void start(Stage stage) throws IOException {
-    scene = new Scene(loadFxml("splendor"), 1000, 800);
+    scene = new Scene(loadFxml("start_page"), 1000, 800);
+    lobby = new Scene(loadFxml("admin_lobby_page"), 1000, 800);
     handCard = new Scene(loadFxml("my_development_cards"), 789, 406);
     reservedCards = new Scene(loadFxml("my_reserved_cards"), 789, 406);
     stage.setTitle("Welcome to Splendor!");
