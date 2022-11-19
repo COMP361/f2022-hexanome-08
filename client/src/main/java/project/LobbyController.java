@@ -103,8 +103,7 @@ public class LobbyController {
 
     EventHandler<ActionEvent> deleteSessionHandler = event -> {
       for (Node n : sessionVbox.getChildren()) {
-        Pane p = (Pane) n;
-        String paneSessionId = p.getAccessibleText();
+        String paneSessionId = n.getAccessibleText();
         if (paneSessionId != null && paneSessionId.equals(sessionId)) {
           /* TODO: If the onAction method involves GUI changes, defer this change by using
               Platform.runLater(() -> { methods_you_want_to_call }) */
@@ -159,7 +158,7 @@ public class LobbyController {
    * @throws UnirestException in case unirest failed to send a request
    */
   public void initialize() throws UnirestException {
-    // Get all available games
+    // Get all available games and pre-set the ChoiceBox
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     User user = App.getUser();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
@@ -174,24 +173,42 @@ public class LobbyController {
         FXCollections.observableArrayList(gameDisplayNames);
     gameChoices.setItems(gameOptionsList);
 
+    // Busy waiting with backend javaFX thread to get lobby main page update
+    // Similar thing with splendor game board
     Thread lobbyMainPageUpdateThread = new Thread(() -> {
       while (true) {
+        // Start busy waiting by trying to update with the latest session info
+        try {
+          lobbyRequestSender.updateSessionMapping();
+        } catch (UnirestException e) {
+          throw new RuntimeException(e);
+        }
+        Map<String, Session> sessionIdMap = lobbyRequestSender.getSessionIdMap();
+        Set<String> remoteSessionIds = sessionIdMap.keySet();
 
-        Map<String, Session> sessionIdMap = App.getLobbyServiceRequestSender().getSessionIdMap();
-        Set<String> sessionIds = sessionIdMap.keySet();
+        List<String> localSessionIds = new ArrayList<>();
+        for (Node n : sessionVbox.getChildren()) {
+          String curLocalSessionId = n.getAccessibleText();
+          localSessionIds.add(curLocalSessionId);
+        }
 
-        // TODO: How to display all sessions? initialize() is called before onAction is done...
-        for (String sessionId : sessionIds) {
-          String creator = sessionIdMap.get(sessionId).getCreator();
-          String gameDisplayName = sessionIdMap.get(sessionId).getGameParameters().getDisplayName();
-          int maxSessionPlayers =
-              sessionIdMap.get(sessionId).getGameParameters().getMaxSessionPlayers();
+        List<String> missingSessionIds = new ArrayList<>();
+        for (String remoteSessionId : remoteSessionIds) {
+          if(!localSessionIds.contains(remoteSessionId)) {
+            missingSessionIds.add(remoteSessionId);
+          }
+        }
 
+        for (String missingSessionId : missingSessionIds) {
+          Session missingSession = sessionIdMap.get(missingSessionId);
+          String creator = missingSession.getCreator();
+          String gameDisplayName = missingSession.getGameParameters().getDisplayName();
+          int maxSessionPlayers = missingSession.getGameParameters().getMaxSessionPlayers();
           Label sessionInfo = new Label(
               gameDisplayName + " max player: " + maxSessionPlayers + " creator: " + creator);
           if (user != null) {
             String accessToken = user.getAccessToken();
-            Pane newPane = generateSessionPane(accessToken, sessionId, sessionInfo);
+            Pane newPane = generateSessionPane(accessToken, missingSessionId, sessionInfo);
 
             if (sessionVbox.getChildren().size() != sessionIdMap.size()) {
               Platform.runLater(() -> {
