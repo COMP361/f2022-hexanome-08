@@ -13,6 +13,21 @@ public class Session {
   private PlayerLocations playerLocations;
   private boolean launched;
 
+  /**
+   * Update a session's fields based on another session.
+   *
+   * @param otherSession another session
+   */
+  public void updateSessionInfo(Session otherSession) {
+    creator = otherSession.getCreator();
+    savegameid = otherSession.getSavegameid();
+    gameParameters = otherSession.getGameParameters();
+    players.clear();
+    players.addAll(otherSession.getPlayers());
+    playerLocations = otherSession.getPlayerLocations();
+    launched = otherSession.getLaunched();
+  }
+
   public void setCreator(String creator) {
     this.creator = creator;
   }
@@ -60,4 +75,5 @@ public class Session {
   public boolean getLaunched() {
     return launched;
   }
+
 }
