@@ -111,8 +111,6 @@ public class LobbyController {
             sessionVbox.getChildren().remove(n);
             try {
               lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
-              lobbyRequestSender.updateSessionMapping();
-              App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
             } catch (UnirestException e) {
               throw new RuntimeException(e);
             }
@@ -210,7 +208,16 @@ public class LobbyController {
             String accessToken = user.getAccessToken();
             Pane newPane = generateSessionPane(accessToken, missingSessionId, sessionInfo);
 
-            if (sessionVbox.getChildren().size() != sessionIdMap.size()) {
+            if (sessionVbox.getChildren().size() < sessionIdMap.size()) {
+              Platform.runLater(() -> {
+                sessionVbox.getChildren().add(newPane);
+                try {
+                  lobbyRequestSender.updateSessionMapping();
+                } catch (UnirestException e) {
+                  throw new RuntimeException(e);
+                }
+              });
+            } else if (sessionVbox.getChildren().size() > sessionIdMap.size()) {
               Platform.runLater(() -> {
                 sessionVbox.getChildren().add(newPane);
                 try {
