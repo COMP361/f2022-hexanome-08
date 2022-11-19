@@ -1,5 +1,7 @@
 package project;
 
+
+import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -8,19 +10,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -28,13 +29,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import project.connection.LobbyServiceRequestSender;
+import project.view.lobby.Session;
 
 /**
  * The PrimaryController use to manage the general flow of the program.
@@ -42,6 +44,7 @@ import org.json.JSONObject;
 public class PrimaryController {
 
   private static final Logger logger = LogManager.getLogger(Main.class);
+
 
   @FXML
   private ChoiceBox<String> gameChoices;
@@ -123,7 +126,9 @@ public class PrimaryController {
   @FXML
   private MenuItem logOutFromWaitingRoom;
   @FXML
-  private MenuItem logOutFromLobby;
+  private MenuItem logOutFromLobbyMenuItem;
+  @FXML
+  private MenuItem adminZoneMenuItem;
   @FXML
   private Button confirmExitGame;
   @FXML
@@ -149,24 +154,33 @@ public class PrimaryController {
    * @throws IOException IOException if fxml file not found
    */
   @FXML
-  protected void onLogInButtonClick() throws IOException, UnirestException {
+  protected void onLogInButtonClick() throws UnirestException {
     String userNameStr = userName.getText();
     String userPasswordStr = userPassword.getText();
-
-    HttpResponse<JsonNode> logInResponse = Unirest.post("http://76.66.139.161:4242/oauth/token")
-        .basicAuth("bgp-client-name", "bgp-client-pw")
-        .field("grant_type", "password")
-        .field("username", userNameStr)
-        .field("password", userPasswordStr)
-        .asJson();
-
     // retrieve the parsed JSONObject from the response
-    JSONObject logInResponseJson = logInResponse.getBody().getObject();
+    LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+    JSONObject logInResponseJson = lobbyRequestSender
+        .sendLogInRequest(userNameStr, userPasswordStr);
+
 
     // extract fields from the object
     try {
       String accessToken = logInResponseJson.getString("access_token");
-      App.setRoot("LobbyService");
+      lobbyRequestSender.setAccessToken(accessToken);
+      JSONObject authorityResponseJson = lobbyRequestSender.sendAuthorityRequest(accessToken);
+      String authority = authorityResponseJson.getString("authority");
+      // if user is player, display admin_lobby_page
+      if (authority.equals("ROLE_ADMIN")) {
+        App.setRoot("admin_lobby_page");
+        lobbyRequestSender.updateSessions();
+        // TODO: how to visually display these session objects as JavaFX GUI?
+
+      } else { // otherwise, player_lobby_page
+        // App.setRoot("player_lobby_page");
+        App.setRoot("LobbyService");
+        lobbyRequestSender.updateSessions();
+      }
+
     } catch (Exception e) {
       logInPageErrorMessage.setText("Please enter both valid username and password");
       userName.setText("");
@@ -193,6 +207,15 @@ public class PrimaryController {
     Stage curStage = (Stage) quitGameButton.getScene().getWindow();
     //App.setRoot("LobbyService");
     curStage.close();
+  }
+
+
+  @FXML
+  protected void onCreateSessionButtonClick() throws UnirestException {
+    LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+    String accessToken = lobbyRequestSender.getAccessToken();
+    assert accessToken != null && !accessToken.equals("");
+    lobbyRequestSender.sendCreateSessionRequest(accessToken, "xox", "");
   }
 
   /**
@@ -248,11 +271,21 @@ public class PrimaryController {
   }
 
   /**
+   * Access admin zone page.
+   */
+  @FXML
+  protected void onAdminZonMenuClick() throws IOException {
+    Stage curStage = (Stage) adminZoneMenuItem.getParentPopup().getOwnerWindow();
+    App.setRootWithSizeTitle("admin_zone", 1000, 800, "Admin Zone");
+    curStage.close();
+  }
+
+  /**
    * Log out from lobby once said menu item has been selected.
    */
   @FXML
   protected void onLogOutFromLobbyMenu() throws IOException {
-    Stage curStage = (Stage) logOutFromLobby.getParentPopup().getOwnerWindow();
+    Stage curStage = (Stage) logOutFromLobbyMenuItem.getParentPopup().getOwnerWindow();
     App.setRootWithSizeTitle("splendor", 1000, 800, "Splendor");
     curStage.close();
   }
