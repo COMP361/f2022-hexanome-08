@@ -92,8 +92,7 @@ public class PrimaryController {
   @FXML
   private MenuItem logOutFromWaitingRoom;
 
-  @FXML
-  private MenuItem adminZoneMenuItem;
+
   @FXML
   private Button confirmExitGame;
   @FXML
@@ -164,15 +163,7 @@ public class PrimaryController {
     curStage.close();
   }
 
-  /**
-   * Access admin zone page.
-   */
-  @FXML
-  protected void onAdminZonMenuClick() throws IOException {
-    Stage curStage = (Stage) adminZoneMenuItem.getParentPopup().getOwnerWindow();
-    App.setRootWithSizeTitle("admin_zone", 1000, 800, "Admin Zone");
-    curStage.close();
-  }
+
 
 
   /**
@@ -465,4 +456,5 @@ public class PrimaryController {
     counterBlack.setText(String.valueOf(numB));
     blackHand.setText(String.valueOf(num3B) + " / 0");
   }
+
 }

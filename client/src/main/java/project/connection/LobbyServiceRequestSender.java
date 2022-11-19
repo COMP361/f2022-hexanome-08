@@ -20,21 +20,12 @@ import project.view.lobby.Session;
  */
 public class LobbyServiceRequestSender {
   private String lobbyUrl;
-  private String accessToken;
   private final Map<String, String> gameNameMapping = new HashMap<>();
 
   private final Map<String, Session> sessionIdMap = new HashMap<>();
 
   public LobbyServiceRequestSender(String lobbyUrlInput) {
     lobbyUrl = lobbyUrlInput;
-  }
-
-  public void setAccessToken(String accessToken) {
-    this.accessToken = accessToken;
-  }
-
-  public String getAccessToken() {
-    return accessToken;
   }
 
   public String getLobbyUrl() {
@@ -102,15 +93,15 @@ public class LobbyServiceRequestSender {
    * send request to check user authority.
    *
    * @param accessToken access token
-   * @return a JsonObject with user authority
+   * @return a user authority in string
    * @throws UnirestException in case unirest failed to send a request
    */
-  public JSONObject sendAuthorityRequest(String accessToken) throws UnirestException {
+  public String sendAuthorityRequest(String accessToken) throws UnirestException {
     // queryString: request param
     HttpResponse<JsonNode> authorityResponse = Unirest.get(lobbyUrl + "/oauth/role")
         .queryString("access_token", accessToken).asJson();
     JSONArray jsonarray = new JSONArray(authorityResponse.getBody().toString());
-    return jsonarray.getJSONObject(0);
+    return jsonarray.getJSONObject(0).getString("authority");
   }
 
   /**
@@ -135,13 +126,14 @@ public class LobbyServiceRequestSender {
    * @return a JsonObject with user authority
    * @throws UnirestException in case unirest failed to send a request
    */
-  public String sendCreateSessionRequest(String accessToken,
+  public String sendCreateSessionRequest(String userName,
+                                         String accessToken,
                                          String gameName,
                                          String saveGameName) throws UnirestException {
-    String creatorName = sendUserNameRequest(accessToken);
+    // String creatorName = sendUserNameRequest(accessToken);
 
     JSONObject requestBody = new JSONObject();
-    requestBody.put("creator", creatorName);
+    requestBody.put("creator", userName);
     requestBody.put("game", gameName);
     requestBody.put("savegame", saveGameName);
 
@@ -167,9 +159,40 @@ public class LobbyServiceRequestSender {
     List<Game> resultList = new ArrayList<>();
     for (int i = 0; i < allGamesJsonArray.length(); i++) {
       String jsonString = allGamesJsonArray.getJSONObject(i).toString();
+      // this method will assign the attributes of Game that can be assigned at this time
+      // name & displayName, the others will stay as null
       Game curGame = gson.fromJson(jsonString, Game.class);
       resultList.add(curGame);
     }
+
     return resultList;
   }
+
+  /**
+   * get the Json details given one game name.
+   *
+   * @param gameName game name
+   * @return json detail info for the game
+   * @throws UnirestException in case unirest failed to send a request
+   */
+  public JSONObject getGameDetailsRequest(String gameName) throws UnirestException {
+    return Unirest.get(lobbyUrl + "/api/gameservices/" + gameName)
+        .asJson()
+        .getBody()
+        .getObject();
+  }
+
+  /**
+   * Send a request to LS to delete a session. Must throw the exception even returns void!
+   *
+   * @param accessToken access token
+   * @param sessionId session id
+   */
+  public void sendDeleteSessionRequest(String accessToken, String sessionId)
+      throws UnirestException {
+
+    Unirest.delete(lobbyUrl + "/api/sessions/" + sessionId)
+        .queryString("access_token", accessToken).asJson();
+  }
+
 }

@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import project.connection.LobbyServiceRequestSender;
+import project.view.lobby.User;
 
 /**
  * Lobby GUI controller.
@@ -43,15 +44,16 @@ public class LogInController {
     JSONObject logInResponseJson = lobbyRequestSender
         .sendLogInRequest(userNameStr, userPasswordStr);
 
-    // extract fields from the object
+    // extract fields from the object, in case of failing to extract "access_token",
+    // update the error message
     try {
       String accessToken = logInResponseJson.getString("access_token");
-      lobbyRequestSender.setAccessToken(accessToken);
-      JSONObject authorityResponseJson = lobbyRequestSender.sendAuthorityRequest(accessToken);
-      String authority = authorityResponseJson.getString("authority");
+      String authority = lobbyRequestSender.sendAuthorityRequest(accessToken);
 
+      User curUser = new User(userNameStr, accessToken, authority);
+      App.setUser(curUser);
       // if user is player, display admin_lobby_page
-      if (authority.equals("ROLE_ADMIN")) {
+      if (App.getUser().getAuthority().equals("ROLE_ADMIN")) {
         App.setRoot("admin_lobby_page");
         // TODO: how to visually display these session objects as JavaFX GUI?
 
