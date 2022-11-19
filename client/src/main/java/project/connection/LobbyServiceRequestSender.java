@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import project.view.lobby.Game;
+import project.view.lobby.GameParameters;
 import project.view.lobby.Session;
+
 
 
 /**
@@ -51,7 +52,7 @@ public class LobbyServiceRequestSender {
 
 
   /**
-   * update the info about session deletion or creation.
+   * update the info about session deletion or creation. Add sessionId -> session mapping
    *
    * @throws UnirestException in case Unirest failed to make the request.
    */
@@ -157,17 +158,18 @@ public class LobbyServiceRequestSender {
    * @return A list of Game
    * @throws UnirestException in case unirest failed to send a request
    */
-  public List<Game> sendAllGamesRequest() throws UnirestException {
-    HttpResponse<JsonNode> allGamesResponse = Unirest.get(lobbyUrl + "/api/gameservices").asJson();
+  public List<GameParameters> sendAllGamesRequest() throws UnirestException {
+    HttpResponse<JsonNode> allGamesResponse =
+        Unirest.get(lobbyUrl + "/api/gameservices").asJson();
     JSONArray allGamesJsonArray = allGamesResponse.getBody().getArray();
     Gson gson = new Gson();
-    List<Game> resultList = new ArrayList<>();
+    List<GameParameters> resultList = new ArrayList<>();
     for (int i = 0; i < allGamesJsonArray.length(); i++) {
       String jsonString = allGamesJsonArray.getJSONObject(i).toString();
       // this method will assign the attributes of Game that can be assigned at this time
       // name & displayName, the others will stay as null
-      Game curGame = gson.fromJson(jsonString, Game.class);
-      resultList.add(curGame);
+      GameParameters curGameParameters = gson.fromJson(jsonString, GameParameters.class);
+      resultList.add(curGameParameters);
     }
 
     return resultList;
@@ -191,7 +193,7 @@ public class LobbyServiceRequestSender {
    * Send a request to LS to delete a session. Must throw the exception even returns void!
    *
    * @param accessToken access token
-   * @param sessionId session id
+   * @param sessionId   session id
    */
   public void sendDeleteSessionRequest(String accessToken, String sessionId)
       throws UnirestException {

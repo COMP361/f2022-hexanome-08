@@ -2,6 +2,7 @@ package project;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -51,6 +52,9 @@ public class LogInController {
       String authority = lobbyRequestSender.sendAuthorityRequest(accessToken);
       User curUser = new User(userNameStr, accessToken, authority);
       App.setUser(curUser);
+
+
+
       // if user is player, display admin_lobby_page
       if (App.getUser().getAuthority().equals("ROLE_ADMIN")) {
         App.setRoot("admin_lobby_page");

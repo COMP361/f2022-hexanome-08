@@ -1,7 +1,6 @@
 package project;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import project.connection.LobbyServiceRequestSender;
-import project.view.lobby.Game;
+import project.view.lobby.GameParameters;
 import project.view.lobby.Session;
 import project.view.lobby.User;
 
@@ -161,12 +160,13 @@ public class LobbyController {
     // Get all available games
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     User user = App.getUser();
-    List<Game> games = lobbyRequestSender.sendAllGamesRequest();
+    List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
 
-    for (Game g : games) {
+    for (GameParameters g : gameParameters) {
       gameDisplayNames.add(g.getDisplayName());
       lobbyRequestSender.addGameNameMapping(g.getDisplayName(), g.getName());
+      System.out.println(g.getDisplayName());
     }
 
     ObservableList<String> gameOptionsList =
