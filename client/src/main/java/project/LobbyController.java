@@ -111,6 +111,7 @@ public class LobbyController {
             sessionVbox.getChildren().remove(n);
             try {
               lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
+              App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
             } catch (UnirestException e) {
               throw new RuntimeException(e);
             }
