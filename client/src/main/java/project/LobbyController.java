@@ -97,6 +97,22 @@ public class LobbyController {
     curStage.close();
   }
 
+  private String formatSessionInfo(Session session) {
+    List<String> curPlayers = session.getPlayers();
+    String curPlayerStr = curPlayers.toString();
+    String creatorName = session.getCreator();
+    int curPlayersCount = curPlayers.size();
+    int maxPlayerCount = session.getGameParameters().getMaxSessionPlayers();
+    String displayGameName = session.getGameParameters().getDisplayName();
+    return String.format(
+            "%s, [%d/%d] players %s: \n",
+            displayGameName,
+            curPlayersCount,
+            maxPlayerCount,
+            curPlayerStr)
+            + String.format("creator: %s", creatorName);
+  }
+
   private Pane generateSessionPane(String accessToken,
                                    String sessionId,
                                    Label sessionInfoContent) {
@@ -183,20 +199,7 @@ public class LobbyController {
         Platform.runLater(() -> {
           Gson gson = new Gson();
           Session joinedSession = gson.fromJson(getSessionDetailResponse.toString(), Session.class);
-          List<String> curPlayers = joinedSession.getPlayers();
-          String curPlayerStr = curPlayers.toString();
-          String creatorName = joinedSession.getCreator();
-          int curPlayersCount = curPlayers.size();
-          int maxPlayerCount = joinedSession.getGameParameters().getMaxSessionPlayers();
-          String displayGameName = joinedSession.getGameParameters().getDisplayName();
-          String newSessionInfo =
-              String.format(
-                  "%s, [%d/%d] players %s: \n",
-                  displayGameName,
-                  curPlayersCount,
-                  maxPlayerCount,
-                  curPlayerStr)
-                  + String.format("creator: %s", creatorName);
+          String newSessionInfo = formatSessionInfo(joinedSession);
           HBox infoHbox = (HBox) joinAndLeaveButton.getParent();
           Label infoLabel = (Label) infoHbox.getChildren().get(0);
           infoLabel.setText(newSessionInfo);
@@ -241,11 +244,30 @@ public class LobbyController {
         // Start busy waiting by trying to update with the latest session info
         try {
           lobbyRequestSender.updateSessionMapping();
+
         } catch (UnirestException e) {
           throw new RuntimeException(e);
         }
+
+
         Map<String, Session> sessionIdMap = lobbyRequestSender.getSessionIdMap();
         Set<String> remoteSessionIds = sessionIdMap.keySet();
+
+        for (String sessionId : sessionIdMap.keySet()) {
+
+        //JSONObject getSessionDetailResponse;
+        //try {
+        //  getSessionDetailResponse = lobbyRequestSender.sendGetSessionDetailRequest(sessionId);
+        //} catch (UnirestException e) {
+        //  throw new RuntimeException(e);
+        //}
+        //Gson gson = new Gson();
+        //Session curSession = sessionIdMap.get(sessionId);
+        //Session updatedSession =
+        //    gson.fromJson(getSessionDetailResponse.toString(), Session.class);
+        //curSession.updateSessionInfo(updatedSession);
+        }
+
 
         List<String> localSessionIds = new ArrayList<>();
         for (Node n : sessionVbox.getChildren()) {
@@ -261,17 +283,22 @@ public class LobbyController {
         }
 
         for (String missingSessionId : missingSessionIds) {
-          Session missingSession = sessionIdMap.get(missingSessionId);
-          String creator = missingSession.getCreator();
-          String gameDisplayName = missingSession.getGameParameters().getDisplayName();
-          int maxSessionPlayers = missingSession.getGameParameters().getMaxSessionPlayers();
-          Label sessionInfo = new Label(
-              gameDisplayName + " max player: " + maxSessionPlayers + " creator: " + creator);
           User user = App.getUser();
           if (user != null) {
             String accessToken = user.getAccessToken();
-            Pane newPane = generateSessionPane(accessToken, missingSessionId, sessionInfo);
+            JSONObject getSessionDetailResponse;
+            try {
+              getSessionDetailResponse =
+                  lobbyRequestSender.sendGetSessionDetailRequest(missingSessionId);
+            } catch (UnirestException e) {
+              throw new RuntimeException(e);
+            }
 
+            Gson gson = new Gson();
+            Session curSession = gson.fromJson(getSessionDetailResponse.toString(), Session.class);
+            String sessionInfo = formatSessionInfo(curSession);
+            Label sessionInfoLabel = new Label(sessionInfo);
+            Pane newPane = generateSessionPane(accessToken, missingSessionId, sessionInfoLabel);
             if (sessionVbox.getChildren().size() != sessionIdMap.size()) {
               Platform.runLater(() -> {
                 sessionVbox.getChildren().add(newPane);
