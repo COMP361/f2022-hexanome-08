@@ -161,7 +161,6 @@ public class LobbyController {
   public void initialize() throws UnirestException {
     // Get all available games and pre-set the ChoiceBox
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
-    User user = App.getUser();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
 
@@ -224,6 +223,7 @@ public class LobbyController {
             int maxSessionPlayers = missingSession.getGameParameters().getMaxSessionPlayers();
             Label sessionInfo = new Label(
                 gameDisplayName + " max player: " + maxSessionPlayers + " creator: " + creator);
+            User user = App.getUser();
             if (user != null) {
               String accessToken = user.getAccessToken();
               Pane newPane = generateSessionPane(accessToken, diffSessionId, sessionInfo);
