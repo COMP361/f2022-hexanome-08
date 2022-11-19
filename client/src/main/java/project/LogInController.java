@@ -1,8 +1,6 @@
 package project;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import java.io.IOException;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -33,8 +31,6 @@ public class LogInController {
   /**
    * The logic of handling log in. The methods check if the user has input both username and user
    * password or not
-   *
-   * @throws IOException IOException if fxml file not found
    */
   @FXML
   protected void onLogInButtonClick() throws UnirestException {
@@ -53,8 +49,6 @@ public class LogInController {
       User curUser = new User(userNameStr, accessToken, authority);
       App.setUser(curUser);
 
-
-
       // if user is player, display admin_lobby_page
       if (App.getUser().getAuthority().equals("ROLE_ADMIN")) {
         App.setRoot("admin_lobby_page");
@@ -64,7 +58,7 @@ public class LogInController {
         // App.setRoot("player_lobby_page");
         App.setRoot("LobbyService");
       }
-      lobbyRequestSender.updateSessions();
+      lobbyRequestSender.updateSessionMapping();
 
     } catch (Exception e) {
       logInPageErrorMessage.setText("Please enter both valid username and password");

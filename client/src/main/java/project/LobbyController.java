@@ -73,6 +73,7 @@ public class LobbyController {
     // TODO: Figure out where to get the saveGameName (maybe input by user?)
     String sessionId =
         lobbyRequestSender.sendCreateSessionRequest(userName, accessToken, gameName, "");
+    lobbyRequestSender.updateSessionMapping();
 
     Pane p = generateSessionPane(accessToken, sessionId, sessionInfo);
     sessionVbox.getChildren().add(p);
@@ -166,31 +167,46 @@ public class LobbyController {
     for (GameParameters g : gameParameters) {
       gameDisplayNames.add(g.getDisplayName());
       lobbyRequestSender.addGameNameMapping(g.getDisplayName(), g.getName());
-      System.out.println(g.getDisplayName());
     }
 
     ObservableList<String> gameOptionsList =
         FXCollections.observableArrayList(gameDisplayNames);
     gameChoices.setItems(gameOptionsList);
 
-    Map<String, Session> sessionIdMap = App.getLobbyServiceRequestSender().getSessionIdMap();
-    Set<String> sessionIds = sessionIdMap.keySet();
+    Thread lobbyMainPageUpdateThread = new Thread(() -> {
+      while (true) {
 
-    // TODO: How to display all sessions? initialize() is called before onAction is done...
-    for (String sessionId : sessionIds) {
-      String creator = sessionIdMap.get(sessionId).getCreator();
-      String gameDisplayName = sessionIdMap.get(sessionId).getGameParameters().getDisplayName();
-      int maxSessionPlayers =
-          sessionIdMap.get(sessionId).getGameParameters().getMaxSessionPlayers();
+        Map<String, Session> sessionIdMap = App.getLobbyServiceRequestSender().getSessionIdMap();
+        Set<String> sessionIds = sessionIdMap.keySet();
 
-      Label sessionInfo = new Label(
-          gameDisplayName + " max player: " + maxSessionPlayers + " creator: " + creator);
-      String accessToken = user.getAccessToken();
-      Pane newPane = generateSessionPane(accessToken, sessionId, sessionInfo);
-      Platform.runLater(() -> {
-        sessionVbox.getChildren().add(newPane);
-      });
-    }
+        // TODO: How to display all sessions? initialize() is called before onAction is done...
+        for (String sessionId : sessionIds) {
+          String creator = sessionIdMap.get(sessionId).getCreator();
+          String gameDisplayName = sessionIdMap.get(sessionId).getGameParameters().getDisplayName();
+          int maxSessionPlayers =
+              sessionIdMap.get(sessionId).getGameParameters().getMaxSessionPlayers();
+
+          Label sessionInfo = new Label(
+              gameDisplayName + " max player: " + maxSessionPlayers + " creator: " + creator);
+          if (user != null) {
+            String accessToken = user.getAccessToken();
+            Pane newPane = generateSessionPane(accessToken, sessionId, sessionInfo);
+
+            if (sessionVbox.getChildren().size() != sessionIdMap.size()) {
+              Platform.runLater(() -> {
+                sessionVbox.getChildren().add(newPane);
+              });
+            }
+          }
+        }
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    });
+    lobbyMainPageUpdateThread.start();
   }
 
 
