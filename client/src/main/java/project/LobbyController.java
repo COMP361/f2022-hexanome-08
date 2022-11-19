@@ -3,7 +3,6 @@ package project;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -112,6 +111,7 @@ public class LobbyController {
             sessionVbox.getChildren().remove(n);
             try {
               lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
+              lobbyRequestSender.updateSessionMapping();
               App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
             } catch (UnirestException e) {
               throw new RuntimeException(e);
@@ -152,7 +152,6 @@ public class LobbyController {
     return p;
   }
 
-
   /**
    * Initializing info for local lobby.
    *
@@ -161,6 +160,7 @@ public class LobbyController {
   public void initialize() throws UnirestException {
     // Get all available games and pre-set the ChoiceBox
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+    User user = App.getUser();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
 
@@ -185,23 +185,34 @@ public class LobbyController {
         }
         Map<String, Session> sessionIdMap = lobbyRequestSender.getSessionIdMap();
         Set<String> remoteSessionIds = sessionIdMap.keySet();
-        Set<String> localSessionIds = new HashSet<>();
+
+        List<String> localSessionIds = new ArrayList<>();
         for (Node n : sessionVbox.getChildren()) {
           String curLocalSessionId = n.getAccessibleText();
           localSessionIds.add(curLocalSessionId);
         }
 
-        Set<String> diffSessionIds;
-        if (localSessionIds.size() > remoteSessionIds.size()) {
-          // use the set with more objects to removeAll the one with less objects
-          // more local than remote, need to remove GUI
-          localSessionIds.removeAll(remoteSessionIds);
-          diffSessionIds = new HashSet<>(localSessionIds);
-          for (Node n : sessionVbox.getChildren()) {
-            String curSessionId = n.getAccessibleText();
-            if (diffSessionIds.contains(curSessionId)) {
+        List<String> missingSessionIds = new ArrayList<>();
+        for (String remoteSessionId : remoteSessionIds) {
+          if(!localSessionIds.contains(remoteSessionId)) {
+            missingSessionIds.add(remoteSessionId);
+          }
+        }
+
+        for (String missingSessionId : missingSessionIds) {
+          Session missingSession = sessionIdMap.get(missingSessionId);
+          String creator = missingSession.getCreator();
+          String gameDisplayName = missingSession.getGameParameters().getDisplayName();
+          int maxSessionPlayers = missingSession.getGameParameters().getMaxSessionPlayers();
+          Label sessionInfo = new Label(
+              gameDisplayName + " max player: " + maxSessionPlayers + " creator: " + creator);
+          if (user != null) {
+            String accessToken = user.getAccessToken();
+            Pane newPane = generateSessionPane(accessToken, missingSessionId, sessionInfo);
+
+            if (sessionVbox.getChildren().size() != sessionIdMap.size()) {
               Platform.runLater(() -> {
-                sessionVbox.getChildren().remove(n);
+                sessionVbox.getChildren().add(newPane);
                 try {
                   lobbyRequestSender.updateSessionMapping();
                 } catch (UnirestException e) {
@@ -210,38 +221,7 @@ public class LobbyController {
               });
             }
           }
-        } else {
-          if (localSessionIds.size() > 0) {
-            // more remote than local, need to add GUI
-            remoteSessionIds.removeAll(localSessionIds);
-          }
-          diffSessionIds = new HashSet<>(remoteSessionIds);
-          for (String diffSessionId : diffSessionIds) {
-            Session missingSession = sessionIdMap.get(diffSessionId);
-            String creator = missingSession.getCreator();
-            String gameDisplayName = missingSession.getGameParameters().getDisplayName();
-            int maxSessionPlayers = missingSession.getGameParameters().getMaxSessionPlayers();
-            Label sessionInfo = new Label(
-                gameDisplayName + " max player: " + maxSessionPlayers + " creator: " + creator);
-            User user = App.getUser();
-            if (user != null) {
-              String accessToken = user.getAccessToken();
-              Pane newPane = generateSessionPane(accessToken, diffSessionId, sessionInfo);
-
-              if (sessionVbox.getChildren().size() < sessionIdMap.size()) {
-                Platform.runLater(() -> {
-                  sessionVbox.getChildren().add(newPane);
-                  try {
-                    lobbyRequestSender.updateSessionMapping();
-                  } catch (UnirestException e) {
-                    throw new RuntimeException(e);
-                  }
-                });
-              }
-            }
-          }
         }
-
         try {
           Thread.sleep(500);
         } catch (InterruptedException e) {
