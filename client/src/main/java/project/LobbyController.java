@@ -212,8 +212,10 @@ public class LobbyController {
             }
           }
         } else {
-          // more remote than local, need to add GUI
-          remoteSessionIds.removeAll(localSessionIds);
+          if (localSessionIds.size() > 0) {
+            // more remote than local, need to add GUI
+            remoteSessionIds.removeAll(localSessionIds);
+          }
           diffSessionIds = new HashSet<>(remoteSessionIds);
           for (String diffSessionId : diffSessionIds) {
             Session missingSession = sessionIdMap.get(diffSessionId);
