@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import project.connection.LobbyServiceRequestSender;
 
 
 /**
@@ -21,6 +22,10 @@ public class App extends Application {
   private static Scene handCard;
 
   private static Scene reservedCards;
+
+  // One and the only one requestSender
+  private static final LobbyServiceRequestSender lobbyRequestSender =
+      new LobbyServiceRequestSender("http://76.66.139.161:4242");
 
   /**
    * Override the start() method to launch the whole project.
@@ -114,6 +119,10 @@ public class App extends Application {
 
   public static void main(String[] args) {
     launch();
+  }
+
+  public static LobbyServiceRequestSender getLobbyServiceRequestSender() {
+    return lobbyRequestSender;
   }
 
 }
