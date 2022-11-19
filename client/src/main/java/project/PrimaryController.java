@@ -163,9 +163,6 @@ public class PrimaryController {
     curStage.close();
   }
 
-
-
-
   /**
    * Displays the options of actions the player can do once they click on a regular development card
    * (not orient).

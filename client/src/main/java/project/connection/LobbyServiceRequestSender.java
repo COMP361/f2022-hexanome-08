@@ -45,6 +45,11 @@ public class LobbyServiceRequestSender {
     return sessionIdMap;
   }
 
+  public void removeSessionIdMap(String sessionId) {
+    sessionIdMap.remove(sessionId);
+  }
+
+
   /**
    * update the info about session deletion or creation.
    *
