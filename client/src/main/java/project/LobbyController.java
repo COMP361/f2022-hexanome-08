@@ -211,7 +211,7 @@ public class LobbyController {
               });
             }
           }
-        } else if (localSessionIds.size() < remoteSessionIds.size()) {
+        } else {
           // more remote than local, need to add GUI
           remoteSessionIds.removeAll(localSessionIds);
           diffSessionIds = new HashSet<>(remoteSessionIds);
