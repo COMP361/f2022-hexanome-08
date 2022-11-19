@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -98,20 +99,24 @@ public class LobbyController {
                                    String sessionId,
                                    Label sessionInfoContent) {
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+    User user = App.getUser();
 
     EventHandler<ActionEvent> deleteSessionHandler = event -> {
-      // TODO: add the request of deleting session here (some weird exceptions exist)
-
       for (Node n : sessionVbox.getChildren()) {
         Pane p = (Pane) n;
         String paneSessionId = p.getAccessibleText();
         if (paneSessionId != null && paneSessionId.equals(sessionId)) {
-          try {
-            lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
-          } catch (UnirestException e) {
-            throw new RuntimeException(e);
-          }
-          sessionVbox.getChildren().remove(n);
+          /* TODO: If the onAction method involves GUI changes, defer this change by using
+              Platform.runLater(() -> { methods_you_want_to_call }) */
+          Platform.runLater(() -> {
+            try {
+              lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
+              App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
+            } catch (UnirestException e) {
+              throw new RuntimeException(e);
+            }
+            sessionVbox.getChildren().remove(n);
+          });
         }
       }
 
@@ -121,12 +126,26 @@ public class LobbyController {
       // TODO: add the request of launching session here
       System.out.println("Launch Session");
     };
+    // give different buttons depending on username and creator name
+    //    String sessionCreatorName =
+    //    lobbyRequestSender.getSessionIdMap().get(sessionId).getCreator();
+    //    String curUserName = user.getUsername();
+    //    if (curUserName.equals(sessionCreatorName)) {
+    //      Button deleteButton = new Button("Delete");
+    //      Button launchButton = new Button("Launch");
+    //      deleteButton.setOnAction(deleteSessionHandler);
+    //      launchButton.setOnAction(launchSessionHandler);
+    //      HBox hb = new HBox(sessionInfoContent, deleteButton, launchButton);
+    //    } else {
+    //      Button joinButton = new Button("Join");
+    //      HBox hb = new HBox(sessionInfoContent, joinButton);
+    //    }
+
 
     Button deleteButton = new Button("Delete");
     Button launchButton = new Button("Launch");
     deleteButton.setOnAction(deleteSessionHandler);
     launchButton.setOnAction(launchSessionHandler);
-
     HBox hb = new HBox(sessionInfoContent, deleteButton, launchButton);
     Pane p = new Pane(hb);
     p.setAccessibleText(sessionId);
@@ -157,6 +176,7 @@ public class LobbyController {
     Map<String, Session> sessionIdMap = App.getLobbyServiceRequestSender().getSessionIdMap();
     Set<String> sessionIds = sessionIdMap.keySet();
 
+    // TODO: How to display all sessions? initialize() is called before onAction is done...
     for (String sessionId : sessionIds) {
       String creator = sessionIdMap.get(sessionId).getCreator();
       String gameDisplayName = sessionIdMap.get(sessionId).getGameParameters().getDisplayName();
@@ -167,7 +187,9 @@ public class LobbyController {
           gameDisplayName + " max player: " + maxSessionPlayers + " creator: " + creator);
       String accessToken = user.getAccessToken();
       Pane newPane = generateSessionPane(accessToken, sessionId, sessionInfo);
-      sessionVbox.getChildren().add(newPane);
+      Platform.runLater(() -> {
+        sessionVbox.getChildren().add(newPane);
+      });
     }
   }
 

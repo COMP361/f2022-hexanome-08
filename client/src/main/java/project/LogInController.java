@@ -49,7 +49,6 @@ public class LogInController {
     try {
       String accessToken = logInResponseJson.getString("access_token");
       String authority = lobbyRequestSender.sendAuthorityRequest(accessToken);
-
       User curUser = new User(userNameStr, accessToken, authority);
       App.setUser(curUser);
       // if user is player, display admin_lobby_page

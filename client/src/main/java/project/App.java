@@ -51,6 +51,10 @@ public class App extends Application {
     stage.show();
   }
 
+  public static void main(String[] args) {
+    launch();
+  }
+
   /**
    * Replace the current scene with the scene loaded from input fxml
    * file with the same layout ([640,400] by default).
@@ -124,9 +128,7 @@ public class App extends Application {
     return reservedCards;
   }
 
-  public static void main(String[] args) {
-    launch();
-  }
+
 
   public static LobbyServiceRequestSender getLobbyServiceRequestSender() {
     return lobbyRequestSender;
