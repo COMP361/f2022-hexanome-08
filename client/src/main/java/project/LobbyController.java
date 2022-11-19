@@ -109,13 +109,14 @@ public class LobbyController {
           /* TODO: If the onAction method involves GUI changes, defer this change by using
               Platform.runLater(() -> { methods_you_want_to_call }) */
           Platform.runLater(() -> {
+            sessionVbox.getChildren().remove(n);
             try {
               lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
+              lobbyRequestSender.updateSessionMapping();
               App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
             } catch (UnirestException e) {
               throw new RuntimeException(e);
             }
-            sessionVbox.getChildren().remove(n);
           });
         }
       }
@@ -195,6 +196,11 @@ public class LobbyController {
             if (sessionVbox.getChildren().size() != sessionIdMap.size()) {
               Platform.runLater(() -> {
                 sessionVbox.getChildren().add(newPane);
+                try {
+                  lobbyRequestSender.updateSessionMapping();
+                } catch (UnirestException e) {
+                  throw new RuntimeException(e);
+                }
               });
             }
           }
