@@ -56,7 +56,7 @@ public class LobbyServiceRequestSender {
    *
    * @throws UnirestException in case Unirest failed to make the request.
    */
-  public void updateSessions() throws UnirestException {
+  public void updateSessionMapping() throws UnirestException {
     // TODO: figure out a way to add GUI update into this method after sessionIdMap is updated
     HttpResponse<JsonNode> lobbyMainPageResponse =
         Unirest.get(lobbyUrl + "/api/sessions").asJson();
