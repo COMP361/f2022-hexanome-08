@@ -205,14 +205,13 @@ public class LobbyController {
                 sessionVbox.getChildren().remove(n);
                 try {
                   lobbyRequestSender.updateSessionMapping();
-                }catch (UnirestException e) {
+                } catch (UnirestException e) {
                   throw new RuntimeException(e);
                 }
               });
             }
           }
-        }
-        else if (localSessionIds.size() < remoteSessionIds.size()) {
+        } else if (localSessionIds.size() < remoteSessionIds.size()) {
           // more remote than local, need to add GUI
           remoteSessionIds.removeAll(localSessionIds);
           diffSessionIds = new HashSet<>(remoteSessionIds);
