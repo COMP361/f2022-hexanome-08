@@ -1,53 +1,27 @@
 package project;
 
 
-import com.google.gson.Gson;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import project.connection.LobbyServiceRequestSender;
-import project.view.lobby.Session;
+
 
 /**
- * The PrimaryController use to manage the general flow of the program.
+ * The controller controls the splendor game GUI.
  */
 public class PrimaryController {
-
-  private static final Logger logger = LogManager.getLogger(Main.class);
-
-
-  @FXML
-  private ChoiceBox<String> gameChoices;
 
   @FXML
   private Pane purchaseContent;
@@ -58,21 +32,13 @@ public class PrimaryController {
   @FXML
   private Pane confirmPane;
 
-  @FXML
-  private Button quitGameButton;
-
-  @FXML
-  private TextField userName;
 
 
-  @FXML
-  private PasswordField userPassword;
+
 
   @FXML
   private BorderPane lobbyPane;
 
-  @FXML
-  private Label logInPageErrorMessage;
 
   @FXML
   private Button confirmButton;
@@ -125,8 +91,7 @@ public class PrimaryController {
   private MenuItem exitWaitingRoom;
   @FXML
   private MenuItem logOutFromWaitingRoom;
-  @FXML
-  private MenuItem logOutFromLobbyMenuItem;
+
   @FXML
   private MenuItem adminZoneMenuItem;
   @FXML
@@ -146,77 +111,6 @@ public class PrimaryController {
   @FXML
   public Pane reserveConfirmPane;
 
-
-  /**
-   * The logic of handling log in. The methods check if the user has input both username and user
-   * password or not
-   *
-   * @throws IOException IOException if fxml file not found
-   */
-  @FXML
-  protected void onLogInButtonClick() throws UnirestException {
-    String userNameStr = userName.getText();
-    String userPasswordStr = userPassword.getText();
-    // retrieve the parsed JSONObject from the response
-    LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
-    JSONObject logInResponseJson = lobbyRequestSender
-        .sendLogInRequest(userNameStr, userPasswordStr);
-
-
-    // extract fields from the object
-    try {
-      String accessToken = logInResponseJson.getString("access_token");
-      lobbyRequestSender.setAccessToken(accessToken);
-      JSONObject authorityResponseJson = lobbyRequestSender.sendAuthorityRequest(accessToken);
-      String authority = authorityResponseJson.getString("authority");
-      // if user is player, display admin_lobby_page
-      if (authority.equals("ROLE_ADMIN")) {
-        App.setRoot("admin_lobby_page");
-        lobbyRequestSender.updateSessions();
-        // TODO: how to visually display these session objects as JavaFX GUI?
-
-      } else { // otherwise, player_lobby_page
-        // App.setRoot("player_lobby_page");
-        App.setRoot("LobbyService");
-        lobbyRequestSender.updateSessions();
-      }
-
-    } catch (Exception e) {
-      logInPageErrorMessage.setText("Please enter both valid username and password");
-      userName.setText("");
-      userPassword.setText("");
-      logger.debug("Wrong user info entered");
-    }
-  }
-
-  /**
-   * Go back (reset the scene) to the Scene loaded from splendor.fxml
-   *
-   * @throws IOException IOException if fxml file not found
-   */
-  @FXML
-  protected void onLogOutMenuItemClick() throws IOException {
-    App.setRoot("splendor");
-  }
-
-  /**
-   * Close the current stage once the quitGameButton has been clicked.
-   */
-  @FXML
-  protected void onQuitGameButtonClick() throws IOException {
-    Stage curStage = (Stage) quitGameButton.getScene().getWindow();
-    //App.setRoot("LobbyService");
-    curStage.close();
-  }
-
-
-  @FXML
-  protected void onCreateSessionButtonClick() throws UnirestException {
-    LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
-    String accessToken = lobbyRequestSender.getAccessToken();
-    assert accessToken != null && !accessToken.equals("");
-    lobbyRequestSender.sendCreateSessionRequest(accessToken, "xox", "");
-  }
 
   /**
    * Produce confirm pop-up once said menu item has been selected.
@@ -266,7 +160,7 @@ public class PrimaryController {
   @FXML
   protected void onLogOutFromWaitingRoomMenu() throws IOException {
     Stage curStage = (Stage) logOutFromWaitingRoom.getParentPopup().getOwnerWindow();
-    App.setRootWithSizeTitle("splendor", 1000, 800, "Splendor");
+    App.setRootWithSizeTitle("start_page", 1000, 800, "Splendor");
     curStage.close();
   }
 
@@ -280,15 +174,6 @@ public class PrimaryController {
     curStage.close();
   }
 
-  /**
-   * Log out from lobby once said menu item has been selected.
-   */
-  @FXML
-  protected void onLogOutFromLobbyMenu() throws IOException {
-    Stage curStage = (Stage) logOutFromLobbyMenuItem.getParentPopup().getOwnerWindow();
-    App.setRootWithSizeTitle("splendor", 1000, 800, "Splendor");
-    curStage.close();
-  }
 
   /**
    * Displays the options of actions the player can do once they click on a regular development card
@@ -371,19 +256,6 @@ public class PrimaryController {
     curStage.show();
   }
 
-  /**
-   * Sets up the Choice Box options in Main Lobby.
-   */
-  @FXML
-  public void dropDownLobby() {
-    // Create observable list for game options drop down (choice box)
-    ObservableList<String> gameOptionsList =
-        FXCollections.observableArrayList("Splendor (Base Game)", "Splendor (Orient Expansion)");
-    // gameChoices will be null until the main lobby stage is launched
-    if (gameChoices != null) {
-      gameChoices.setItems(gameOptionsList);
-    }
-  }
 
 
   /**
