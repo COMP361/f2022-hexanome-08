@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -75,7 +77,7 @@ public class LobbyController {
     // TODO: Figure out where to get the saveGameName (maybe input by user?)
     String sessionId =
         lobbyRequestSender.sendCreateSessionRequest(userName, accessToken, gameName, "");
-    lobbyRequestSender.updateSessionMapping();
+    lobbyRequestSender.getRemoteSessions();
 
     Pane p = generateSessionPane(accessToken, sessionId, sessionInfo);
     sessionVbox.getChildren().add(p);
@@ -84,6 +86,8 @@ public class LobbyController {
 
   @FXML
   protected void onLogOutFromLobbyMenu() throws IOException {
+    // clean up local lobby session cache before logging out
+    App.getLobbyServiceRequestSender().clearSessionIdMap();
     App.setRoot("start_page");
   }
 
@@ -105,12 +109,12 @@ public class LobbyController {
     int maxPlayerCount = session.getGameParameters().getMaxSessionPlayers();
     String displayGameName = session.getGameParameters().getDisplayName();
     return String.format(
-            "%s, [%d/%d] players %s: \n",
-            displayGameName,
-            curPlayersCount,
-            maxPlayerCount,
-            curPlayerStr)
-            + String.format("creator: %s", creatorName);
+        "%s, [%d/%d] players %s: \n",
+        displayGameName,
+        curPlayersCount,
+        maxPlayerCount,
+        curPlayerStr)
+        + String.format("creator: %s", creatorName);
   }
 
   private Pane generateSessionPane(String accessToken,
@@ -144,7 +148,6 @@ public class LobbyController {
               sessionVbox.getChildren().remove(n);
               try {
                 lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
-                lobbyRequestSender.updateSessionMapping();
                 App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
               } catch (UnirestException e) {
                 throw new RuntimeException(e);
@@ -216,6 +219,35 @@ public class LobbyController {
     return p;
   }
 
+
+  private void addNewSessionGui(Map<String, Session> localSessionIdMap, String accessToken) {
+    for (String sessionId : localSessionIdMap.keySet()) {
+      Session curSession = localSessionIdMap.get(sessionId);
+      String sessionInfo = formatSessionInfo(curSession);
+      Label sessionInfoLabel = new Label(sessionInfo);
+      Pane newPane = generateSessionPane(accessToken, sessionId, sessionInfoLabel);
+      newPane.setAccessibleText(sessionId);
+      // defer GUI change to lobby main page
+      Platform.runLater(() -> {
+        sessionVbox.getChildren().add(newPane);
+      });
+    }
+  }
+
+  private void updateSessionGui(Node vboxChild, Map<String, Session> localSessionIdMap) {
+    Pane sessionPane = (Pane) vboxChild;
+    Label curSessionLabel = (Label) sessionPane.getChildren().get(0);
+
+    String curSessionId = sessionPane.getAccessibleText();
+    Session curSession = localSessionIdMap.get(curSessionId);
+    String sessionInfo = formatSessionInfo(curSession);
+    // defer GUI change to lobby main page
+    Platform.runLater(() -> {
+      curSessionLabel.setText(sessionInfo);
+    });
+  }
+
+
   /**
    * Initializing info for local lobby.
    *
@@ -223,6 +255,8 @@ public class LobbyController {
    */
   public void initialize() throws UnirestException {
     // Get all available games and pre-set the ChoiceBox
+    // TODO: Some problem still remain unsolved for synchronization over diff clients...
+    // mainly about display on session info
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
@@ -232,6 +266,7 @@ public class LobbyController {
       lobbyRequestSender.addGameNameMapping(g.getDisplayName(), g.getName());
     }
 
+    // Available games to choose from ChoiceBox
     ObservableList<String> gameOptionsList =
         FXCollections.observableArrayList(gameDisplayNames);
     gameChoices.setItems(gameOptionsList);
@@ -242,75 +277,85 @@ public class LobbyController {
     Thread lobbyMainPageUpdateThread = new Thread(() -> {
       while (true) {
         // Start busy waiting by trying to update with the latest session info
+        Map<String, Session> remoteSessionIdMap;
+        Map<String, Session> localSessionIdMap = lobbyRequestSender.getSessionIdMap();
         try {
-          lobbyRequestSender.updateSessionMapping();
-
+          remoteSessionIdMap = lobbyRequestSender.getRemoteSessions();
         } catch (UnirestException e) {
           throw new RuntimeException(e);
         }
 
+        // if we have any remote sessions, then we need to sync local session ids
+        // with the remote ones (either add or remove session from local sessionIdMap)
+        User user = App.getUser();
+        if (!remoteSessionIdMap.isEmpty()) {
+          int remoteSessionCount = remoteSessionIdMap.size();
+          int localSessionCount = localSessionIdMap.size();
+          if (localSessionCount > 0) {
+            // local already has a record of some sessions
+            Set<String> remoteSessionIds = remoteSessionIdMap.keySet();
+            Set<String> localSessionIds = localSessionIdMap.keySet();
 
-        Map<String, Session> sessionIdMap = lobbyRequestSender.getSessionIdMap();
-        Set<String> remoteSessionIds = sessionIdMap.keySet();
+            // TODO: Shallow copy might be a future problem....
+            if (remoteSessionCount > localSessionCount) {
+              // remote has more sessions, need to create ones locally
+              remoteSessionIds.removeAll(localSessionIds);
+              for (String sessionId : remoteSessionIds) {
+                Session remoteSession = remoteSessionIdMap.get(sessionId);
+                Session newLocalSession = new Session(remoteSession);
+                // added new session to local session id map
+                localSessionIdMap.put(sessionId, newLocalSession);
+              }
+              // update local session id map
+              lobbyRequestSender.setSessionIdMap(localSessionIdMap);
+              // GUI: add the new sessions
+              // generate all GUI if user logged in
+              if (user != null) {
+                String accessToken = user.getAccessToken();
+                addNewSessionGui(localSessionIdMap, accessToken);
+              }
 
-        for (String sessionId : sessionIdMap.keySet()) {
-
-        //JSONObject getSessionDetailResponse;
-        //try {
-        //  getSessionDetailResponse = lobbyRequestSender.sendGetSessionDetailRequest(sessionId);
-        //} catch (UnirestException e) {
-        //  throw new RuntimeException(e);
-        //}
-        //Gson gson = new Gson();
-        //Session curSession = sessionIdMap.get(sessionId);
-        //Session updatedSession =
-        //    gson.fromJson(getSessionDetailResponse.toString(), Session.class);
-        //curSession.updateSessionInfo(updatedSession);
-        }
-
-
-        List<String> localSessionIds = new ArrayList<>();
-        for (Node n : sessionVbox.getChildren()) {
-          String curLocalSessionId = n.getAccessibleText();
-          localSessionIds.add(curLocalSessionId);
-        }
-
-        List<String> missingSessionIds = new ArrayList<>();
-        for (String remoteSessionId : remoteSessionIds) {
-          if (!localSessionIds.contains(remoteSessionId)) {
-            missingSessionIds.add(remoteSessionId);
-          }
-        }
-
-        for (String missingSessionId : missingSessionIds) {
-          User user = App.getUser();
-          if (user != null) {
-            String accessToken = user.getAccessToken();
-            JSONObject getSessionDetailResponse;
-            try {
-              getSessionDetailResponse =
-                  lobbyRequestSender.sendGetSessionDetailRequest(missingSessionId);
-            } catch (UnirestException e) {
-              throw new RuntimeException(e);
-            }
-
-            Gson gson = new Gson();
-            Session curSession = gson.fromJson(getSessionDetailResponse.toString(), Session.class);
-            String sessionInfo = formatSessionInfo(curSession);
-            Label sessionInfoLabel = new Label(sessionInfo);
-            Pane newPane = generateSessionPane(accessToken, missingSessionId, sessionInfoLabel);
-            if (sessionVbox.getChildren().size() != sessionIdMap.size()) {
-              Platform.runLater(() -> {
-                sessionVbox.getChildren().add(newPane);
-                try {
-                  lobbyRequestSender.updateSessionMapping();
-                } catch (UnirestException e) {
-                  throw new RuntimeException(e);
+            } else if (localSessionCount > remoteSessionCount) {
+              // local has more sessions, need to delete ones locally
+              localSessionIds.removeAll(remoteSessionIds);
+              for (String sessionId : localSessionIds) {
+                // remove session from local session id map
+                localSessionIdMap.remove(sessionId);
+                for (Node n : sessionVbox.getChildren()) {
+                  if (n.getAccessibleText().equals(sessionId)) {
+                    // defer GUI remove after
+                    Platform.runLater(() -> {
+                      sessionVbox.getChildren().remove(n);
+                    });
+                  }
                 }
-              });
+              }
+              // update local session id map
+              lobbyRequestSender.setSessionIdMap(localSessionIdMap);
+            }
+
+          } else {
+            // local has no record of any sessions, add all default ones
+            // then copy the whole thing
+            lobbyRequestSender.setSessionIdMap(remoteSessionIdMap);
+
+            // generate all GUI if user logged in
+            if (user != null) {
+              String accessToken = user.getAccessToken();
+              addNewSessionGui(localSessionIdMap, accessToken);
             }
           }
         }
+
+        // TODO: After having the updated local sessions id map, we can update GUI
+        // proceed with updating all local session ids' session info
+
+        for (Node n : sessionVbox.getChildren()) {
+          if (user != null) {
+            updateSessionGui(n, localSessionIdMap);
+          }
+        }
+
         try {
           Thread.sleep(500);
         } catch (InterruptedException e) {

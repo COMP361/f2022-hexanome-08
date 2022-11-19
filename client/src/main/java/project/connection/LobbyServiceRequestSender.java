@@ -22,7 +22,7 @@ public class LobbyServiceRequestSender {
   private String lobbyUrl;
   private final Map<String, String> gameNameMapping = new HashMap<>();
 
-  private final Map<String, Session> sessionIdMap = new HashMap<>();
+  private Map<String, Session> sessionIdMap = new HashMap<>();
 
   public LobbyServiceRequestSender(String lobbyUrlInput) {
     lobbyUrl = lobbyUrlInput;
@@ -45,33 +45,49 @@ public class LobbyServiceRequestSender {
     return sessionIdMap;
   }
 
+  public void clearSessionIdMap() {
+    sessionIdMap.clear();
+  }
+
+  public void setSessionIdMap(Map<String, Session> otherSessionIdMap) {
+    sessionIdMap = new HashMap<>(otherSessionIdMap);
+  }
+
   public void removeSessionIdMap(String sessionId) {
+    assert sessionIdMap.containsKey(sessionId);
     sessionIdMap.remove(sessionId);
   }
 
 
   /**
-   * update the info about session deletion or creation. Add sessionId -> session mapping
+   * update the info about session deletion or creation locally.
+   * If remote has more sessions (result from REST) -> add session to sessionIdMap
+   * If local has more sessions (sessionIdMap > resultFromRest) -> delete it from sessionIdMap
    *
    * @throws UnirestException in case Unirest failed to make the request.
    */
-  public void updateSessionMapping() throws UnirestException {
+  public Map<String, Session> getRemoteSessions() throws UnirestException {
     // TODO: figure out a way to add GUI update into this method after sessionIdMap is updated
     HttpResponse<JsonNode> lobbyMainPageResponse =
         Unirest.get(lobbyUrl + "/api/sessions").asJson();
-    JSONObject sessionObject =
-        lobbyMainPageResponse.getBody().getObject().getJSONObject("sessions");
-    JSONArray sessionsArray = sessionObject.toJSONArray(sessionObject.names());
-    JSONArray sessionIds = sessionObject.names();
+    JSONObject sessionObject = lobbyMainPageResponse
+        .getBody()
+        .getObject()
+        .getJSONObject("sessions");
+
+    // JsonArray of session details
+    JSONArray remoteSessionsArray = sessionObject.toJSONArray(sessionObject.names());
+    // JsonArray of session ids
+    JSONArray remoteSessionIds = sessionObject.names();
     Gson gson = new Gson();
-    // add new session into the mapping if there is one
-    for (int i = 0; i < sessionsArray.length(); i++) {
-      Session session = gson.fromJson(sessionsArray.getJSONObject(i).toString(), Session.class);
-      String sessionId = sessionIds.getString(i);
-      if (!sessionIdMap.containsKey(sessionId)) {
-        sessionIdMap.put(sessionId, session);
-      }
+    Map<String, Session> returnMap = new HashMap<>();
+    for (int i = 0; i < remoteSessionsArray.length(); i++) {
+      String sessionId = remoteSessionIds.getString(i);
+      Session session = gson
+          .fromJson(remoteSessionsArray.getJSONObject(i).toString(), Session.class);
+      returnMap.put(sessionId, session);
     }
+    return returnMap;
   }
 
   /**
@@ -206,7 +222,7 @@ public class LobbyServiceRequestSender {
    * send request to get detail session info.
    *
    * @param sessionId session id
-//   * @return JsonObject with detailed session info
+   *                  //   * @return JsonObject with detailed session info
    * @throws UnirestException in case unirest failed to send a request
    */
   public JSONObject sendGetSessionDetailRequest(String sessionId) throws UnirestException {

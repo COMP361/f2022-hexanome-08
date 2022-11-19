@@ -18,7 +18,7 @@ public class Session {
    *
    * @param otherSession another session
    */
-  public void updateSessionInfo(Session otherSession) {
+  public Session(Session otherSession) {
     creator = otherSession.getCreator();
     savegameid = otherSession.getSavegameid();
     gameParameters = otherSession.getGameParameters();
