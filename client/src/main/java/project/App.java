@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import project.connection.LobbyServiceRequestSender;
+import project.view.lobby.User;
 
 
 /**
@@ -29,6 +30,8 @@ public class App extends Application {
   // One and the only one requestSender
   private static final LobbyServiceRequestSender lobbyRequestSender =
       new LobbyServiceRequestSender("http://76.66.139.161:4242");
+
+  private static User user;
 
   /**
    * Override the start() method to launch the whole project.
@@ -127,6 +130,14 @@ public class App extends Application {
 
   public static LobbyServiceRequestSender getLobbyServiceRequestSender() {
     return lobbyRequestSender;
+  }
+
+  public static User getUser() {
+    return user;
+  }
+
+  public static void setUser(User puser) {
+    user = puser;
   }
 
 }

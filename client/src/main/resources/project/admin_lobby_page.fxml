@@ -74,10 +74,10 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Region prefHeight="373.0" prefWidth="223.0" HBox.hgrow="ALWAYS" />
-                        <ScrollPane maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="832.0">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="545.0" prefWidth="797.0" />
-                          </content>
+                        <ScrollPane fx:id="sessionScrollPane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="832.0" vbarPolicy="ALWAYS">
+                           <content>
+                              <VBox fx:id="sessionVbox" prefHeight="420.0" prefWidth="808.0" />
+                           </content>
                         </ScrollPane>
                         <Region prefHeight="373.0" prefWidth="173.0" HBox.hgrow="ALWAYS" />
                      </children>
@@ -90,7 +90,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Settings">
             <items>
-              <MenuItem fx:id="logOutFromLobbyMenuItem" mnemonicParsing="false" onAction="#onLogOutFromLobbyMenu" onMenuValidation="#onLogOutFromLobbyMenu" text="Log out" />
+              <MenuItem mnemonicParsing="false" onAction="#onLogOutFromLobbyMenu" onMenuValidation="#onLogOutFromLobbyMenu" text="Log out" />
                   <MenuItem fx:id="adminZoneMenuItem" mnemonicParsing="false" text="Admin Zone" />
                   <MenuItem mnemonicParsing="false" text="User Settings" />
             </items>
