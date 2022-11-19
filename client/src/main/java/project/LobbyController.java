@@ -194,7 +194,7 @@ public class LobbyController {
 
         List<String> missingSessionIds = new ArrayList<>();
         for (String remoteSessionId : remoteSessionIds) {
-          if(!localSessionIds.contains(remoteSessionId)) {
+          if (!localSessionIds.contains(remoteSessionId)) {
             missingSessionIds.add(remoteSessionId);
           }
         }
