@@ -5,11 +5,15 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import project.view.lobby.Game;
 import project.view.lobby.Session;
+
 
 /**
  * class that is responsible to send different requests to the LS.
@@ -17,6 +21,7 @@ import project.view.lobby.Session;
 public class LobbyServiceRequestSender {
   private String lobbyUrl;
   private String accessToken;
+  private final Map<String, String> gameNameMapping = new HashMap<>();
 
   private final Map<String, Session> sessionIdMap = new HashMap<>();
 
@@ -34,6 +39,15 @@ public class LobbyServiceRequestSender {
 
   public String getLobbyUrl() {
     return lobbyUrl;
+  }
+
+  public Map<String, String> getGameNameMapping() {
+    return new HashMap<>(gameNameMapping);
+  }
+
+  public void addGameNameMapping(String gameDisplayName, String gameName) {
+    assert !gameNameMapping.containsKey(gameDisplayName);
+    gameNameMapping.put(gameDisplayName, gameName);
   }
 
   public Map<String, Session> getSessionIdMap() {
@@ -115,8 +129,8 @@ public class LobbyServiceRequestSender {
   /**
    * UTF8-String, encoding the id of the newly created session (positive long).
    *
-   * @param accessToken access token
-   * @param gameName game name
+   * @param accessToken  access token
+   * @param gameName     game name
    * @param saveGameName save game name
    * @return a JsonObject with user authority
    * @throws UnirestException in case unirest failed to send a request
@@ -131,8 +145,6 @@ public class LobbyServiceRequestSender {
     requestBody.put("game", gameName);
     requestBody.put("savegame", saveGameName);
 
-    System.out.println(requestBody);
-
     HttpResponse<String> createSessionResponse = Unirest.post(lobbyUrl + "/api/sessions")
         .header("Content-Type", "application/json")
         .queryString("access_token", accessToken)
@@ -140,5 +152,24 @@ public class LobbyServiceRequestSender {
         .asString();
 
     return createSessionResponse.getBody();
+  }
+
+  /**
+   * Used to get all available games in LS.
+   *
+   * @return A list of Game
+   * @throws UnirestException in case unirest failed to send a request
+   */
+  public List<Game> sendAllGamesRequest() throws UnirestException {
+    HttpResponse<JsonNode> allGamesResponse = Unirest.get(lobbyUrl + "/api/gameservices").asJson();
+    JSONArray allGamesJsonArray = allGamesResponse.getBody().getArray();
+    Gson gson = new Gson();
+    List<Game> resultList = new ArrayList<>();
+    for (int i = 0; i < allGamesJsonArray.length(); i++) {
+      String jsonString = allGamesJsonArray.getJSONObject(i).toString();
+      Game curGame = gson.fromJson(jsonString, Game.class);
+      resultList.add(curGame);
+    }
+    return resultList;
   }
 }
