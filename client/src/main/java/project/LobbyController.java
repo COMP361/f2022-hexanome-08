@@ -84,6 +84,7 @@ public class LobbyController {
   protected void onLogOutFromLobbyMenu() throws IOException {
     // clean up local lobby session cache before logging out
     App.getLobbyServiceRequestSender().clearSessionIdMap();
+    App.setUser(null);
     App.setRoot("start_page");
   }
 
@@ -113,6 +114,76 @@ public class LobbyController {
         + String.format("creator: %s", creatorName);
   }
 
+
+  private EventHandler<ActionEvent> createDeleteSessionHandler(
+      VBox sessionVbox, String sessionId,
+      LobbyServiceRequestSender lobbyRequestSender,
+      String accessToken) {
+    return event -> {
+      for (Node n : sessionVbox.getChildren()) {
+        String paneSessionId = n.getAccessibleText();
+        if (paneSessionId != null && paneSessionId.equals(sessionId)) {
+          // TODO: If the onAction method involves GUI changes, defer this change by using
+          //  Platform.runLater(() -> { methods_you_want_to_call })
+          Platform.runLater(() -> {
+            sessionVbox.getChildren().remove(n);
+            try {
+              lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
+              App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
+            } catch (UnirestException e) {
+              throw new RuntimeException(e);
+            }
+          });
+        }
+      }
+    };
+  }
+
+  private EventHandler<ActionEvent> createJoinLeaveSessionHandler(
+      String curUserName, String sessionId,
+      LobbyServiceRequestSender lobbyRequestSender, String accessToken) {
+    return event -> {
+      // TODO: add the request of joining / leaving session here
+      // anonymous class of EventHandler instance
+
+      Button joinAndLeaveButton = (Button) event.getSource();
+      // If the button says "Join", send join request
+      if (joinAndLeaveButton.getText().equals("Join")) {
+        // First thing, a request
+        joinAndLeaveButton.setText("Leave");
+        try {
+          lobbyRequestSender.sendAddPlayerRequest(accessToken, sessionId, curUserName);
+        } catch (UnirestException e) {
+          throw new RuntimeException(e);
+        }
+      } else if (joinAndLeaveButton.getText().equals("Leave")) { // otherwise, send leave request
+        joinAndLeaveButton.setText("Join");
+        try {
+          lobbyRequestSender.sendRemovePlayerRequest(accessToken, sessionId, curUserName);
+        } catch (UnirestException e) {
+          throw new RuntimeException(e);
+        }
+      }
+
+      // Then, obtain the result from either join/leave request
+      JSONObject getSessionDetailResponse;
+      try {
+        getSessionDetailResponse = lobbyRequestSender.sendGetSessionDetailRequest(sessionId);
+      } catch (UnirestException e) {
+        throw new RuntimeException(e);
+      }
+      Platform.runLater(() -> {
+        Gson gson = new Gson();
+        Session joinedSession = gson.fromJson(getSessionDetailResponse.toString(), Session.class);
+        String newSessionInfo = formatSessionInfo(joinedSession);
+        HBox infoHbox = (HBox) joinAndLeaveButton.getParent();
+        Label infoLabel = (Label) infoHbox.getChildren().get(0);
+        infoLabel.setText(newSessionInfo);
+      });
+
+    };
+  }
+
   /**
    * create a GUI representation of session object.
    *
@@ -140,29 +211,13 @@ public class LobbyController {
     Region spaceBetween = new Region();
     spaceBetween.setPrefWidth(200);
     spaceBetween.setPrefHeight(30);
+    //
     User user = App.getUser();
     String curUserName = user.getUsername();
     // if the user is the creator, provides delete and launch button
     if (curUserName.equals(sessionCreatorName)) {
-      EventHandler<ActionEvent> deleteSessionHandler = event -> {
-        for (Node n : sessionVbox.getChildren()) {
-          String paneSessionId = n.getAccessibleText();
-          if (paneSessionId != null && paneSessionId.equals(sessionId)) {
-            // TODO: If the onAction method involves GUI changes, defer this change by using
-            //  Platform.runLater(() -> { methods_you_want_to_call })
-            Platform.runLater(() -> {
-              sessionVbox.getChildren().remove(n);
-              try {
-                lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
-                App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
-              } catch (UnirestException e) {
-                throw new RuntimeException(e);
-              }
-            });
-          }
-        }
-
-      };
+      EventHandler<ActionEvent> deleteSessionHandler =
+          createDeleteSessionHandler(sessionVbox, sessionId, lobbyRequestSender, accessToken);
       EventHandler<ActionEvent> launchSessionHandler = event -> {
         // TODO: add the request of launching session here
         //  (need to have the game server logic ready)
@@ -174,49 +229,26 @@ public class LobbyController {
       launchButton.setOnAction(launchSessionHandler);
       hb = new HBox(sessionInfoContent, spaceBetween, deleteButton, launchButton);
     } else {
-      EventHandler<ActionEvent> joinAndLeaveSessionHandler = event -> {
-        // TODO: add the request of joining / leaving session here
-        // anonymous class of EventHandler instance
+      EventHandler<ActionEvent> joinAndLeaveSessionHandler =
+          createJoinLeaveSessionHandler(curUserName, sessionId, lobbyRequestSender, accessToken);
+      JSONObject sessionDetailJson;
+      try {
+        sessionDetailJson = lobbyRequestSender.sendGetSessionDetailRequest(sessionId);
+      } catch (UnirestException e) {
+        throw new RuntimeException(e);
+      }
 
-        Button joinAndLeaveButton = (Button) event.getSource();
+      Gson gson = new Gson();
+      Session curSession = gson.fromJson(sessionDetailJson.toString(), Session.class);
+      List<String> players = curSession.getPlayers();
+      String buttonContent;
+      if (players.contains(curUserName)) {
+        buttonContent = "Leave";
+      } else {
+        buttonContent = "Join";
+      }
 
-        // If the button says "Join", send join request
-
-        if (joinAndLeaveButton.getText().equals("Join")) {
-          // First thing, a request
-          joinAndLeaveButton.setText("Leave");
-          try {
-            lobbyRequestSender.sendAddPlayerRequest(accessToken, sessionId, curUserName);
-          } catch (UnirestException e) {
-            throw new RuntimeException(e);
-          }
-        } else { // otherwise, send leave request
-          joinAndLeaveButton.setText("Join");
-          try {
-            lobbyRequestSender.sendRemovePlayerRequest(accessToken, sessionId, curUserName);
-          } catch (UnirestException e) {
-            throw new RuntimeException(e);
-          }
-        }
-
-        // Then, obtain the result from either join/leave request
-        JSONObject getSessionDetailResponse;
-        try {
-          getSessionDetailResponse = lobbyRequestSender.sendGetSessionDetailRequest(sessionId);
-        } catch (UnirestException e) {
-          throw new RuntimeException(e);
-        }
-        Platform.runLater(() -> {
-          Gson gson = new Gson();
-          Session joinedSession = gson.fromJson(getSessionDetailResponse.toString(), Session.class);
-          String newSessionInfo = formatSessionInfo(joinedSession);
-          HBox infoHbox = (HBox) joinAndLeaveButton.getParent();
-          Label infoLabel = (Label) infoHbox.getChildren().get(0);
-          infoLabel.setText(newSessionInfo);
-        });
-
-      };
-      Button joinAndLeaveButton = new Button("Join");
+      Button joinAndLeaveButton = new Button(buttonContent);
       joinAndLeaveButton.setOnAction(joinAndLeaveSessionHandler);
       hb = new HBox(sessionInfoContent, spaceBetween, joinAndLeaveButton);
     }
@@ -257,8 +289,10 @@ public class LobbyController {
     }
   }
 
-  private void updateSessionsGui(Map<String, Session> localSessionIdMap, HBox inputHbox) {
-    String curSessionId = inputHbox.getAccessibleText();
+  private void updateSessionsGui(Map<String, Session> localSessionIdMap, Node inputNode) {
+    String curSessionId = inputNode.getAccessibleText();
+    Pane childPane = (Pane) inputNode;
+    HBox inputHbox = (HBox) childPane.getChildren().get(0);
     Label curSessionLabel = (Label) inputHbox.getChildren().get(0);
     Session curSession = localSessionIdMap.get(curSessionId);
     String sessionInfo = formatSessionInfo(curSession);
@@ -318,7 +352,7 @@ public class LobbyController {
           localSessionIdMap = lobbyRequestSender.getSessionIdMap();
           addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
         } else { // localSessionIdMap is not empty because it can only be
-          if (user != null) {
+          if (user != null) { // stop client from updating if user log out
             int remoteSessionCount = remoteSessionIdMap.size();
             int localSessionCount = localSessionIdMap.size();
             // local already has a record of some sessions
@@ -354,14 +388,9 @@ public class LobbyController {
             // proceed with updating all local session ids' session info
             // in the case of localSessionCount == remoteSessionCount
             // local session map will not be updated, we manually update it here
-            if (!localSessionIdMap.isEmpty()) {
-              lobbyRequestSender.setSessionIdMap(remoteSessionIdMap);
-              localSessionIdMap = lobbyRequestSender.getSessionIdMap();
-              for (Node n : sessionVbox.getChildren()) {
-                Pane childPane = (Pane) n;
-                HBox inputHbox = (HBox) childPane.getChildren().get(0);
-                updateSessionsGui(localSessionIdMap, inputHbox);
-              }
+            localSessionIdMap = lobbyRequestSender.getSessionIdMap();
+            for (Node n : sessionVbox.getChildren()) {
+              updateSessionsGui(localSessionIdMap, n);
             }
           }
 
@@ -371,8 +400,6 @@ public class LobbyController {
             throw new RuntimeException(e);
           }
         }
-
-
       }
     });
     lobbyMainPageUpdateThread.start();
