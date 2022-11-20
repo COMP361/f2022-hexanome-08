@@ -22,8 +22,12 @@ public class Session {
     creator = otherSession.getCreator();
     savegameid = otherSession.getSavegameid();
     gameParameters = otherSession.getGameParameters();
-    players.clear();
-    players.addAll(otherSession.getPlayers());
+    if (players != null) {
+      players.clear();
+      players.addAll(otherSession.getPlayers());
+    } else {
+      players = otherSession.getPlayers();
+    }
     playerLocations = otherSession.getPlayerLocations();
     launched = otherSession.getLaunched();
   }
