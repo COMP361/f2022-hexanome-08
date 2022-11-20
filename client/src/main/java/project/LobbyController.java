@@ -176,6 +176,7 @@ public class LobbyController {
     } else {
       EventHandler<ActionEvent> joinAndLeaveSessionHandler = event -> {
         // TODO: add the request of joining / leaving session here
+        // anonymous class of EventHandler instance
 
         Button joinAndLeaveButton = (Button) event.getSource();
 
@@ -256,10 +257,9 @@ public class LobbyController {
     }
   }
 
-  private void updateSessionsGui(Map<String, Session> localSessionIdMap, Node inputNode) {
-    String curSessionId = inputNode.getAccessibleText();
-    HBox curSessionHbox = (HBox) inputNode;
-    Label curSessionLabel = (Label) curSessionHbox.getChildren().get(0);
+  private void updateSessionsGui(Map<String, Session> localSessionIdMap, HBox inputHbox) {
+    String curSessionId = inputHbox.getAccessibleText();
+    Label curSessionLabel = (Label) inputHbox.getChildren().get(0);
     Session curSession = localSessionIdMap.get(curSessionId);
     String sessionInfo = formatSessionInfo(curSession);
     // defer GUI change to lobby main page
@@ -313,54 +313,58 @@ public class LobbyController {
           // local has no record of any sessions, add all default ones
           // then copy the whole thing
           lobbyRequestSender.setSessionIdMap(remoteSessionIdMap);
-
           // generate all GUI if user logged in
           String accessToken = user.getAccessToken();
           localSessionIdMap = lobbyRequestSender.getSessionIdMap();
           addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
         } else { // localSessionIdMap is not empty because it can only be
-          int remoteSessionCount = remoteSessionIdMap.size();
-          int localSessionCount = localSessionIdMap.size();
-          // local already has a record of some sessions
-          Set<String> remoteSessionIds = remoteSessionIdMap.keySet();
-          Set<String> localSessionIds = localSessionIdMap.keySet();
+          if (user != null) {
+            int remoteSessionCount = remoteSessionIdMap.size();
+            int localSessionCount = localSessionIdMap.size();
+            // local already has a record of some sessions
+            Set<String> remoteSessionIds = remoteSessionIdMap.keySet();
+            Set<String> localSessionIds = localSessionIdMap.keySet();
 
-          // TODO: Shallow copy might be a future problem....
-          if (remoteSessionCount > localSessionCount) {
-            // remote has more sessions, need to create ones locally
-            remoteSessionIds.removeAll(localSessionIds);
-            for (String sessionId : remoteSessionIds) {
-              Session remoteSession = remoteSessionIdMap.get(sessionId);
-              Session newLocalSession = new Session(remoteSession);
-              // added new session to local session id map
-              localSessionIdMap.put(sessionId, newLocalSession);
-            }
-            // update local session id map
-            lobbyRequestSender.setSessionIdMap(localSessionIdMap);
-            // GUI: add the new sessions
-            // generate all GUI if user logged in
-            if (user != null) {
+            // TODO: Shallow copy might be a future problem....
+            if (remoteSessionCount > localSessionCount) {
+              // remote has more sessions, need to create ones locally
+              remoteSessionIds.removeAll(localSessionIds);
+              for (String sessionId : remoteSessionIds) {
+                Session remoteSession = remoteSessionIdMap.get(sessionId);
+                Session newLocalSession = new Session(remoteSession);
+                // added new session to local session id map
+                localSessionIdMap.put(sessionId, newLocalSession);
+              }
+              // update local session id map
+              lobbyRequestSender.setSessionIdMap(localSessionIdMap);
+              // GUI: add the new sessions
+              // generate all GUI if user logged in
               String accessToken = user.getAccessToken();
               addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
+
+            } else if (localSessionCount > remoteSessionCount) {
+              // local has more sessions, need to delete ones locally
+              localSessionIds.removeAll(remoteSessionIds);
+              // update local session id map (if user logged in)
+              lobbyRequestSender.setSessionIdMap(localSessionIdMap);
+              removeSessionsGui(localSessionIdMap, localSessionIds, sessionVbox);
             }
 
-          } else if (localSessionCount > remoteSessionCount) {
-            // local has more sessions, need to delete ones locally
-            localSessionIds.removeAll(remoteSessionIds);
-            removeSessionsGui(localSessionIdMap, localSessionIds, sessionVbox);
-            // update local session id map
-            lobbyRequestSender.setSessionIdMap(localSessionIdMap);
-          }
-
-          // TODO: After having the updated local sessions id map, we can update GUI
-          // proceed with updating all local session ids' session info
-
-          // the children of Vbox are Hbox, Hbox.get(0) contains the Label
-          for (Node n : sessionVbox.getChildren()) {
-            if (user != null) {
-              updateSessionsGui(localSessionIdMap, n);
+            // TODO: After having the updated local sessions id map, we can update GUI
+            // proceed with updating all local session ids' session info
+            // in the case of localSessionCount == remoteSessionCount
+            // local session map will not be updated, we manually update it here
+            if (!localSessionIdMap.isEmpty()) {
+              lobbyRequestSender.setSessionIdMap(remoteSessionIdMap);
+              localSessionIdMap = lobbyRequestSender.getSessionIdMap();
+              for (Node n : sessionVbox.getChildren()) {
+                Pane childPane = (Pane) n;
+                HBox inputHbox = (HBox) childPane.getChildren().get(0);
+                updateSessionsGui(localSessionIdMap, inputHbox);
+              }
             }
           }
+
           try {
             Thread.sleep(500);
           } catch (InterruptedException e) {
