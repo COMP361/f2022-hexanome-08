@@ -28,6 +28,8 @@ public class Session {
     launched = otherSession.getLaunched();
   }
 
+
+
   public void setCreator(String creator) {
     this.creator = creator;
   }
