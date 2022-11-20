@@ -151,7 +151,6 @@ public class LobbyServiceRequestSender {
                                          String accessToken,
                                          String gameName,
                                          String saveGameName) throws UnirestException {
-    // String creatorName = sendUserNameRequest(accessToken);
 
     JSONObject requestBody = new JSONObject();
     requestBody.put("creator", userName);

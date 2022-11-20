@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +14,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -58,29 +56,27 @@ public class LobbyController {
     Map<String, String> gameNameMapping = lobbyRequestSender.getGameNameMapping();
 
     // Get the current game display name in the choice box
-    String gameDisplayName = gameChoices.getValue();
-    String gameName = gameNameMapping.get(gameDisplayName);
+    String displayGameName = gameChoices.getValue();
+    String gameName = gameNameMapping.get(displayGameName);
     String accessToken = curUser.getAccessToken();
-    String userName = curUser.getUsername();
+    String creator = curUser.getUsername();
     JSONObject gameDetailsJson = lobbyRequestSender.getGameDetailsRequest(gameName);
-
     int maxSessionPlayers = gameDetailsJson.getInt("maxSessionPlayers");
 
-    // TODO: Do we need these 2 info ???
-    int minSessionPlayers = gameDetailsJson.getInt("minSessionPlayers");
-    String gameLocation = gameDetailsJson.getString("location");
-    //
-
-    Label sessionInfo = new Label(
-        gameDisplayName + " max player: " + maxSessionPlayers + " creator: " + userName);
-
-    // TODO: Figure out where to get the saveGameName (maybe input by user?)
+    String sessionInfoStr = String.format(
+        "%s, [%d/%d] players [%s]: \n",
+        displayGameName, 1, maxSessionPlayers, creator) + String.format("creator: %s", creator);
+    Label sessionInfo = new Label(sessionInfoStr);
+    // TODO: Figure out where to get the saveGameName (maybe input by user? -> Later)
     String sessionId =
-        lobbyRequestSender.sendCreateSessionRequest(userName, accessToken, gameName, "");
-    lobbyRequestSender.getRemoteSessions();
+        lobbyRequestSender.sendCreateSessionRequest(creator, accessToken, gameName, "");
 
-    Pane p = generateSessionPane(accessToken, sessionId, sessionInfo);
-    sessionVbox.getChildren().add(p);
+
+    Pane p = createSessionGui(accessToken, sessionId, sessionInfo, creator);
+
+    Platform.runLater(() -> {
+      sessionVbox.getChildren().add(p);
+    });
   }
 
 
@@ -117,25 +113,35 @@ public class LobbyController {
         + String.format("creator: %s", creatorName);
   }
 
-  private Pane generateSessionPane(String accessToken,
-                                   String sessionId,
-                                   Label sessionInfoContent) {
+  /**
+   * create a GUI representation of session object.
+   *
+   * @param accessToken        access token
+   * @param sessionId          session id
+   * @param sessionInfoContent session info in string
+   * @return a Pane that contains info about a session
+   */
+  private Pane createSessionGui(String accessToken,
+                                String sessionId,
+                                Label sessionInfoContent,
+                                String creator) {
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
-    User user = App.getUser();
-    String curUserName = user.getUsername();
 
     // give different buttons depending on username and creator name
-
     HBox hb;
-    String sessionCreatorName =
-        lobbyRequestSender.getSessionIdMap().get(sessionId).getCreator();
-
+    String sessionCreatorName;
+    if (creator.equals("")) {
+      sessionCreatorName = lobbyRequestSender.getSessionIdMap().get(sessionId).getCreator();
+    } else {
+      sessionCreatorName = creator;
+    }
 
     // Can be changed for better visualization
     Region spaceBetween = new Region();
     spaceBetween.setPrefWidth(200);
     spaceBetween.setPrefHeight(30);
-
+    User user = App.getUser();
+    String curUserName = user.getUsername();
     // if the user is the creator, provides delete and launch button
     if (curUserName.equals(sessionCreatorName)) {
       EventHandler<ActionEvent> deleteSessionHandler = event -> {
@@ -219,14 +225,13 @@ public class LobbyController {
     return p;
   }
 
-
-  private void addNewSessionGui(Map<String, Session> localSessionIdMap, String accessToken) {
+  private void addSessionsGui(Map<String, Session> localSessionIdMap, String accessToken,
+                              VBox sessionVbox) {
     for (String sessionId : localSessionIdMap.keySet()) {
       Session curSession = localSessionIdMap.get(sessionId);
       String sessionInfo = formatSessionInfo(curSession);
       Label sessionInfoLabel = new Label(sessionInfo);
-      Pane newPane = generateSessionPane(accessToken, sessionId, sessionInfoLabel);
-      newPane.setAccessibleText(sessionId);
+      Pane newPane = createSessionGui(accessToken, sessionId, sessionInfoLabel, "");
       // defer GUI change to lobby main page
       Platform.runLater(() -> {
         sessionVbox.getChildren().add(newPane);
@@ -234,11 +239,27 @@ public class LobbyController {
     }
   }
 
-  private void updateSessionGui(Node vboxChild, Map<String, Session> localSessionIdMap) {
-    Pane sessionPane = (Pane) vboxChild;
-    Label curSessionLabel = (Label) sessionPane.getChildren().get(0);
+  private void removeSessionsGui(Map<String, Session> localSessionIdMap,
+                                 Set<String> localSessionIds, VBox sessionVbox) {
 
-    String curSessionId = sessionPane.getAccessibleText();
+    for (String sessionId : localSessionIds) {
+      // remove session from local session id map
+      localSessionIdMap.remove(sessionId);
+      for (Node n : sessionVbox.getChildren()) {
+        if (n.getAccessibleText().equals(sessionId)) {
+          // defer GUI remove after
+          Platform.runLater(() -> {
+            sessionVbox.getChildren().remove(n);
+          });
+        }
+      }
+    }
+  }
+
+  private void updateSessionsGui(Map<String, Session> localSessionIdMap, Node inputNode) {
+    String curSessionId = inputNode.getAccessibleText();
+    HBox curSessionHbox = (HBox) inputNode;
+    Label curSessionLabel = (Label) curSessionHbox.getChildren().get(0);
     Session curSession = localSessionIdMap.get(curSessionId);
     String sessionInfo = formatSessionInfo(curSession);
     // defer GUI change to lobby main page
@@ -288,79 +309,66 @@ public class LobbyController {
         // if we have any remote sessions, then we need to sync local session ids
         // with the remote ones (either add or remove session from local sessionIdMap)
         User user = App.getUser();
-        if (!remoteSessionIdMap.isEmpty()) {
+        if (localSessionIdMap.isEmpty() && user != null) {
+          // local has no record of any sessions, add all default ones
+          // then copy the whole thing
+          lobbyRequestSender.setSessionIdMap(remoteSessionIdMap);
+
+          // generate all GUI if user logged in
+          String accessToken = user.getAccessToken();
+          localSessionIdMap = lobbyRequestSender.getSessionIdMap();
+          addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
+        } else { // localSessionIdMap is not empty because it can only be
           int remoteSessionCount = remoteSessionIdMap.size();
           int localSessionCount = localSessionIdMap.size();
-          if (localSessionCount > 0) {
-            // local already has a record of some sessions
-            Set<String> remoteSessionIds = remoteSessionIdMap.keySet();
-            Set<String> localSessionIds = localSessionIdMap.keySet();
+          // local already has a record of some sessions
+          Set<String> remoteSessionIds = remoteSessionIdMap.keySet();
+          Set<String> localSessionIds = localSessionIdMap.keySet();
 
-            // TODO: Shallow copy might be a future problem....
-            if (remoteSessionCount > localSessionCount) {
-              // remote has more sessions, need to create ones locally
-              remoteSessionIds.removeAll(localSessionIds);
-              for (String sessionId : remoteSessionIds) {
-                Session remoteSession = remoteSessionIdMap.get(sessionId);
-                Session newLocalSession = new Session(remoteSession);
-                // added new session to local session id map
-                localSessionIdMap.put(sessionId, newLocalSession);
-              }
-              // update local session id map
-              lobbyRequestSender.setSessionIdMap(localSessionIdMap);
-              // GUI: add the new sessions
-              // generate all GUI if user logged in
-              if (user != null) {
-                String accessToken = user.getAccessToken();
-                addNewSessionGui(localSessionIdMap, accessToken);
-              }
-
-            } else if (localSessionCount > remoteSessionCount) {
-              // local has more sessions, need to delete ones locally
-              localSessionIds.removeAll(remoteSessionIds);
-              for (String sessionId : localSessionIds) {
-                // remove session from local session id map
-                localSessionIdMap.remove(sessionId);
-                for (Node n : sessionVbox.getChildren()) {
-                  if (n.getAccessibleText().equals(sessionId)) {
-                    // defer GUI remove after
-                    Platform.runLater(() -> {
-                      sessionVbox.getChildren().remove(n);
-                    });
-                  }
-                }
-              }
-              // update local session id map
-              lobbyRequestSender.setSessionIdMap(localSessionIdMap);
+          // TODO: Shallow copy might be a future problem....
+          if (remoteSessionCount > localSessionCount) {
+            // remote has more sessions, need to create ones locally
+            remoteSessionIds.removeAll(localSessionIds);
+            for (String sessionId : remoteSessionIds) {
+              Session remoteSession = remoteSessionIdMap.get(sessionId);
+              Session newLocalSession = new Session(remoteSession);
+              // added new session to local session id map
+              localSessionIdMap.put(sessionId, newLocalSession);
             }
-
-          } else {
-            // local has no record of any sessions, add all default ones
-            // then copy the whole thing
-            lobbyRequestSender.setSessionIdMap(remoteSessionIdMap);
-
+            // update local session id map
+            lobbyRequestSender.setSessionIdMap(localSessionIdMap);
+            // GUI: add the new sessions
             // generate all GUI if user logged in
             if (user != null) {
               String accessToken = user.getAccessToken();
-              addNewSessionGui(localSessionIdMap, accessToken);
+              addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
+            }
+
+          } else if (localSessionCount > remoteSessionCount) {
+            // local has more sessions, need to delete ones locally
+            localSessionIds.removeAll(remoteSessionIds);
+            removeSessionsGui(localSessionIdMap, localSessionIds, sessionVbox);
+            // update local session id map
+            lobbyRequestSender.setSessionIdMap(localSessionIdMap);
+          }
+
+          // TODO: After having the updated local sessions id map, we can update GUI
+          // proceed with updating all local session ids' session info
+
+          // the children of Vbox are Hbox, Hbox.get(0) contains the Label
+          for (Node n : sessionVbox.getChildren()) {
+            if (user != null) {
+              updateSessionsGui(localSessionIdMap, n);
             }
           }
-        }
-
-        // TODO: After having the updated local sessions id map, we can update GUI
-        // proceed with updating all local session ids' session info
-
-        for (Node n : sessionVbox.getChildren()) {
-          if (user != null) {
-            updateSessionGui(n, localSessionIdMap);
+          try {
+            Thread.sleep(500);
+          } catch (InterruptedException e) {
+            throw new RuntimeException(e);
           }
         }
 
-        try {
-          Thread.sleep(500);
-        } catch (InterruptedException e) {
-          throw new RuntimeException(e);
-        }
+
       }
     });
     lobbyMainPageUpdateThread.start();
