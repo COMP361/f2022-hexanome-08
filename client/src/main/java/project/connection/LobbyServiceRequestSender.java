@@ -75,12 +75,16 @@ public class LobbyServiceRequestSender {
         .getObject()
         .getJSONObject("sessions");
 
-    // JsonArray of session details
-    JSONArray remoteSessionsArray = sessionObject.toJSONArray(sessionObject.names());
     // JsonArray of session ids
     JSONArray remoteSessionIds = sessionObject.names();
     Gson gson = new Gson();
     Map<String, Session> returnMap = new HashMap<>();
+
+    // JsonArray of session details
+    JSONArray remoteSessionsArray = sessionObject.toJSONArray(sessionObject.names());
+    if (remoteSessionsArray == null) {
+      return returnMap;
+    }
     for (int i = 0; i < remoteSessionsArray.length(); i++) {
       String sessionId = remoteSessionIds.getString(i);
       Session session = gson

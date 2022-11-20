@@ -3,7 +3,9 @@ package project;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -71,9 +73,7 @@ public class LobbyController {
     String sessionId =
         lobbyRequestSender.sendCreateSessionRequest(creator, accessToken, gameName, "");
 
-
     Pane p = createSessionGui(accessToken, sessionId, sessionInfo, creator);
-
     Platform.runLater(() -> {
       sessionVbox.getChildren().add(p);
     });
@@ -127,13 +127,13 @@ public class LobbyController {
           //  Platform.runLater(() -> { methods_you_want_to_call })
           Platform.runLater(() -> {
             sessionVbox.getChildren().remove(n);
-            try {
-              lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
-              App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
-            } catch (UnirestException e) {
-              throw new RuntimeException(e);
-            }
           });
+          try {
+            lobbyRequestSender.sendDeleteSessionRequest(accessToken, sessionId);
+            App.getLobbyServiceRequestSender().removeSessionIdMap(sessionId);
+          } catch (UnirestException e) {
+            throw new RuntimeException(e);
+          }
         }
       }
     };
@@ -172,12 +172,12 @@ public class LobbyController {
       } catch (UnirestException e) {
         throw new RuntimeException(e);
       }
+      Gson gson = new Gson();
+      Session joinedSession = gson.fromJson(getSessionDetailResponse.toString(), Session.class);
+      String newSessionInfo = formatSessionInfo(joinedSession);
+      HBox infoHbox = (HBox) joinAndLeaveButton.getParent();
+      Label infoLabel = (Label) infoHbox.getChildren().get(0);
       Platform.runLater(() -> {
-        Gson gson = new Gson();
-        Session joinedSession = gson.fromJson(getSessionDetailResponse.toString(), Session.class);
-        String newSessionInfo = formatSessionInfo(joinedSession);
-        HBox infoHbox = (HBox) joinAndLeaveButton.getParent();
-        Label infoLabel = (Label) infoHbox.getChildren().get(0);
         infoLabel.setText(newSessionInfo);
       });
 
@@ -278,12 +278,11 @@ public class LobbyController {
     for (String sessionId : localSessionIds) {
       // remove session from local session id map
       localSessionIdMap.remove(sessionId);
-      for (Node n : sessionVbox.getChildren()) {
+      for (Iterator<Node> iterator = sessionVbox.getChildren().iterator(); iterator.hasNext(); ) {
+        Node n = iterator.next();
         if (n.getAccessibleText().equals(sessionId)) {
           // defer GUI remove after
-          Platform.runLater(() -> {
-            sessionVbox.getChildren().remove(n);
-          });
+          Platform.runLater(iterator::remove);
         }
       }
     }
@@ -339,7 +338,9 @@ public class LobbyController {
         } catch (UnirestException e) {
           throw new RuntimeException(e);
         }
-
+        if (remoteSessionIdMap.isEmpty()) {
+          continue;
+        }
         // if we have any remote sessions, then we need to sync local session ids
         // with the remote ones (either add or remove session from local sessionIdMap)
         User user = App.getUser();
@@ -388,6 +389,7 @@ public class LobbyController {
             // proceed with updating all local session ids' session info
             // in the case of localSessionCount == remoteSessionCount
             // local session map will not be updated, we manually update it here
+            System.out.println(localSessionIdMap.keySet());
             localSessionIdMap = lobbyRequestSender.getSessionIdMap();
             for (Node n : sessionVbox.getChildren()) {
               updateSessionsGui(localSessionIdMap, n);
@@ -395,7 +397,7 @@ public class LobbyController {
           }
 
           try {
-            Thread.sleep(500);
+            Thread.sleep(1000);
           } catch (InterruptedException e) {
             throw new RuntimeException(e);
           }
