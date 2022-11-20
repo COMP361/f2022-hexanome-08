@@ -1,7 +1,12 @@
 package project;
 
 import java.io.IOException;
+import java.util.Map;
 import javafx.application.Application;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import project.connection.LobbyServiceRequestSender;
+import project.view.lobby.Session;
 import project.view.lobby.User;
 
 
@@ -42,9 +48,11 @@ public class App extends Application {
   @Override
   public void start(Stage stage) throws IOException {
     scene = new Scene(loadFxml("start_page"), 1000, 800);
-    lobby = new Scene(loadFxml("admin_lobby_page"), 1000, 800);
-    handCard = new Scene(loadFxml("my_development_cards"), 789, 406);
-    reservedCards = new Scene(loadFxml("my_reserved_cards"), 789, 406);
+    // Every time we loadFxml("a_file"), the file corresponding
+    // controller's initialize method will get called
+    //lobby = new Scene(loadFxml("admin_lobby_page"), 1000, 800);
+    //handCard = new Scene(loadFxml("my_development_cards"), 789, 406);
+    //reservedCards = new Scene(loadFxml("my_reserved_cards"), 789, 406);
     stage.setTitle("Welcome to Splendor!");
     stage.setScene(scene);
     stage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
