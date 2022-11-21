@@ -64,6 +64,9 @@ public class LobbyGuiTask extends Task<Void> {
       // generate all GUI if user logged in
       String accessToken = user.getAccessToken();
       localSessionIdMap = lobbyRequestSender.getSessionIdMap();
+      // initialize() will get called everytime the fxml file associated with it get loaded
+      // since the first we load this, we do not have a local
+      System.out.println("Added all sessions");
       lobbyController.addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
     } else { // localSessionIdMap is not empty because it can only be
       if (user != null) { // stop client from updating if user log out
@@ -102,7 +105,12 @@ public class LobbyGuiTask extends Task<Void> {
         // proceed with updating all local session ids' session info
         // in the case of localSessionCount == remoteSessionCount
         // local session map will not be updated, we manually update it here
-        System.out.println(localSessionIdMap.keySet());
+        if (localSessionIdMap.isEmpty()) {
+          System.out.println("No local sessions yet");
+        } else {
+          System.out.println("Current local sessions:" + localSessionIdMap.keySet());
+        }
+
         localSessionIdMap = lobbyRequestSender.getSessionIdMap();
         for (Node n : sessionVbox.getChildren()) {
           lobbyController.updateSessionsGui(localSessionIdMap, n);

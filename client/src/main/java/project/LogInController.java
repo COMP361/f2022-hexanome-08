@@ -73,4 +73,9 @@ public class LogInController {
     curStage.close();
   }
 
+  public void initialize() {
+    userName.setText("ruoyu");
+    userPassword.setText("Dd991218?");
+  }
+
 }
