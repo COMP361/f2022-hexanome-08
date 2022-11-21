@@ -23,17 +23,26 @@ public class LobbyGuiTask extends Task<Void> {
 
   private final LobbyServiceRequestSender lobbyRequestSender;
   private final VBox sessionVbox;
+  private final LobbyController lobbyController;
 
 
-  public LobbyGuiTask(LobbyServiceRequestSender lsSender, VBox psessionVbox) {
+  /**
+   * Constructor of LobbyGuiTask.
+   *
+   * @param lsSender     LS request sender
+   * @param psessionVbox where sessions are updated visually
+   * @param lc           lobby controller
+   */
+  public LobbyGuiTask(LobbyServiceRequestSender lsSender, VBox psessionVbox, LobbyController lc) {
     lobbyRequestSender = lsSender;
     sessionVbox = psessionVbox;
+    lobbyController = lc;
   }
 
 
   @Override
   protected Void call() throws Exception {
-    System.out.println(Thread.currentThread().getName());
+    System.out.println("Trying to start gui update task in:" + Thread.currentThread().getName());
     // Start busy waiting by trying to update with the latest session info
     Map<String, Session> remoteSessionIdMap;
     Map<String, Session> localSessionIdMap = lobbyRequestSender.getSessionIdMap();
@@ -55,7 +64,7 @@ public class LobbyGuiTask extends Task<Void> {
       // generate all GUI if user logged in
       String accessToken = user.getAccessToken();
       localSessionIdMap = lobbyRequestSender.getSessionIdMap();
-      LobbyController.addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
+      lobbyController.addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
     } else { // localSessionIdMap is not empty because it can only be
       if (user != null) { // stop client from updating if user log out
         int remoteSessionCount = remoteSessionIdMap.size();
@@ -79,14 +88,14 @@ public class LobbyGuiTask extends Task<Void> {
           // GUI: add the new sessions
           // generate all GUI if user logged in
           String accessToken = user.getAccessToken();
-          LobbyController.addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
+          lobbyController.addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
 
         } else if (localSessionCount > remoteSessionCount) {
           // local has more sessions, need to delete ones locally
           localSessionIds.removeAll(remoteSessionIds);
           // update local session id map (if user logged in)
           lobbyRequestSender.setSessionIdMap(localSessionIdMap);
-          LobbyController.removeSessionsGui(localSessionIdMap, localSessionIds, sessionVbox);
+          lobbyController.removeSessionsGui(localSessionIdMap, localSessionIds, sessionVbox);
         }
 
         // TODO: After having the updated local sessions id map, we can update GUI
@@ -96,7 +105,7 @@ public class LobbyGuiTask extends Task<Void> {
         System.out.println(localSessionIdMap.keySet());
         localSessionIdMap = lobbyRequestSender.getSessionIdMap();
         for (Node n : sessionVbox.getChildren()) {
-          LobbyController.updateSessionsGui(localSessionIdMap, n);
+          lobbyController.updateSessionsGui(localSessionIdMap, n);
         }
       }
 
