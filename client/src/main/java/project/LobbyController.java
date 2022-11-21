@@ -53,7 +53,7 @@ public class LobbyController {
   private ScrollPane sessionScrollPane;
 
   @FXML
-  private static VBox sessionVbox;
+  private VBox sessionVbox;
 
 
   @FXML
@@ -104,7 +104,7 @@ public class LobbyController {
     curStage.close();
   }
 
-  private static String formatSessionInfo(Session session) {
+  private String formatSessionInfo(Session session) {
     List<String> curPlayers = session.getPlayers();
     String curPlayerStr = curPlayers.toString();
     String creatorName = session.getCreator();
@@ -121,7 +121,7 @@ public class LobbyController {
   }
 
 
-  private static EventHandler<ActionEvent> createDeleteSessionHandler(
+  private EventHandler<ActionEvent> createDeleteSessionHandler(
       VBox sessionVbox, String sessionId,
       LobbyServiceRequestSender lobbyRequestSender,
       String accessToken) {
@@ -145,7 +145,7 @@ public class LobbyController {
     };
   }
 
-  private static EventHandler<ActionEvent> createJoinLeaveSessionHandler(
+  private EventHandler<ActionEvent> createJoinLeaveSessionHandler(
       String curUserName, String sessionId,
       LobbyServiceRequestSender lobbyRequestSender, String accessToken) {
     return event -> {
@@ -198,10 +198,10 @@ public class LobbyController {
    * @param sessionInfoContent session info in string
    * @return a Pane that contains info about a session
    */
-  private static Pane createSessionGui(String accessToken,
-                                       String sessionId,
-                                       Label sessionInfoContent,
-                                       String creator) {
+  private Pane createSessionGui(String accessToken,
+                                String sessionId,
+                                Label sessionInfoContent,
+                                String creator) {
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
 
     // give different buttons depending on username and creator name
@@ -264,8 +264,8 @@ public class LobbyController {
     return p;
   }
 
-  protected static void addSessionsGui(Map<String, Session> localSessionIdMap, String accessToken,
-                              VBox sessionVbox) {
+  protected void addSessionsGui(Map<String, Session> localSessionIdMap, String accessToken,
+                                VBox sessionVbox) {
     for (String sessionId : localSessionIdMap.keySet()) {
       Session curSession = localSessionIdMap.get(sessionId);
       String sessionInfo = formatSessionInfo(curSession);
@@ -278,8 +278,8 @@ public class LobbyController {
     }
   }
 
-  protected static void removeSessionsGui(Map<String, Session> localSessionIdMap,
-                                 Set<String> localSessionIds, VBox sessionVbox) {
+  protected void removeSessionsGui(Map<String, Session> localSessionIdMap,
+                                   Set<String> localSessionIds, VBox sessionVbox) {
 
     for (String sessionId : localSessionIds) {
       // remove session from local session id map
@@ -294,7 +294,7 @@ public class LobbyController {
     }
   }
 
-  protected static void updateSessionsGui(Map<String, Session> localSessionIdMap, Node inputNode) {
+  protected void updateSessionsGui(Map<String, Session> localSessionIdMap, Node inputNode) {
     String curSessionId = inputNode.getAccessibleText();
     Pane childPane = (Pane) inputNode;
     HBox inputHbox = (HBox) childPane.getChildren().get(0);
@@ -337,107 +337,128 @@ public class LobbyController {
     // Busy waiting with backend javaFX thread to get lobby main page update
     // Similar thing with splendor game board
     // TODO: Deletion of Session is not visible on other client's side!
-    //Service<Void> guiService =
-    //    new Service<Void>() {
-    //      @Override
-    //      protected Task<Void> createTask() {
-    //        return null;
-    //      }
-    //    };
-
-    ScheduledService<Void> guiService =
-        new ScheduledService<Void>() {
+    LobbyController lc = this;
+    Service<Void> guiService =
+        new Service<Void>() {
           @Override
-          protected LobbyGuiTask createTask() {
+          protected Task<Void> createTask() {
+            return new LobbyGuiTask(lobbyRequestSender, sessionVbox, lc);
+          }
 
-            return new LobbyGuiTask(lobbyRequestSender, sessionVbox);
-            //return new Task<Map<String, Session>>() {
-            //
-            //  @Override
-            //  // The place we run multiple tasks
-            //  // The place we should do things that are not related to Gui update
-            //  protected Map<String, Session> call() {
-            //    System.out.println(Thread.currentThread().getName());
-            //    // Start busy waiting by trying to update with the latest session info
-            //    Map<String, Session> remoteSessionIdMap;
-            //    Map<String, Session> localSessionIdMap = lobbyRequestSender.getSessionIdMap();
-            //    try {
-            //      remoteSessionIdMap = lobbyRequestSender.getRemoteSessions();
-            //    } catch (UnirestException e) {
-            //      throw new RuntimeException(e);
-            //    }
-            //    if (remoteSessionIdMap.isEmpty()) {
-            //      return remoteSessionIdMap;
-            //    }
-            //    // if we have any remote sessions, then we need to sync local session ids
-            //    // with the remote ones (either add or remove session from local sessionIdMap)
-            //    User user = App.getUser();
-            //    if (localSessionIdMap.isEmpty() && user != null) {
-            //      // local has no record of any sessions, add all default ones
-            //      // then copy the whole thing
-            //      lobbyRequestSender.setSessionIdMap(remoteSessionIdMap);
-            //      // generate all GUI if user logged in
-            //      String accessToken = user.getAccessToken();
-            //      localSessionIdMap = lobbyRequestSender.getSessionIdMap();
-            //      addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
-            //    } else { // localSessionIdMap is not empty because it can only be
-            //      if (user != null) { // stop client from updating if user log out
-            //        int remoteSessionCount = remoteSessionIdMap.size();
-            //        int localSessionCount = localSessionIdMap.size();
-            //        // local already has a record of some sessions
-            //        Set<String> remoteSessionIds = remoteSessionIdMap.keySet();
-            //        Set<String> localSessionIds = localSessionIdMap.keySet();
-            //
-            //        // TODO: Shallow copy might be a future problem....
-            //        if (remoteSessionCount > localSessionCount) {
-            //          // remote has more sessions, need to create ones locally
-            //          remoteSessionIds.removeAll(localSessionIds);
-            //          for (String sessionId : remoteSessionIds) {
-            //            Session remoteSession = remoteSessionIdMap.get(sessionId);
-            //            Session newLocalSession = new Session(remoteSession);
-            //            // added new session to local session id map
-            //            localSessionIdMap.put(sessionId, newLocalSession);
-            //          }
-            //          // update local session id map
-            //          lobbyRequestSender.setSessionIdMap(localSessionIdMap);
-            //          // GUI: add the new sessions
-            //          // generate all GUI if user logged in
-            //          String accessToken = user.getAccessToken();
-            //          addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
-            //
-            //        } else if (localSessionCount > remoteSessionCount) {
-            //          // local has more sessions, need to delete ones locally
-            //          localSessionIds.removeAll(remoteSessionIds);
-            //          // update local session id map (if user logged in)
-            //          lobbyRequestSender.setSessionIdMap(localSessionIdMap);
-            //          removeSessionsGui(localSessionIdMap, localSessionIds, sessionVbox);
-            //        }
-            //
-            //        // TODO: After having the updated local sessions id map, we can update GUI
-            //        // proceed with updating all local session ids' session info
-            //        // in the case of localSessionCount == remoteSessionCount
-            //        // local session map will not be updated, we manually update it here
-            //        System.out.println(localSessionIdMap.keySet());
-            //        localSessionIdMap = lobbyRequestSender.getSessionIdMap();
-            //        for (Node n : sessionVbox.getChildren()) {
-            //          updateSessionsGui(localSessionIdMap, n);
-            //        }
-            //      }
-            //
-            //    }
-            //    return null;
-            //  }
-            //
-            //  //@Override
-            //  //protected void updateValue(Map<String, Session> stringSessionMap) {
-            //  //  super.updateValue(stringSessionMap);
-            //  //}
-            //};
+          @Override
+          protected void succeeded() {
+            reset();
           }
         };
 
-    guiService.setPeriod(Duration.millis(1000));
-    guiService.start();
+    Thread guiUpdateThread = new Thread(() -> {
+      while (true) {
+        System.out.println(
+            "Trying to start gui update service in:" + Thread.currentThread().getName());
+        Platform.runLater(guiService::start);
+        try {
+          Thread.sleep(500);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
+        }
+      }
+    });
+    guiUpdateThread.start();
+
+    //
+    //ScheduledService<Void> guiService =
+    //    new ScheduledService<Void>() {
+    //      @Override
+    //      protected LobbyGuiTask createTask() {
+    //
+    //        return new LobbyGuiTask(lobbyRequestSender, sessionVbox);
+    //        //return new Task<Map<String, Session>>() {
+    //        //
+    //        //  @Override
+    //        //  // The place we run multiple tasks
+    //        //  // The place we should do things that are not related to Gui update
+    //        //  protected Map<String, Session> call() {
+    //        //    System.out.println(Thread.currentThread().getName());
+    //        //    // Start busy waiting by trying to update with the latest session info
+    //        //    Map<String, Session> remoteSessionIdMap;
+    //        //    Map<String, Session> localSessionIdMap = lobbyRequestSender.getSessionIdMap();
+    //        //    try {
+    //        //      remoteSessionIdMap = lobbyRequestSender.getRemoteSessions();
+    //        //    } catch (UnirestException e) {
+    //        //      throw new RuntimeException(e);
+    //        //    }
+    //        //    if (remoteSessionIdMap.isEmpty()) {
+    //        //      return remoteSessionIdMap;
+    //        //    }
+    //        //    // if we have any remote sessions, then we need to sync local session ids
+    //        //    // with the remote ones (either add or remove session from local sessionIdMap)
+    //        //    User user = App.getUser();
+    //        //    if (localSessionIdMap.isEmpty() && user != null) {
+    //        //      // local has no record of any sessions, add all default ones
+    //        //      // then copy the whole thing
+    //        //      lobbyRequestSender.setSessionIdMap(remoteSessionIdMap);
+    //        //      // generate all GUI if user logged in
+    //        //      String accessToken = user.getAccessToken();
+    //        //      localSessionIdMap = lobbyRequestSender.getSessionIdMap();
+    //        //      addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
+    //        //    } else { // localSessionIdMap is not empty because it can only be
+    //        //      if (user != null) { // stop client from updating if user log out
+    //        //        int remoteSessionCount = remoteSessionIdMap.size();
+    //        //        int localSessionCount = localSessionIdMap.size();
+    //        //        // local already has a record of some sessions
+    //        //        Set<String> remoteSessionIds = remoteSessionIdMap.keySet();
+    //        //        Set<String> localSessionIds = localSessionIdMap.keySet();
+    //        //
+    //        //        // TODO: Shallow copy might be a future problem....
+    //        //        if (remoteSessionCount > localSessionCount) {
+    //        //          // remote has more sessions, need to create ones locally
+    //        //          remoteSessionIds.removeAll(localSessionIds);
+    //        //          for (String sessionId : remoteSessionIds) {
+    //        //            Session remoteSession = remoteSessionIdMap.get(sessionId);
+    //        //            Session newLocalSession = new Session(remoteSession);
+    //        //            // added new session to local session id map
+    //        //            localSessionIdMap.put(sessionId, newLocalSession);
+    //        //          }
+    //        //          // update local session id map
+    //        //          lobbyRequestSender.setSessionIdMap(localSessionIdMap);
+    //        //          // GUI: add the new sessions
+    //        //          // generate all GUI if user logged in
+    //        //          String accessToken = user.getAccessToken();
+    //        //          addSessionsGui(localSessionIdMap, accessToken, sessionVbox);
+    //        //
+    //        //        } else if (localSessionCount > remoteSessionCount) {
+    //        //          // local has more sessions, need to delete ones locally
+    //        //          localSessionIds.removeAll(remoteSessionIds);
+    //        //          // update local session id map (if user logged in)
+    //        //          lobbyRequestSender.setSessionIdMap(localSessionIdMap);
+    //        //          removeSessionsGui(localSessionIdMap, localSessionIds, sessionVbox);
+    //        //        }
+    //        //
+    //        //        // TODO: After having the updated local sessions id map, we can update GUI
+    //        //        // proceed with updating all local session ids' session info
+    //        //        // in the case of localSessionCount == remoteSessionCount
+    //        //        // local session map will not be updated, we manually update it here
+    //        //        System.out.println(localSessionIdMap.keySet());
+    //        //        localSessionIdMap = lobbyRequestSender.getSessionIdMap();
+    //        //        for (Node n : sessionVbox.getChildren()) {
+    //        //          updateSessionsGui(localSessionIdMap, n);
+    //        //        }
+    //        //      }
+    //        //
+    //        //    }
+    //        //    return null;
+    //        //  }
+    //        //
+    //        //  //@Override
+    //        //  //protected void updateValue(Map<String, Session> stringSessionMap) {
+    //        //  //  super.updateValue(stringSessionMap);
+    //        //  //}
+    //        //};
+    //      }
+    //    };
+    //
+    //guiService.setPeriod(Duration.millis(1000));
+    //guiService.start();
 
   }
 
