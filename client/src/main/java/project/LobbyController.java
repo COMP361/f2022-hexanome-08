@@ -318,6 +318,16 @@ public class LobbyController {
     // TODO: Some problem still remain unsolved for synchronization over diff clients...
     // mainly about display on session info
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+
+    try {
+      // before executing the Service, make sure we get the copy of the remote sessions
+      lobbyRequestSender.setSessionIdMap(lobbyRequestSender.getRemoteSessions());
+    } catch (UnirestException e) {
+      throw new RuntimeException(e);
+    }
+
+    System.out.println("During initialization, current sessions: "
+            + lobbyRequestSender.getSessionIdMap().keySet());
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
 
@@ -327,8 +337,7 @@ public class LobbyController {
     }
 
     // Available games to choose from ChoiceBox
-    ObservableList<String> gameOptionsList =
-        FXCollections.observableArrayList(gameDisplayNames);
+    ObservableList<String> gameOptionsList = FXCollections.observableArrayList(gameDisplayNames);
     gameChoices.setItems(gameOptionsList);
     //LobbyGuiTask myTask = new LobbyGuiTask();
     //Thread thread = new Thread(myTask);
@@ -338,7 +347,7 @@ public class LobbyController {
     // Similar thing with splendor game board
     // TODO: Deletion of Session is not visible on other client's side!
     LobbyController lc = this;
-    Service<Void> guiService =
+    Service<Void> guiUpdateService =
         new Service<Void>() {
           @Override
           protected Task<Void> createTask() {
@@ -355,7 +364,8 @@ public class LobbyController {
       while (true) {
         System.out.println(
             "Trying to start gui update service in:" + Thread.currentThread().getName());
-        Platform.runLater(guiService::start);
+        guiUpdateService.start();
+        //Platform.runLater(guiUpdateService::start);
         try {
           Thread.sleep(500);
         } catch (InterruptedException e) {
