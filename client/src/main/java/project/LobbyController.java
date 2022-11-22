@@ -52,6 +52,10 @@ public class LobbyController {
   private VBox sessionVbox;
 
 
+
+
+
+
   @FXML
   protected void onCreateSessionButtonClick() throws UnirestException {
     // TODO: How to add a Session on GUI (with the buttons, everything)
@@ -259,19 +263,31 @@ public class LobbyController {
     return p;
   }
 
-  protected void addSessionsGui(SessionList localSessionList, String accessToken,
-                                VBox sessionVbox) {
-    Map<String, Session> localSessionsMap = localSessionList.getSesionIdMap();
-    for (String sessionId : localSessionsMap.keySet()) {
-      Session curSession = localSessionsMap.get(sessionId);
-      String sessionInfo = formatSessionInfo(curSession);
-      Label sessionInfoLabel = new Label(sessionInfo);
-      Pane newPane = createSessionGui(accessToken, sessionId, sessionInfoLabel, "");
-      // defer GUI change to lobby main page
-      Platform.runLater(() -> {
-        sessionVbox.getChildren().add(newPane);
-      });
-    }
+//  protected void addSessionsGui(SessionList localSessionList, String accessToken,
+//                                VBox sessionVbox) {
+//    Map<String, Session> localSessionsMap = localSessionList.getSesionIdMap();
+//    for (String sessionId : localSessionsMap.keySet()) {
+//      Session curSession = localSessionsMap.get(sessionId);
+//      String sessionInfo = formatSessionInfo(curSession);
+//      Label sessionInfoLabel = new Label(sessionInfo);
+//      Pane newPane = createSessionGui(accessToken, sessionId, sessionInfoLabel, "");
+//      // defer GUI change to lobby main page
+//      Platform.runLater(() -> {
+//        sessionVbox.getChildren().add(newPane);
+//      });
+//    }
+//  }
+  protected void addOneSessionGui(Session curSession,
+                                  String sessionId,
+                                  String accessToken,
+                                  VBox sessionVbox) {
+    String sessionInfo = formatSessionInfo(curSession);
+    Label sessionInfoLabel = new Label(sessionInfo);
+    Pane newPane = createSessionGui(accessToken, sessionId, sessionInfoLabel, "");
+    // defer GUI change to lobby main page
+    Platform.runLater(() -> {
+      sessionVbox.getChildren().add(newPane);
+    });
   }
 
   protected void removeSessionsGui(Map<String, Session> localSessionIdMap,
@@ -377,6 +393,27 @@ public class LobbyController {
             isFirstCheck = false;
             if (user != null) {
               // TODO: Add all sessions to GUI here, when created and added, we spawn a thread accordingly
+              Map<String, Session> localSessionsMap = localSessionList.getSesionIdMap();
+              for(Session)
+              addSessionsGui(localSessionList, user.getAccessToken(), sessionVbox);
+//              int mapSize = localSessionList.getSesionIdMap().size();
+//              for(int i = 0; i < mapSize; i++){
+//                Session currentSession = localSessionList.getSesionIdMap().get(i);
+//
+//                Pane p = createSessionGui(user.getAccessToken(), currentSession.getSavegameid(),
+//                        new Label(formatSessionInfo(currentSession)),currentSession.getCreator());
+//              }
+//              String accessToken,
+//              String sessionId,
+//              Label sessionInfoContent,
+//              String creator
+
+//              for loop
+//              Pane p = crea....LobbyController
+//
+//              Platform.runLater(()->{
+//                sessonVox.vetchildren().add(p)
+//              });
             }
           } else {
             // TODO: localSession has been set, check the diff between remote and local
