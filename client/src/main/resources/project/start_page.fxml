@@ -11,39 +11,34 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" styleClass="bodyback" stylesheets="@splendor_background.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.LogInController">
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="userName" alignment="CENTER" layoutX="325.0" layoutY="203.0" promptText="username">
+            <TextField fx:id="userName" alignment="CENTER" layoutX="610.0" layoutY="387.0" promptText="username">
                <font>
                   <Font size="25.0" />
                </font>
             </TextField>
-            <Label alignment="CENTER" layoutX="253.0" layoutY="72.0" prefHeight="124.0" prefWidth="447.0" text="Splendor">
-               <font>
-                  <Font size="96.0" />
-               </font>
-            </Label>
-            <Button fx:id="quitGameButton" layoutX="562.0" layoutY="340.0" mnemonicParsing="false" onAction="#onQuitGameButtonClick" text="Quit">
+            <Button fx:id="quitGameButton" layoutX="848.0" layoutY="541.0" mnemonicParsing="false" onAction="#onQuitGameButtonClick" text="Quit">
                <font>
                   <Font size="22.0" />
                </font></Button>
-            <Button fx:id="logInButton" layoutX="325.0" layoutY="340.0" mnemonicParsing="false" onAction="#onLogInButtonClick" text="Log In">
+            <Button layoutX="610.0" layoutY="541.0" mnemonicParsing="false" onAction="#onLogInButtonClick" text="Log In">
                <font>
                   <Font size="22.0" />
                </font>
             </Button>
-            <Label fx:id="logInPageErrorMessage" layoutX="313.0" layoutY="398.0" prefHeight="123.0" prefWidth="422.0" textFill="RED">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-            <PasswordField fx:id="userPassword" alignment="CENTER" layoutX="325.0" layoutY="265.0" promptText="password">
+            <PasswordField fx:id="userPassword" alignment="CENTER" layoutX="610.0" layoutY="462.0" promptText="password">
                <font>
                   <Font size="25.0" />
                </font>
             </PasswordField>
+            <Label fx:id="logInPageErrorMessage" layoutX="613.0" layoutY="591.0" prefHeight="57.0" prefWidth="304.0" textFill="RED">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </center>
