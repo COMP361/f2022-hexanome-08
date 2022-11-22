@@ -396,10 +396,7 @@ public class LobbyController {
               Map<String, Session> localSessionsMap = localSessionList.getSesionIdMap();
               for(String sessionID: localSessionsMap.keySet()){
                 Session curSession = localSessionsMap.get(sessionID);
-                String sessionInfo = formatSessionInfo(curSession);
-                Label sessionInfoLabel = new Label(sessionInfo);
                 addOneSessionGui(curSession, sessionID, user.getAccessToken(), sessionVbox);
-
 
                 getUpdateOneSessionGuiThread(sessionID, lobbyRequestSender, sessionVbox);
               }
