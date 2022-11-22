@@ -401,40 +401,8 @@ public class LobbyController {
                 addOneSessionGui(curSession, sessionID, user.getAccessToken(), sessionVbox);
 
 
+                getUpdateOneSessionGuiThread(sessionID, lobbyRequestSender, sessionVbox);
               }
-
-  //              protected void addSessionsGui(SessionList localSessionList, String accessToken,
-  //                            VBox sessionVbox) {
-  //    Map<String, Session> localSessionsMap = localSessionList.getSesionIdMap();
-  //    for (String sessionId : localSessionsMap.keySet()) {
-  //      Session curSession = localSessionsMap.get(sessionId);
-  //      String sessionInfo = formatSessionInfo(curSession);
-  //      Label sessionInfoLabel = new Label(sessionInfo);
-  //      Pane newPane = createSessionGui(accessToken, sessionId, sessionInfoLabel, "");
-  //      // defer GUI change to lobby main page
-  //      Platform.runLater(() -> {
-  //        sessionVbox.getChildren().add(newPane);
-  //      });
-  //    }
-  //  }
-//              int mapSize = localSessionList.getSesionIdMap().size();
-//              for(int i = 0; i < mapSize; i++){
-//                Session currentSession = localSessionList.getSesionIdMap().get(i);
-//
-//                Pane p = createSessionGui(user.getAccessToken(), currentSession.getSavegameid(),
-//                        new Label(formatSessionInfo(currentSession)),currentSession.getCreator());
-//              }
-//              String accessToken,
-//              String sessionId,
-//              Label sessionInfoContent,
-//              String creator
-
-//              for loop
-//              Pane p = crea....LobbyController
-//
-//              Platform.runLater(()->{
-//                sessonVox.vetchildren().add(p)
-//              });
             }
           } else {
             // TODO: localSession has been set, check the diff between remote and local
