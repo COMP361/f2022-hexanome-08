@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane fx:id="devCardPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="406.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
+   <children>
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="295.0" layoutY="80.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/level1/g1.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="549.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/orient/2/o22.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="47.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/level1/b3.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="181.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/level1/bl3.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="305.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/level1/g1.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="410.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/level1/r7.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="305.0" layoutY="30.0" text="My Development Cards" />
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="523.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/level1/w5.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="660.0" layoutY="74.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/orient/1/o1g1.png" />
+         </image>
+      </ImageView>
+      <Button layoutX="13.0" layoutY="13.0" mnemonicParsing="false" onAction="#exitDevCard" prefHeight="18.0" prefWidth="30.0" text="x" />
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="534.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/level1/w5.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="57.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/level1/b3.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="65.0" layoutY="137.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/level1/b3.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="138.0" fitWidth="72.0" layoutX="74.0" layoutY="164.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pictures/level1/b3.png" />
+         </image>
+      </ImageView>
+      <ImageView id="newCard" fitHeight="138.0" fitWidth="72.0" layoutX="93.0" layoutY="199.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</Pane>

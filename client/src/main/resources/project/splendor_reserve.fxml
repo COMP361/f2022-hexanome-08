@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="Settings">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Log out" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </top>
-</BorderPane>
+<Pane fx:id="reserveConfirmPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
+   <children>
+      <Button layoutX="81.0" layoutY="94.0" mnemonicParsing="false" onAction="#reserveConfirmClick" prefHeight="36.0" prefWidth="73.0" text="Confirm" />
+      <Text layoutX="-72.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You will get 1 gold token if &#10;you reserve this card, proceed?" textAlignment="CENTER" wrappingWidth="503.10791015625">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Text>
+      <Button layoutX="206.0" layoutY="94.0" mnemonicParsing="false" onAction="#reserveBackClick" prefHeight="36.0" prefWidth="73.0" text="Cancel" />
+   </children>
+</Pane>
