@@ -58,7 +58,7 @@ public class LogInController {
         // App.setRoot("player_lobby_page");
         App.setRoot("LobbyService");
       }
-      lobbyRequestSender.getRemoteSessions();
+      //lobbyRequestSender.getRemoteSessions();
 
     } catch (Exception e) {
       logInPageErrorMessage.setText("Please enter both valid username and password");
