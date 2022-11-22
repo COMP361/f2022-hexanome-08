@@ -263,20 +263,7 @@ public class LobbyController {
     return p;
   }
 
-//  protected void addSessionsGui(SessionList localSessionList, String accessToken,
-//                                VBox sessionVbox) {
-//    Map<String, Session> localSessionsMap = localSessionList.getSesionIdMap();
-//    for (String sessionId : localSessionsMap.keySet()) {
-//      Session curSession = localSessionsMap.get(sessionId);
-//      String sessionInfo = formatSessionInfo(curSession);
-//      Label sessionInfoLabel = new Label(sessionInfo);
-//      Pane newPane = createSessionGui(accessToken, sessionId, sessionInfoLabel, "");
-//      // defer GUI change to lobby main page
-//      Platform.runLater(() -> {
-//        sessionVbox.getChildren().add(newPane);
-//      });
-//    }
-//  }
+
   protected void addOneSessionGui(Session curSession,
                                   String sessionId,
                                   String accessToken,
@@ -320,7 +307,8 @@ public class LobbyController {
   }
 
   private Thread getUpdateOneSessionGuiThread(String sessionId,
-                                           LobbyServiceRequestSender lobbyRequestSender) {
+                                              LobbyServiceRequestSender lobbyRequestSender,
+                                              VBox sessionVbox) {
 
     return new Thread(() -> {
       String hashedResponse = "";
@@ -332,7 +320,7 @@ public class LobbyController {
         while (responseCode == 408) {
           try {
             longPullResponse =
-                lobbyRequestSender.sendGetOneSessionDetailRequest(sessionId, hashedResponse);
+                    lobbyRequestSender.sendGetOneSessionDetailRequest(sessionId, hashedResponse);
           } catch (UnirestException e) {
             throw new RuntimeException(e);
           }
@@ -341,6 +329,18 @@ public class LobbyController {
         if (responseCode == 200) {
           hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
           localSession = new Gson().fromJson(hashedResponse,Session.class);
+          for (Node n : sessionVbox.getChildren()) {
+            if (n.getAccessibleText().equals(sessionId)) {
+              Pane sessionPane = (Pane) n;
+              HBox sessionHbox = (HBox) sessionPane.getChildren().get(0);
+              Label sessionInfoLabel = (Label) sessionHbox.getChildren().get(0);
+              String newSessionInfo = formatSessionInfo(localSession);
+              // defer updating session info
+              Platform.runLater(() -> {
+                sessionInfoLabel.setText(newSessionInfo);
+              });
+            }
+          }
         }
       }
     });
@@ -394,8 +394,29 @@ public class LobbyController {
             if (user != null) {
               // TODO: Add all sessions to GUI here, when created and added, we spawn a thread accordingly
               Map<String, Session> localSessionsMap = localSessionList.getSesionIdMap();
-              for(Session)
-              addSessionsGui(localSessionList, user.getAccessToken(), sessionVbox);
+              for(String sessionID: localSessionsMap.keySet()){
+                Session curSession = localSessionsMap.get(sessionID);
+                String sessionInfo = formatSessionInfo(curSession);
+                Label sessionInfoLabel = new Label(sessionInfo);
+                addOneSessionGui(curSession, sessionID, user.getAccessToken(), sessionVbox);
+
+
+              }
+
+  //              protected void addSessionsGui(SessionList localSessionList, String accessToken,
+  //                            VBox sessionVbox) {
+  //    Map<String, Session> localSessionsMap = localSessionList.getSesionIdMap();
+  //    for (String sessionId : localSessionsMap.keySet()) {
+  //      Session curSession = localSessionsMap.get(sessionId);
+  //      String sessionInfo = formatSessionInfo(curSession);
+  //      Label sessionInfoLabel = new Label(sessionInfo);
+  //      Pane newPane = createSessionGui(accessToken, sessionId, sessionInfoLabel, "");
+  //      // defer GUI change to lobby main page
+  //      Platform.runLater(() -> {
+  //        sessionVbox.getChildren().add(newPane);
+  //      });
+  //    }
+  //  }
 //              int mapSize = localSessionList.getSesionIdMap().size();
 //              for(int i = 0; i < mapSize; i++){
 //                Session currentSession = localSessionList.getSesionIdMap().get(i);
