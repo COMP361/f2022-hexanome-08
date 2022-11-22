@@ -7,9 +7,4 @@ public interface DevelopmentCard extends Card{
     Optional<Colour> GemColor = null;
     boolean isPaired = false;
     int pairedCardId = 0;
-
-    public int getLevel();
-    Optional<Colour> getGemColor();
-    boolean isPaired();
-    int getPairedCardID();
 }
