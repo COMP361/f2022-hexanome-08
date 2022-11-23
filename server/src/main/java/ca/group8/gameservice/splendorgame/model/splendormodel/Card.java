@@ -15,7 +15,7 @@ public class Card {
     }
 
 
-    public int getCardId() {
+    public String getCardId() {
         return cardId;
     }
 
