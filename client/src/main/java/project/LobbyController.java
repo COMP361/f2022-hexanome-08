@@ -85,7 +85,7 @@ public class LobbyController {
     curStage.close();
   }
 
-  private String formatSessionInfo(Session session) {
+  public String formatSessionInfo(Session session) {
     List<String> curPlayers = session.getPlayers();
     String curPlayerStr = curPlayers.toString();
     String creatorName = session.getCreator();
