@@ -2,6 +2,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.EnumMap;
+import java.util.Optional;
 
 public class Card {
 
@@ -16,10 +17,12 @@ public class Card {
     }
 
     public int getPrestigePoints() {
+
         return prestigePoints;
     }
 
     public EnumMap<Colour, Integer> getPrice() {
         return price;
     }
+
 }
