@@ -14,8 +14,9 @@ public class DevelopmentCard extends Card {
   public DevelopmentCard(String paramCardId, int paramPrestigePoints, EnumMap<Colour, Integer> paramPrice,
                          int paramLevel, Optional<Colour> paramGemColour, int gemNumber) {
 
-    super(paramCardId, paramPrestigePoints, paramPrice);
+    super(paramPrestigePoints, paramPrice);
     level = paramLevel;
+    gemNumber = paramGemNumber;
     if(paramGemColour.isPresent()){
       gemColor = paramGemColour;
     }
@@ -45,5 +46,25 @@ public class DevelopmentCard extends Card {
 
   public int getGemNumber() {
     return gemNumber;
+  }
+
+  public int getLevel() {
+    return level;
+  }
+
+  public Optional<Colour> getGemColor() {
+    return gemColor;
+  }
+
+  public int getGemNumber() {
+    return gemNumber;
+  }
+
+  public boolean isPaired() {
+    return isPaired;
+  }
+
+  public int getPairedCardId() {
+    return pairedCardId;
   }
 }
