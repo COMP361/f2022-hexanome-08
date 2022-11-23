@@ -9,26 +9,26 @@ import java.util.Set;
  */
 public class SessionList {
 
-  private final Map<Long, Session> sessionIdMap;
+  private final Map<Long, Session> sessions;
 
   public SessionList() {
-    this.sessionIdMap = new HashMap<>();
+    this.sessions = new HashMap<>();
   }
 
-  public Map<Long, Session> getSessionIdMap() {
-    return sessionIdMap;
+  public Map<Long, Session> getSessions() {
+    return sessions;
   }
 
-  public Session getSessionById (Long sessionId) {
-    return sessionIdMap.get(sessionId);
+  public Session getSessionById(Long sessionId) {
+    return sessions.get(sessionId);
   }
 
   public Set<Long> getSessionIds() {
-    return sessionIdMap.keySet();
+    return sessions.keySet();
   }
 
   public int getSessionsCount() {
-    return sessionIdMap.size();
+    return sessions.size();
   }
 
 }

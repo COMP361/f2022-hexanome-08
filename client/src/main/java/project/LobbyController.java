@@ -52,10 +52,6 @@ public class LobbyController {
   private VBox sessionVbox;
 
 
-
-
-
-
   @FXML
   protected void onCreateSessionButtonClick() throws UnirestException {
     // TODO: How to add a Session on GUI (with the buttons, everything)
@@ -80,7 +76,8 @@ public class LobbyController {
         lobbyRequestSender.sendCreateSessionRequest(creator, accessToken, gameName, "");
     Session newSession = new Gson()
         .fromJson(lobbyRequestSender
-            .sendGetOneSessionDetailRequest(Long.parseLong(sessionId), "").getBody(), Session.class);
+                .sendGetOneSessionDetailRequest(Long.parseLong(sessionId), "").getBody(),
+            Session.class);
     Pane p = createSessionGui(accessToken, Long.parseLong(sessionId), newSession, sessionInfo);
     Platform.runLater(() -> {
       sessionVbox.getChildren().add(p);
@@ -302,7 +299,7 @@ public class LobbyController {
         while (responseCode == 408) {
           try {
             longPullResponse =
-                    lobbyRequestSender.sendGetOneSessionDetailRequest(sessionId, hashedResponse);
+                lobbyRequestSender.sendGetOneSessionDetailRequest(sessionId, hashedResponse);
           } catch (UnirestException e) {
             throw new RuntimeException(e);
           }
@@ -361,7 +358,9 @@ public class LobbyController {
         int responseCode = 408;
         User user = App.getUser();
         // if there is no user logged in, do not do anything
-        if (user == null) continue;
+        if (user == null) {
+          continue;
+        }
         while (responseCode == 408) {
           try {
             longPullResponse =
@@ -377,8 +376,8 @@ public class LobbyController {
           if (isFirstCheck) {
             localSessionList = new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
             isFirstCheck = false;
-            Map<Long, Session> localSessionsMap = localSessionList.getSessionIdMap();
-            for(Long sessionId: localSessionsMap.keySet()){
+            Map<Long, Session> localSessionsMap = localSessionList.getSessions();
+            for (Long sessionId : localSessionsMap.keySet()) {
               Session curSession = localSessionsMap.get(sessionId);
               addOneSessionGui(user.getAccessToken(), sessionId, curSession, sessionVbox);
               getUpdateOneSessionGuiThread(sessionId, lobbyRequestSender, sessionVbox);
@@ -405,10 +404,8 @@ public class LobbyController {
                 removeSessionsGui(diffSessionId, sessionVbox);
               }
               localSessionList = remoteSessionList;
-            }
-
-            // remote more than local -> add Session GUI
-            else if (remoteSessionCount > localSessionCount) {
+            } else if (remoteSessionCount > localSessionCount) {
+              // remote more than local -> add Session GUI
               remoteSessionIds.removeAll(localSessionIds);
               for (Long diffSessionId : remoteSessionIds) {
                 String accessToken = user.getAccessToken();

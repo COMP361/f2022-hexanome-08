@@ -25,6 +25,11 @@ public class LobbyServiceRequestSender {
 
   private final SessionList localSessionList;
 
+  /**
+   * lobby service request sender constructor.
+   *
+   * @param lobbyUrlInput lobby url
+   */
   public LobbyServiceRequestSender(String lobbyUrlInput) {
     lobbyUrl = lobbyUrlInput;
     gameNameMapping = new HashMap<>();
@@ -62,15 +67,17 @@ public class LobbyServiceRequestSender {
   }
 
   /**
-   * Send a long poll get request to get detail on 1 session (whether ppl joined in the session or left).
+   * Send a long poll get request to get detail on
+   * 1 session (whether ppl joined in the session or left).
    *
-   * @param sessionId session id
+   *
+   * @param sessionId            session id
    * @param hashPreviousResponse previous response payload body hashed with MD5
-   * @returna response of the sessions details as String
    * @throws UnirestException in case unirest failed to send a request
+   * @returna response of the sessions details as String
    */
   public HttpResponse<String> sendGetOneSessionDetailRequest(
-      Long sessionId,String hashPreviousResponse) throws UnirestException {
+      Long sessionId, String hashPreviousResponse) throws UnirestException {
     if (hashPreviousResponse.equals("")) {
       return Unirest.get(lobbyUrl + "/api/sessions" + sessionId.toString()).asString();
     } else {
@@ -265,7 +272,9 @@ public class LobbyServiceRequestSender {
    */
   public void sendAddPlayerRequest(String accessToken, Long sessionId, String playerName)
       throws UnirestException {
-    Unirest.put(String.format("%s/api/sessions/%s/players/%s", lobbyUrl, sessionId.toString(), playerName))
+    Unirest.put(
+            String.format("%s/api/sessions/%s/players/%s",
+                lobbyUrl, sessionId.toString(), playerName))
         .queryString("access_token", accessToken).asString();
 
   }
@@ -280,7 +289,11 @@ public class LobbyServiceRequestSender {
    */
   public void sendRemovePlayerRequest(String accessToken, Long sessionId, String playerName)
       throws UnirestException {
-    Unirest.delete(String.format("%s/api/sessions/%s/players/%s", lobbyUrl, sessionId.toString(), playerName))
+    Unirest.delete(
+            String
+                .format("%s/api/sessions/%s/players/%s",
+                    lobbyUrl,
+                    sessionId.toString(), playerName))
         .queryString("access_token", accessToken).asString();
 
   }
