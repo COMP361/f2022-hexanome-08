@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.Group?>
+<?import javafx.scene.SubScene?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
@@ -11,6 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
@@ -18,7 +20,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
+<AnchorPane style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.GameController">
    <children>
       <BorderPane fx:id="gameBoardContent" layoutY="4.666666507720947" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
 
@@ -558,6 +560,13 @@
                </children>
             </VBox>
          </top>
+         <center>
+            <SubScene fx:id="inventoryScene" height="377.0" visible="false" width="527.0" BorderPane.alignment="CENTER">
+              <root>
+                <Region />
+              </root>
+            </SubScene>
+         </center>
       </BorderPane>
       <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
