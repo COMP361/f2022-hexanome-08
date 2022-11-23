@@ -1,5 +1,7 @@
-package main.java.ca.group8.gameservice.splendorgame.model;
+
+package ca.group8.gameservice.splendorgame.model;
 
 public enum Colour {
-    WHITE,BLACK,BLUE,GREEN,RED
+  WHITE, BLACK, BLUE, GREEN, RED
+
 }
