@@ -23,6 +23,11 @@ public class TokenHand {
     return allTokens;
   }
 
+  public int getGoldTokenNumber(){
+    return allTokens.get(Colour.GOLD);
+  }
+
+
   /**
    * Adds a certain amount (quantity) of a certain GemColour colour from the TokenHand.
    *

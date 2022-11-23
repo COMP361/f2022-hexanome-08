@@ -1,4 +1,4 @@
-package ca.group8.gameservice.splendorgame.model;
+package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,9 @@ public class PurchasedHand {
     }
 
     public void removeDevelopmentCard(DevelopmentCard card){
+
         developmentCards.remove(card);
+
     }
 
     public List<DevelopmentCard> getDevelopmentCards() {
