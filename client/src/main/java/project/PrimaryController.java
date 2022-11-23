@@ -217,16 +217,6 @@ public class PrimaryController {
 
   }
 
-  @FXML
-  protected void joinGame() throws IOException {
-    App.setRoot("splendor_game_board");
-    App.setHandCard();
-    App.setReserveCard();
-    Stage curStage = (Stage) waitingRoom.getScene().getWindow();
-    curStage.close();
-    curStage = (Stage) App.getScene().getWindow();
-    curStage.show();
-  }
 
   @FXML
   protected void joinWaitingRoom() throws IOException {

@@ -1,3 +1,5 @@
+package ca.group8.gameservice.splendorgame.model.splendormodel;
+
 import java.util.EnumMap;
 
 /**
@@ -5,16 +7,20 @@ import java.util.EnumMap;
  */
 public class TokenHand {
 
-  private EnumMap<GemColour, Integer> allTokens;
+  private EnumMap<Colour, Integer> allTokens;
 
   /**
    * Relies on Game Info to know how many players are in the game.
    * Initialize all token values to zero.
    */
   protected TokenHand() {
-    for (GemColour colour : GemColour.values()) {
+    for (Colour colour : Colour.values()) {
       allTokens.put(colour, 0);
     }
+  }
+
+  public EnumMap<Colour, Integer> getAllTokens() {
+    return allTokens;
   }
 
   /**
@@ -24,8 +30,8 @@ public class TokenHand {
    * @param quantity = quantity to add.
    *
    */
-  //TODO: QUESTIN: Is verifying that you have 10 tokens or less in the controller?
-  public void addToken(GemColour colour, int quantity) {
+  //TODO: QUESTIN: Is verifying that you have 10 tokens or less in the controller? yes
+  public void addToken(Colour colour, int quantity) {
     //add Tokens
     allTokens.put(colour, (allTokens.get(colour) + quantity));
   }
@@ -39,7 +45,7 @@ public class TokenHand {
    * @param quantity = quantity to remove.
    *
    */
-  public void removeToken(GemColour colour, int quantity) {
+  public void removeToken(Colour colour, int quantity) {
     //verify that this number of tokens can be removed (meaning new sum >=0)
     assert (allTokens.get(colour) - quantity) >= 0;
     //remove Tokens

@@ -1,3 +1,5 @@
+package ca.group8.gameservice.splendorgame.model.splendormodel;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +14,7 @@ public class GameInfo {
   private Optional<String> winner; //made optional for when Winner is not defined yet;
   private String firstPlayer; //should be Player Name of first player.
   private static List<String> activePlayers = new ArrayList<>();
-  private TableTop tableTop;
+  //private TableTop tableTop;
 
   /**
    * @param player NOTE: In this implementation, activePlayers is an arrayList meaning you cannot get(Player)
