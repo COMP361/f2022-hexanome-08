@@ -1,79 +1,61 @@
 package project.view.lobby;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Sessions needed to do GUI representation.
  */
 public class Session {
-  private String creator;
-  private String savegameid;
-  private GameParameters gameParameters;
-  private List<String> players;
-  private PlayerLocations playerLocations;
+
+  private final GameParameters gameParameters;
+  private final String creator;
   private boolean launched;
+  private final ArrayList<String> players;
+
+  // Optional fields
+  private String savegameid;
+  private Map<String, String> playerLocations;
 
   /**
-   * Update a session's fields based on another session.
+   * Session constructor.
    *
-   * @param otherSession another session
+   * @param creator creator name
+   * @param gameParameters game parameters
    */
-  public void updateSessionInfo(Session otherSession) {
-    creator = otherSession.getCreator();
-    savegameid = otherSession.getSavegameid();
-    gameParameters = otherSession.getGameParameters();
-    players.clear();
-    players.addAll(otherSession.getPlayers());
-    playerLocations = otherSession.getPlayerLocations();
-    launched = otherSession.getLaunched();
-  }
-
-  public void setCreator(String creator) {
+  public Session(String creator, GameParameters gameParameters) {
     this.creator = creator;
-  }
-
-  public String getCreator() {
-    return creator;
-  }
-
-  public void setSavegameid(String savegameid) {
-    this.savegameid = savegameid;
-  }
-
-  public String getSavegameid() {
-    return savegameid;
-  }
-
-  public void setGameParameters(GameParameters gameParameters) {
     this.gameParameters = gameParameters;
+    players = new ArrayList<>();
+    players.add(creator);
+    launched = false;
+    playerLocations = new HashMap<>();
   }
 
   public GameParameters getGameParameters() {
     return gameParameters;
   }
 
-  public void setPlayers(List<String> players) {
-    this.players = players;
+  public String getCreator() {
+    return creator;
   }
 
-  public List<String> getPlayers() {
+  public boolean isLaunched() {
+    return launched;
+  }
+
+  public ArrayList<String> getPlayers() {
     return players;
   }
 
-  public void setPlayerLocations(PlayerLocations playerLocations) {
-    this.playerLocations = playerLocations;
+  public String getSavegameid() {
+    return savegameid;
   }
 
-  public PlayerLocations getPlayerLocations() {
+  public Map<String, String> getPlayerLocations() {
     return playerLocations;
   }
 
-  public void setLaunched(boolean launched) {
-    this.launched = launched;
-  }
-
-  public boolean getLaunched() {
-    return launched;
-  }
 
 }
