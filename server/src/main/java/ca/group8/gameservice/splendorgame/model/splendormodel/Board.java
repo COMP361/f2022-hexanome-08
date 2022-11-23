@@ -13,6 +13,7 @@ public class Board {
     columns = paramWidth;
     rows = paramHeight;
     cardBoard = new Card[rows][columns];
+    //initialise method needed
 
   }
 

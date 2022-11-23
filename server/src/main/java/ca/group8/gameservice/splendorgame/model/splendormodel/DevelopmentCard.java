@@ -2,24 +2,43 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.EnumMap;
 import java.util.Optional;
+import org.graalvm.compiler.nodes.calc.IntegerDivRemNode.Op;
 
 public class DevelopmentCard extends Card {
-
+  private int prestigePoints;
+  private EnumMap<Colour,Integer> price;
   private int level;
   private Optional<Colour> gemColor;
-  private int gemNumber;
   private boolean isPaired = false;
   private int pairedCardId = -1;
 
-  public DevelopmentCard(int paramPrestigePoints,
-                         EnumMap<Colour, Integer> paramPrice, int paramLevel, Optional<Colour> paramGemColour, int paramGemNumber) {
 
+
+  public DevelopmentCard(int paramPrestigePoints,
+      EnumMap<Colour, Integer> paramPrice, int prestigePoints,
+      EnumMap<Colour, Integer> price, int level,
+      Optional<Colour> gemColor, boolean isPaired, int pairedCardId) {
     super(paramPrestigePoints, paramPrice);
-    level = paramLevel;
-    gemNumber = paramGemNumber;
-    if(paramGemColour.isPresent()){
-      gemColor = paramGemColour;
+
+    this.prestigePoints = prestigePoints;
+    this.price = price;
+    this.level = level;
+    if(gemColor.isPresent()){
+      this.gemColor = gemColor;
+    }else{
+      this.gemColor= Optional.empty();
     }
+    this.isPaired = isPaired;
+    this.pairedCardId = pairedCardId;
+  }
+
+
+  public int getPrestigePoints() {
+    return prestigePoints;
+  }
+
+  public EnumMap<Colour, Integer> getPrice() {
+    return price;
   }
 
   public int getLevel() {
@@ -30,15 +49,12 @@ public class DevelopmentCard extends Card {
     return gemColor;
   }
 
-  public int getGemNumber() {
-    return gemNumber;
-  }
-
   public boolean isPaired() {
-    return isPaired;
+    return false;
   }
 
-  public int getPairedCardId() {
-    return pairedCardId;
+  public int getPairedCardID() {
+    return 0;
+
   }
 }

@@ -13,23 +13,27 @@ public class GameInfo {
   private String currentPlayer; //represents which player's turn it is currently
   private Optional<String> winner; //made optional for when Winner is not defined yet;
   private String firstPlayer; //should be Player Name of first player.
-  private static List<String> activePlayers = new ArrayList<>();
-  //private TableTop tableTop;
+  private ArrayList<Player> activePlayers;
+  private ArrayList<String> playerNames = new ArrayList<>();
+  private TableTop tableTop;
 
   /**
-   * @param player NOTE: In this implementation, activePlayers is an arrayList meaning you cannot get(Player)
+   * @param players NOTE: In this implementation, activePlayers is an arrayList meaning you cannot get(Player)
    *               based on giving the player name that is in the list.(can only index list)
    *               <p>
    *               QUESTION: If we only store the PlayerNames (and not player objects), how do we ensure
    *               that the names we are given correspond to ACTUAL players?
    */
-  public GameInfo(String... player) {
+  public GameInfo(ArrayList<Player> players) {
     Random random = new Random(); //create a new random object
-    activePlayers = Arrays.asList(player);
+    activePlayers = players;
+    for (Player player : activePlayers){
+      playerNames.add(player.getName());
+    }
     //generates a random number between 1 and size of activePlayers list
-    firstPlayer = activePlayers.get(random.nextInt(activePlayers.size()) + 1);
+    firstPlayer = playerNames.get(random.nextInt(activePlayers.size()) + 1);
     currentPlayer = firstPlayer;
-    //TODO Initialize TableTop based on its constructor
+    tableTop = new TableTop(activePlayers);
 
 
   }
@@ -43,7 +47,7 @@ public class GameInfo {
     //TODO: Implement this operation (will be based on TableTop implementation)
   }
 
-  protected static int getNumOfPlayers() {
+  public int getNumOfPlayers() {
     return activePlayers.size();
   }
 
