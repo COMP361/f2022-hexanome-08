@@ -86,42 +86,6 @@ public class LobbyServiceRequestSender {
     }
   }
 
-
-  ///**
-  // * update the info about session deletion or creation locally.
-  // * If remote has more sessions (result from REST) -> add session to sessionIdMap
-  // * If local has more sessions (sessionIdMap > resultFromRest) -> delete it from sessionIdMap
-  // *
-  // * @throws UnirestException in case Unirest failed to make the request.
-  // */
-  //public Map<String, Session> getRemoteSessions() throws UnirestException {
-  //
-  //  HttpResponse<JsonNode> lobbyMainPageResponse =
-  //      Unirest.get(lobbyUrl + "/api/sessions").asJson();
-  //  JSONObject sessionObject = lobbyMainPageResponse
-  //      .getBody()
-  //      .getObject()
-  //      .getJSONObject("sessions");
-  //
-  //  // JsonArray of session ids
-  //  JSONArray remoteSessionIds = sessionObject.names();
-  //  Gson gson = new Gson();
-  //  Map<String, Session> returnMap = new HashMap<>();
-  //
-  //  // JsonArray of session details
-  //  JSONArray remoteSessionsArray = sessionObject.toJSONArray(sessionObject.names());
-  //  if (remoteSessionsArray == null) {
-  //    return returnMap;
-  //  }
-  //  for (int i = 0; i < remoteSessionsArray.length(); i++) {
-  //    String sessionId = remoteSessionIds.getString(i);
-  //    Session session = gson
-  //        .fromJson(remoteSessionsArray.getJSONObject(i).toString(), Session.class);
-  //    returnMap.put(sessionId, session);
-  //  }
-  //  return returnMap;
-  //}
-
   /**
    * send a log in request to LS.
    *
