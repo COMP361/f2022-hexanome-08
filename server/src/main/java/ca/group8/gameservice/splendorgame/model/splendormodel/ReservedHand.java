@@ -1,14 +1,13 @@
-package ca.group8.gameservice.splendorgame.model;
+package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PurchasedHand {
-
+public class ReservedHand {
     private List<DevelopmentCard> developmentCards = new ArrayList<>();
     private List<NobleCard> nobleCards = new ArrayList<>();
 
-    public PurchasedHand(List<DevelopmentCard> developmentCards, List<NobleCard> nobleCards) {
+    public ReservedHand(List<DevelopmentCard> developmentCards, List<NobleCard> nobleCards) {
         this.developmentCards = developmentCards;
         this.nobleCards = nobleCards;
     }
@@ -25,6 +24,11 @@ public class PurchasedHand {
         developmentCards.remove(card);
     }
 
+    public boolean isFull(){
+
+        return developmentCards.size() + nobleCards.size() == 3;
+    }
+
     public List<DevelopmentCard> getDevelopmentCards() {
         return developmentCards;
     }
@@ -32,6 +36,4 @@ public class PurchasedHand {
     public List<NobleCard> getNobleCards() {
         return nobleCards;
     }
-
-
 }
