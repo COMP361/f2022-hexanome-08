@@ -21,7 +21,7 @@ public class Session {
   /**
    * Session constructor.
    *
-   * @param creator creator name
+   * @param creator        creator name
    * @param gameParameters game parameters
    */
   public Session(String creator, GameParameters gameParameters) {
