@@ -26,7 +26,7 @@ public class ReservedHand {
 
     public boolean isFull(){
 
-        return developmentCards.size() + nobleCards.size() == 3;
+        return developmentCards.size()== 3;
     }
 
     public List<DevelopmentCard> getDevelopmentCards() {

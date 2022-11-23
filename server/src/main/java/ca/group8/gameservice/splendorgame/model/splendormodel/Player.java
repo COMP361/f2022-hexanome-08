@@ -9,12 +9,20 @@ public class Player implements PlayerReadOnly {
   private TokenHand tokenHand;
   private PurchasedHand purchasedHand;
   private ReservedHand reservedHand;
-  //needs purchased hand and reserved hand
 
-  public Player(String paramName, TokenHand paramTokenHand) {
+  //need get reserved card number,
+  private EnumMap<Colour, Integer> wealth = new EnumMap<>(Colour.class);
+
+
+  public Player(String paramName, TokenHand paramTokenHand,
+      PurchasedHand purchasedHand,
+      ReservedHand reservedHand) {
     tokenHand=paramTokenHand;
     name = paramName;
+    this.purchasedHand = purchasedHand;
+    this.reservedHand = reservedHand;
   }
+
 
   public EnumMap<Colour, Integer> getTotalGems(){
     EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
@@ -35,9 +43,20 @@ public class Player implements PlayerReadOnly {
       wealth.put(colour, tokenHand.getAllTokens().get(colour)+gems.get(colour);
     }
     return wealth;
-
-
   }
+
+  public TokenHand getTokenHand() {
+    return tokenHand;
+  }
+
+  public PurchasedHand getPurchasedHand() {
+    return purchasedHand;
+  }
+
+  public ReservedHand getReservedHand() {
+    return reservedHand;
+  }
+
 
 
 

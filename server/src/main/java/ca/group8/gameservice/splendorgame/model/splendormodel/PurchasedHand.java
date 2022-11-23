@@ -22,7 +22,9 @@ public class PurchasedHand {
     }
 
     public void removeDevelopmentCard(DevelopmentCard card){
+
         developmentCards.remove(card);
+
     }
 
     public List<DevelopmentCard> getDevelopmentCards() {
