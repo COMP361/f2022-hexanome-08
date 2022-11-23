@@ -3,29 +3,16 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import java.util.EnumMap;
 import java.util.Optional;
 
-public class BaseCard implements DevelopmentCard{
-    private int cardId;
-    private int prestigePoints;
-    private EnumMap<Colour,Integer> price;
-    private int level;
-    private Optional<Colour> gemColor;
-    private boolean isPaired = false;
-    private int pairedCardId = -1;
+public class BaseCard extends DevelopmentCard {
 
-    public BaseCard(int parId, int parPrestige, EnumMap<Colour,Integer> parPrice,
-                    int parLevel, Optional<Colour> parGem){
-        cardId = parId;
-        prestigePoints = parPrestige;
-        price = parPrice;
-        level = parLevel;
-        if(parGem.isPresent()){
-            gemColor = parGem;
-        }
+    public BaseCard(String paramCardId, int paramPrestigePoints, EnumMap<Colour,Integer> paramPrice,
+                    int paramLevel, Optional<Colour> paramGemColour){
+        super(paramCardId,paramPrestigePoints, paramPrice, paramLevel, paramGemColour);
     }
 
 
 
-    public int getCardId() {
+    public String getCardId() {
         return cardId;
     }
 
