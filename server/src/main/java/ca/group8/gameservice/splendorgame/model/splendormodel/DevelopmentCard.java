@@ -13,6 +13,7 @@ public class DevelopmentCard extends Card {
 
   public DevelopmentCard(String paramCardId, int paramPrestigePoints,
       EnumMap<Colour, Integer> paramPrice, int paramLevel, Optional<Colour> paramGemColour) {
+
     super(paramCardId, paramPrestigePoints, paramPrice);
     level = paramLevel;
     if(paramGemColour.isPresent()){
