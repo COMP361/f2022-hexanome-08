@@ -1,4 +1,4 @@
-package ca.group8.gameservice.splendorgame.model;
+package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class ReservedHand {
 
     public boolean isFull(){
 
-        return developmentCards.size() + nobleCards.size() == 3;
+        return developmentCards.size()== 3;
     }
 
     public List<DevelopmentCard> getDevelopmentCards() {
