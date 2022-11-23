@@ -14,4 +14,4 @@ public class NobleCard extends Card {
         super(paramCardId, paramPrestigePoints, paramPrice);
     }
 }
-}
+
