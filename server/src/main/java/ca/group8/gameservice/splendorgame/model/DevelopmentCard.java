@@ -1,3 +1,4 @@
+
 package ca.group8.gameservice.splendorgame.model;
 
 import java.util.EnumMap;
@@ -13,4 +14,5 @@ public class DevelopmentCard extends Card{
         EnumMap<Colour, Integer> paramPrice) {
         super(paramCardId, paramPrestigePoints, paramPrice);
     }
+
 }
