@@ -1,4 +1,4 @@
-package ca.group8.gameservice.splendorgame.model;
+package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 public class BaseBoard extends Board {
   private int width;

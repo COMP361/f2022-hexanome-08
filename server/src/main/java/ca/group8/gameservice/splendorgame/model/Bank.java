@@ -1,3 +1,5 @@
+package ca.group8.gameservice.splendorgame.model;
+
 import java.util.EnumMap;
 
 /**

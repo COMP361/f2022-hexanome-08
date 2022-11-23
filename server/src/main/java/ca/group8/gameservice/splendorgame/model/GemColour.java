@@ -1,3 +1,5 @@
+package ca.group8.gameservice.splendorgame.model;
+
 /**
  * Represents the Gem colours.
  */
