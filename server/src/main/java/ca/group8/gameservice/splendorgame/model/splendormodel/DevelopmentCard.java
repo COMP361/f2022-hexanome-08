@@ -5,18 +5,40 @@ import java.util.Optional;
 
 public class DevelopmentCard extends Card {
 
-  public int level;
-  public Optional<Colour> gemColor;
-  public boolean isPaired = false;
-  public int pairedCardId = -1;
+  private int level;
+  private Optional<Colour> gemColor;
+  private int gemNumber;
+  private boolean isPaired = false;
+  private int pairedCardId = -1;
 
-  public DevelopmentCard(String paramCardId, int paramPrestigePoints,
-                         EnumMap<Colour, Integer> paramPrice, int paramLevel, Optional<Colour> paramGemColour) {
+  public DevelopmentCard(int paramPrestigePoints,
+                         EnumMap<Colour, Integer> paramPrice, int paramLevel, Optional<Colour> paramGemColour, int paramGemNumber) {
 
-    super(paramCardId, paramPrestigePoints, paramPrice);
+    super(paramPrestigePoints, paramPrice);
     level = paramLevel;
+    gemNumber = paramGemNumber;
     if(paramGemColour.isPresent()){
       gemColor = paramGemColour;
     }
+  }
+
+  public int getLevel() {
+    return level;
+  }
+
+  public Optional<Colour> getGemColor() {
+    return gemColor;
+  }
+
+  public int getGemNumber() {
+    return gemNumber;
+  }
+
+  public boolean isPaired() {
+    return isPaired;
+  }
+
+  public int getPairedCardId() {
+    return pairedCardId;
   }
 }
