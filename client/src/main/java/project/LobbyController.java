@@ -42,10 +42,14 @@ public class LobbyController {
   private MenuItem adminZoneMenuItem;
 
   @FXML
-  private ScrollPane sessionScrollPane;
+  private VBox sessionVbox;
 
   @FXML
-  private VBox sessionVbox;
+  protected void joinGame() throws IOException {
+    App.setRoot("splendor_game_board");
+    App.setHandCard();
+    App.setReserveCard();
+  }
 
 
   @FXML

@@ -1,0 +1,16 @@
+[
+    {
+        "cardName":"b1",
+        "level":1,
+        "prestigePoint":1,
+        "price":{
+            "BLUE":4,
+            "BLACK":0,
+            "RED":0,
+            "GREEN":0,
+            "WHITE":0
+        },
+        "isOrient":false,
+        "needsBurn":false
+    }
+]
