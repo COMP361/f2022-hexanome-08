@@ -9,33 +9,26 @@ import java.util.Set;
  */
 public class SessionList {
 
-  private Map<String, Session> sesionIdMap;
+  private final Map<Long, Session> sessionIdMap;
 
   public SessionList() {
-    this.sesionIdMap = new HashMap<>();
+    this.sessionIdMap = new HashMap<>();
   }
 
-  public Map<String, Session> getSesionIdMap() {
-    return sesionIdMap;
+  public Map<Long, Session> getSessionIdMap() {
+    return sessionIdMap;
   }
 
-  public Session getSessionById (String sessionId) {
-    return sesionIdMap.get(sessionId);
+  public Session getSessionById (Long sessionId) {
+    return sessionIdMap.get(sessionId);
   }
 
-  public Set<String> getSessionIds() {
-    return sesionIdMap.keySet();
-  }
-
-  public void setSesionIdMap(SessionList newSessionList) {
-    if (!sesionIdMap.isEmpty()) {
-      sesionIdMap.clear();
-    }
-    sesionIdMap.putAll(newSessionList.getSesionIdMap());
+  public Set<Long> getSessionIds() {
+    return sessionIdMap.keySet();
   }
 
   public int getSessionsCount() {
-    return sesionIdMap.size();
+    return sessionIdMap.size();
   }
 
 }

@@ -70,11 +70,11 @@ public class LobbyServiceRequestSender {
    * @throws UnirestException in case unirest failed to send a request
    */
   public HttpResponse<String> sendGetOneSessionDetailRequest(
-      String sessionId,String hashPreviousResponse) throws UnirestException {
+      Long sessionId,String hashPreviousResponse) throws UnirestException {
     if (hashPreviousResponse.equals("")) {
-      return Unirest.get(lobbyUrl + "/api/sessions" + sessionId).asString();
+      return Unirest.get(lobbyUrl + "/api/sessions" + sessionId.toString()).asString();
     } else {
-      return Unirest.get(lobbyUrl + "/api/sessions" + sessionId)
+      return Unirest.get(lobbyUrl + "/api/sessions" + sessionId.toString())
           .queryString("hash", hashPreviousResponse).asString();
     }
   }
@@ -235,10 +235,10 @@ public class LobbyServiceRequestSender {
    * @param sessionId   session id
    * @throws UnirestException in case unirest failed to send a request
    */
-  public void sendDeleteSessionRequest(String accessToken, String sessionId)
+  public void sendDeleteSessionRequest(String accessToken, Long sessionId)
       throws UnirestException {
 
-    Unirest.delete(lobbyUrl + "/api/sessions/" + sessionId)
+    Unirest.delete(lobbyUrl + "/api/sessions/" + sessionId.toString())
         .queryString("access_token", accessToken).asString();
   }
 
@@ -249,9 +249,9 @@ public class LobbyServiceRequestSender {
    *                  //   * @return JsonObject with detailed session info
    * @throws UnirestException in case unirest failed to send a request
    */
-  public JSONObject sendGetSessionDetailRequest(String sessionId) throws UnirestException {
+  public JSONObject sendGetSessionDetailRequest(Long sessionId) throws UnirestException {
     // TODO: Later, pass optional "hash=???" request parameter
-    return Unirest.get(String.format("%s/api/sessions/%s", lobbyUrl, sessionId))
+    return Unirest.get(String.format("%s/api/sessions/%s", lobbyUrl, sessionId.toString()))
         .asJson().getBody().getObject();
   }
 
@@ -263,9 +263,9 @@ public class LobbyServiceRequestSender {
    * @param playerName  player name
    * @throws UnirestException in case unirest failed to send a request
    */
-  public void sendAddPlayerRequest(String accessToken, String sessionId, String playerName)
+  public void sendAddPlayerRequest(String accessToken, Long sessionId, String playerName)
       throws UnirestException {
-    Unirest.put(String.format("%s/api/sessions/%s/players/%s", lobbyUrl, sessionId, playerName))
+    Unirest.put(String.format("%s/api/sessions/%s/players/%s", lobbyUrl, sessionId.toString(), playerName))
         .queryString("access_token", accessToken).asString();
 
   }
@@ -278,9 +278,9 @@ public class LobbyServiceRequestSender {
    * @param playerName  player name
    * @throws UnirestException in case unirest failed to send a request
    */
-  public void sendRemovePlayerRequest(String accessToken, String sessionId, String playerName)
+  public void sendRemovePlayerRequest(String accessToken, Long sessionId, String playerName)
       throws UnirestException {
-    Unirest.delete(String.format("%s/api/sessions/%s/players/%s", lobbyUrl, sessionId, playerName))
+    Unirest.delete(String.format("%s/api/sessions/%s/players/%s", lobbyUrl, sessionId.toString(), playerName))
         .queryString("access_token", accessToken).asString();
 
   }
