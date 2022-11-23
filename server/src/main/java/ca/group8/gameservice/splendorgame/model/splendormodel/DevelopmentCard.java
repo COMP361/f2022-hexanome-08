@@ -1,4 +1,3 @@
-
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.EnumMap;
@@ -12,7 +11,7 @@ public class DevelopmentCard extends Card {
   public int pairedCardId = -1;
 
   public DevelopmentCard(String paramCardId, int paramPrestigePoints,
-      EnumMap<Colour, Integer> paramPrice, int paramLevel, Optional<Colour> paramGemColour) {
+                         EnumMap<Colour, Integer> paramPrice, int paramLevel, Optional<Colour> paramGemColour) {
 
     super(paramCardId, paramPrestigePoints, paramPrice);
     level = paramLevel;
