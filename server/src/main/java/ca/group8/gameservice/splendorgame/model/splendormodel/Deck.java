@@ -8,11 +8,17 @@ import java.util.List;
  */
 public class Deck {
 
+
   //TODO: Depends on Card interface
   private List<Card> cards = new ArrayList();
 
   //TODO Make a LEVEL enum to assign to ca.group8.gameservice.splendorgame.model.splendormodel.Deck? Or do we want an int?
   private int level;
+
+  public Deck(List<Card> cards, int level) {
+    this.cards = cards;
+    this.level = level;
+  }
 
   /**
    * Get the size of the deck.
@@ -25,8 +31,9 @@ public class Deck {
    * Remove the top Card off of the deck.
    */
   public Card pop() {
+    Card card;
     if (!this.isEmpty()) {
-      Card card = cards.remove(0);
+      card = cards.remove(0);
     } else {
       throw new UnsupportedOperationException(); //TODO Throw a more relevant exception
     }
@@ -38,6 +45,6 @@ public class Deck {
    * Check if ca.group8.gameservice.splendorgame.model.splendormodel.Deck is empty.
    */
   public boolean isEmpty() {
-    return aCards.isEmpty();
+    return cards.isEmpty();
   }
 }
