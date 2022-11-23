@@ -80,8 +80,8 @@ public class LobbyController {
         lobbyRequestSender.sendCreateSessionRequest(creator, accessToken, gameName, "");
     Session newSession = new Gson()
         .fromJson(lobbyRequestSender
-            .sendGetOneSessionDetailRequest(sessionId, "").getBody(), Session.class);
-    Pane p = createSessionGui(accessToken, sessionId, newSession, sessionInfo);
+            .sendGetOneSessionDetailRequest(Long.parseLong(sessionId), "").getBody(), Session.class);
+    Pane p = createSessionGui(accessToken, Long.parseLong(sessionId), newSession, sessionInfo);
     Platform.runLater(() -> {
       sessionVbox.getChildren().add(p);
     });
@@ -123,13 +123,14 @@ public class LobbyController {
 
 
   private EventHandler<ActionEvent> createDeleteSessionHandler(
-      VBox sessionVbox, String sessionId,
+      VBox sessionVbox, Long sessionId,
       LobbyServiceRequestSender lobbyRequestSender,
       String accessToken) {
     return event -> {
       for (Node n : sessionVbox.getChildren()) {
         String paneSessionId = n.getAccessibleText();
-        if (paneSessionId != null && paneSessionId.equals(sessionId)) {
+        String sessionIdStr = sessionId.toString();
+        if (paneSessionId != null && paneSessionId.equals(sessionIdStr)) {
           // TODO: If the onAction method involves GUI changes, defer this change by using
           //  Platform.runLater(() -> { methods_you_want_to_call })
           Platform.runLater(() -> {
@@ -146,7 +147,7 @@ public class LobbyController {
   }
 
   private EventHandler<ActionEvent> createJoinLeaveSessionHandler(
-      String curUserName, String sessionId,
+      String curUserName, Long sessionId,
       LobbyServiceRequestSender lobbyRequestSender, String accessToken) {
     return event -> {
       // TODO: add the request of joining / leaving session here
@@ -199,7 +200,7 @@ public class LobbyController {
    * @return a Pane that contains info about a session
    */
   private Pane createSessionGui(String accessToken,
-                                String sessionId,
+                                Long sessionId,
                                 Session curSession,
                                 Label sessionInfoContent) {
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
@@ -246,12 +247,12 @@ public class LobbyController {
     }
 
     Pane p = new Pane(hb);
-    p.setAccessibleText(sessionId);
+    p.setAccessibleText(sessionId.toString());
     return p;
   }
 
   protected void addOneSessionGui(String accessToken,
-                                  String sessionId,
+                                  Long sessionId,
                                   Session curSession,
                                   VBox sessionVbox) {
     String sessionInfo = formatSessionInfo(curSession);
@@ -263,11 +264,11 @@ public class LobbyController {
     });
   }
 
-  protected void removeSessionsGui(String sessionId, VBox sessionVbox) {
+  protected void removeSessionsGui(Long sessionId, VBox sessionVbox) {
 
     for (Iterator<Node> iterator = sessionVbox.getChildren().iterator(); iterator.hasNext(); ) {
       Node n = iterator.next();
-      if (n.getAccessibleText().equals(sessionId)) {
+      if (n.getAccessibleText().equals(sessionId.toString())) {
         // defer GUI remove after
         Platform.runLater(iterator::remove);
       }
@@ -287,7 +288,7 @@ public class LobbyController {
     });
   }
 
-  private Thread getUpdateOneSessionGuiThread(String sessionId,
+  private Thread getUpdateOneSessionGuiThread(Long sessionId,
                                               LobbyServiceRequestSender lobbyRequestSender,
                                               VBox sessionVbox) {
 
@@ -313,7 +314,7 @@ public class LobbyController {
           localSession = new Gson().fromJson(hashedResponse, Session.class);
 
           for (Node n : sessionVbox.getChildren()) {
-            if (n.getAccessibleText().equals(sessionId)) {
+            if (n.getAccessibleText().equals(sessionId.toString())) {
               Pane sessionPane = (Pane) n;
               HBox sessionHbox = (HBox) sessionPane.getChildren().get(0);
               Label sessionInfoLabel = (Label) sessionHbox.getChildren().get(0);
@@ -376,16 +377,14 @@ public class LobbyController {
           if (isFirstCheck) {
             localSessionList = new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
             isFirstCheck = false;
-
-            if (user != null) {
-              // TODO: Add all sessions to GUI here, when created and added, we spawn a thread accordingly
-              Map<String, Session> localSessionsMap = localSessionList.getSesionIdMap();
-              for(String sessionID: localSessionsMap.keySet()){
-                Session curSession = localSessionsMap.get(sessionID);
-                addOneSessionGui(user.getAccessToken(), sessionID, curSession, sessionVbox);
-
-                getUpdateOneSessionGuiThread(sessionID, lobbyRequestSender, sessionVbox);
-              }
+            Map<Long, Session> localSessionsMap = localSessionList.getSessionIdMap();
+            for(Long sessionId: localSessionsMap.keySet()){
+              Session curSession = localSessionsMap.get(sessionId);
+              addOneSessionGui(user.getAccessToken(), sessionId, curSession, sessionVbox);
+              getUpdateOneSessionGuiThread(sessionId, lobbyRequestSender, sessionVbox);
+              Thread updateSessionInfoThread =
+                  getUpdateOneSessionGuiThread(sessionId, lobbyRequestSender, sessionVbox);
+              updateSessionInfoThread.start();
             }
           } else {
             // TODO: localSession has been set, check the diff between remote and local
@@ -393,16 +392,16 @@ public class LobbyController {
                 remoteSessionList =
                 new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
 
-            Set<String> remoteSessionIds = remoteSessionList.getSessionIds();
+            Set<Long> remoteSessionIds = remoteSessionList.getSessionIds();
             int remoteSessionCount = remoteSessionList.getSessionsCount();
 
-            Set<String> localSessionIds = localSessionList.getSessionIds();
+            Set<Long> localSessionIds = localSessionList.getSessionIds();
             int localSessionCount = localSessionList.getSessionsCount();
 
             // local more than remote -> delete Session GUI
             if (localSessionCount > remoteSessionCount) {
               localSessionIds.removeAll(remoteSessionIds);
-              for (String diffSessionId : localSessionIds) {
+              for (Long diffSessionId : localSessionIds) {
                 removeSessionsGui(diffSessionId, sessionVbox);
               }
               localSessionList = remoteSessionList;
@@ -411,7 +410,7 @@ public class LobbyController {
             // remote more than local -> add Session GUI
             else if (remoteSessionCount > localSessionCount) {
               remoteSessionIds.removeAll(localSessionIds);
-              for (String diffSessionId : remoteSessionIds) {
+              for (Long diffSessionId : remoteSessionIds) {
                 String accessToken = user.getAccessToken();
                 Session curSession = remoteSessionList.getSessionById(diffSessionId);
                 addOneSessionGui(accessToken, diffSessionId, curSession, sessionVbox);
