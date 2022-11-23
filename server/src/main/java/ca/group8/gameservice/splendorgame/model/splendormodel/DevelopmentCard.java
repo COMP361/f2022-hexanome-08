@@ -11,7 +11,7 @@ public class DevelopmentCard extends Card {
   public boolean isPaired;
   public int pairedCardId;
 
-  public DevelopmentCard(int paramCardId, int paramPrestigePoints,
+  public DevelopmentCard(String paramCardId, int paramPrestigePoints,
       EnumMap<Colour, Integer> paramPrice) {
     super(paramCardId, paramPrestigePoints, paramPrice);
   }

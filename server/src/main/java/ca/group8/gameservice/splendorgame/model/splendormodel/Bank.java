@@ -1,4 +1,4 @@
-package ca.group8.gameservice.splendorgame.model;
+package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.EnumMap;
 
@@ -7,7 +7,7 @@ import java.util.EnumMap;
  */
 public class Bank {
 
-  private EnumMap<GemColour, Integer> allGems;
+  private EnumMap<Colour, Integer> allGems;
   private final int initialValue; //this is the value all gems (excl. gold) are initialized too
 
   /**
@@ -23,8 +23,8 @@ public class Bank {
   //TODO: and pass an integer value to Bank representing the initial gem values.
   protected Bank(GameInfo gameInfo) {
     initialValue = (GameInfo.getNumOfPlayers() * 2) - 1;
-    for (GemColour colour : GemColour.values()) {
-      if (colour == GemColour.GOLD) {
+    for (Colour colour : Colour.values()) {
+      if (colour == Colour.GOLD) {
         allGems.put(colour, 5);
       } else {
         allGems.put(colour, initialValue);
@@ -40,7 +40,7 @@ public class Bank {
    *
    */
   //TODO: Is it going to be called Gems or tokens? Cause in concept model we called it Gems
-  public void addGem(GemColour colour, int quantity) {
+  public void addGem(Colour colour, int quantity) {
     //verify that this number of gems can be added (meaning new sum will not exceed initial value)
     assert (allGems.get(colour) + quantity) <= initialValue;
     //add Gems
@@ -55,7 +55,7 @@ public class Bank {
    *
    */
   //TODO: Is it going to be called Gems or tokens? Cause in concept model we called it Gems
-  public void removeGem(GemColour colour, int quantity) {
+  public void removeGem(Colour colour, int quantity) {
     //verify that this number of gems can be removed (meaning new sum >=0)
     assert (allGems.get(colour) - quantity) >= 0;
     //remove Gems

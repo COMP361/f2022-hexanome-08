@@ -1,9 +1,8 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.EnumMap;
-import java.util.Optional;
 
-public class NobleCard implements Card{
+public class NobleCard extends Card {
     private int cardId;
     private int prestigePoints;
     private EnumMap<Colour,Integer> price;
