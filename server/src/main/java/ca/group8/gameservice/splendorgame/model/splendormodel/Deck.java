@@ -1,3 +1,5 @@
+package ca.group8.gameservice.splendorgame.model.splendormodel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +11,7 @@ public class Deck {
   //TODO: Depends on Card interface
   private List<Card> cards = new ArrayList();
 
-  //TODO Make a LEVEL enum to assign to Deck? Or do we want an int?
+  //TODO Make a LEVEL enum to assign to ca.group8.gameservice.splendorgame.model.splendormodel.Deck? Or do we want an int?
   private int level;
 
   /**
@@ -33,7 +35,7 @@ public class Deck {
   }
 
   /**
-   * Check if Deck is empty.
+   * Check if ca.group8.gameservice.splendorgame.model.splendormodel.Deck is empty.
    */
   public boolean isEmpty() {
     return aCards.isEmpty();
