@@ -15,6 +15,7 @@ public class Player implements PlayerReadOnly {
   }
 
   public EnumMap<Colour, Integer> getWealth(){
+    return null;
 
   }
 

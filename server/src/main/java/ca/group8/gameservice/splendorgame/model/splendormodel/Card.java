@@ -14,4 +14,16 @@ public class Card {
         price= paramPrice;
     }
 
+
+    public int getCardId() {
+        return cardId;
+    }
+
+    public int getPrestigePoints() {
+        return prestigePoints;
+    }
+
+    public EnumMap<Colour, Integer> getPrice() {
+        return price;
+    }
 }
