@@ -1,5 +1,7 @@
 package ca.group8.gameservice.splendorgame.model;
 
+import ca.group8.gameservice.splendorgame.model.splendormodel.Board;
+
 /**
  * Generic game interface with methods common to all board game implementations. The Game represents a persistable game
  * state allowing full game replay. This includes a reference to a game Board as well as e.g. gameplay history snapshots
