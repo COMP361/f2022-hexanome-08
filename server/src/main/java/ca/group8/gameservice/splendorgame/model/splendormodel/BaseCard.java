@@ -9,9 +9,10 @@ public class BaseCard extends DevelopmentCard {
     public BaseCard(int paramPrestigePoints,
         EnumMap<Colour, Integer> paramPrice, int prestigePoints,
         EnumMap<Colour, Integer> price, int level,
-        Optional<Colour> gemColor, boolean isPaired, int pairedCardId) {
+        Optional<Colour> gemColor, boolean isPaired, int pairedCardId, int gemNumber) {
         super(paramPrestigePoints, paramPrice, prestigePoints, price, level,
-            gemColor, isPaired, pairedCardId);
+            gemColor, isPaired, pairedCardId, gemNumber);
 
     }
+
 }

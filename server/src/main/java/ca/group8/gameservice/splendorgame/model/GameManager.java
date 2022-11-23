@@ -2,7 +2,7 @@ package ca.group8.gameservice.splendorgame.model;
 
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.Player;
-import eu.kartoffelquadrat.lobbyservice.samplegame.controller.communcationbeans.Player;
+//import eu.kartoffelquadrat.lobbyservice.samplegame.controller.communcationbeans.Player;
 
 import org.springframework.stereotype.Component;
 
