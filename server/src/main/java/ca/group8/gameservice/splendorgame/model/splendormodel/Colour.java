@@ -1,7 +1,8 @@
-
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-public enum Colour {
-  WHITE, BLACK, BLUE, GREEN, RED
-
+/**
+ * Represents the Gem colours.
+ */
+public enum GemColour {
+  RED, BLUE, GREEN, WHITE, BLACK, GOLD;
 }
