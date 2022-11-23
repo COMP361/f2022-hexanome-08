@@ -64,24 +64,7 @@ public class LobbyController {
     String gameName = gameNameMapping.get(displayGameName);
     String accessToken = curUser.getAccessToken();
     String creator = curUser.getUsername();
-    JSONObject gameDetailsJson = lobbyRequestSender.getGameDetailsRequest(gameName);
-    int maxSessionPlayers = gameDetailsJson.getInt("maxSessionPlayers");
-
-    String sessionInfoStr = String.format(
-        "%s, [%d/%d] players [%s]: \n",
-        displayGameName, 1, maxSessionPlayers, creator) + String.format("creator: %s", creator);
-    Label sessionInfo = new Label(sessionInfoStr);
-    // TODO: saveGameName is an optional argument FOR NOW, implement it later
-    String sessionId =
-        lobbyRequestSender.sendCreateSessionRequest(creator, accessToken, gameName, "");
-    Session newSession = new Gson()
-        .fromJson(lobbyRequestSender
-                .sendGetOneSessionDetailRequest(Long.parseLong(sessionId), "").getBody(),
-            Session.class);
-    Pane p = createSessionGui(accessToken, Long.parseLong(sessionId), newSession, sessionInfo);
-    Platform.runLater(() -> {
-      sessionVbox.getChildren().add(p);
-    });
+    lobbyRequestSender.sendCreateSessionRequest(creator, accessToken, gameName, "");
   }
 
 
