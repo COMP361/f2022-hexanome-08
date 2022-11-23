@@ -54,7 +54,6 @@ public class LobbyController {
 
   @FXML
   protected void onCreateSessionButtonClick() throws UnirestException {
-    // TODO: How to add a Session on GUI (with the buttons, everything)
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     User curUser = App.getUser();
     Map<String, String> gameNameMapping = lobbyRequestSender.getGameNameMapping();
@@ -85,7 +84,7 @@ public class LobbyController {
     curStage.close();
   }
 
-  public String formatSessionInfo(Session session) {
+  private String formatSessionInfo(Session session) {
     List<String> curPlayers = session.getPlayers();
     String curPlayerStr = curPlayers.toString();
     String creatorName = session.getCreator();
@@ -151,23 +150,6 @@ public class LobbyController {
           throw new RuntimeException(e);
         }
       }
-
-      // Then, obtain the result from either join/leave request
-      JSONObject getSessionDetailResponse;
-      try {
-        getSessionDetailResponse = lobbyRequestSender.sendGetSessionDetailRequest(sessionId);
-      } catch (UnirestException e) {
-        throw new RuntimeException(e);
-      }
-      Gson gson = new Gson();
-      Session joinedSession = gson.fromJson(getSessionDetailResponse.toString(), Session.class);
-      String newSessionInfo = formatSessionInfo(joinedSession);
-      HBox infoHbox = (HBox) joinAndLeaveButton.getParent();
-      Label infoLabel = (Label) infoHbox.getChildren().get(0);
-      Platform.runLater(() -> {
-        infoLabel.setText(newSessionInfo);
-      });
-
     };
   }
 
@@ -253,19 +235,6 @@ public class LobbyController {
         Platform.runLater(iterator::remove);
       }
     }
-  }
-
-  protected void updateSessionsGui(Map<String, Session> localSessionIdMap, Node inputNode) {
-    String curSessionId = inputNode.getAccessibleText();
-    Pane childPane = (Pane) inputNode;
-    HBox inputHbox = (HBox) childPane.getChildren().get(0);
-    Label curSessionLabel = (Label) inputHbox.getChildren().get(0);
-    Session curSession = localSessionIdMap.get(curSessionId);
-    String sessionInfo = formatSessionInfo(curSession);
-    // defer GUI change to lobby main page
-    Platform.runLater(() -> {
-      curSessionLabel.setText(sessionInfo);
-    });
   }
 
   private Thread getUpdateOneSessionGuiThread(Long sessionId,
