@@ -4,14 +4,20 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import java.util.EnumMap;
 
 public class Card {
-    String cardId;
     int prestigePoints;
     EnumMap<Colour,Integer> price;
 
-    public Card(String paramCardId, int paramPrestigePoints, EnumMap<Colour,Integer> paramPrice){
-        cardId=paramCardId;
+    public Card(int paramPrestigePoints, EnumMap<Colour,Integer> paramPrice){
+
         prestigePoints = paramPrestigePoints;
         price= paramPrice;
     }
 
+    public int getPrestigePoints() {
+        return prestigePoints;
+    }
+
+    public EnumMap<Colour, Integer> getPrice() {
+        return price;
+    }
 }

@@ -14,10 +14,6 @@ public class Player implements PlayerReadOnly {
     name = paramName;
   }
 
-  public EnumMap<Colour, Integer> getWealth(){
-
-  }
-
 
 
   @Override
