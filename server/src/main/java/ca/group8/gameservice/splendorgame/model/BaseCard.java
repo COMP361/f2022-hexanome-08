@@ -4,13 +4,13 @@ import java.util.EnumMap;
 import java.util.Optional;
 
 public class BaseCard implements DevelopmentCard{
-    private int cardId;
-    private int prestigePoints;
-    private EnumMap<Colour,Integer> price;
-    private int level;
+    private final int cardId;
+    private final int prestigePoints;
+    private final EnumMap<Colour,Integer> price;
+    private final int level;
+    private final boolean isPaired = false;
+    private final int pairedCardId = -1;
     private Optional<Colour> gemColor;
-    private boolean isPaired = false;
-    private int pairedCardId = -1;
 
     public BaseCard(int parId, int parPrestige, EnumMap<Colour,Integer> parPrice,
                     int parLevel, Optional<Colour> parGem){
