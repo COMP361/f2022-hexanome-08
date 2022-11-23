@@ -307,8 +307,7 @@ public class LobbyController {
         }
         if (responseCode == 200) {
           hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
-
-          localSession = new Gson().fromJson(hashedResponse, Session.class);
+          localSession = new Gson().fromJson(longPullResponse.getBody(), Session.class);
 
           for (Node n : sessionVbox.getChildren()) {
             if (n.getAccessibleText().equals(sessionId.toString())) {
