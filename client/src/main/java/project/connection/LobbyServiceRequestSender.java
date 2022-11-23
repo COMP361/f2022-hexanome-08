@@ -79,9 +79,9 @@ public class LobbyServiceRequestSender {
   public HttpResponse<String> sendGetOneSessionDetailRequest(
       Long sessionId, String hashPreviousResponse) throws UnirestException {
     if (hashPreviousResponse.equals("")) {
-      return Unirest.get(lobbyUrl + "/api/sessions" + sessionId.toString()).asString();
+      return Unirest.get(lobbyUrl + "/api/sessions/" + sessionId.toString()).asString();
     } else {
-      return Unirest.get(lobbyUrl + "/api/sessions" + sessionId.toString())
+      return Unirest.get(lobbyUrl + "/api/sessions/" + sessionId.toString())
           .queryString("hash", hashPreviousResponse).asString();
     }
   }
