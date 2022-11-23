@@ -23,6 +23,11 @@ public class TokenHand {
     return allTokens;
   }
 
+  public int getGoldTokenNumber(){
+    return allTokens.get(Colour.GOLD);
+  }
+
+
   /**
    * Adds a certain amount (quantity) of a certain GemColour colour from the TokenHand.
    *
@@ -30,13 +35,11 @@ public class TokenHand {
    * @param quantity = quantity to add.
    *
    */
-  //TODO: QUESTIN: Is verifying that you have 10 tokens or less in the controller? yes
+
   public void addToken(Colour colour, int quantity) {
     //add Tokens
     allTokens.put(colour, (allTokens.get(colour) + quantity));
   }
-
-  //TODO: Is it going to be called Gems or tokens? Cause in concept model we called it Gems
 
   /**
    * Removes a certain amount (quantity) of a certain GemColour colour from the TokenHand.
