@@ -285,18 +285,18 @@ public class LobbyController {
   }
 
   private Set<Long> findDifferentSessionIds(Set<Long> setA,
-                                              Set<Long> setB) {
+                                            Set<Long> setB) {
     HashSet<Long> resultSet = new HashSet<>();
     if (setA.size() > setB.size()) {
       for (Long l : setA) {
-        if (!setB.contains(l)){
+        if (!setB.contains(l)) {
           resultSet.add(l);
         }
       }
 
     } else if (setB.size() > setA.size()) {
       for (Long l : setB) {
-        if (!setA.contains(l)){
+        if (!setA.contains(l)) {
           resultSet.add(l);
         }
       }
@@ -368,7 +368,7 @@ public class LobbyController {
 
             Set<Long> remoteSessionIds = remoteSessionList.getSessionIds();
             Set<Long> localSessionIds = localSessionList.getSessionIds();
-            Set<Long> diffSessionIds = findDifferentSessionIds(remoteSessionIds,localSessionIds);
+            Set<Long> diffSessionIds = findDifferentSessionIds(remoteSessionIds, localSessionIds);
             if (diffSessionIds.isEmpty()) {
               continue;
             }
