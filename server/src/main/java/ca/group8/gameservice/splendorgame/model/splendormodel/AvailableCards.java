@@ -7,7 +7,7 @@ public class AvailableCards {
   private final String cardName;
   private final int level;
   private final int prestigePoint;
-  private final Map<Color,Integer> price;
+  private final Map<Colour,Integer> price;
   private final boolean isOrient;
   private final boolean needsBurn;
 
@@ -16,7 +16,7 @@ public class AvailableCards {
     this.cardName = cardName;
     this.level = level;
     this.prestigePoint = prestigePoint;
-    this.price = new HashMap<>();
+    this.price = new HashMap<Colour,Integer>();
     this.isOrient = isOrient;
     this.needsBurn = needsBurn;
   }
@@ -34,7 +34,7 @@ public class AvailableCards {
     return prestigePoint;
   }
 
-  public Map<Color, Integer> getPrice() {
+  public Map<Colour, Integer> getPrice() {
     return price;
   }
 
