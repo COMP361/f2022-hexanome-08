@@ -97,6 +97,5 @@
           </Menu>
         </menus>
       </MenuBar>
-      <Button layoutX="200.0" layoutY="55.0" mnemonicParsing="false" onAction="#joinGame" text="JoinGame" />
    </children>
 </AnchorPane>

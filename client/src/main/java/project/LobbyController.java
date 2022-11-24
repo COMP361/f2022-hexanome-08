@@ -136,9 +136,6 @@ public class LobbyController {
       String curUserName, Long sessionId,
       LobbyServiceRequestSender lobbyRequestSender, String accessToken) {
     return event -> {
-      // TODO: add the request of joining / leaving session here
-      // anonymous class of EventHandler instance
-
       Button joinAndLeaveButton = (Button) event.getSource();
       // If the button says "Join", send join request
       if (joinAndLeaveButton.getText().equals("Join")) {
@@ -156,6 +153,43 @@ public class LobbyController {
         } catch (UnirestException e) {
           throw new RuntimeException(e);
         }
+      }
+    };
+  }
+
+  // TODO: For server side, they need to handle
+  //  this POST request and send a PUT request to GameServer
+  private EventHandler<ActionEvent> createLaunchSessionHandler(
+      Long sessionId, LobbyServiceRequestSender lobbyRequestSender, String accessToken) {
+    return event -> {
+      try {
+        lobbyRequestSender.sendLaunchSessionRequest(sessionId, accessToken);
+      } catch (UnirestException e) {
+        throw new RuntimeException(e);
+      }
+    };
+  }
+
+
+  private EventHandler<ActionEvent> createPlayGameHandler() {
+    return event -> {
+      try {
+        // TODO: Adjust this fxml file later when game server is done
+        App.setRoot("splendor_game_board");
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    };
+  }
+
+
+  private EventHandler<ActionEvent> createWatchGameHandler() {
+    return event -> {
+      // just load the board to this user, nothing else should be done
+      try {
+        App.setRoot("splendor_game_board");
+      } catch (IOException e) {
+        throw new RuntimeException(e);
       }
     };
   }
@@ -185,35 +219,50 @@ public class LobbyController {
     //
     User user = App.getUser();
     String curUserName = user.getUsername();
-    // if the user is the creator, provides delete and launch button
-    if (curUserName.equals(sessionCreatorName)) {
-      EventHandler<ActionEvent> deleteSessionHandler =
-          createDeleteSessionHandler(sessionVbox, sessionId, lobbyRequestSender, accessToken);
-      EventHandler<ActionEvent> launchSessionHandler = event -> {
-        // TODO: add the request of launching session here
-        //  (need to have the game server logic ready)
-        System.out.println("Launch Session");
-      };
-      Button deleteButton = new Button("Delete");
-      Button launchButton = new Button("Launch");
-      deleteButton.setOnAction(deleteSessionHandler);
-      launchButton.setOnAction(launchSessionHandler);
-      hb = new HBox(sessionInfoContent, spaceBetween, deleteButton, launchButton);
-    } else {
-      EventHandler<ActionEvent> joinAndLeaveSessionHandler =
-          createJoinLeaveSessionHandler(curUserName, sessionId, lobbyRequestSender, accessToken);
-      List<String> players = curSession.getPlayers();
-      String buttonContent;
-      if (players.contains(curUserName)) {
-        buttonContent = "Leave";
-      } else {
-        buttonContent = "Join";
-      }
+    List<String> curSessionPlayers = curSession.getPlayers();
 
-      Button joinAndLeaveButton = new Button(buttonContent);
-      joinAndLeaveButton.setOnAction(joinAndLeaveSessionHandler);
-      hb = new HBox(sessionInfoContent, spaceBetween, joinAndLeaveButton);
+    // if the session is launched, add a Play Button for both creator and player
+    if (curSession.isLaunched()) {
+      // if the current user is not in the session, then give a Watch Button
+      if (!curSessionPlayers.contains(curUserName)) {
+        EventHandler<ActionEvent> watchGameHandler = createWatchGameHandler();
+        Button watchButton = new Button("Watch");
+        watchButton.setOnAction(watchGameHandler);
+        hb = new HBox(sessionInfoContent, spaceBetween, watchButton);
+      } else {
+        EventHandler<ActionEvent> playGameHandler = createPlayGameHandler();
+        Button playButton = new Button("Play");
+        playButton.setOnAction(playGameHandler);
+        hb = new HBox(sessionInfoContent, spaceBetween, playButton);
+      }
+    } else {
+      // otherwise, add diff buttons for creator OR player
+      // if the user is the creator, provides delete and launch button
+      if (curUserName.equals(sessionCreatorName)) {
+        EventHandler<ActionEvent> deleteSessionHandler =
+            createDeleteSessionHandler(sessionVbox, sessionId, lobbyRequestSender, accessToken);
+        EventHandler<ActionEvent> launchSessionHandler =
+            createLaunchSessionHandler(sessionId, lobbyRequestSender, accessToken);
+        Button deleteButton = new Button("Delete");
+        Button launchButton = new Button("Launch");
+        deleteButton.setOnAction(deleteSessionHandler);
+        launchButton.setOnAction(launchSessionHandler);
+        hb = new HBox(sessionInfoContent, spaceBetween, deleteButton, launchButton);
+      } else {
+        EventHandler<ActionEvent> joinAndLeaveSessionHandler =
+            createJoinLeaveSessionHandler(curUserName, sessionId, lobbyRequestSender, accessToken);
+        String buttonContent;
+        if (curSessionPlayers.contains(curUserName)) {
+          buttonContent = "Leave";
+        } else {
+          buttonContent = "Join";
+        }
+        Button joinAndLeaveButton = new Button(buttonContent);
+        joinAndLeaveButton.setOnAction(joinAndLeaveSessionHandler);
+        hb = new HBox(sessionInfoContent, spaceBetween, joinAndLeaveButton);
+      }
     }
+
 
     Pane p = new Pane(hb);
     p.setAccessibleText(sessionId.toString());
@@ -247,11 +296,11 @@ public class LobbyController {
   private Thread getUpdateOneSessionGuiThread(Long sessionId,
                                               LobbyServiceRequestSender lobbyRequestSender,
                                               VBox sessionVbox) {
-
     return new Thread(() -> {
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
       Session localSession;
+      boolean isFirstCheck = true;
       while (true) {
         int responseCode = 408;
         while (responseCode == 408) {
@@ -265,18 +314,60 @@ public class LobbyController {
         }
         if (responseCode == 200) {
           hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
+          // obtain the latest session info of one session
           localSession = new Gson().fromJson(longPullResponse.getBody(), Session.class);
+          List<String> curPlayers = localSession.getPlayers();
+
 
           for (Node n : sessionVbox.getChildren()) {
             if (n.getAccessibleText().equals(sessionId.toString())) {
+              // if found the corresponding GUI session, first update button if game launched
+              // if user is not in game / in game, button is updated differently
               Pane sessionPane = (Pane) n;
               HBox sessionHbox = (HBox) sessionPane.getChildren().get(0);
-              Label sessionInfoLabel = (Label) sessionHbox.getChildren().get(0);
-              String newSessionInfo = formatSessionInfo(localSession);
-              // defer updating session info
-              Platform.runLater(() -> {
-                sessionInfoLabel.setText(newSessionInfo);
-              });
+              // if it's firstCheck, we do not want to do any button replacement!
+              if (localSession.isLaunched() && !isFirstCheck) {
+                // if user is in this game, then we only need to delete the Leave button to Play
+                // if user is NOT in this game, change the Join button to Watch
+                // either way, we are just removing one button and create a new one
+                String curUserName = App.getUser().getUsername();
+                Button replaceButton;
+                if (curPlayers.contains(curUserName)) {
+                  replaceButton = new Button("Play");
+                  replaceButton.setOnAction(createPlayGameHandler());
+                } else {
+                  replaceButton = new Button("Watch");
+                  replaceButton.setOnAction(createWatchGameHandler());
+                }
+                String creatorName = localSession.getCreator();
+                if (curUserName.equals(creatorName)) {
+                  // if it's creator, after launching, we should remove
+                  // both Delete and Launch button
+                  Platform.runLater(() -> {
+                    sessionHbox.getChildren().remove(2);
+                    sessionHbox.getChildren().remove(2);
+                    sessionHbox.getChildren().add(replaceButton);
+                  });
+
+                } else {
+                  // otherwise, replace the last button only
+                  Platform.runLater(() -> {
+                    // remove the Button on index 2 (0: Label, 1: Region, 2: Button)
+                    sessionHbox.getChildren().remove(2);
+                    sessionHbox.getChildren().add(replaceButton);
+                  });
+                }
+
+              } else {
+                Label sessionInfoLabel = (Label) sessionHbox.getChildren().get(0);
+                String newSessionInfo = formatSessionInfo(localSession);
+                isFirstCheck = false;
+                // defer updating session info
+                Platform.runLater(() -> {
+                  sessionInfoLabel.setText(newSessionInfo);
+                });
+              }
+
             }
           }
         }
