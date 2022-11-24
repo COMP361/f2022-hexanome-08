@@ -7,11 +7,6 @@ public class ReservedHand {
     private List<DevelopmentCard> developmentCards = new ArrayList<>();
     private List<NobleCard> nobleCards = new ArrayList<>();
 
-    public ReservedHand(List<DevelopmentCard> developmentCards, List<NobleCard> nobleCards) {
-        this.developmentCards = developmentCards;
-        this.nobleCards = nobleCards;
-    }
-
     public void addDevelopmentCard(DevelopmentCard card){
         developmentCards.add(card);
     }

@@ -15,8 +15,8 @@ public class Deck {
   //TODO Make a LEVEL enum to assign to ca.group8.gameservice.splendorgame.model.splendormodel.Deck? Or do we want an int?
   private int level;
 
-  public Deck(List<Card> cards, int level) {
-    this.cards = cards;
+  public Deck(int level) {
+    //initialize by adding Cards to cards field
     this.level = level;
   }
 
