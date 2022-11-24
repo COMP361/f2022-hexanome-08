@@ -5,6 +5,9 @@ import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+/**
+ * Game controller for game GUI.
+ */
 public class GameController {
 
   @FXML
