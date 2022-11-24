@@ -1,6 +1,12 @@
 package project.view.splendor;
 
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.AnchorPane;
 
-public class GameBoardGui extends HBox {
+public class GameBoardGui extends AnchorPane {
+  // TokenBankGui
+  // NobleListGui
+  // BaseCardBoardGui -> BaseCardLevelGui
+  // OrientCardBoardGui -> OrientCardLevelGui
+
+
 }
