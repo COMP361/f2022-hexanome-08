@@ -47,7 +47,7 @@ public class App extends Application {
    */
   @Override
   public void start(Stage stage) throws IOException {
-    scene = new Scene(loadFxml("start_page"), 1000, 800);
+    scene = new Scene(loadFxml("start_page"), 1200, 900);
     // Every time we loadFxml("a_file"), the file corresponding
     // controller's initialize method will get called
     //lobby = new Scene(loadFxml("admin_lobby_page"), 1000, 800);

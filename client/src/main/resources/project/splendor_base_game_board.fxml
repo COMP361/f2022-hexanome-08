@@ -8,9 +8,9 @@
 
 <AnchorPane style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.GameController">
     <children>
-        <BorderPane fx:id="gameBoardContent" layoutY="4.666666507720947" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
+        <BorderPane fx:id="gameBoardContent" layoutY="4.666666507720947" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0">
          <center>
-            <AnchorPane fx:id="gameBoardAnchorPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <AnchorPane fx:id="gameBoardAnchorPane" maxHeight="600.0" maxWidth="900.0" BorderPane.alignment="CENTER" />
          </center>
         </BorderPane>
         <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
