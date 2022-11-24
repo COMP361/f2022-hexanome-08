@@ -18,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -195,6 +196,7 @@ public class LobbyController {
   @FXML
   public void joinGameDev() throws IOException {
     // TODO: For debug usage
+    Scene curScene = sessionVbox.getScene();
     App.setRoot("splendor_base_game_board");
   }
 

@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.SubScene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import project.view.splendor.NobleListGui;
 import project.view.splendor.TokenBankGui;
 
 /**
@@ -40,28 +38,44 @@ public class GameController {
     newStage.show();
   }
 
-  public void initialize() {
-    // initializing the card area
-    gameBoardAnchorPane = new AnchorPane();
 
-    // initialize noble area
+  private void initializeNobleList(int curPlayerNum,
+                                   double imgWidth, double imgHeight,
+                                   double nobleListLayoutX, double nobleListLayoutY) {
     List<ImageView> testImages = new ArrayList<>();
-    Image img = new Image("project/pictures/noble/noble1.png");
-    ImageView imgv = new ImageView(img);
-    testImages.add(imgv);
-    //Platform.runLater(() -> {
-    //  gameBoardAnchorPane.getChildren().add(new NobleListGui(testImages));
-    //});
+    for (int i = 1; i <= curPlayerNum; i++) {
+      Image img = new Image(String.format("project/pictures/noble/noble%d.png",i));
+      ImageView imgv = new ImageView(img);
+      imgv.setFitWidth(imgWidth);
+      imgv.setFitHeight(imgHeight);
+      testImages.add(imgv);
+    }
 
     Platform.runLater(() -> {
-      gameBoardAnchorPane.getChildren().add(new Label("okok"));
+      VBox nobleList = new VBox();
+      for (ImageView img : testImages) {
+        nobleList.getChildren().add(img);
+      }
+      gameBoardAnchorPane.getChildren().add(nobleList);
+      nobleList.setLayoutX(nobleListLayoutX);
+      nobleList.setLayoutY(nobleListLayoutY);
+    });
+  }
+
+  public void initialize() {
+    gameBoardAnchorPane.setMaxHeight(600);
+    gameBoardAnchorPane.setMaxWidth(900);
+    // initialize noble area
+    initializeNobleList(5, 100, 100, 810, 50);
+
+    //initialize token area
+    TokenBankGui tokenBank = new TokenBankGui();
+    Platform.runLater(() -> {
+      gameBoardAnchorPane.getChildren().add(tokenBank);
+      tokenBank.setLayoutX(40);
+      tokenBank.setLayoutY(5);
     });
 
-    // initialize token area
-    //Platform.runLater(() -> {
-    //  TokenBankGui tokenBank = new TokenBankGui();
-    //  gameBoardAnchorPane.getChildren().add(tokenBank);
-    //});
 
   }
 
