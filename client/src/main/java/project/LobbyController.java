@@ -51,13 +51,7 @@ public class LobbyController {
   @FXML
   private VBox sessionVbox;
 
-  @FXML
-  protected void joinGame() throws IOException {
-    App.setRoot("splendor_game_board");
-    App.setHandCard();
-    App.setReserveCard();
-  }
-
+  private List<Thread> updateThreadPool;
 
   @FXML
   protected void onCreateSessionButtonClick() throws UnirestException {
@@ -78,6 +72,7 @@ public class LobbyController {
   protected void onLogOutFromLobbyMenu() throws IOException {
     // clean up local lobby session cache before logging out
     App.setUser(null);
+    stopAndClearThreads();
     App.setRoot("start_page");
   }
 
@@ -176,6 +171,8 @@ public class LobbyController {
       try {
         // TODO: Adjust this fxml file later when game server is done
         App.setRoot("splendor_game_board");
+        // anything involving reloading this page, we need to clear the thread pool
+        stopAndClearThreads();
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -188,6 +185,7 @@ public class LobbyController {
       // just load the board to this user, nothing else should be done
       try {
         App.setRoot("splendor_game_board");
+        stopAndClearThreads();
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -247,6 +245,8 @@ public class LobbyController {
         Button launchButton = new Button("Launch");
         deleteButton.setOnAction(deleteSessionHandler);
         launchButton.setOnAction(launchSessionHandler);
+        // launchButton greyed out
+        launchButton.setDisable(true);
         hb = new HBox(sessionInfoContent, spaceBetween, deleteButton, launchButton);
       } else {
         EventHandler<ActionEvent> joinAndLeaveSessionHandler =
@@ -317,16 +317,15 @@ public class LobbyController {
           // obtain the latest session info of one session
           localSession = new Gson().fromJson(longPullResponse.getBody(), Session.class);
           List<String> curPlayers = localSession.getPlayers();
-
-
           for (Node n : sessionVbox.getChildren()) {
+            boolean replaceButtonFlag;
             if (n.getAccessibleText().equals(sessionId.toString())) {
               // if found the corresponding GUI session, first update button if game launched
               // if user is not in game / in game, button is updated differently
               Pane sessionPane = (Pane) n;
               HBox sessionHbox = (HBox) sessionPane.getChildren().get(0);
-              // if it's firstCheck, we do not want to do any button replacement!
-              if (localSession.isLaunched() && !isFirstCheck) {
+              // if it's NOT firstCheck, we want to ONLY do button replacement!
+              if (!isFirstCheck) {
                 // if user is in this game, then we only need to delete the Leave button to Play
                 // if user is NOT in this game, change the Join button to Watch
                 // either way, we are just removing one button and create a new one
@@ -340,17 +339,30 @@ public class LobbyController {
                   replaceButton.setOnAction(createWatchGameHandler());
                 }
                 String creatorName = localSession.getCreator();
+                int curPlayersCount = curPlayers.size();
+                int minPlayersCount = localSession.getGameParameters().getMinSessionPlayers();
                 if (curUserName.equals(creatorName)) {
-                  // if it's creator, after launching, we should remove
-                  // both Delete and Launch button
-                  Platform.runLater(() -> {
-                    sessionHbox.getChildren().remove(2);
-                    sessionHbox.getChildren().remove(2);
-                    sessionHbox.getChildren().add(replaceButton);
-                  });
-
+                  Button launchButton = (Button) sessionHbox.getChildren().get(3);
+                  // If it's curUser, then we must check for set Enable for him/her
+                  if (launchButton.isDisabled()) {
+                    // only setDisable(false) for the launch button if we have enough players
+                    if (curPlayersCount == minPlayersCount) {
+                      Platform.runLater(() -> {
+                        launchButton.setDisable(false);
+                      });
+                    }
+                  } else {
+                    // if launchButton.isDisabled() == false, means we can click it
+                    // if it's clickable, then we should replace it here
+                    Platform.runLater(() -> {
+                      sessionHbox.getChildren().remove(2);
+                      sessionHbox.getChildren().remove(2);
+                      sessionHbox.getChildren().add(replaceButton);
+                    });
+                  }
                 } else {
-                  // otherwise, replace the last button only
+                  // if the user is not creator, there is no point updating the launch for one
+                  // thus ONLY the remove / replace button logic here for user
                   Platform.runLater(() -> {
                     // remove the Button on index 2 (0: Label, 1: Region, 2: Button)
                     sessionHbox.getChildren().remove(2);
@@ -359,6 +371,7 @@ public class LobbyController {
                 }
 
               } else {
+                // If it's firstCheck, we only want to update their textInfo
                 Label sessionInfoLabel = (Label) sessionHbox.getChildren().get(0);
                 String newSessionInfo = formatSessionInfo(localSession);
                 isFirstCheck = false;
@@ -408,6 +421,7 @@ public class LobbyController {
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
+    updateThreadPool = new ArrayList<>();
 
     for (GameParameters g : gameParameters) {
       gameDisplayNames.add(g.getDisplayName());
@@ -450,6 +464,7 @@ public class LobbyController {
               addOneSessionGui(user.getAccessToken(), sessionId, curSession, sessionVbox);
               Thread updateSessionInfoThread =
                   getUpdateOneSessionGuiThread(sessionId, lobbyRequestSender, sessionVbox);
+              updateThreadPool.add(updateSessionInfoThread);
               updateSessionInfoThread.start();
             }
           } else {
@@ -480,6 +495,7 @@ public class LobbyController {
                 // created Session Pane
                 Thread updateSessionInfoThread =
                     getUpdateOneSessionGuiThread(diffSessionId, lobbyRequestSender, sessionVbox);
+                updateThreadPool.add(updateSessionInfoThread);
                 updateSessionInfoThread.start();
               }
             }
@@ -490,8 +506,15 @@ public class LobbyController {
         }
       }
     });
+    updateThreadPool.add(updateAddRemoveSessionThread);
     updateAddRemoveSessionThread.start();
+  }
 
+  private void stopAndClearThreads() {
+    for (Thread t : updateThreadPool) {
+      t.interrupt();
+    }
+    updateThreadPool.clear();
   }
 }
 
