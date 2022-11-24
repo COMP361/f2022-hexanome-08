@@ -9,7 +9,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import project.view.splendor.Colour;
 import project.view.splendor.TokenBankGui;
 
 /**
@@ -75,6 +77,16 @@ public class GameController {
       tokenBank.setLayoutX(40);
       tokenBank.setLayoutY(5);
     });
+
+    for (Text t :
+        tokenBank.getColourTokenNumMap().values()) {
+      System.out.println(t.getText());
+    }
+
+    for (Colour t :
+        tokenBank.getColourTokenNumMap().keySet()) {
+      System.out.println(t);
+    }
 
 
   }
