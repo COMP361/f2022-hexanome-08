@@ -5,6 +5,8 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.logging.log4j.core.util.SetUtils;
 import org.json.JSONObject;
 import project.connection.LobbyServiceRequestSender;
 import project.view.lobby.GameParameters;
@@ -245,7 +248,6 @@ public class LobbyController {
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
       Session localSession;
-
       while (true) {
         int responseCode = 408;
         while (responseCode == 408) {
@@ -278,6 +280,27 @@ public class LobbyController {
     });
   }
 
+  private Set<Long> findDifferentSessionIds(Set<Long> setA,
+                                              Set<Long> setB) {
+    HashSet<Long> resultSet = new HashSet<>();
+    if (setA.size() > setB.size()) {
+      for (Long l : setA) {
+        if (!setB.contains(l)){
+          resultSet.add(l);
+        }
+      }
+
+    } else if (setB.size() > setA.size()) {
+      for (Long l : setB) {
+        if (!setA.contains(l)){
+          resultSet.add(l);
+        }
+      }
+    }
+
+    return resultSet;
+  }
+
 
   /**
    * Initializing info for local lobby.
@@ -304,7 +327,6 @@ public class LobbyController {
       HttpResponse<String> longPullResponse = null;
       SessionList localSessionList = null;
       boolean isFirstCheck = true;
-
       while (true) {
         int responseCode = 408;
         User user = App.getUser();
@@ -331,34 +353,31 @@ public class LobbyController {
             for (Long sessionId : localSessionsMap.keySet()) {
               Session curSession = localSessionsMap.get(sessionId);
               addOneSessionGui(user.getAccessToken(), sessionId, curSession, sessionVbox);
-              getUpdateOneSessionGuiThread(sessionId, lobbyRequestSender, sessionVbox);
               Thread updateSessionInfoThread =
                   getUpdateOneSessionGuiThread(sessionId, lobbyRequestSender, sessionVbox);
               updateSessionInfoThread.start();
             }
           } else {
             // TODO: localSession has been set, check the diff between remote and local
-            SessionList
-                remoteSessionList =
+            SessionList remoteSessionList =
                 new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
 
             Set<Long> remoteSessionIds = remoteSessionList.getSessionIds();
-            int remoteSessionCount = remoteSessionList.getSessionsCount();
-
             Set<Long> localSessionIds = localSessionList.getSessionIds();
+            Set<Long> diffSessionIds = findDifferentSessionIds(remoteSessionIds,localSessionIds);
+            if (diffSessionIds.isEmpty()) {
+              continue;
+            }
+            int remoteSessionCount = remoteSessionList.getSessionsCount();
             int localSessionCount = localSessionList.getSessionsCount();
-
             // local more than remote -> delete Session GUI
             if (localSessionCount > remoteSessionCount) {
-              localSessionIds.removeAll(remoteSessionIds);
-              for (Long diffSessionId : localSessionIds) {
+              for (Long diffSessionId : diffSessionIds) {
                 removeSessionsGui(diffSessionId, sessionVbox);
               }
-              localSessionList = remoteSessionList;
             } else if (remoteSessionCount > localSessionCount) {
               // remote more than local -> add Session GUI
-              remoteSessionIds.removeAll(localSessionIds);
-              for (Long diffSessionId : remoteSessionIds) {
+              for (Long diffSessionId : diffSessionIds) {
                 String accessToken = user.getAccessToken();
                 Session curSession = remoteSessionList.getSessionById(diffSessionId);
                 addOneSessionGui(accessToken, diffSessionId, curSession, sessionVbox);
@@ -368,8 +387,10 @@ public class LobbyController {
                     getUpdateOneSessionGuiThread(diffSessionId, lobbyRequestSender, sessionVbox);
                 updateSessionInfoThread.start();
               }
-              localSessionList = remoteSessionList;
             }
+            // update local sessions
+            localSessionList = remoteSessionList;
+
           }
         }
       }
