@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.GameController">
+<AnchorPane style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane layoutY="4.666666507720947" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
 
@@ -568,5 +568,33 @@
             </Menu>
         </menus>
       </MenuBar>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Group>
+               <children>
+                  <ImageView fitHeight="85.0" fitWidth="85.0">
+                     <image>
+                        <Image url="@pictures/token/red_tokens.png" />
+                     </image>
+                  </ImageView>
+                  <Text fx:id="counterWhite11" layoutX="38.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="25.0" text="Button" />
+                  <Button layoutX="57.0" layoutY="1.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="27.0" text="Button" />
+               </children>
+            </Group>
+            <Group>
+               <children>
+                  <ImageView fitHeight="85.0" fitWidth="85.0">
+                     <image>
+                        <Image url="@pictures/token/red_tokens.png" />
+                     </image>
+                  </ImageView>
+                  <Text fx:id="counterWhite1" layoutX="38.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="25.0" text="Button" />
+                  <Button layoutX="57.0" layoutY="1.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="27.0" text="Button" />
+               </children>
+            </Group>
+         </children>
+      </HBox>
    </children>
 </AnchorPane>
