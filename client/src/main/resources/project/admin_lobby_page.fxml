@@ -22,6 +22,7 @@
             <HBox alignment="TOP_CENTER" prefHeight="119.0" prefWidth="960.0" BorderPane.alignment="CENTER">
                <children>
                   <Region prefHeight="91.0" prefWidth="412.0" HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#joinGameDev" prefHeight="26.0" prefWidth="188.0" text="TestJoinButton" />
                   <Label prefHeight="191.0" prefWidth="205.0" text="Lobby">
                      <font>
                         <Font name="Axiforma-SemiBold" size="40.0" />
