@@ -6,21 +6,16 @@ import java.util.EnumMap;
 public class Player implements PlayerReadOnly {
 
   private final String name;
-  private TokenHand tokenHand;
-  private PurchasedHand purchasedHand;
-  private ReservedHand reservedHand;
+  private TokenHand tokenHand = new TokenHand();
+  private PurchasedHand purchasedHand = new PurchasedHand();
+  private ReservedHand reservedHand = new ReservedHand();
 
   //need get reserved card number,
   private EnumMap<Colour, Integer> wealth = new EnumMap<>(Colour.class);
 
 
-  public Player(String paramName, TokenHand paramTokenHand,
-      PurchasedHand purchasedHand,
-      ReservedHand reservedHand) {
-    tokenHand=paramTokenHand;
+  public Player(String paramName){
     name = paramName;
-    this.purchasedHand = purchasedHand;
-    this.reservedHand = reservedHand;
   }
 
 
@@ -64,11 +59,11 @@ public class Player implements PlayerReadOnly {
 
   @Override
   public String getName() {
-    return null;
+    return name;
   }
 
   @Override
   public String getPreferredColour() {
-    return null;
+    return getPreferredColour();
   }
 }

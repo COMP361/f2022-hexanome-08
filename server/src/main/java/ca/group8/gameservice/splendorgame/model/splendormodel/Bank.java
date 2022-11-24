@@ -21,8 +21,8 @@ public class Bank {
    */
   //TODO: Do we want to have this param?? Or should we implement this logic in GameState
   //TODO: and pass an integer value to Bank representing the initial gem values.
-  protected Bank(GameInfo gameInfo) {
-    initialValue = (GameInfo.getNumOfPlayers() * 2) - 1;
+  protected Bank(int numPlayers) {
+    initialValue = (numPlayers * 2) - 1;
     for (Colour colour : Colour.values()) {
       if (colour == Colour.GOLD) {
         allGems.put(colour, 5);
