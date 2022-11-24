@@ -70,7 +70,6 @@ public class LobbyServiceRequestSender {
    * Send a long poll get request to get detail on
    * 1 session (whether ppl joined in the session or left).
    *
-   *
    * @param sessionId            session id
    * @param hashPreviousResponse previous response payload body hashed with MD5
    * @throws UnirestException in case unirest failed to send a request
@@ -122,31 +121,17 @@ public class LobbyServiceRequestSender {
   }
 
   /**
-   * request the username with access token.
-   *
-   * @param accessToken access token
-   * @return username
-   * @throws UnirestException in case unirest failed to send a request
-   */
-  public String sendUserNameRequest(String accessToken) throws UnirestException {
-    HttpResponse<String> userNameResponse = Unirest.get(lobbyUrl + "/oauth/username")
-        .queryString("access_token", accessToken).asString();
-    return userNameResponse.getBody();
-  }
-
-  /**
    * UTF8-String, encoding the id of the newly created session (positive long).
    *
    * @param accessToken  access token
    * @param gameName     game name
    * @param saveGameName save game name
-   * @return a JsonObject with user authority
    * @throws UnirestException in case unirest failed to send a request
    */
-  public String sendCreateSessionRequest(String userName,
-                                         String accessToken,
-                                         String gameName,
-                                         String saveGameName) throws UnirestException {
+  public void sendCreateSessionRequest(String userName,
+                                       String accessToken,
+                                       String gameName,
+                                       String saveGameName) throws UnirestException {
 
     JSONObject requestBody = new JSONObject();
     requestBody.put("creator", userName);
@@ -158,8 +143,6 @@ public class LobbyServiceRequestSender {
         .queryString("access_token", accessToken)
         .body(requestBody)
         .asString();
-
-    return createSessionResponse.getBody();
   }
 
   /**
@@ -213,18 +196,6 @@ public class LobbyServiceRequestSender {
         .queryString("access_token", accessToken).asString();
   }
 
-  /**
-   * send request to get detail session info.
-   *
-   * @param sessionId session id
-   *                  //   * @return JsonObject with detailed session info
-   * @throws UnirestException in case unirest failed to send a request
-   */
-  public JSONObject sendGetSessionDetailRequest(Long sessionId) throws UnirestException {
-    // TODO: Later, pass optional "hash=???" request parameter
-    return Unirest.get(String.format("%s/api/sessions/%s", lobbyUrl, sessionId.toString()))
-        .asJson().getBody().getObject();
-  }
 
   /**
    * send add player request to LS.
@@ -260,6 +231,19 @@ public class LobbyServiceRequestSender {
                     sessionId.toString(), playerName))
         .queryString("access_token", accessToken).asString();
 
+  }
+
+  /**
+   * send launch session request to LS.
+   *
+   * @param sessionId   session id
+   * @param accessToken access token
+   * @throws UnirestException in case unirest failed to send a request
+   */
+
+  public void sendLaunchSessionRequest(Long sessionId, String accessToken) throws UnirestException {
+    Unirest.post(lobbyUrl + "/api/sessions/" + sessionId.toString())
+        .queryString("access_token", accessToken).asString();
   }
 
 }
