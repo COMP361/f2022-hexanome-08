@@ -5,9 +5,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import org.w3c.dom.Node;
 
-public class VerticalPlayerInfoGui extends VBox {
+public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
 
-  public VerticalPlayerInfoGui(PlayerPosition playerPosition) {
+  private final PlayerPosition playerPosition;
+  private final String playerName;
+
+  public VerticalPlayerInfoGui(PlayerPosition playerPosition, String playerName) {
+    this.playerPosition = playerPosition;
+    this.playerName = playerName;
     // TODO: The fxml associated with this class, must be bind to controller = project.App
     FXMLLoader fxmlLoader;
     if (playerPosition.equals(PlayerPosition.LEFT)) {
@@ -24,5 +29,24 @@ public class VerticalPlayerInfoGui extends VBox {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public PlayerPosition getPlayerPosition() {
+    return playerPosition;
+  }
+
+  public String getPlayerName(){
+    return playerName;
+  }
+
+  @Override
+  public void setup(double layoutX, double layoutY) {
+    // set the layout of the GUI
+    setLayoutX(layoutX);
+    setLayoutY(layoutY);
+
+
+
+
   }
 }

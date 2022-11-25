@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import project.App;
 
-public class TokenBankGui extends HBox {
+public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
 
   public TokenBankGui() {
     // TODO: The fxml associated with this class, must be bind to controller = project.App
@@ -234,10 +234,30 @@ public class TokenBankGui extends HBox {
   }
 
 
-  public void setup(Map<Colour, Integer> inputBankBalance, double layoutX, double layoutY) {
-    setColourTokenBankMap(inputBankBalance);
-    bindButtonAndLabel();
+  public void setup(int numOfPlayer, double layoutX, double layoutY) {
+    // set the layout of the GUI
     setLayoutX(layoutX);
     setLayoutY(layoutY);
+
+    // GUI class dependent things to setup
+    int baseTokenCount = 0;
+    if (numOfPlayer == 4) {
+      baseTokenCount = 7;
+    } else if (numOfPlayer == 3) {
+      baseTokenCount = 5;
+    } else if (numOfPlayer == 2){
+      baseTokenCount = 4;
+    }
+    Colour[] colours =  App.getAllColours();
+    Map<Colour, Integer> bankMap = new HashMap<>();
+    for (Colour c : colours) {
+      if(c.equals(Colour.GOLD)) {
+        bankMap.put(c, 5);
+      } else {
+        bankMap.put(c,baseTokenCount);
+      }
+    }
+    setColourTokenBankMap(bankMap);
+    bindButtonAndLabel();
   }
 }
