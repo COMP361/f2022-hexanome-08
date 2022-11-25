@@ -2,14 +2,15 @@ package project;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import project.view.splendor.Colour;
 import project.view.splendor.TokenBankGui;
@@ -44,6 +45,8 @@ public class GameController {
   private void initializeNobleList(int curPlayerNum,
                                    double imgWidth, double imgHeight,
                                    double nobleListLayoutX, double nobleListLayoutY) {
+    // TODO: Need to bind action on these Noble (ImageView) in the future so that clicking
+    //  on them will send a REST request and a pop up
     List<ImageView> testImages = new ArrayList<>();
     for (int i = 1; i <= curPlayerNum; i++) {
       Image img = new Image(String.format("project/pictures/noble/noble%d.png",i));
@@ -71,22 +74,43 @@ public class GameController {
     initializeNobleList(5, 100, 100, 810, 50);
 
     //initialize token area
+
+    Colour[] colours =  new Colour[] {
+        Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN,Colour.GOLD
+    };
+    // TODO: change based on number of players
+    Map<Colour, Integer> bankMap = new HashMap<>();
+    int playerCount = 3;
+    int baseTokenCount = 0;
+    if (playerCount == 4) {
+      baseTokenCount = 7;
+    } else if (playerCount == 3) {
+      baseTokenCount = 5;
+    } else if (playerCount == 2){
+      baseTokenCount = 4;
+    }
+    for (Colour c : colours) {
+      if(c.equals(Colour.GOLD)) {
+        bankMap.put(c, 5);
+      } else {
+        bankMap.put(c,baseTokenCount);
+      }
+    }
     TokenBankGui tokenBank = new TokenBankGui();
     Platform.runLater(() -> {
+      tokenBank.setup(bankMap,40,5);
       gameBoardAnchorPane.getChildren().add(tokenBank);
-      tokenBank.setLayoutX(40);
-      tokenBank.setLayoutY(5);
     });
 
-    for (Text t :
-        tokenBank.getColourTokenNumMap().values()) {
-      System.out.println(t.getText());
-    }
-
-    for (Colour t :
-        tokenBank.getColourTokenNumMap().keySet()) {
-      System.out.println(t);
-    }
+    //for (Text t :
+    //    tokenBank.getColourTokenLeftMap().values()) {
+    //  System.out.println(t.getText());
+    //}
+    //
+    //for (Colour t :
+    //    tokenBank.getColourTokenLeftMap().keySet()) {
+    //  System.out.println(t);
+    //}
 
 
   }
