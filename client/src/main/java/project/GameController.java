@@ -13,7 +13,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import project.view.splendor.Colour;
+import project.view.splendor.HorizontalPlayerInfoGui;
+import project.view.splendor.PlayerPosition;
 import project.view.splendor.TokenBankGui;
+import project.view.splendor.VerticalPlayerInfoGui;
 
 /**
  * Game controller for game GUI.
@@ -23,6 +26,8 @@ public class GameController {
 
   @FXML
   private AnchorPane gameBoardAnchorPane;
+  @FXML
+  private AnchorPane playerBoardAnchorPane;
   /**
    * Opening the development cards pop up once "My Cards" button is pressed.
    */
@@ -48,7 +53,7 @@ public class GameController {
     // TODO: Need to bind action on these Noble (ImageView) in the future so that clicking
     //  on them will send a REST request and a pop up
     List<ImageView> testImages = new ArrayList<>();
-    for (int i = 1; i <= curPlayerNum; i++) {
+    for (int i = 1; i <= curPlayerNum+1; i++) {
       Image img = new Image(String.format("project/pictures/noble/noble%d.png",i));
       ImageView imgv = new ImageView(img);
       imgv.setFitWidth(imgWidth);
@@ -68,27 +73,24 @@ public class GameController {
   }
 
   public void initialize() {
-    gameBoardAnchorPane.setMaxHeight(600);
-    gameBoardAnchorPane.setMaxWidth(900);
+    // TODO: change based on number of players, get the info from server later
+    int curPlayerNum = 2;
+    int baseTokenCount = 0;
+    if (curPlayerNum == 4) {
+      baseTokenCount = 7;
+    } else if (curPlayerNum == 3) {
+      baseTokenCount = 5;
+    } else if (curPlayerNum == 2){
+      baseTokenCount = 4;
+    }
     // initialize noble area
-    initializeNobleList(5, 100, 100, 810, 50);
+    initializeNobleList(curPlayerNum, 100, 100, 810, 50);
 
     //initialize token area
-
     Colour[] colours =  new Colour[] {
         Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN,Colour.GOLD
     };
-    // TODO: change based on number of players
     Map<Colour, Integer> bankMap = new HashMap<>();
-    int playerCount = 3;
-    int baseTokenCount = 0;
-    if (playerCount == 4) {
-      baseTokenCount = 7;
-    } else if (playerCount == 3) {
-      baseTokenCount = 5;
-    } else if (playerCount == 2){
-      baseTokenCount = 4;
-    }
     for (Colour c : colours) {
       if(c.equals(Colour.GOLD)) {
         bankMap.put(c, 5);
@@ -102,15 +104,34 @@ public class GameController {
       gameBoardAnchorPane.getChildren().add(tokenBank);
     });
 
-    //for (Text t :
-    //    tokenBank.getColourTokenLeftMap().values()) {
-    //  System.out.println(t.getText());
-    //}
-    //
-    //for (Colour t :
-    //    tokenBank.getColourTokenLeftMap().keySet()) {
-    //  System.out.println(t);
-    //}
+    //initialize player area
+    List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
+    List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
+
+    if (curPlayerNum >= 2) {
+      HorizontalPlayerInfoGui curPlayer = new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM);
+      VerticalPlayerInfoGui leftPlayer = new VerticalPlayerInfoGui(PlayerPosition.LEFT);
+      horizontalPlayers.add(curPlayer);
+      verticalPlayers.add(leftPlayer);
+      if (curPlayerNum >= 3) {
+        HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP);
+        horizontalPlayers.add(topPlayer);
+        if (curPlayerNum == 4) {
+          VerticalPlayerInfoGui rightPlayer = new VerticalPlayerInfoGui(PlayerPosition.RIGHT);
+          verticalPlayers.add(rightPlayer);
+        }
+      }
+    }
+
+    Platform.runLater(() -> {
+      for (VerticalPlayerInfoGui vPlayer : verticalPlayers) {
+        playerBoardAnchorPane.getChildren().add(vPlayer);
+      }
+
+      for (HorizontalPlayerInfoGui hPlayer : horizontalPlayers) {
+        playerBoardAnchorPane.getChildren().add(hPlayer);
+      }
+    });
 
 
   }

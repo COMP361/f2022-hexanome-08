@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import project.connection.LobbyServiceRequestSender;
 import project.view.lobby.Session;
 import project.view.lobby.User;
+import project.view.splendor.Colour;
 
 
 /**
@@ -36,6 +37,13 @@ public class App extends Application {
   // One and the only one requestSender
   private static final LobbyServiceRequestSender lobbyRequestSender =
       new LobbyServiceRequestSender("http://76.66.139.161:4242");
+
+  private static final Colour[] allColours = new Colour[] {
+    Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
+  };
+  private static final Colour[] baseColours = new Colour[] {
+      Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
+  };
 
   private static User user;
 
@@ -140,6 +148,14 @@ public class App extends Application {
 
   public static LobbyServiceRequestSender getLobbyServiceRequestSender() {
     return lobbyRequestSender;
+  }
+
+  public static Colour[] getAllColours() {
+    return allColours;
+  }
+
+  public static Colour[] getBaseColours() {
+    return baseColours;
   }
 
   public static User getUser() {

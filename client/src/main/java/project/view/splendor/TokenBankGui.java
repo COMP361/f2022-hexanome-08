@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import project.App;
 
 public class TokenBankGui extends HBox {
 
@@ -153,7 +154,7 @@ public class TokenBankGui extends HBox {
     // processing token number Text of 5 regular token
     Map<Colour,Label> resultMap = new HashMap<>();
     ObservableList<Node> allChildren = this.getChildren();
-    Colour[] colours =  getBaseColours();
+    Colour[] colours = App.getBaseColours();
     for (int i = 0; i < 5; i++) {
       Group curGroup = (Group) allChildren.get(i);
       Label takeTokenNum = (Label) curGroup.getChildren().get(curGroup.getChildren().size()-2);
@@ -170,7 +171,7 @@ public class TokenBankGui extends HBox {
   public Map<Colour,Text> getColourTokenBankMap() {
     Map<Colour,Text> resultTextList = new HashMap<>();
     ObservableList<Node> allChildren = this.getChildren();
-    Colour[] colours =  getAllColours();
+    Colour[] colours = App.getAllColours();
     // processing token number Text of 5 regular token
     for (int i = 0; i < 5; i++) {
       Group curGroup = (Group) allChildren.get(i);
@@ -186,22 +187,9 @@ public class TokenBankGui extends HBox {
     return resultTextList;
   }
 
-  private Colour[] getBaseColours() {
-    return new Colour[] {
-        Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
-    };
-  }
-
-  private Colour[] getAllColours() {
-    return new Colour[] {
-        Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
-    };
-  }
-
-
   private void setColourTokenBankMap(Map<Colour,Integer> bankBalanceMap) {
     Map<Colour, Text> curBankTokenBankMap = getColourTokenBankMap();
-    Colour[] allColours = getAllColours();
+    Colour[] allColours = App.getAllColours();
     for(Colour c : allColours) {
       Text curText = curBankTokenBankMap.get(c);
       int newBalance = bankBalanceMap.get(c);
@@ -229,7 +217,7 @@ public class TokenBankGui extends HBox {
    */
   private void bindButtonAndLabel() {
     ObservableList<Node> allChildren = this.getChildren();
-    Colour[] colours = getBaseColours();
+    Colour[] colours = App.getBaseColours();
     // iterate through all five regular tokens
     for (int i = 0; i < 5; i++) {
       Group curGroup = (Group) allChildren.get(i);
