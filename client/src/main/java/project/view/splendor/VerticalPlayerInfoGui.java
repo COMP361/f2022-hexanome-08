@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
 import org.w3c.dom.Node;
 
-public class VerticalPlayerInfoGui extends VBox implements Node {
+public class VerticalPlayerInfoGui extends VBox {
 
   public VerticalPlayerInfoGui(PlayerPosition playerPosition) {
     // TODO: The fxml associated with this class, must be bind to controller = project.App
