@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import project.view.splendor.Colour;
 import project.view.splendor.HorizontalPlayerInfoGui;
+import project.view.splendor.NobleBoardGui;
 import project.view.splendor.PlayerPosition;
 import project.view.splendor.TokenBankGui;
 import project.view.splendor.VerticalPlayerInfoGui;
@@ -47,91 +48,54 @@ public class GameController {
   }
 
 
-  private void initializeNobleList(int curPlayerNum,
-                                   double imgWidth, double imgHeight,
-                                   double nobleListLayoutX, double nobleListLayoutY) {
-    // TODO: Need to bind action on these Noble (ImageView) in the future so that clicking
-    //  on them will send a REST request and a pop up
-    List<ImageView> testImages = new ArrayList<>();
-    for (int i = 1; i <= curPlayerNum+1; i++) {
-      Image img = new Image(String.format("project/pictures/noble/noble%d.png",i));
-      ImageView imgv = new ImageView(img);
-      imgv.setFitWidth(imgWidth);
-      imgv.setFitHeight(imgHeight);
-      testImages.add(imgv);
-    }
-
-    Platform.runLater(() -> {
-      VBox nobleList = new VBox();
-      for (ImageView img : testImages) {
-        nobleList.getChildren().add(img);
-      }
-      gameBoardAnchorPane.getChildren().add(nobleList);
-      nobleList.setLayoutX(nobleListLayoutX);
-      nobleList.setLayoutY(nobleListLayoutY);
-    });
-  }
-
   public void initialize() {
     // TODO: change based on number of players, get the info from server later
-    int curPlayerNum = 2;
-    int baseTokenCount = 0;
-    if (curPlayerNum == 4) {
-      baseTokenCount = 7;
-    } else if (curPlayerNum == 3) {
-      baseTokenCount = 5;
-    } else if (curPlayerNum == 2){
-      baseTokenCount = 4;
-    }
-    // initialize noble area
-    initializeNobleList(curPlayerNum, 100, 100, 810, 50);
+    int curPlayerNum = 4;
 
-    //initialize token area
-    Colour[] colours =  new Colour[] {
-        Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN,Colour.GOLD
-    };
-    Map<Colour, Integer> bankMap = new HashMap<>();
-    for (Colour c : colours) {
-      if(c.equals(Colour.GOLD)) {
-        bankMap.put(c, 5);
-      } else {
-        bankMap.put(c,baseTokenCount);
-      }
-    }
+    // initialize noble area
+    NobleBoardGui nobleBoard = new NobleBoardGui(100,100,5);
+    Platform.runLater(() -> {
+      nobleBoard.setup(curPlayerNum,810, 50);
+      gameBoardAnchorPane.getChildren().add(nobleBoard);
+    });
+
+    // initialize token area
     TokenBankGui tokenBank = new TokenBankGui();
     Platform.runLater(() -> {
-      tokenBank.setup(bankMap,40,5);
+      tokenBank.setup(curPlayerNum,40,5);
       gameBoardAnchorPane.getChildren().add(tokenBank);
     });
 
-    //initialize player area
-    List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
-    List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
-
-    if (curPlayerNum >= 2) {
-      HorizontalPlayerInfoGui curPlayer = new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM);
-      VerticalPlayerInfoGui leftPlayer = new VerticalPlayerInfoGui(PlayerPosition.LEFT);
-      horizontalPlayers.add(curPlayer);
-      verticalPlayers.add(leftPlayer);
-      if (curPlayerNum >= 3) {
-        HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP);
-        horizontalPlayers.add(topPlayer);
-        if (curPlayerNum == 4) {
-          VerticalPlayerInfoGui rightPlayer = new VerticalPlayerInfoGui(PlayerPosition.RIGHT);
-          verticalPlayers.add(rightPlayer);
-        }
-      }
-    }
-
-    Platform.runLater(() -> {
-      for (VerticalPlayerInfoGui vPlayer : verticalPlayers) {
-        playerBoardAnchorPane.getChildren().add(vPlayer);
-      }
-
-      for (HorizontalPlayerInfoGui hPlayer : horizontalPlayers) {
-        playerBoardAnchorPane.getChildren().add(hPlayer);
-      }
-    });
+    // initialize player area
+    //List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
+    //List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
+    //if (curPlayerNum >= 2) {
+    //  HorizontalPlayerInfoGui curPlayer = new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM);
+    //  VerticalPlayerInfoGui leftPlayer = new VerticalPlayerInfoGui(PlayerPosition.LEFT);
+    //  curPlayer.setup(0,0);
+    //  leftPlayer.setup(0,0);
+    //
+    //  horizontalPlayers.add(curPlayer);
+    //  verticalPlayers.add(leftPlayer);
+    //  if (curPlayerNum >= 3) {
+    //    HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP);
+    //    horizontalPlayers.add(topPlayer);
+    //    if (curPlayerNum == 4) {
+    //      VerticalPlayerInfoGui rightPlayer = new VerticalPlayerInfoGui(PlayerPosition.RIGHT);
+    //      verticalPlayers.add(rightPlayer);
+    //    }
+    //  }
+    //}
+    //
+    //Platform.runLater(() -> {
+    //  for (VerticalPlayerInfoGui vPlayer : verticalPlayers) {
+    //    playerBoardAnchorPane.getChildren().add(vPlayer);
+    //  }
+    //
+    //  for (HorizontalPlayerInfoGui hPlayer : horizontalPlayers) {
+    //    playerBoardAnchorPane.getChildren().add(hPlayer);
+    //  }
+    //});
 
 
   }
