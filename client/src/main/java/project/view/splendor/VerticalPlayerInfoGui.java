@@ -70,8 +70,8 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
     Group group = (Group) allChildren.get(0);
 
     resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(5));
-    resultMap.put(PlayerVisibleInfo.RESERVEDCARDS, (Text) group.getChildren().get(7));
-    resultMap.put(PlayerVisibleInfo.RESERVEDNOBLES, (Text) group.getChildren().get(8));
+    resultMap.put(PlayerVisibleInfo.RESERVED_CARDS, (Text) group.getChildren().get(7));
+    resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(8));
     return resultMap;
   }
 

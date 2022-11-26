@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -61,8 +62,9 @@ public class GameController {
       gameBoardAnchorPane.getChildren().add(tokenBank);
     });
 
-        VerticalPlayerInfoGui playerInfoGui = new VerticalPlayerInfoGui(PlayerPosition.LEFT,"s");
-        System.out.println(playerInfoGui.getLeftPlayerInfo().get(PlayerVisibleInfo.POINT).getText());
+    HorizontalPlayerInfoGui playerInfoGui = new HorizontalPlayerInfoGui(PlayerPosition.TOP,"s");
+    Group curGroup  = (Group) playerInfoGui.getChildren().get(0);
+    System.out.println(curGroup.getChildren().get(1).getLayoutX());
 
     // initialize player area
     //List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
