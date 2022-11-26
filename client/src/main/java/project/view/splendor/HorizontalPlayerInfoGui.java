@@ -7,6 +7,7 @@ import java.util.Map;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import project.App;
 
@@ -64,14 +65,14 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
       goldInfo.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(1));
     } else if (playerPosition.equals(PlayerPosition.BOTTOM)) {
       for (int i = 1; i < 6; i++) {
-        HBox currBox = (HBox) this.getChildren().get(i);
+        VBox currBox = (VBox) this.getChildren().get(i);
         Group curGroup = (Group) currBox.getChildren().get(1);
         info.put(PlayerTokenInfo.GEM, (Text) curGroup.getChildren().get(1));
         info.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         result.put(colours[i-1], info);
       }
-      HBox currBox = (HBox) this.getChildren().get(6);
-      Group curGroup = (Group) this.getChildren().get(1);
+      VBox currBox = (VBox) this.getChildren().get(6);
+      Group curGroup = (Group) currBox.getChildren().get(1);
       goldInfo.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(1));
     }
     result.put(Colour.GOLD, goldInfo);

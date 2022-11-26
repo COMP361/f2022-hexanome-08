@@ -99,7 +99,7 @@ public class GameController {
           new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM, btmPlayerName, 3);
       VerticalPlayerInfoGui leftPlayerGui =
           new VerticalPlayerInfoGui(PlayerPosition.LEFT, leftPlayerName, 3);
-      btmPlayerGui.setup(config.getBoardLayoutX(),config.getBtmPlayerLayoutY());
+      btmPlayerGui.setup(config.getBtmPlayerLayoutX(),config.getBtmPlayerLayoutY());
       leftPlayerGui.setup(config.getLeftPlayerLayoutX(),config.getLeftPlayerLayoutY());
       horizontalPlayers.add(btmPlayerGui);
       verticalPlayers.add(leftPlayerGui);
