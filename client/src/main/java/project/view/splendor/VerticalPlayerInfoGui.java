@@ -1,9 +1,16 @@
 package project.view.splendor;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-import org.w3c.dom.Node;
+import javafx.scene.text.Text;
+import project.App;
 
 public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
 
@@ -38,6 +45,36 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
   public String getPlayerName(){
     return playerName;
   }
+
+  public Map<Colour,Map<PlayerVisibleInfo, Text>> getLeftPlayerTokenHandInfo(){
+    Map<Colour, Map<PlayerVisibleInfo, Text>> resultMap = new HashMap<>();
+    Colour[] colours = App.getBaseColours();
+    ObservableList<Node> allChildren = this.getChildren();
+    for (int i = 0; i < colours.length; i++){
+      Map<PlayerVisibleInfo, Text> mapInMap = new HashMap<>();
+      Group curGroup = (Group) allChildren.get(i+1);
+      mapInMap.put(PlayerVisibleInfo.GEM,(Text) curGroup.getChildren().get(2));
+      mapInMap.put(PlayerVisibleInfo.TOKEN,(Text) curGroup.getChildren().get(3));
+      resultMap.put(colours[i], mapInMap);
+    }
+    Group curGroup = (Group) allChildren.get(6);
+    Map<PlayerVisibleInfo, Text> goldMap= new HashMap<>();
+    goldMap.put(PlayerVisibleInfo.TOKEN, (Text) curGroup.getChildren().get(1));
+    resultMap.put(Colour.GOLD, goldMap);
+    return resultMap;
+  }
+
+  public Map<PlayerVisibleInfo, Text> getLeftPlayerInfo(){
+    Map<PlayerVisibleInfo, Text> resultMap = new HashMap<>();
+    ObservableList<Node> allChildren = this.getChildren();
+    Group group = (Group) allChildren.get(0);
+
+    resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(5));
+    resultMap.put(PlayerVisibleInfo.RESERVEDCARDS, (Text) group.getChildren().get(7));
+    resultMap.put(PlayerVisibleInfo.RESERVEDNOBLES, (Text) group.getChildren().get(8));
+    return resultMap;
+  }
+
 
   @Override
   public void setup(double layoutX, double layoutY) {
