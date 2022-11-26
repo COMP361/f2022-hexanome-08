@@ -44,12 +44,12 @@ public class GameController {
 
   public void initialize() {
     // TODO: change based on number of players, get the info from server later
-    int curPlayerNum = 2;
+    int curPlayerNum = 4;
 
     // initialize noble area
     NobleBoardGui nobleBoard = new NobleBoardGui(100,100,5);
     Platform.runLater(() -> {
-      nobleBoard.setup(curPlayerNum,935, 280);
+      nobleBoard.setup(curPlayerNum,935, 200);
       playerBoardAnchorPane.getChildren().add(nobleBoard);
     });
 
@@ -62,15 +62,24 @@ public class GameController {
 
     // initialize player area
     List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
+    List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
 //    List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
     if (curPlayerNum >= 2) {
 //      HorizontalPlayerInfoGui curPlayer = new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM);
       VerticalPlayerInfoGui leftPlayer = new VerticalPlayerInfoGui(PlayerPosition.LEFT, "p1", 3);
-//      curPlayer.setup(0,0);
-      leftPlayer.setup(0,142.5);
-
+      VerticalPlayerInfoGui rightPlayer = new VerticalPlayerInfoGui(PlayerPosition.RIGHT,"p3",3);
+      HorizontalPlayerInfoGui bottomPlayer = new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM,"p2",3);
+      HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP,"p4",3);
+      leftPlayer.setup(0,92);
+      rightPlayer.setup(1075,920);
+      bottomPlayer.setup(267,725);
+      topPlayer.setup(267,0);
 //      horizontalPlayers.add(curPlayer);
       verticalPlayers.add(leftPlayer);
+      verticalPlayers.add(rightPlayer);
+      horizontalPlayers.add(bottomPlayer);
+      horizontalPlayers.add(topPlayer);
+
 //      if (curPlayerNum >= 3) {
 //        HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP);
 //        horizontalPlayers.add(topPlayer);
@@ -86,9 +95,9 @@ public class GameController {
         playerBoardAnchorPane.getChildren().add(vPlayer);
       }
 
-//      for (HorizontalPlayerInfoGui hPlayer : horizontalPlayers) {
-//        playerBoardAnchorPane.getChildren().add(hPlayer);
-//      }
+      for (HorizontalPlayerInfoGui hPlayer : horizontalPlayers) {
+        playerBoardAnchorPane.getChildren().add(hPlayer);
+      }
     });
 
 
