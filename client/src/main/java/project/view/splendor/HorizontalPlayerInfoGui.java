@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import project.App;
 
@@ -95,6 +97,27 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
       resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(7));
     }
     return resultMap;
+  }
+
+  @Override
+  public void setHighlight(boolean highlightChoice) {
+    if (highlightChoice && playerPosition.equals(PlayerPosition.BOTTOM)){
+      Group groupPlayer = (Group) this.getChildren().get(0);
+      Rectangle highlight = (Rectangle) groupPlayer.getChildren().get(0);
+      highlight.setFill(Color.GREEN);
+    } else if (highlightChoice && playerPosition.equals(PlayerPosition.TOP)){
+      Group groupPlayer = (Group) this.getChildren().get(6);
+      Rectangle highlight = (Rectangle) groupPlayer.getChildren().get(0);
+      highlight.setFill(Color.GREEN);
+    } else if (!highlightChoice && playerPosition.equals(PlayerPosition.BOTTOM)){
+      Group groupPlayer = (Group) this.getChildren().get(0);
+      Rectangle highlight = (Rectangle) groupPlayer.getChildren().get(0);
+      highlight.setFill(Color.WHITE);
+    } else if (!highlightChoice && playerPosition.equals(PlayerPosition.TOP)){
+      Group groupPlayer = (Group) this.getChildren().get(6);
+      Rectangle highlight = (Rectangle) groupPlayer.getChildren().get(0);
+      highlight.setFill(Color.WHITE);
+    }
   }
 
 
