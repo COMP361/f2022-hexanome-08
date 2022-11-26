@@ -14,6 +14,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import project.view.splendor.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Game controller for game GUI.
@@ -99,9 +101,37 @@ public class GameController {
         playerBoardAnchorPane.getChildren().add(hPlayer);
       }
     });
-
-
+  }
+  public void highlightPlayer() {
+    //TODO add current player as an attribute.
+    PlayerPosition playerLocation = null;
+    //TODO should no get the current players here, should obtain from the class using method.
+    HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP,"p4",3);
+    if (playerLocation.equals(PlayerPosition.TOP) || playerLocation.equals(PlayerPosition.RIGHT)) {
+      Group playerInfo = (Group) topPlayer.getChildren().get(6);
+      Rectangle highlight = (Rectangle) playerInfo.getChildren().get(0);
+      highlight.setFill(Color.CHARTREUSE);
+    } else {
+      Group playerInfo = (Group) topPlayer.getChildren().get(0);
+      Rectangle highlight = (Rectangle) playerInfo.getChildren().get(0);
+      highlight.setFill(Color.CHARTREUSE);
+    }
   }
 
+  public void unHighlightPlayer() {
+    //TODO add current player as an attribute.
+    PlayerPosition playerLocation = null;
+    //TODO should no get the current players here, should obtain from the class using method.
+    HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP,"p4",3);
+    if (playerLocation.equals(PlayerPosition.TOP) || playerLocation.equals(PlayerPosition.RIGHT)) {
+      Group playerInfo = (Group) topPlayer.getChildren().get(6);
+      Rectangle highlight = (Rectangle) playerInfo.getChildren().get(0);
+      highlight.setFill(Color.WHITE);
+    } else {
+      Group playerInfo = (Group) topPlayer.getChildren().get(0);
+      Rectangle highlight = (Rectangle) playerInfo.getChildren().get(0);
+      highlight.setFill(Color.WHITE);
+    }
+  }
 
 }
