@@ -90,6 +90,7 @@ public class GameController {
     });
 
     // initialize player area
+    Map<String, PlayerInfoGui> playerNameGuiMap = new HashMap<>();
     List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
     List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
     if (curPlayerNum >= 2) {
@@ -103,18 +104,22 @@ public class GameController {
       leftPlayerGui.setup(config.getLeftPlayerLayoutX(),config.getLeftPlayerLayoutY());
       horizontalPlayers.add(btmPlayerGui);
       verticalPlayers.add(leftPlayerGui);
+      playerNameGuiMap.put(btmPlayerName, btmPlayerGui);
+      playerNameGuiMap.put(leftPlayerName, leftPlayerGui);
       if (curPlayerNum >= 3) {
         String topPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.TOP);
         HorizontalPlayerInfoGui topPlayerGui =
             new HorizontalPlayerInfoGui(PlayerPosition.TOP, topPlayerName, 3);
         topPlayerGui.setup(config.getTopPlayerLayoutX(),config.getTopPlayerLayoutY());
         horizontalPlayers.add(topPlayerGui);
+        playerNameGuiMap.put(topPlayerName, topPlayerGui);
         if (curPlayerNum == 4) {
           String rightPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.RIGHT);
           VerticalPlayerInfoGui rightPlayerGui =
               new VerticalPlayerInfoGui(PlayerPosition.RIGHT, rightPlayerName, 3);
           rightPlayerGui.setup(config.getRightPlayerLayoutX(),config.getRightPlayerLayoutY());
           verticalPlayers.add(rightPlayerGui);
+          playerNameGuiMap.put(rightPlayerName, rightPlayerGui);
         }
       }
     }
@@ -128,36 +133,14 @@ public class GameController {
         playerBoardAnchorPane.getChildren().add(hPlayer);
       }
     });
-  }
-  public void highlightPlayer() {
-    //TODO add current player as an attribute.
-    PlayerPosition playerLocation = null;
-    //TODO should no get the current players here, should obtain from the class using method.
-    HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP,"p4",3);
-    if (playerLocation.equals(PlayerPosition.TOP) || playerLocation.equals(PlayerPosition.RIGHT)) {
-      Group playerInfo = (Group) topPlayer.getChildren().get(6);
-      Rectangle highlight = (Rectangle) playerInfo.getChildren().get(0);
-      highlight.setFill(Color.CHARTREUSE);
-    } else {
-      Group playerInfo = (Group) topPlayer.getChildren().get(0);
-      Rectangle highlight = (Rectangle) playerInfo.getChildren().get(0);
-      highlight.setFill(Color.CHARTREUSE);
-    }
-  }
 
-  public void unHighlightPlayer() {
-    //TODO add current player as an attribute.
-    PlayerPosition playerLocation = null;
-    //TODO should no get the current players here, should obtain from the class using method.
-    HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP,"p4",3);
-    if (playerLocation.equals(PlayerPosition.TOP) || playerLocation.equals(PlayerPosition.RIGHT)) {
-      Group playerInfo = (Group) topPlayer.getChildren().get(6);
-      Rectangle highlight = (Rectangle) playerInfo.getChildren().get(0);
-      highlight.setFill(Color.WHITE);
-    } else {
-      Group playerInfo = (Group) topPlayer.getChildren().get(0);
-      Rectangle highlight = (Rectangle) playerInfo.getChildren().get(0);
-      highlight.setFill(Color.WHITE);
+
+    // check how to highlight which player?
+    String currentTurnPlayerName = "D";
+    for (String name : playerNameGuiMap.keySet()) {
+      if(name.equals(currentTurnPlayerName)) {
+        playerNameGuiMap.get(name).setHighlight(true);
+      }
     }
   }
 
