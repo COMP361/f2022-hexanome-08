@@ -7,7 +7,6 @@
 
 <AnchorPane fx:id="playerBoardAnchorPane" prefHeight="900.0" prefWidth="1200.0" style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.GameController">
     <children>
-      <AnchorPane fx:id="gameBoardAnchorPane" layoutX="150.0" layoutY="150.0" maxHeight="600.0" maxWidth="900.0" prefHeight="600.0" prefWidth="900.0" />
         <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <menus>
                 <Menu mnemonicParsing="false" text="Settings">
