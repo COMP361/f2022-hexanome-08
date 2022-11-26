@@ -47,65 +47,62 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
     return playerName;
   }
 
-  public Map<Colour,Map<PlayerVisibleInfo, Text>> getLeftPlayerTokenHandInfo(){
+  public Map<Colour,Map<PlayerVisibleInfo, Text>> getHorizontalPlayerTokenHandInfo(PlayerPosition playerPosition){
     Map<Colour, Map<PlayerVisibleInfo, Text>> resultMap = new HashMap<>();
     Colour[] colours = App.getBaseColours();
     ObservableList<Node> allChildren = this.getChildren();
-    for (int i = 0; i < colours.length; i++){
-      Map<PlayerVisibleInfo, Text> mapInMap = new HashMap<>();
-      Group curGroup = (Group) allChildren.get(i+1);
-      mapInMap.put(PlayerVisibleInfo.GEM,(Text) curGroup.getChildren().get(2));
-      mapInMap.put(PlayerVisibleInfo.TOKEN,(Text) curGroup.getChildren().get(3));
-      resultMap.put(colours[i], mapInMap);
-    }
-    Group curGroup = (Group) allChildren.get(6);
-    Map<PlayerVisibleInfo, Text> goldMap= new HashMap<>();
-    goldMap.put(PlayerVisibleInfo.TOKEN, (Text) curGroup.getChildren().get(1));
-    resultMap.put(Colour.GOLD, goldMap);
-    return resultMap;
-  }
-
-  public Map<PlayerVisibleInfo, Text> getLeftPlayerInfo(){
-    Map<PlayerVisibleInfo, Text> resultMap = new HashMap<>();
-    ObservableList<Node> allChildren = this.getChildren();
-    Group group = (Group) allChildren.get(0);
-
-    resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(5));
-    resultMap.put(PlayerVisibleInfo.RESERVEDCARDS, (Text) group.getChildren().get(7));
-    resultMap.put(PlayerVisibleInfo.RESERVEDNOBLES, (Text) group.getChildren().get(8));
-    return resultMap;
-  }
-
-  public Map<Colour,Map<PlayerVisibleInfo, Text>> getRightPlayerTokenHandInfo(){
-    Map<Colour, Map<PlayerVisibleInfo, Text>> resultMap = new HashMap<>();
-    Colour[] colours = App.getBaseColours();
-    ObservableList<Node> allChildren = this.getChildren();
-    for (int i = 0; i < colours.length; i++){
-      Map<PlayerVisibleInfo, Text> mapInMap = new HashMap<>();
-      HBox curBox = (HBox) allChildren.get(i);
+    if (playerPosition.equals(PlayerPosition.LEFT)){
+      for (int i = 0; i < colours.length; i++){
+        Map<PlayerVisibleInfo, Text> mapInMap = new HashMap<>();
+        Group curGroup = (Group) allChildren.get(i+1);
+        mapInMap.put(PlayerVisibleInfo.GEM,(Text) curGroup.getChildren().get(2));
+        mapInMap.put(PlayerVisibleInfo.TOKEN,(Text) curGroup.getChildren().get(3));
+        resultMap.put(colours[i], mapInMap);
+      }
+      Group curGroup = (Group) allChildren.get(6);
+      Map<PlayerVisibleInfo, Text> goldMap= new HashMap<>();
+      goldMap.put(PlayerVisibleInfo.TOKEN, (Text) curGroup.getChildren().get(1));
+      resultMap.put(Colour.GOLD, goldMap);
+    } else if (playerPosition.equals(PlayerPosition.RIGHT)) {
+      for (int i = 0; i < colours.length; i++){
+        Map<PlayerVisibleInfo, Text> mapInMap = new HashMap<>();
+        HBox curBox = (HBox) allChildren.get(i);
+        Group curGroup = (Group) curBox.getChildren().get(1);
+        mapInMap.put(PlayerVisibleInfo.GEM, (Text) curGroup.getChildren().get(1));
+        mapInMap.put(PlayerVisibleInfo.TOKEN,(Text) curGroup.getChildren().get(3));
+        resultMap.put(colours[i], mapInMap);
+      }
+      HBox curBox = (HBox) allChildren.get(5);
+      Map<PlayerVisibleInfo, Text> goldMap= new HashMap<>();
       Group curGroup = (Group) curBox.getChildren().get(1);
-      mapInMap.put(PlayerVisibleInfo.GEM, (Text) curGroup.getChildren().get(1));
-      mapInMap.put(PlayerVisibleInfo.TOKEN,(Text) curGroup.getChildren().get(3));
-      resultMap.put(colours[i], mapInMap);
+      goldMap.put(PlayerVisibleInfo.TOKEN, (Text) curGroup.getChildren().get(1));
+      resultMap.put(Colour.GOLD, goldMap);
     }
-    HBox curBox = (HBox) allChildren.get(5);
-    Map<PlayerVisibleInfo, Text> goldMap= new HashMap<>();
-    Group curGroup = (Group) curBox.getChildren().get(1);
-    goldMap.put(PlayerVisibleInfo.TOKEN, (Text) curGroup.getChildren().get(1));
-    resultMap.put(Colour.GOLD, goldMap);
     return resultMap;
   }
 
-  public Map<PlayerVisibleInfo, Text> getRightPlayerInfo(){
+  public Map<PlayerVisibleInfo, Text> getHorizontalPlayerInfo(PlayerPosition playerPosition){
     Map<PlayerVisibleInfo, Text> resultMap = new HashMap<>();
     ObservableList<Node> allChildren = this.getChildren();
-    Group group = (Group) allChildren.get(6);
+    if (playerPosition.equals(PlayerPosition.LEFT)){
+      Group group = (Group) allChildren.get(0);
+      resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(5));
+      resultMap.put(PlayerVisibleInfo.RESERVED_CARDS, (Text) group.getChildren().get(7));
+      resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(8));
 
-    resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(6));
-    resultMap.put(PlayerVisibleInfo.RESERVEDCARDS, (Text) group.getChildren().get(8));
-    resultMap.put(PlayerVisibleInfo.RESERVEDNOBLES, (Text) group.getChildren().get(7));
+    } else if (playerPosition.equals(PlayerPosition.RIGHT)){
+      Group group = (Group) allChildren.get(6);
+
+      resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(6));
+      resultMap.put(PlayerVisibleInfo.RESERVED_CARDS, (Text) group.getChildren().get(8));
+      resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(7));
+    }
     return resultMap;
   }
+
+
+
+
 
   @Override
   public void setup(double layoutX, double layoutY) {
