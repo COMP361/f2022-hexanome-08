@@ -51,7 +51,7 @@ public class Board {
   }
 
 
-  Card takeAndReplaceCard(Card paramCard, Position paramPosition) {
+  public Card takeAndReplaceCard(Card paramCard, Position paramPosition) {
     Card takenCard = cardBoard[paramPosition.getY()][paramPosition.getX()];
     cardBoard[paramPosition.getY()][paramPosition.getX()] = paramCard;
     return takenCard;
