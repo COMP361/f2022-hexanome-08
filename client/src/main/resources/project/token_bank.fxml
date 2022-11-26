@@ -13,32 +13,32 @@
 <?import javafx.scene.text.Text?>
 
 <fx:root prefHeight="100.0" prefWidth="750.0" type="HBox" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.App">
-    <Group>
-        <ImageView fitHeight="100.0" fitWidth="100.0">
-            <Image url="@pictures/token/red_tokens.png" />
-        </ImageView>
-        <Button layoutX="69.0" layoutY="12.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="17.0" text="+">
-            <font>
-                <Font size="18.0" />
-            </font>
-        </Button>
-        <Button layoutX="-2.0" layoutY="14.0" mnemonicParsing="false" text="-">
-            <font>
-                <Font size="18.0" />
-            </font>
-        </Button>
+   <Group>
+      <ImageView fitHeight="100.0" fitWidth="100.0">
+         <Image url="@pictures/token/red_tokens.png" />
+      </ImageView>
+      <Button layoutX="69.0" layoutY="12.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="17.0" text="+">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
+      <Button layoutX="-2.0" layoutY="12.0" mnemonicParsing="false" text="-">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="33.0" layoutX="33.0" layoutY="-15.0" stroke="BLACK" strokeType="INSIDE" width="34.0" />
       <Label layoutX="42.0" layoutY="-15.0" text="0">
          <font>
             <Font size="26.0" />
          </font>
       </Label>
-        <Text fill="#ff8000" layoutX="38.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
-            <font>
-                <Font name="System Bold" size="40.0" />
-            </font>
-        </Text>
-    </Group>
+      <Text fill="#ff8000" layoutX="38.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+         <font>
+            <Font name="System Bold" size="40.0" />
+         </font>
+      </Text>
+   </Group>
    <Group>
       <children>
          <ImageView fitHeight="100.0" fitWidth="100.0">
@@ -48,12 +48,12 @@
          </ImageView>
          <Button layoutX="69.0" layoutY="12.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="17.0" text="+">
             <font>
-               <Font size="18.0" />
+               <Font size="16.0" />
             </font>
          </Button>
-         <Button layoutX="-2.0" layoutY="14.0" mnemonicParsing="false" text="-">
+         <Button layoutX="-2.0" layoutY="12.0" mnemonicParsing="false" text="-">
             <font>
-               <Font size="18.0" />
+               <Font size="16.0" />
             </font>
          </Button>
          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="33.0" layoutX="33.0" layoutY="-15.0" stroke="BLACK" strokeType="INSIDE" width="34.0" />
@@ -78,12 +78,12 @@
          </ImageView>
          <Button layoutX="69.0" layoutY="12.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="17.0" text="+">
             <font>
-               <Font size="18.0" />
+               <Font size="16.0" />
             </font>
          </Button>
-         <Button layoutX="-2.0" layoutY="14.0" mnemonicParsing="false" text="-">
+         <Button layoutX="-2.0" layoutY="12.0" mnemonicParsing="false" text="-">
             <font>
-               <Font size="18.0" />
+               <Font size="16.0" />
             </font>
          </Button>
          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="33.0" layoutX="33.0" layoutY="-15.0" stroke="BLACK" strokeType="INSIDE" width="34.0" />
@@ -108,12 +108,12 @@
          </ImageView>
          <Button layoutX="69.0" layoutY="12.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="17.0" text="+">
             <font>
-               <Font size="18.0" />
+               <Font size="16.0" />
             </font>
          </Button>
-         <Button layoutX="-2.0" layoutY="14.0" mnemonicParsing="false" text="-">
+         <Button layoutX="-2.0" layoutY="12.0" mnemonicParsing="false" text="-">
             <font>
-               <Font size="18.0" />
+               <Font size="16.0" />
             </font>
          </Button>
          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="33.0" layoutX="33.0" layoutY="-15.0" stroke="BLACK" strokeType="INSIDE" width="34.0" />
@@ -138,12 +138,12 @@
          </ImageView>
          <Button layoutX="69.0" layoutY="12.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="17.0" text="+">
             <font>
-               <Font size="18.0" />
+               <Font size="16.0" />
             </font>
          </Button>
-         <Button layoutX="-2.0" layoutY="14.0" mnemonicParsing="false" text="-">
+         <Button layoutX="-2.0" layoutY="12.0" mnemonicParsing="false" text="-">
             <font>
-               <Font size="18.0" />
+               <Font size="16.0" />
             </font>
          </Button>
          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="33.0" layoutX="33.0" layoutY="-15.0" stroke="BLACK" strokeType="INSIDE" width="34.0" />
