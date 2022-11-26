@@ -2,6 +2,9 @@
 
 ## Ruoyu's README is great
 
+### M5 prep
+1. Run code with a coverage report: the button on top right with a shield shape.
+
 ### M3 start-up template related
 
 #### Compile and Run the template (mvn clean javafx:run)
