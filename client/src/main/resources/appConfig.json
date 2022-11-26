@@ -1,0 +1,20 @@
+ {
+   "boardLayoutX": 1200,
+   "boardLayoutY": 850,
+   "nobleLayoutX": 935,
+   "nobleLayoutY": 200,
+   "tokenBankLayoutX": 170,
+   "tokenBankLayoutY": 130,
+   "topPlayerLayoutX": 267.5,
+   "topPlayerLayoutY": 0,
+   "btmPlayerLayoutX": 267,
+   "btmPlayerLayoutY": 725,
+   "rightPlayerLayoutX": 1075,
+   "rightPlayerLayoutY": 92,
+   "leftPlayerLayoutX": 92,
+   "leftPlayerLayoutY": 0,
+   "baseCardBoardLayoutX": 0,
+   "baseCardBoardLayoutY": 0,
+   "orientCardBoardLayoutX": 0,
+   "orientCardBoardLayoutY": 0
+ }

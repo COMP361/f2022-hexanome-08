@@ -1,22 +1,18 @@
 package project;
 
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
+import java.util.Objects;
 import javafx.application.Application;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import project.connection.LobbyServiceRequestSender;
-import project.view.lobby.Session;
 import project.view.lobby.User;
 import project.view.splendor.Colour;
 
@@ -47,6 +43,9 @@ public class App extends Application {
 
   private static User user;
 
+  private static GameBoardLayoutConfig guiLayouts;
+
+
   /**
    * Override the start() method to launch the whole project.
    *
@@ -55,7 +54,18 @@ public class App extends Application {
    */
   @Override
   public void start(Stage stage) throws IOException {
-    scene = new Scene(loadFxml("start_page"), 1200, 926);
+    try {
+      FileReader f = new FileReader(Objects.requireNonNull(
+          App.class.getClassLoader().getResource("appConfig.json")).getFile());
+      JsonReader jfReader = new JsonReader(f);
+      guiLayouts = new Gson().fromJson(jfReader, GameBoardLayoutConfig.class);
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+
+    scene = new Scene(loadFxml("start_page"),
+        guiLayouts.getBoardLayoutX(),
+        guiLayouts.getBoardLayoutX());
     // Every time we loadFxml("a_file"), the file corresponding
     // controller's initialize method will get called
     //lobby = new Scene(loadFxml("admin_lobby_page"), 1000, 800);
@@ -164,6 +174,9 @@ public class App extends Application {
 
   public static void setUser(User puser) {
     user = puser;
+  }
+  public static GameBoardLayoutConfig getGuiLayouts() {
+    return guiLayouts;
   }
 
 }

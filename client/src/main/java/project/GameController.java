@@ -62,6 +62,8 @@ public class GameController {
 
 
   public void initialize() {
+
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     // TODO: change based on number of players, get the info from server later
     String firstPlayer = "A"; // needs to highlight the boarder of this player
     String curPlayer = "D";
@@ -74,14 +76,14 @@ public class GameController {
     // initialize noble area
     NobleBoardGui nobleBoard = new NobleBoardGui(100,100,5);
     Platform.runLater(() -> {
-      nobleBoard.setup(curPlayerNum,935, 280);
+      nobleBoard.setup(curPlayerNum,config.getNobleLayoutX(), config.getNobleLayoutY());
       playerBoardAnchorPane.getChildren().add(nobleBoard);
     });
 
     // initialize token area
     TokenBankGui tokenBank = new TokenBankGui();
     Platform.runLater(() -> {
-      tokenBank.setup(curPlayerNum,190,170);
+      tokenBank.setup(curPlayerNum,config.getTokenBankLayoutX(),config.getTokenBankLayoutY());
       playerBoardAnchorPane.getChildren().add(tokenBank);
     });
 
@@ -95,21 +97,21 @@ public class GameController {
           new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM, btmPlayerName, 3);
       VerticalPlayerInfoGui leftPlayerGui =
           new VerticalPlayerInfoGui(PlayerPosition.LEFT, leftPlayerName, 3);
-      btmPlayerGui.setup(450,600);
-      leftPlayerGui.setup(0,142.5);
+      btmPlayerGui.setup(config.getBoardLayoutX(),config.getBtmPlayerLayoutY());
+      leftPlayerGui.setup(config.getLeftPlayerLayoutX(),config.getLeftPlayerLayoutY());
       horizontalPlayers.add(btmPlayerGui);
       verticalPlayers.add(leftPlayerGui);
       if (curPlayerNum >= 3) {
         String topPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.TOP);
         HorizontalPlayerInfoGui topPlayerGui =
             new HorizontalPlayerInfoGui(PlayerPosition.TOP, topPlayerName, 3);
-        topPlayerGui.setup(450,0);
+        topPlayerGui.setup(config.getTopPlayerLayoutX(),config.getTopPlayerLayoutY());
         horizontalPlayers.add(topPlayerGui);
         if (curPlayerNum == 4) {
           String rightPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.RIGHT);
           VerticalPlayerInfoGui rightPlayerGui =
               new VerticalPlayerInfoGui(PlayerPosition.RIGHT, rightPlayerName, 3);
-          rightPlayerGui.setup(1000,142.5);
+          rightPlayerGui.setup(config.getRightPlayerLayoutX(),config.getRightPlayerLayoutY());
           verticalPlayers.add(rightPlayerGui);
         }
       }
