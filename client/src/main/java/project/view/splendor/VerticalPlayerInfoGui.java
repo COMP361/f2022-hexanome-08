@@ -54,7 +54,7 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
     return initialTokenNum;
   }
 
-  public Map<Colour,Map<PlayerTokenInfo, Text>> getVerticalPlayerTokenHandInfo(PlayerPosition playerPosition){
+  public Map<Colour,Map<PlayerTokenInfo, Text>> getPlayerColourWealthMap(PlayerPosition playerPosition){
     Map<Colour, Map<PlayerTokenInfo, Text>> resultMap = new HashMap<>();
     Colour[] colours = App.getBaseColours();
     ObservableList<Node> allChildren = this.getChildren();
@@ -88,7 +88,7 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
     return resultMap;
   }
 
-  public Map<PlayerVisibleInfo, Text> getVerticalPlayerInfo(PlayerPosition playerPosition){
+  public Map<PlayerVisibleInfo, Text> getPlayerVisibleInfoMap(PlayerPosition playerPosition){
     Map<PlayerVisibleInfo, Text> resultMap = new HashMap<>();
     ObservableList<Node> allChildren = this.getChildren();
     if (playerPosition.equals(PlayerPosition.LEFT)){
@@ -109,7 +109,7 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
 
 
   private void giveInitialStartTokens() {
-    Map<Colour, Map<PlayerTokenInfo, Text>> allTokenColourMap = getVerticalPlayerTokenHandInfo(playerPosition);
+    Map<Colour, Map<PlayerTokenInfo, Text>> allTokenColourMap = getPlayerColourWealthMap(playerPosition);
     Colour[] baseColours = App.getBaseColours();
     for (Colour c : baseColours) {
       Map<PlayerTokenInfo, Text> oneColourMap = allTokenColourMap.get(c);

@@ -1,7 +1,9 @@
 package project;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,9 +44,32 @@ public class GameController {
   }
 
 
+  private List<String> sortPlayerNames(String curPlayerName, List<String> allPlayerNames) {
+    while(!allPlayerNames.get(0).equals(curPlayerName)) {
+      String tmpPlayerName = allPlayerNames.remove(0);
+      allPlayerNames.add(tmpPlayerName);
+    }
+    return new ArrayList<>(allPlayerNames);
+  }
+  private Map<PlayerPosition, String> setPlayerToPosition(String curPlayerName, List<String> allPlayerNames) {
+    Map<PlayerPosition, String> resultMap = new HashMap<>();
+    List<String> orderedNames = sortPlayerNames(curPlayerName, allPlayerNames);
+    for (int i = 0; i < orderedNames.size(); i++) {
+      resultMap.put(PlayerPosition.values()[i], orderedNames.get(i));
+    }
+    return resultMap;
+  }
+
+
   public void initialize() {
     // TODO: change based on number of players, get the info from server later
-    int curPlayerNum = 2;
+    String firstPlayer = "A"; // needs to highlight the boarder of this player
+    String curPlayer = "D";
+    String[] allPlayerNames = new String[] {"C","A","D","B"};
+    List<String> playerNames = new ArrayList<>(Arrays.asList(allPlayerNames));
+    int curPlayerNum = playerNames.size();
+    Map<PlayerPosition, String> sortedPositionPlayerNameMap =
+        setPlayerToPosition(curPlayer, playerNames);
 
     // initialize noble area
     NobleBoardGui nobleBoard = new NobleBoardGui(100,100,5);
@@ -60,29 +85,34 @@ public class GameController {
       playerBoardAnchorPane.getChildren().add(tokenBank);
     });
 
-    HorizontalPlayerInfoGui playerInfoGui = new HorizontalPlayerInfoGui(PlayerPosition.TOP,"s",3);
-    Group curGroup  = (Group) playerInfoGui.getChildren().get(0);
-    System.out.println(curGroup.getChildren().get(1).getLayoutX());
-
     // initialize player area
     List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
-//    List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
+    List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
     if (curPlayerNum >= 2) {
-//      HorizontalPlayerInfoGui curPlayer = new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM);
-      VerticalPlayerInfoGui leftPlayer = new VerticalPlayerInfoGui(PlayerPosition.LEFT, "p1", 3);
-//      curPlayer.setup(0,0);
-      leftPlayer.setup(0,142.5);
-
-//      horizontalPlayers.add(curPlayer);
-      verticalPlayers.add(leftPlayer);
-//      if (curPlayerNum >= 3) {
-//        HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP);
-//        horizontalPlayers.add(topPlayer);
-//        if (curPlayerNum == 4) {
-//          VerticalPlayerInfoGui rightPlayer = new VerticalPlayerInfoGui(PlayerPosition.RIGHT);
-//          verticalPlayers.add(rightPlayer);
-//        }
-//      }
+      String btmPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.BOTTOM);
+      String leftPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.LEFT);
+      HorizontalPlayerInfoGui btmPlayerGui =
+          new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM, btmPlayerName, 3);
+      VerticalPlayerInfoGui leftPlayerGui =
+          new VerticalPlayerInfoGui(PlayerPosition.LEFT, leftPlayerName, 3);
+      btmPlayerGui.setup(450,600);
+      leftPlayerGui.setup(0,142.5);
+      horizontalPlayers.add(btmPlayerGui);
+      verticalPlayers.add(leftPlayerGui);
+      if (curPlayerNum >= 3) {
+        String topPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.TOP);
+        HorizontalPlayerInfoGui topPlayerGui =
+            new HorizontalPlayerInfoGui(PlayerPosition.TOP, topPlayerName, 3);
+        topPlayerGui.setup(450,0);
+        horizontalPlayers.add(topPlayerGui);
+        if (curPlayerNum == 4) {
+          String rightPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.RIGHT);
+          VerticalPlayerInfoGui rightPlayerGui =
+              new VerticalPlayerInfoGui(PlayerPosition.RIGHT, rightPlayerName, 3);
+          rightPlayerGui.setup(1000,142.5);
+          verticalPlayers.add(rightPlayerGui);
+        }
+      }
     }
 
     Platform.runLater(() -> {
@@ -90,9 +120,9 @@ public class GameController {
         playerBoardAnchorPane.getChildren().add(vPlayer);
       }
 
-//      for (HorizontalPlayerInfoGui hPlayer : horizontalPlayers) {
-//        playerBoardAnchorPane.getChildren().add(hPlayer);
-//      }
+      for (HorizontalPlayerInfoGui hPlayer : horizontalPlayers) {
+        playerBoardAnchorPane.getChildren().add(hPlayer);
+      }
     });
 
 
