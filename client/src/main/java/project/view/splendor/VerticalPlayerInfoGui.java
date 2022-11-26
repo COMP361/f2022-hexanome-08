@@ -3,7 +3,6 @@ package project.view.splendor;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
-import org.w3c.dom.Node;
 
 public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
 
