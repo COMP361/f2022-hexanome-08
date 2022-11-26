@@ -19,6 +19,10 @@ public class Board {
 
   }
 
+  public void add(int row, int column, Card card){
+    cardBoard[row][column] = card;
+  }
+
   boolean hasCard(Card paramCard) {
     for (Card[] array : cardBoard) {
       for (Card card : array) {
