@@ -18,9 +18,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PrimaryController">
+<AnchorPane style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.GameController">
    <children>
-      <BorderPane fx:id="gameBoardContent" layoutY="4.666666507720947" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
+      <BorderPane layoutY="4.666666507720947" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0">
 
          <bottom>
             <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
@@ -35,19 +35,19 @@
                         <StackPane prefHeight="113.0" prefWidth="88.0">
                            <children>
                               <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ed3737" height="93.0" stroke="BLACK" strokeType="INSIDE" width="93.0" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0 / 0" />
+                              <Text fx:id="redHand" strokeType="OUTSIDE" strokeWidth="0.0" text="0 / 0" />
                            </children>
                         </StackPane>
                         <StackPane layoutX="10.0" layoutY="10.0" prefHeight="113.0" prefWidth="88.0">
                            <children>
                               <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="93.0" stroke="BLACK" strokeType="INSIDE" width="93.0" />
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0 / 0" />
+                              <Text fx:id="whiteHand" strokeType="OUTSIDE" strokeWidth="0.0" text="0 / 0" />
                            </children>
                         </StackPane>
                         <StackPane layoutX="10.0" layoutY="10.0" prefHeight="113.0" prefWidth="88.0">
                            <children>
                               <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3f2a09" height="93.0" stroke="BLACK" strokeType="INSIDE" width="93.0" />
-                              <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="0 / 0" />
+                              <Text fx:id="blackHand" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="0 / 0" />
                            </children>
                         </StackPane>
                         <StackPane layoutX="10.0" layoutY="10.0" prefHeight="113.0" prefWidth="88.0">
@@ -217,22 +217,22 @@
                                  <children>
                                     <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="400.0" spacing="5.0">
                                        <children>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level3/b1.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level3/b2.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="124.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="124.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level3/b3.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="purchasedCard" fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="purchasedCard" fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level3/b4.png" />
                                              </image>
@@ -241,22 +241,22 @@
                                     </HBox>
                                     <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="300.0" spacing="5.0">
                                        <children>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level2/b1.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level2/b2.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="124.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="124.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level2/b3.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="reservedCard" fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level2/b4.png" />
                                              </image>
@@ -265,22 +265,22 @@
                                     </HBox>
                                     <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="300.0" spacing="5.0">
                                        <children>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level1/b1.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level1/b2.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="124.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="124.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level1/b3.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="237.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/level1/b4.png" />
                                              </image>
@@ -293,12 +293,12 @@
                                  <children>
                                     <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                                        <children>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/orient/3/o31.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/orient/3/o32.png" />
                                              </image>
@@ -307,12 +307,12 @@
                                     </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                                        <children>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/orient/2/o21.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/orient/2/o22.png" />
                                              </image>
@@ -321,12 +321,12 @@
                                     </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                                        <children>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/orient/1/o1_6.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fitHeight="120.0" fitWidth="120.0" onMouseClicked="#onDevelopmentCardShapeClick" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@pictures/orient/1/o1_7.png" />
                                              </image>
@@ -396,27 +396,26 @@
                                           <Image url="@pictures/token/gold_tokens.png" />
                                        </image>
                                     </ImageView>
-                                    <Button id="minusRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false" text="-" />
-                                    <Button id="plusWhite" layoutX="295.0" layoutY="40.0" mnemonicParsing="false" text="+" />
-                                    <Button id="minusWhite" layoutX="245.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                                    <Button fx:id="minusRed" layoutX="160.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                                    <Button fx:id="plusWhite" layoutX="295.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                                    <Button fx:id="minusWhite" layoutX="245.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                                     <Button id="plusBlue" layoutX="466.0" layoutY="40.0" mnemonicParsing="false" text="+" />
-                                    <Button id="plusBlack" layoutX="378.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                                    <Button fx:id="plusBlack" layoutX="378.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                                     <Button id="plusGreen" layoutX="550.0" layoutY="40.0" mnemonicParsing="false" text="+" />
-                                    <Button id="plusRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false" text="+" />
+                                    <Button fx:id="plusRed" layoutX="210.0" layoutY="40.0" mnemonicParsing="false" text="+" />
                                     <Button id="minusBlue" layoutX="412.0" layoutY="40.0" mnemonicParsing="false" text="-" />
-                                    <Button id="minusBlack" layoutX="330.0" layoutY="40.0" mnemonicParsing="false" text="-" />
+                                    <Button fx:id="minusBlack" layoutX="330.0" layoutY="40.0" mnemonicParsing="false" text="-" />
                                     <Button id="minusGreen" layoutX="500.0" layoutY="40.0" mnemonicParsing="false" text="-" />
-                                    <Text id="totalRed" fill="WHITE" layoutX="187.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
-                                       <font>
+                                    <Text fx:id="totalRed" fill="WHITE" layoutX="187.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7"> <font>
                                           <Font size="36.0" />
                                        </font>
                                     </Text>
-                                    <Text id="totalWhite" layoutX="272.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+                                    <Text fx:id="totalWhite" layoutX="272.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
                                        <font>
                                           <Font name="System Bold" size="36.0" />
                                        </font>
                                     </Text>
-                                    <Text id="totalBlack" fill="WHITE" layoutX="356.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+                                    <Text fx:id="totalBlack" fill="WHITE" layoutX="356.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
                                        <font>
                                           <Font size="36.0" />
                                        </font>
@@ -437,13 +436,13 @@
                                        </font>
                                     </Text>
                                     <Circle fill="WHITE" layoutX="197.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
-                                    <Text id="counterRed" layoutX="193.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                                    <Text fx:id="counterRed" layoutX="193.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                                     <Circle fill="WHITE" layoutX="281.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
                                     <Circle fill="WHITE" layoutX="365.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
                                     <Circle fill="WHITE" layoutX="452.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
                                     <Circle fill="WHITE" layoutX="537.0" layoutY="40.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
-                                    <Text id="counterWhite" layoutX="277.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-                                    <Text id="counterBlack" layoutX="361.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                                    <Text fx:id="counterWhite" layoutX="277.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+                                    <Text fx:id="counterBlack" layoutX="361.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                                     <Text id="counterBlue" layoutX="449.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                                     <Text id="counterGreen" layoutX="533.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
                                     <Group layoutX="119.0" layoutY="188.0">
@@ -459,7 +458,7 @@
                                     </Group>
                                  </children>
                               </Group>
-                              <Button id="confirmButton" layoutX="581.0" layoutY="24.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="66.0" text="Confirm" />
+                              <Button fx:id="confirmButton" layoutX="581.0" layoutY="24.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="66.0" text="Confirm" />
                               <Group layoutX="612.0" layoutY="177.0">
                                  <children>
                                     <Rectangle arcHeight="10.0" arcWidth="10.0" fill="#c3352b" height="52.0" stroke="BLACK" strokeType="INSIDE" width="23.0" />
@@ -552,7 +551,7 @@
                         <Circle fill="#acdef4" layoutX="104.0" layoutY="672.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" />
                         <Text layoutX="54.0" layoutY="677.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0/15" />
                         <Text layoutX="95.0" layoutY="677.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0/0" />
-                        <Button layoutX="598.0" layoutY="656.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#openMyReservedCards" prefHeight="32.0" prefWidth="121.0" text="My Reserved Cards" />
+                        <Button layoutX="587.0" layoutY="656.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="32.0" prefWidth="132.0" text="My Reserved Cards" />
                         <Button layoutX="147.0" layoutY="656.0" mnemonicParsing="false" onMouseClicked="#openMyCards" prefHeight="32.0" prefWidth="93.0" text="My Cards" />
                      </children>
                   </AnchorPane>
@@ -564,8 +563,7 @@
         <menus>
             <Menu mnemonicParsing="false" text="Settings">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Volume" />
-                  <MenuItem fx:id="logOutMenuItem" mnemonicParsing="false" onAction="#onLogOutMenuItemClick" text="Exit game" />
+                  <MenuItem fx:id="exitGame" mnemonicParsing="false" onAction="#onExitGameClick" text="Exit Game" />
                </items>
             </Menu>
         </menus>
