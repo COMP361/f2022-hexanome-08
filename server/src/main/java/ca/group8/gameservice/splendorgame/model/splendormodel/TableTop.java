@@ -91,16 +91,16 @@ public class TableTop {
   private void initialiseBaseDecks(){
     for(DevelopmentCard card :  generateBaseCards()){
       int level = card.getLevel();
-      decks.get(level-1).add(card);
+      decks.get(level).add(card);
     }
-    for(Deck deck : decks){
-      deck.shuffle();
+    for(int i = 1; i<4; i++){
+      decks.get(i).shuffle();
     }
   }
 
 
 
-  public ArrayList<Deck> getDecks() {
+  public Map<Integer, Deck> getDecks() {
     return decks;
   }
 
