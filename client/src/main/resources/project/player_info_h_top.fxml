@@ -114,11 +114,11 @@
          <Image url="@pictures/ta_pictures/khabiir.png" />
       </ImageView>
       <Circle fill="#acdef4" layoutX="108.0" layoutY="17.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
-      <Text layoutX="108.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
+      <Text layoutX="106.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
       <Circle fill="#e3f2ac" layoutX="109.0" layoutY="51.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
       <Text layoutX="108.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
-      <Text layoutX="113.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-      <Text layoutX="98.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+      <Text layoutX="109.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="15" />
+      <Text layoutX="96.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
       <Text layoutX="113.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
       <Text layoutX="98.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
    </Group>
