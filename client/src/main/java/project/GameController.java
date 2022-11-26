@@ -12,12 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import project.view.splendor.Colour;
-import project.view.splendor.HorizontalPlayerInfoGui;
-import project.view.splendor.NobleBoardGui;
-import project.view.splendor.PlayerPosition;
-import project.view.splendor.TokenBankGui;
-import project.view.splendor.VerticalPlayerInfoGui;
+import project.view.splendor.*;
 
 /**
  * Game controller for game GUI.
@@ -65,6 +60,9 @@ public class GameController {
       tokenBank.setup(curPlayerNum,40,5);
       gameBoardAnchorPane.getChildren().add(tokenBank);
     });
+
+        VerticalPlayerInfoGui playerInfoGui = new VerticalPlayerInfoGui(PlayerPosition.LEFT,"s");
+        System.out.println(playerInfoGui.getLeftPlayerInfo().get(PlayerVisibleInfo.POINT).getText());
 
     // initialize player area
     //List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
