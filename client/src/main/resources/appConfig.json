@@ -13,8 +13,8 @@
    "rightPlayerLayoutY": 92,
    "leftPlayerLayoutX": 0,
    "leftPlayerLayoutY": 92,
-   "baseCardBoardLayoutX": 0,
-   "baseCardBoardLayoutY": 0,
-   "orientCardBoardLayoutX": 0,
-   "orientCardBoardLayoutY": 0
+   "baseCardBoardLayoutX": 170,
+   "baseCardBoardLayoutY": 240,
+   "orientCardBoardLayoutX": 660,
+   "orientCardBoardLayoutY": 240
  }
