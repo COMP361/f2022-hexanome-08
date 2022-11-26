@@ -26,7 +26,6 @@ public class Player implements PlayerReadOnly {
       int oldValue = totalGems.get(card.getGemColor());
       totalGems.put(card.getGemColor().get(), oldValue+card.getGemNumber());
     }
-
     return totalGems;
   }
 
