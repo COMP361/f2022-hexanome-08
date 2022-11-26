@@ -22,8 +22,6 @@ public class GameController {
 
 
   @FXML
-  private AnchorPane gameBoardAnchorPane;
-  @FXML
   private AnchorPane playerBoardAnchorPane;
   /**
    * Opening the development cards pop up once "My Cards" button is pressed.
@@ -46,56 +44,52 @@ public class GameController {
 
   public void initialize() {
     // TODO: change based on number of players, get the info from server later
-    int curPlayerNum = 4;
+    int curPlayerNum = 2;
 
     // initialize noble area
     NobleBoardGui nobleBoard = new NobleBoardGui(100,100,5);
     Platform.runLater(() -> {
-      nobleBoard.setup(curPlayerNum,810, 50);
-      gameBoardAnchorPane.getChildren().add(nobleBoard);
+      nobleBoard.setup(curPlayerNum,935, 280);
+      playerBoardAnchorPane.getChildren().add(nobleBoard);
     });
 
     // initialize token area
     TokenBankGui tokenBank = new TokenBankGui();
     Platform.runLater(() -> {
-      tokenBank.setup(curPlayerNum,40,5);
-      gameBoardAnchorPane.getChildren().add(tokenBank);
+      tokenBank.setup(curPlayerNum,190,170);
+      playerBoardAnchorPane.getChildren().add(tokenBank);
     });
 
-    HorizontalPlayerInfoGui playerInfoGui = new HorizontalPlayerInfoGui(PlayerPosition.TOP,"s");
-    Group curGroup  = (Group) playerInfoGui.getChildren().get(0);
-    System.out.println(curGroup.getChildren().get(1).getLayoutX());
-
     // initialize player area
-    //List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
-    //List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
-    //if (curPlayerNum >= 2) {
-    //  HorizontalPlayerInfoGui curPlayer = new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM);
-    //  VerticalPlayerInfoGui leftPlayer = new VerticalPlayerInfoGui(PlayerPosition.LEFT);
-    //  curPlayer.setup(0,0);
-    //  leftPlayer.setup(0,0);
-    //
-    //  horizontalPlayers.add(curPlayer);
-    //  verticalPlayers.add(leftPlayer);
-    //  if (curPlayerNum >= 3) {
-    //    HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP);
-    //    horizontalPlayers.add(topPlayer);
-    //    if (curPlayerNum == 4) {
-    //      VerticalPlayerInfoGui rightPlayer = new VerticalPlayerInfoGui(PlayerPosition.RIGHT);
-    //      verticalPlayers.add(rightPlayer);
-    //    }
-    //  }
-    //}
-    //
-    //Platform.runLater(() -> {
-    //  for (VerticalPlayerInfoGui vPlayer : verticalPlayers) {
-    //    playerBoardAnchorPane.getChildren().add(vPlayer);
-    //  }
-    //
-    //  for (HorizontalPlayerInfoGui hPlayer : horizontalPlayers) {
-    //    playerBoardAnchorPane.getChildren().add(hPlayer);
-    //  }
-    //});
+    List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
+//    List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
+    if (curPlayerNum >= 2) {
+//      HorizontalPlayerInfoGui curPlayer = new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM);
+      VerticalPlayerInfoGui leftPlayer = new VerticalPlayerInfoGui(PlayerPosition.LEFT, "p1", 3);
+//      curPlayer.setup(0,0);
+      leftPlayer.setup(0,142.5);
+
+//      horizontalPlayers.add(curPlayer);
+      verticalPlayers.add(leftPlayer);
+//      if (curPlayerNum >= 3) {
+//        HorizontalPlayerInfoGui topPlayer = new HorizontalPlayerInfoGui(PlayerPosition.TOP);
+//        horizontalPlayers.add(topPlayer);
+//        if (curPlayerNum == 4) {
+//          VerticalPlayerInfoGui rightPlayer = new VerticalPlayerInfoGui(PlayerPosition.RIGHT);
+//          verticalPlayers.add(rightPlayer);
+//        }
+//      }
+    }
+
+    Platform.runLater(() -> {
+      for (VerticalPlayerInfoGui vPlayer : verticalPlayers) {
+        playerBoardAnchorPane.getChildren().add(vPlayer);
+      }
+
+//      for (HorizontalPlayerInfoGui hPlayer : horizontalPlayers) {
+//        playerBoardAnchorPane.getChildren().add(hPlayer);
+//      }
+    });
 
 
   }
