@@ -61,8 +61,8 @@ public class GameController {
       gameBoardAnchorPane.getChildren().add(tokenBank);
     });
 
-        VerticalPlayerInfoGui playerInfoGui = new VerticalPlayerInfoGui(PlayerPosition.LEFT,"s");
-        System.out.println(playerInfoGui.getLeftPlayerInfo().get(PlayerVisibleInfo.POINT).getText());
+        VerticalPlayerInfoGui playerInfoGui = new VerticalPlayerInfoGui(PlayerPosition.RIGHT,"s");
+        System.out.println(playerInfoGui.getRightPlayerInfo().get(PlayerVisibleInfo.POINT).getText());
 
     // initialize player area
     //List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
