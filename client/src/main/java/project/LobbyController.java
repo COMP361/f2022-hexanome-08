@@ -18,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -192,6 +193,13 @@ public class LobbyController {
     };
   }
 
+  @FXML
+  public void joinGameDev() throws IOException {
+    // TODO: For debug usage
+    Scene curScene = sessionVbox.getScene();
+    App.setRoot("splendor_base_game_board");
+  }
+
   /**
    * create a GUI representation of session object.
    *
@@ -318,7 +326,6 @@ public class LobbyController {
           localSession = new Gson().fromJson(longPullResponse.getBody(), Session.class);
           List<String> curPlayers = localSession.getPlayers();
           for (Node n : sessionVbox.getChildren()) {
-            boolean replaceButtonFlag;
             if (n.getAccessibleText().equals(sessionId.toString())) {
               // if found the corresponding GUI session, first update button if game launched
               // if user is not in game / in game, button is updated differently
@@ -370,16 +377,16 @@ public class LobbyController {
                   });
                 }
 
-              } else {
-                // If it's firstCheck, we only want to update their textInfo
-                Label sessionInfoLabel = (Label) sessionHbox.getChildren().get(0);
-                String newSessionInfo = formatSessionInfo(localSession);
-                isFirstCheck = false;
-                // defer updating session info
-                Platform.runLater(() -> {
-                  sessionInfoLabel.setText(newSessionInfo);
-                });
               }
+
+              // regardless of first check or not, we always want the info to be updated
+              Label sessionInfoLabel = (Label) sessionHbox.getChildren().get(0);
+              String newSessionInfo = formatSessionInfo(localSession);
+              isFirstCheck = false;
+              // defer updating session info
+              Platform.runLater(() -> {
+                sessionInfoLabel.setText(newSessionInfo);
+              });
 
             }
           }
@@ -468,7 +475,6 @@ public class LobbyController {
               updateSessionInfoThread.start();
             }
           } else {
-            // TODO: localSession has been set, check the diff between remote and local
             SessionList remoteSessionList =
                 new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
 
