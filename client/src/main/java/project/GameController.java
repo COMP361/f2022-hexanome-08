@@ -60,7 +60,7 @@ public class GameController {
       playerBoardAnchorPane.getChildren().add(tokenBank);
     });
 
-    HorizontalPlayerInfoGui playerInfoGui = new HorizontalPlayerInfoGui(PlayerPosition.TOP,"s");
+    HorizontalPlayerInfoGui playerInfoGui = new HorizontalPlayerInfoGui(PlayerPosition.TOP,"s",3);
     Group curGroup  = (Group) playerInfoGui.getChildren().get(0);
     System.out.println(curGroup.getChildren().get(1).getLayoutX());
 
