@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import project.App;
@@ -75,6 +76,36 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
     return resultMap;
   }
 
+  public Map<Colour,Map<PlayerVisibleInfo, Text>> getRightPlayerTokenHandInfo(){
+    Map<Colour, Map<PlayerVisibleInfo, Text>> resultMap = new HashMap<>();
+    Colour[] colours = App.getBaseColours();
+    ObservableList<Node> allChildren = this.getChildren();
+    for (int i = 0; i < colours.length; i++){
+      Map<PlayerVisibleInfo, Text> mapInMap = new HashMap<>();
+      HBox curBox = (HBox) allChildren.get(i);
+      Group curGroup = (Group) curBox.getChildren().get(1);
+      mapInMap.put(PlayerVisibleInfo.GEM, (Text) curGroup.getChildren().get(1));
+      mapInMap.put(PlayerVisibleInfo.TOKEN,(Text) curGroup.getChildren().get(3));
+      resultMap.put(colours[i], mapInMap);
+    }
+    HBox curBox = (HBox) allChildren.get(5);
+    Map<PlayerVisibleInfo, Text> goldMap= new HashMap<>();
+    Group curGroup = (Group) curBox.getChildren().get(1);
+    goldMap.put(PlayerVisibleInfo.TOKEN, (Text) curGroup.getChildren().get(1));
+    resultMap.put(Colour.GOLD, goldMap);
+    return resultMap;
+  }
+
+  public Map<PlayerVisibleInfo, Text> getRightPlayerInfo(){
+    Map<PlayerVisibleInfo, Text> resultMap = new HashMap<>();
+    ObservableList<Node> allChildren = this.getChildren();
+    Group group = (Group) allChildren.get(6);
+
+    resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(6));
+    resultMap.put(PlayerVisibleInfo.RESERVEDCARDS, (Text) group.getChildren().get(8));
+    resultMap.put(PlayerVisibleInfo.RESERVEDNOBLES, (Text) group.getChildren().get(7));
+    return resultMap;
+  }
 
   @Override
   public void setup(double layoutX, double layoutY) {
