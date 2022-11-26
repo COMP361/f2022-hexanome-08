@@ -64,12 +64,14 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
       goldInfo.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(1));
     } else if (this.playerPosition.equals(PlayerPosition.BOTTOM)) {
       for (int i = 1; i < 6; i++) {
-        Group curGroup = (Group) this.getChildren().get(i);
+        HBox currBox = (HBox) this.getChildren().get(i);
+        Group curGroup = (Group) currBox.getChildren().get(1);
         info.put(PlayerTokenInfo.GEM, (Text) curGroup.getChildren().get(1));
         info.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         result.put(colours[i], info);
       }
-      Group curGroup = (Group) this.getChildren().get(6);
+      HBox currBox = (HBox) this.getChildren().get(6);
+      Group curGroup = (Group) this.getChildren().get(1);
       goldInfo.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(1));
     }
     result.put(Colour.GOLD, goldInfo);
