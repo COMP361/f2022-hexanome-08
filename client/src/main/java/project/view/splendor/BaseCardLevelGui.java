@@ -12,7 +12,10 @@ import javafx.scene.layout.HBox;
 
 
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -107,23 +110,29 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
         Group levelCard = (Group) this.getChildren().get(0);
         Rectangle rectangle = (Rectangle) levelCard.getChildren().get(0);
         if(this.level == 3){
-            rectangle.setFill(Color.BLUE);
+            rectangle.setFill(Color.DODGERBLUE);
             Text deck = (Text) levelCard.getChildren().get(1);
             Text levelOfCard = (Text) levelCard.getChildren().get(2);
             deck.setText("20");
+            deck.setFont(Font.font("System", FontPosture.REGULAR,16));
             levelOfCard.setText(". . .");
+            levelOfCard.setFont(Font.font("System", FontPosture.REGULAR,18));
         } else if(this.level == 2){
             rectangle.setFill(Color.YELLOW);
             Text deck = (Text) levelCard.getChildren().get(1);
             Text levelOfCard = (Text) levelCard.getChildren().get(2);
             deck.setText("30");
-            levelOfCard.setText(". .");
+            deck.setFont(Font.font("System", FontPosture.REGULAR,16));
+            levelOfCard.setText(" . .");
+            levelOfCard.setFont(Font.font("System", FontPosture.REGULAR,18));
         } else if(this.level == 1){
-            rectangle.setFill(Color.GREEN);
+            rectangle.setFill(Paint.valueOf("#30ff1f"));
             Text deck = (Text) levelCard.getChildren().get(1);
             Text levelOfCard = (Text) levelCard.getChildren().get(2);
             deck.setText("40");
-            levelOfCard.setText(".");
+            deck.setFont(Font.font("System", FontPosture.REGULAR,16));
+            levelOfCard.setText(" .");
+            levelOfCard.setFont(Font.font("System", FontPosture.REGULAR,18));
         }
     }
 
