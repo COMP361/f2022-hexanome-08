@@ -48,6 +48,11 @@ public class GameController {
   }
 
   @FXML
+  protected void onOpenMyPurchaseCardClick() throws IOException {
+    App.setRootWithSizeTitle("my_development_cards", 800, 600, "My Development Cards");
+  }
+
+  @FXML
   protected void openMyCards() {
     Stage newStage = new Stage();
     newStage.setTitle("My Development Cards");
