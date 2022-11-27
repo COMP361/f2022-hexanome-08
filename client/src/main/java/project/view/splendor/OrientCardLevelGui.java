@@ -1,15 +1,23 @@
 package project.view.splendor;
 
+import java.util.ArrayList;
+import java.util.List;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import project.App;
+import project.view.splendor.gameitems.DevelopmentCard;
 
-public class OrientCardLevelGui extends HBox {
+public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     private final int level;
     public OrientCardLevelGui(int level){
         this.level = level;
@@ -26,7 +34,7 @@ public class OrientCardLevelGui extends HBox {
         return level;
     }
 
-    public void setup(){
+    private void setDeckLevelText() {
         Group levelCard = (Group) this.getChildren().get(2);
         Rectangle rectangle = (Rectangle) levelCard.getChildren().get(0);
         rectangle.setFill(Color.RED);
@@ -41,4 +49,76 @@ public class OrientCardLevelGui extends HBox {
             levelOfCard.setText(".");
         }
     }
+
+    private void setUpCards(List<DevelopmentCard> cards) {
+        assert cards.size() == 2;
+        int i = 0;
+        for (DevelopmentCard card : cards) {
+            String curCardName = card.getCardName();
+            int curCardLevel = card.getLevel();
+            String cardPath =
+                String.format("project/pictures/orient/%d/%s.png", curCardLevel, curCardName);
+            Image cardImg = new Image(cardPath);
+            getOneCardGui(i).setImage(cardImg);
+            i += 1;
+        }
+
+    }
+
+    private EventHandler<MouseEvent> createClickOnCardHandler() {
+        return event -> {
+            try {
+                App.setRootWithSizeTitle("splendor_card_action",
+                    360, 170, "Make your decision");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
+    private EventHandler<MouseEvent> createClickOnDeckHandler() {
+        return event -> {
+            try {
+                App.setRootWithSizeTitle("splendor_deck_action",
+                    360, 170, "Make your decision");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+    private void bindActionToCardAndDeck() {
+        // get all cards first
+        List<ImageView> allCards = getAllCardsGui();
+
+        for (ImageView imgV : allCards) {
+            imgV.setOnMouseClicked(createClickOnCardHandler());
+        }
+
+        Group deck = (Group) this.getChildren().get(2);
+        deck.setOnMouseClicked(createClickOnDeckHandler());
+    }
+
+    @Override
+    public List<ImageView> getAllCardsGui() {
+        List<ImageView> allCards = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            ImageView curImageView = (ImageView) this.getChildren().get(i);
+            allCards.add(curImageView);
+        }
+        return allCards;
+    }
+
+    @Override
+    public ImageView getOneCardGui(int cardIndex) {
+        return getAllCardsGui().get(cardIndex);
+    }
+
+
+    @Override
+    public void setup(List<DevelopmentCard> cards) {
+        setDeckLevelText();
+        setUpCards(cards);
+        bindActionToCardAndDeck();
+    }
+
 }

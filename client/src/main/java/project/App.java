@@ -88,7 +88,7 @@ public class App extends Application {
    * @param fxml The fxml file where we read the GUI setup
    * @throws IOException when fxml not found
    */
-  static void setRoot(String fxml) throws IOException {
+  public static void setRoot(String fxml) throws IOException {
     scene.setRoot(loadFxml(fxml));
   }
 
@@ -101,7 +101,7 @@ public class App extends Application {
    * @param title  Title of the new stage
    * @throws IOException when fxml not found
    */
-  static void setRootWithSizeTitle(String fxml, int height, int width, String title)
+  public static void setRootWithSizeTitle(String fxml, int height, int width, String title)
       throws IOException {
     Stage newStage = new Stage();
     newStage.setTitle(title);
@@ -117,7 +117,7 @@ public class App extends Application {
    * @param curScene The current scene of the pop-up
    * @throws IOException when fxml not found
    */
-  static void setPopUpRoot(String fxml, Scene curScene) throws IOException {
+  public static void setPopUpRoot(String fxml, Scene curScene) throws IOException {
     curScene.setRoot(loadFxml(fxml));
   }
 
