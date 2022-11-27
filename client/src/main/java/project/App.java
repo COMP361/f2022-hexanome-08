@@ -179,4 +179,17 @@ public class App extends Application {
     return guiLayouts;
   }
 
+  public static String getNoblePath(String cardName) {
+    return String.format("project/pictures/noble/%s.png",cardName);
+  }
+
+  public static String getOrientCardPath(String cardName, int level) {
+    assert level >= 1 && level <= 3;
+    return String.format("project/pictures/orient/%d/%s.png",level, cardName);
+  }
+
+  public static String getBaseCardPath(String cardName, int level) {
+    assert level >= 1 && level <= 3;
+    return String.format("project/pictures/level%d/%s.png",level, cardName);
+  }
 }

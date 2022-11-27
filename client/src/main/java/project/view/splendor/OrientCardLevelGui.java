@@ -19,8 +19,11 @@ import project.view.splendor.gameitems.DevelopmentCard;
 
 public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     private final int level;
-    public OrientCardLevelGui(int level){
+    private final List<DevelopmentCard> cards;
+    public OrientCardLevelGui(int level, List<DevelopmentCard> cards){
         this.level = level;
+        this.cards = cards;
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/project/orient_card_template.fxml"));
         fxmlLoader.setRoot(this);
         try {
@@ -115,7 +118,7 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
 
 
     @Override
-    public void setup(List<DevelopmentCard> cards) {
+    public void setup() {
         setDeckLevelText();
         setUpCards(cards);
         bindActionToCardAndDeck();

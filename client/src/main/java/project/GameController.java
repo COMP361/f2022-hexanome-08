@@ -10,9 +10,14 @@ import java.util.Map;
 import java.util.Optional;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import project.view.splendor.*;
 import project.view.splendor.gameitems.BaseCard;
 import project.view.splendor.gameitems.DevelopmentCard;
@@ -49,12 +54,59 @@ public class GameController {
 
   @FXML
   protected void onOpenMyReserveCardClick() throws IOException {
-    App.setRootWithSizeTitle("my_reserved_cards", 789, 406, "My Reserved Cards");
+    FXMLLoader fxmlLoader = new FXMLLoader
+        (App.class.getResource("my_reserved_cards.fxml"));
+    Image img2 = new Image("project/pictures/noble/noble1.png");
+    List<ImageView> testNobleImageViews = new ArrayList<>();
+    for (int i = 0; i < 5; i++) {
+      ImageView imgV = new ImageView(img2);
+      testNobleImageViews.add(imgV);
+    }
+    fxmlLoader.setController(new ReservedHandController(testNobleImageViews,testNobleImageViews));
+    Pane reserveHandPopup = fxmlLoader.load();
+    Stage newStage = new Stage();
+    newStage.setTitle("My Reserved Cards");
+    newStage.setScene(new Scene(reserveHandPopup, 789, 406));
+    newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+    newStage.show();
   }
 
   @FXML
   protected void onOpenMyPurchaseCardClick() throws IOException {
-    App.setRootWithSizeTitle("my_development_cards", 800, 600, "My Development Cards");
+    // TODO: Add a parameter for this method: Map<Colour, List<DevelopmentCard>> cardsMap here
+
+    FXMLLoader fxmlLoader = new FXMLLoader
+        (App.class.getResource("my_development_cards.fxml"));
+    Map<Colour, List<DevelopmentCard>> colourToCardStackMap = new HashMap<>();
+
+    EnumMap<Colour, Integer> cardPrice = new EnumMap<>(Colour.class);
+    cardPrice.put(Colour.RED, 0);
+    cardPrice.put(Colour.BLACK, 0);
+    cardPrice.put(Colour.BLUE, 4);
+    cardPrice.put(Colour.WHITE, 0);
+    cardPrice.put(Colour.GREEN, 0);
+
+    DevelopmentCard c1 = new DevelopmentCard(1,
+        cardPrice, "b1", 1,
+        Optional.of(Colour.BLACK),false, -1, 1);
+
+    DevelopmentCard c2 = new DevelopmentCard(1,
+        cardPrice, "b1", 1,
+        Optional.of(Colour.BLACK),true, -1, 1);
+
+    List<DevelopmentCard> oneColourImageVs = new ArrayList<>();
+    oneColourImageVs.add(c1);
+    oneColourImageVs.add(c2);
+
+    colourToCardStackMap.put(Colour.BLACK, oneColourImageVs);
+
+    fxmlLoader.setController(new PurchaseHandController(colourToCardStackMap));
+    Pane reserveHandPopup = fxmlLoader.load();
+    Stage newStage = new Stage();
+    newStage.setTitle("My Purchased Cards");
+    newStage.setScene(new Scene(reserveHandPopup, 800, 600));
+    newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+    newStage.show();
   }
 
 
@@ -164,16 +216,16 @@ public class GameController {
     cardPrice.put(Colour.WHITE, 0);
     cardPrice.put(Colour.GREEN, 0);
 
+    DevelopmentCard c1 = new DevelopmentCard(1,
+        cardPrice, "b1", 1,
+        Optional.of(Colour.BLACK),false, -1, 1);
+
     EnumMap<Colour, Integer> cardPrice2 = new EnumMap<>(Colour.class);
     cardPrice2.put(Colour.RED, 0);
     cardPrice2.put(Colour.BLACK, 0);
     cardPrice2.put(Colour.BLUE, 0);
     cardPrice2.put(Colour.WHITE, 0);
     cardPrice2.put(Colour.GREEN, 3);
-    DevelopmentCard c1 = new DevelopmentCard(1,
-        cardPrice, "b1", 1,
-        Optional.of(Colour.BLACK),false, -1, 1);
-
 
     DevelopmentCard c2 = new DevelopmentCard(1,
         cardPrice2, "o1g1", 1,
@@ -192,11 +244,11 @@ public class GameController {
     // base card and orient card area
     for (int i = 3; i >= 1; i--) {
       Map<CardType, DevelopmentCardBoardGui> oneLevelCardsMap = new HashMap<>();
-      BaseCardLevelGui baseCardLevelGui = new BaseCardLevelGui(i);
-      OrientCardLevelGui orientCardLevelGui = new OrientCardLevelGui(i);
+      BaseCardLevelGui baseCardLevelGui = new BaseCardLevelGui(i, cards);
+      OrientCardLevelGui orientCardLevelGui = new OrientCardLevelGui(i, cards2);
 
-      baseCardLevelGui.setup(cards);
-      orientCardLevelGui.setup(cards2);
+      baseCardLevelGui.setup();
+      orientCardLevelGui.setup();
       oneLevelCardsMap.put(CardType.BASE, baseCardLevelGui);
       oneLevelCardsMap.put(CardType.ORIENT, orientCardLevelGui);
 
