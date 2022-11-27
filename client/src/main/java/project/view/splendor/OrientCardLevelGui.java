@@ -11,6 +11,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -46,12 +48,16 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
         Text deck = (Text) levelCard.getChildren().get(1);
         Text levelOfCard = (Text) levelCard.getChildren().get(2);
         deck.setText("10");
+        deck.setFont(Font.font("System", FontPosture.REGULAR,16));
         if(this.level == 3){
             levelOfCard.setText(". . .");
+            levelOfCard.setFont(Font.font("System", FontPosture.REGULAR,18));
         } else if(this.level == 2){
-            levelOfCard.setText(". .");
+            levelOfCard.setText(" . .");
+            levelOfCard.setFont(Font.font("System", FontPosture.REGULAR,18));
         } else if(this.level == 1){
-            levelOfCard.setText(".");
+            levelOfCard.setText(" .");
+            levelOfCard.setFont(Font.font("System", FontPosture.REGULAR,18));
         }
     }
 

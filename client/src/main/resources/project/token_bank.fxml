@@ -178,10 +178,11 @@
          </Group>
       </children>
    </VBox>
+   <Region prefHeight="115.0" prefWidth="44.0" />
    <VBox prefHeight="115.0" prefWidth="120.0">
       <children>
-         <Region prefHeight="83.0" prefWidth="120.0" />
-         <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="120.0" text="Confirm">
+         <Region prefHeight="37.0" prefWidth="120.0" />
+         <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="92.0" text="Confirm">
             <font>
                <Font size="18.0" />
             </font></Button>
