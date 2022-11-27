@@ -171,6 +171,13 @@ public class GameController {
     orientCardDeck.setLayoutX(config.getOrientCardBoardLayoutX());
     orientCardDeck.setLayoutY(config.getOrientCardBoardLayoutY());
 
+    for (int i = 3; i >= 1; i--) {
+      OrientCardLevelGui orientCardLevelGui = new OrientCardLevelGui(i);
+      orientCardLevelGui.setup();
+      Platform.runLater(() -> {
+        orientCardDeck.getChildren().add(orientCardLevelGui);
+      });
+    }
 
   }
 
