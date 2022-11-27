@@ -16,10 +16,10 @@ public class DevelopmentCard extends Card {
 
 
   public DevelopmentCard(int paramPrestigePoints,
-      EnumMap<Colour, Integer> paramPrice, int prestigePoints,
+      EnumMap<Colour, Integer> paramPrice, String cardName, int prestigePoints,
       EnumMap<Colour, Integer> price, int level,
       Optional<Colour> gemColor, boolean isPaired, int pairedCardId, int gemNumber) {
-    super(paramPrestigePoints, paramPrice);
+    super(paramPrestigePoints, paramPrice, cardName);
 
     this.prestigePoints = prestigePoints;
     this.price = price;

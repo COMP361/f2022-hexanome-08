@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,6 +40,14 @@ public class Deck {
     }
 
     return card;
+  }
+
+  public void add(Card card){
+    cards.add(card);
+  }
+
+  public void shuffle(){
+    Collections.shuffle(cards);
   }
 
   /**

@@ -19,6 +19,10 @@ public class Board {
 
   }
 
+  public void add(int row, int column, Card card){
+    cardBoard[row][column] = card;
+  }
+
   boolean hasCard(Card paramCard) {
     for (Card[] array : cardBoard) {
       for (Card card : array) {
@@ -47,7 +51,7 @@ public class Board {
   }
 
 
-  Card takeAndReplaceCard(Card paramCard, Position paramPosition) {
+  public Card takeAndReplaceCard(Card paramCard, Position paramPosition) {
     Card takenCard = cardBoard[paramPosition.getY()][paramPosition.getX()];
     cardBoard[paramPosition.getY()][paramPosition.getX()] = paramCard;
     return takenCard;

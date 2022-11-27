@@ -7,8 +7,8 @@ public class NobleCard extends Card {
 
 
     public NobleCard(int paramPrestigePoints,
-        EnumMap<Colour, Integer> paramPrice) {
-        super(paramPrestigePoints, paramPrice);
+        EnumMap<Colour, Integer> paramPrice, String paramCardName) {
+        super(paramPrestigePoints, paramPrice, paramCardName);
 
     }
 }
