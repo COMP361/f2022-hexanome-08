@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import project.connection.LobbyServiceRequestSender;
 import project.view.lobby.User;
@@ -191,5 +192,16 @@ public class App extends Application {
   public static String getBaseCardPath(String cardName, int level) {
     assert level >= 1 && level <= 3;
     return String.format("project/pictures/level%d/%s.png",level, cardName);
+  }
+
+  public static void loadPopUpWithController(String fxmlName, Object controller,
+                                             double popUpStageWidth, double popUpStageHeight)
+      throws IOException {
+    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
+    fxmlLoader.setController(controller);
+    Stage newStage = new Stage();
+    newStage.setScene(new Scene(fxmlLoader.load(), 360, 170));
+    newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+    newStage.show();
   }
 }

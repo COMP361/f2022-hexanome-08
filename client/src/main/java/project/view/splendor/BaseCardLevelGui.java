@@ -21,6 +21,8 @@ import java.io.IOException;
 import javafx.stage.Stage;
 import project.App;
 import project.PurchaseCardController;
+import project.PurchaseHandController;
+import project.ReserveCardController;
 import project.view.splendor.gameitems.DevelopmentCard;
 
 public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
@@ -74,15 +76,8 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     private EventHandler<MouseEvent> createClickOnCardHandler(DevelopmentCard curCard) {
         return event -> {
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader
-                    (App.class.getResource("splendor_card_action.fxml"));
-                fxmlLoader.setController(new PurchaseCardController(curCard));
-                Pane purchasePopup = fxmlLoader.load();
-                Stage newStage = new Stage();
-                newStage.setScene(new Scene(purchasePopup, 360, 170));
-                newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
-                newStage.show();
-
+                App.loadPopUpWithController("splendor_card_action.fxml",
+                    new PurchaseCardController(curCard), 360, 170);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -92,8 +87,8 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     private EventHandler<MouseEvent> createClickOnDeckHandler() {
         return event -> {
             try {
-                App.setRootWithSizeTitle("splendor_deck_action",
-                    360, 170, "Make your decision");
+                App.loadPopUpWithController("splendor_deck_action.fxml",
+                    new ReserveCardController(), 360, 170);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
