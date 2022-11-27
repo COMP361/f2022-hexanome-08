@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,8 +63,27 @@ public class GameInfo { // TODO add gametype
     return winner.isPresent();
   }
 
-  public String getCurrentPlayer() {
-    return currentPlayer;
+  /**
+   * @return Current player object (as a Player).
+   */
+  public Player getCurrentPlayer() {
+    Player curPlayer=null;
+    for (Player player : activePlayers) {
+      if (player.getName()==currentPlayer) {
+        curPlayer=player;
+        break;
+      }
+    }
+    if(curPlayer==null) {
+      throw new IllegalStateException("Cannot find this current player in the active player list.");
+    }
+    return curPlayer;
+  }
+
+  public void setNextPlayer(){
+    int index = playerNames.indexOf(currentPlayer);
+    //if last player in list return to first player
+    currentPlayer= playerNames.get((index+1)%4);
   }
 
   public Optional<String> getWinner() {
@@ -85,4 +105,5 @@ public class GameInfo { // TODO add gametype
   public TableTop getTableTop() {
     return tableTop;
   }
+
 }

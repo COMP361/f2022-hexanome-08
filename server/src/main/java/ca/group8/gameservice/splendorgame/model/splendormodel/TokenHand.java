@@ -36,9 +36,12 @@ public class TokenHand {
    *
    */
 
-  public void addToken(Colour colour, int quantity) {
+  public void addToken(EnumMap<Colour,Integer> paramTokens) {
     //add Tokens
-    allTokens.put(colour, (allTokens.get(colour) + quantity));
+    for(Colour colour: Colour.values()){
+      int newVal = allTokens.get(colour) + paramTokens.get(colour);
+      allTokens.replace(colour,newVal);
+    }
   }
 
   /**
