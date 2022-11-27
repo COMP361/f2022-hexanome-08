@@ -1,5 +1,6 @@
 package project.view.splendor;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.layout.HBox;
 
@@ -9,21 +10,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-public class BaseCardLevelGui extends HBox {
-    private final double baseCardWidth;
-    private final double baseCardHeight;
-    private final int level;
-    public BaseCardLevelGui(double baseCardWidth, double baseCardHeight, int level){
-        this.baseCardWidth = baseCardWidth;
-        this.baseCardHeight = baseCardHeight;
-        this.level = level;
-    }
-    public double getBaseCardWidth() {
-        return baseCardWidth;
-    }
+import java.io.IOException;
 
-    public double getBaseCardHeight() {
-        return baseCardHeight;
+public class BaseCardLevelGui extends HBox {
+
+    private final int level;
+    public BaseCardLevelGui(int level){
+        this.level = level;
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/project/base_card_template.fxml"));
+        fxmlLoader.setRoot(this);
+        try {
+            fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public double getBaseCardSpace() {
@@ -31,9 +31,7 @@ public class BaseCardLevelGui extends HBox {
     }
 
 
-    public void setup(double layoutX, double layoutY){
-        setLayoutX(layoutX);
-        setLayoutY(layoutY);
+    public void setup(){
         Group levelCard = (Group) this.getChildren().get(0);
         Rectangle rectangle = (Rectangle) levelCard.getChildren().get(0);
         if(this.level == 3){

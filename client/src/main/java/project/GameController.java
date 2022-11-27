@@ -159,10 +159,19 @@ public class GameController {
     // base card area
     baseCardDeck.setLayoutX(config.getBaseCardBoardLayoutX());
     baseCardDeck.setLayoutY(config.getBaseCardBoardLayoutY());
+    for (int i = 3; i >= 1; i--) {
+      BaseCardLevelGui baseCardLevelGui = new BaseCardLevelGui(i);
+      baseCardLevelGui.setup();
+      Platform.runLater(() -> {
+        baseCardDeck.getChildren().add(baseCardLevelGui);
+      });
+    }
 
     // orient card area (HardCoded Card Images)
     orientCardDeck.setLayoutX(config.getOrientCardBoardLayoutX());
     orientCardDeck.setLayoutY(config.getOrientCardBoardLayoutY());
+
+
   }
 
 }
