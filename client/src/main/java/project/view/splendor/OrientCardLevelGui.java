@@ -15,6 +15,8 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 import project.App;
+import project.CardActionController;
+import project.DeckActionController;
 import project.view.splendor.gameitems.DevelopmentCard;
 
 public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui {
@@ -68,11 +70,11 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
 
     }
 
-    private EventHandler<MouseEvent> createClickOnCardHandler() {
+    private EventHandler<MouseEvent> createClickOnCardHandler(DevelopmentCard curCard) {
         return event -> {
             try {
-                App.setRootWithSizeTitle("splendor_card_action",
-                    360, 170, "Make your decision");
+                App.loadPopUpWithController("card_action.fxml",
+                    new CardActionController(curCard), 360, 170);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -82,8 +84,8 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
     private EventHandler<MouseEvent> createClickOnDeckHandler() {
         return event -> {
             try {
-                App.setRootWithSizeTitle("splendor_deck_action",
-                    360, 170, "Make your decision");
+                App.loadPopUpWithController("deck_action.fxml",
+                    new DeckActionController(), 360, 170);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -92,11 +94,10 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
     private void bindActionToCardAndDeck() {
         // get all cards first
         List<ImageView> allCards = getAllCardsGui();
-
-        for (ImageView imgV : allCards) {
-            imgV.setOnMouseClicked(createClickOnCardHandler());
+        for (int i = 0; i < allCards.size(); i++){
+            DevelopmentCard curCard = cards.get(i);
+            allCards.get(i).setOnMouseClicked(createClickOnCardHandler(curCard));
         }
-
         Group deck = (Group) this.getChildren().get(2);
         deck.setOnMouseClicked(createClickOnDeckHandler());
     }

@@ -63,10 +63,9 @@ public class GameController {
       testNobleImageViews.add(imgV);
     }
     fxmlLoader.setController(new ReservedHandController(testNobleImageViews,testNobleImageViews));
-    Pane reserveHandPopup = fxmlLoader.load();
     Stage newStage = new Stage();
     newStage.setTitle("My Reserved Cards");
-    newStage.setScene(new Scene(reserveHandPopup, 789, 406));
+    newStage.setScene(new Scene(fxmlLoader.load(), 789, 406));
     newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     newStage.show();
   }
