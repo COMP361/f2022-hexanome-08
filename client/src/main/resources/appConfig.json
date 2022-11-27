@@ -1,6 +1,6 @@
  {
-   "boardLayoutX": 1200,
-   "boardLayoutY": 850,
+   "appWidth": 1200,
+   "appHeight": 850,
    "nobleLayoutX": 935,
    "nobleLayoutY": 200,
    "tokenBankLayoutX": 170,

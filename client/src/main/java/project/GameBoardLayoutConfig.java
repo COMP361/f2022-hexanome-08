@@ -1,8 +1,8 @@
 package project;
 
 public class GameBoardLayoutConfig {
-  private double boardLayoutX;
-  private double boardLayoutY;
+  private double appWidth;
+  private double appHeight;
   private double nobleLayoutX;
   private double nobleLayoutY;
   private double tokenBankLayoutX;
@@ -19,17 +19,17 @@ public class GameBoardLayoutConfig {
   private double baseCardBoardLayoutY;
   private double orientCardBoardLayoutX;
   private double orientCardBoardLayoutY;
-  public void setBoardLayoutX(double boardLayoutX) {
-    this.boardLayoutX = boardLayoutX;
+  public void setAppWidth(double appWidth) {
+    this.appWidth = appWidth;
   }
-  public double getBoardLayoutX() {
-    return boardLayoutX;
+  public double getAppWidth() {
+    return appWidth;
   }
-  public void setBoardLayoutY(double boardLayoutY) {
-    this.boardLayoutY = boardLayoutY;
+  public void setAppHeight(double appHeight) {
+    this.appHeight = appHeight;
   }
-  public double getBoardLayoutY() {
-    return boardLayoutY;
+  public double getAppHeight() {
+    return appHeight;
   }
   public void setNobleLayoutX(double nobleLayoutX) {
     this.nobleLayoutX = nobleLayoutX;

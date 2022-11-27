@@ -10,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import project.view.splendor.gameitems.DevelopmentCard;
 
-public class PurchaseCardController implements Initializable {
+public class CardActionController implements Initializable {
   private final DevelopmentCard cardPurchased;
 
   @FXML
@@ -22,7 +22,7 @@ public class PurchaseCardController implements Initializable {
   @FXML
   private Button goBackButton;
 
-  public PurchaseCardController(DevelopmentCard cardPurchased) {
+  public CardActionController(DevelopmentCard cardPurchased) {
     this.cardPurchased = cardPurchased;
   }
 
