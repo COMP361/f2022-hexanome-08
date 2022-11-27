@@ -215,7 +215,7 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
    * Bind all functionality to the GUI objects we care.
    *
    */
-  private void bindButtonAndLabel() {
+  private void bindActionToButtonAndLabel() {
     ObservableList<Node> allChildren = this.getChildren();
     Colour[] colours = App.getBaseColours();
     // iterate through all five regular tokens
@@ -258,6 +258,6 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
       }
     }
     setColourTokenBankMap(bankMap);
-    bindButtonAndLabel();
+    bindActionToButtonAndLabel();
   }
 }
