@@ -171,7 +171,7 @@ public class LobbyController {
     return event -> {
       try {
         // TODO: Adjust this fxml file later when game server is done
-        App.setRoot("splendor_game_board");
+        App.setRoot("splendor_base_game_board");
         // anything involving reloading this page, we need to clear the thread pool
         stopAndClearThreads();
       } catch (IOException e) {
@@ -185,7 +185,7 @@ public class LobbyController {
     return event -> {
       // just load the board to this user, nothing else should be done
       try {
-        App.setRoot("splendor_game_board");
+        App.setRoot("splendor_base_game_board");
         stopAndClearThreads();
       } catch (IOException e) {
         throw new RuntimeException(e);
@@ -196,7 +196,6 @@ public class LobbyController {
   @FXML
   public void joinGameDev() throws IOException {
     // TODO: For debug usage
-    Scene curScene = sessionVbox.getScene();
     App.setRoot("splendor_base_game_board");
   }
 

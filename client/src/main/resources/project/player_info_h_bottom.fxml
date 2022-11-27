@@ -76,7 +76,7 @@
       <children>
          <Region prefHeight="200.0" prefWidth="200.0" />
          <Group>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="90.0" stroke="BLACK" strokeType="INSIDE" width="90.0" />
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="90.0" stroke="BLACK" strokeType="INSIDE" width="90.0" />
             <Text layoutX="20.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                <font>
                   <Font size="24.0" />

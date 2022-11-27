@@ -52,15 +52,6 @@ public class GameController {
     App.setRootWithSizeTitle("my_development_cards", 800, 600, "My Development Cards");
   }
 
-  @FXML
-  protected void openMyCards() {
-    Stage newStage = new Stage();
-    newStage.setTitle("My Development Cards");
-    newStage.setScene(App.getHandCard());
-    newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
-    newStage.show();
-  }
-
 
   private List<String> sortPlayerNames(String curPlayerName, List<String> allPlayerNames) {
     while(!allPlayerNames.get(0).equals(curPlayerName)) {

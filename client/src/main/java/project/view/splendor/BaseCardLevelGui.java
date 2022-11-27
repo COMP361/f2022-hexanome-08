@@ -2,6 +2,7 @@ package project.view.splendor;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 
@@ -12,7 +13,7 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 
-public class BaseCardLevelGui extends HBox {
+public class BaseCardLevelGui extends HBox implements CardBoardGui{
 
     private final int level;
     public BaseCardLevelGui(int level){
@@ -30,8 +31,21 @@ public class BaseCardLevelGui extends HBox {
         return level;
     }
 
+    @Override
+    public ImageView getCardGui(int cardIndex) {
+        assert cardIndex >= 0 && cardIndex < 4;
+        return (ImageView) this.getChildren().get(cardIndex+1);
+    }
 
-    public void setup(){
+    private void setUpCards() {
+
+    }
+    private void bindActionToCardAndDeck() {
+        // always allow player to click on card even they can not purchase it / reserve it
+
+    }
+
+    private void setDeckLevelText() {
         Group levelCard = (Group) this.getChildren().get(0);
         Rectangle rectangle = (Rectangle) levelCard.getChildren().get(0);
         if(this.level == 3){
@@ -53,5 +67,11 @@ public class BaseCardLevelGui extends HBox {
             deck.setText("40");
             levelOfCard.setText(".");
         }
+    }
+
+    @Override
+    public void setup(){
+        setDeckLevelText();
+
     }
 }
