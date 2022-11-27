@@ -26,7 +26,7 @@ public class BaseCardLevelGui extends HBox {
         }
     }
 
-    public double getBaseCardSpace() {
+    public double getLevel() {
         return level;
     }
 
