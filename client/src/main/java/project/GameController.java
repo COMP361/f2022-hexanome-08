@@ -27,6 +27,12 @@ public class GameController {
 
   @FXML
   private AnchorPane playerBoardAnchorPane;
+
+  @FXML
+  private VBox baseCardDeck;
+
+  @FXML
+  private VBox orientCardDeck;
   /**
    * Opening the development cards pop up once "My Cards" button is pressed.
    */
@@ -34,6 +40,11 @@ public class GameController {
   @FXML
   protected void onExitGameClick() throws IOException {
     App.setRoot("admin_lobby_page");
+  }
+
+  @FXML
+  protected void onOpenMyReserveCardClick() throws IOException {
+    App.setRootWithSizeTitle("my_reserved_cards", 789, 406, "My Reserved Cards");
   }
 
   @FXML
@@ -135,13 +146,23 @@ public class GameController {
     });
 
 
-    // check how to highlight which player?
-    String currentTurnPlayerName = "D";
+    // check how to highlight which player
+    String currentTurnPlayerName = "A";
     for (String name : playerNameGuiMap.keySet()) {
       if(name.equals(currentTurnPlayerName)) {
         playerNameGuiMap.get(name).setHighlight(true);
       }
     }
+
+    // initialize cardboard area
+
+    // base card area
+    baseCardDeck.setLayoutX(config.getBaseCardBoardLayoutX());
+    baseCardDeck.setLayoutY(config.getBaseCardBoardLayoutY());
+
+    // orient card area (HardCoded Card Images)
+    orientCardDeck.setLayoutX(config.getOrientCardBoardLayoutX());
+    orientCardDeck.setLayoutY(config.getOrientCardBoardLayoutY());
   }
 
 }

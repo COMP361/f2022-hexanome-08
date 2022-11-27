@@ -1,58 +1,58 @@
 package project;
 
 public class GameBoardLayoutConfig {
-  private int boardLayoutX;
-  private int boardLayoutY;
-  private int nobleLayoutX;
-  private int nobleLayoutY;
-  private int tokenBankLayoutX;
-  private int tokenBankLayoutY;
+  private double boardLayoutX;
+  private double boardLayoutY;
+  private double nobleLayoutX;
+  private double nobleLayoutY;
+  private double tokenBankLayoutX;
+  private double tokenBankLayoutY;
   private double topPlayerLayoutX;
-  private int topPlayerLayoutY;
-  private int btmPlayerLayoutX;
-  private int btmPlayerLayoutY;
-  private int rightPlayerLayoutX;
-  private int rightPlayerLayoutY;
-  private int leftPlayerLayoutX;
-  private int leftPlayerLayoutY;
-  private int baseCardBoardLayoutX;
-  private int baseCardBoardLayoutY;
-  private int orientCardBoardLayoutX;
-  private int orientCardBoardLayoutY;
-  public void setBoardLayoutX(int boardLayoutX) {
+  private double topPlayerLayoutY;
+  private double btmPlayerLayoutX;
+  private double btmPlayerLayoutY;
+  private double rightPlayerLayoutX;
+  private double rightPlayerLayoutY;
+  private double leftPlayerLayoutX;
+  private double leftPlayerLayoutY;
+  private double baseCardBoardLayoutX;
+  private double baseCardBoardLayoutY;
+  private double orientCardBoardLayoutX;
+  private double orientCardBoardLayoutY;
+  public void setBoardLayoutX(double boardLayoutX) {
     this.boardLayoutX = boardLayoutX;
   }
-  public int getBoardLayoutX() {
+  public double getBoardLayoutX() {
     return boardLayoutX;
   }
-  public void setBoardLayoutY(int boardLayoutY) {
+  public void setBoardLayoutY(double boardLayoutY) {
     this.boardLayoutY = boardLayoutY;
   }
-  public int getBoardLayoutY() {
+  public double getBoardLayoutY() {
     return boardLayoutY;
   }
-  public void setNobleLayoutX(int nobleLayoutX) {
+  public void setNobleLayoutX(double nobleLayoutX) {
     this.nobleLayoutX = nobleLayoutX;
   }
-  public int getNobleLayoutX() {
+  public double getNobleLayoutX() {
     return nobleLayoutX;
   }
-  public void setNobleLayoutY(int nobleLayoutY) {
+  public void setNobleLayoutY(double nobleLayoutY) {
     this.nobleLayoutY = nobleLayoutY;
   }
-  public int getNobleLayoutY() {
+  public double getNobleLayoutY() {
     return nobleLayoutY;
   }
-  public void setTokenBankLayoutX(int tokenBankLayoutX) {
+  public void setTokenBankLayoutX(double tokenBankLayoutX) {
     this.tokenBankLayoutX = tokenBankLayoutX;
   }
-  public int getTokenBankLayoutX() {
+  public double getTokenBankLayoutX() {
     return tokenBankLayoutX;
   }
-  public void setTokenBankLayoutY(int tokenBankLayoutY) {
+  public void setTokenBankLayoutY(double tokenBankLayoutY) {
     this.tokenBankLayoutY = tokenBankLayoutY;
   }
-  public int getTokenBankLayoutY() {
+  public double getTokenBankLayoutY() {
     return tokenBankLayoutY;
   }
   public void setTopPlayerLayoutX(double topPlayerLayoutX) {
@@ -61,70 +61,70 @@ public class GameBoardLayoutConfig {
   public double getTopPlayerLayoutX() {
     return topPlayerLayoutX;
   }
-  public void setTopPlayerLayoutY(int topPlayerLayoutY) {
+  public void setTopPlayerLayoutY(double topPlayerLayoutY) {
     this.topPlayerLayoutY = topPlayerLayoutY;
   }
-  public int getTopPlayerLayoutY() {
+  public double getTopPlayerLayoutY() {
     return topPlayerLayoutY;
   }
-  public void setBtmPlayerLayoutX(int btmPlayerLayoutX) {
+  public void setBtmPlayerLayoutX(double btmPlayerLayoutX) {
     this.btmPlayerLayoutX = btmPlayerLayoutX;
   }
-  public int getBtmPlayerLayoutX() {
+  public double getBtmPlayerLayoutX() {
     return btmPlayerLayoutX;
   }
-  public void setBtmPlayerLayoutY(int btmPlayerLayoutY) {
+  public void setBtmPlayerLayoutY(double btmPlayerLayoutY) {
     this.btmPlayerLayoutY = btmPlayerLayoutY;
   }
-  public int getBtmPlayerLayoutY() {
+  public double getBtmPlayerLayoutY() {
     return btmPlayerLayoutY;
   }
-  public void setRightPlayerLayoutX(int rightPlayerLayoutX) {
+  public void setRightPlayerLayoutX(double rightPlayerLayoutX) {
     this.rightPlayerLayoutX = rightPlayerLayoutX;
   }
-  public int getRightPlayerLayoutX() {
+  public double getRightPlayerLayoutX() {
     return rightPlayerLayoutX;
   }
-  public void setRightPlayerLayoutY(int rightPlayerLayoutY) {
+  public void setRightPlayerLayoutY(double rightPlayerLayoutY) {
     this.rightPlayerLayoutY = rightPlayerLayoutY;
   }
-  public int getRightPlayerLayoutY() {
+  public double getRightPlayerLayoutY() {
     return rightPlayerLayoutY;
   }
-  public void setLeftPlayerLayoutX(int leftPlayerLayoutX) {
+  public void setLeftPlayerLayoutX(double leftPlayerLayoutX) {
     this.leftPlayerLayoutX = leftPlayerLayoutX;
   }
-  public int getLeftPlayerLayoutX() {
+  public double getLeftPlayerLayoutX() {
     return leftPlayerLayoutX;
   }
-  public void setLeftPlayerLayoutY(int leftPlayerLayoutY) {
+  public void setLeftPlayerLayoutY(double leftPlayerLayoutY) {
     this.leftPlayerLayoutY = leftPlayerLayoutY;
   }
-  public int getLeftPlayerLayoutY() {
+  public double getLeftPlayerLayoutY() {
     return leftPlayerLayoutY;
   }
-  public void setBaseCardBoardLayoutX(int baseCardBoardLayoutX) {
+  public void setBaseCardBoardLayoutX(double baseCardBoardLayoutX) {
     this.baseCardBoardLayoutX = baseCardBoardLayoutX;
   }
-  public int getBaseCardBoardLayoutX() {
+  public double getBaseCardBoardLayoutX() {
     return baseCardBoardLayoutX;
   }
-  public void setBaseCardBoardLayoutY(int baseCardBoardLayoutY) {
+  public void setBaseCardBoardLayoutY(double baseCardBoardLayoutY) {
     this.baseCardBoardLayoutY = baseCardBoardLayoutY;
   }
-  public int getBaseCardBoardLayoutY() {
+  public double getBaseCardBoardLayoutY() {
     return baseCardBoardLayoutY;
   }
-  public void setOrientCardBoardLayoutX(int orientCardBoardLayoutX) {
+  public void setOrientCardBoardLayoutX(double orientCardBoardLayoutX) {
     this.orientCardBoardLayoutX = orientCardBoardLayoutX;
   }
-  public int getOrientCardBoardLayoutX() {
+  public double getOrientCardBoardLayoutX() {
     return orientCardBoardLayoutX;
   }
-  public void setOrientCardBoardLayoutY(int orientCardBoardLayoutY) {
+  public void setOrientCardBoardLayoutY(double orientCardBoardLayoutY) {
     this.orientCardBoardLayoutY = orientCardBoardLayoutY;
   }
-  public int getOrientCardBoardLayoutY() {
+  public double getOrientCardBoardLayoutY() {
     return orientCardBoardLayoutY;
   }
 }
