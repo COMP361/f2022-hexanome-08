@@ -1,11 +1,16 @@
 package project;
 
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import project.view.splendor.gameitems.Card;
 
-public class ReservedHandController {
+public class ReservedHandController implements Initializable {
 
   @FXML
   private HBox reservedDevCardsHbox;
@@ -13,24 +18,28 @@ public class ReservedHandController {
   @FXML
   private HBox reservedNoblesHbox;
 
+  private final List<ImageView> playerCards;
+  private final List<ImageView> playerNobles;
 
-  public void initialize() {
-    // TODO: send the GET request under player/inventory here, not with the button
-    //  not long polling!!!
+  public ReservedHandController (List<ImageView> playerCards, List<ImageView> playerNobles) {
+    this.playerCards = playerCards;
+    this.playerNobles = playerNobles;
+  }
+
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
     System.out.println("Loading reserved cards");
-    Image img = new Image(String.format("project/pictures/level2/b1.png"));
 
     // TESTING USE ONLY!!!!
     for (int i = 0; i < 3; i++) {
       ImageView imgV = (ImageView) reservedDevCardsHbox.getChildren().get(i);
-      imgV.setImage(img);
+      imgV.setImage(playerCards.get(0).getImage());
     }
 
     Image img2 = new Image(String.format("project/pictures/noble/noble1.png"));
     for (int i = 0; i < 5; i++) {
       ImageView imgV = (ImageView) reservedNoblesHbox.getChildren().get(i);
-      imgV.setImage(img2);
+      imgV.setImage(playerNobles.get(0).getImage());
     }
-
   }
 }

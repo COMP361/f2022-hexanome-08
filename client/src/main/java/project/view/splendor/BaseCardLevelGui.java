@@ -5,25 +5,31 @@ import java.util.List;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
 
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import javafx.stage.Stage;
 import project.App;
+import project.PurchaseCardController;
 import project.view.splendor.gameitems.DevelopmentCard;
 
 public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
     private final int level;
-    public BaseCardLevelGui(int level){
+    private final List<DevelopmentCard> cards;
+    public BaseCardLevelGui(int level, List<DevelopmentCard> cards){
         this.level = level;
+        this.cards = cards;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/project/base_card_template.fxml"));
         fxmlLoader.setRoot(this);
         try {
@@ -65,11 +71,18 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
     }
 
-    private EventHandler<MouseEvent> createClickOnCardHandler() {
+    private EventHandler<MouseEvent> createClickOnCardHandler(DevelopmentCard curCard) {
         return event -> {
             try {
-                App.setRootWithSizeTitle("splendor_card_action",
-                    360, 170, "Make your decision");
+                FXMLLoader fxmlLoader = new FXMLLoader
+                    (App.class.getResource("splendor_card_action.fxml"));
+                fxmlLoader.setController(new PurchaseCardController(curCard));
+                Pane purchasePopup = fxmlLoader.load();
+                Stage newStage = new Stage();
+                newStage.setScene(new Scene(purchasePopup, 360, 170));
+                newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+                newStage.show();
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -90,8 +103,9 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
         // get all cards first
         List<ImageView> allCards = getAllCardsGui();
 
-        for (ImageView imgV : allCards) {
-            imgV.setOnMouseClicked(createClickOnCardHandler());
+        for (int i = 0; i < allCards.size(); i++){
+            DevelopmentCard curCard = cards.get(i);
+            allCards.get(i).setOnMouseClicked(createClickOnCardHandler(curCard));
         }
 
         Group deck = (Group) this.getChildren().get(0);
@@ -123,7 +137,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     }
 
     @Override
-    public void setup(List<DevelopmentCard> cards){
+    public void setup(){
         setDeckLevelText();
         setUpCards(cards);
         bindActionToCardAndDeck();

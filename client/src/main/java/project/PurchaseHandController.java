@@ -1,11 +1,14 @@
 package project;
 
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -15,25 +18,45 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import project.view.splendor.Colour;
+import project.view.splendor.gameitems.BaseCard;
+import project.view.splendor.gameitems.DevelopmentCard;
 
-public class PurchaseHandController {
+public class PurchaseHandController implements Initializable {
 
   @FXML
   private HBox cardStackHbox;
 
-  private final Map<Colour, Group> colourGroupMap = new HashMap<>();
+  private final Map<Colour, Group> colourGroupMap;
+  private final Map<Colour, List<DevelopmentCard>> colourCardsMap;
 
-  private List<HBox> generateCardSatchelPair(List<ImageView> allImageViews){
+  public PurchaseHandController(Map<Colour, List<DevelopmentCard>> colourCardsMap) {
+    this.colourGroupMap = new HashMap<>();
+    this.colourCardsMap = colourCardsMap;
+  }
+
+  private List<HBox> generateCardSatchelPair(List<DevelopmentCard> oneColourCards){
     List<HBox> result = new ArrayList<>();
-    for (ImageView imgV : allImageViews) {
+    for (DevelopmentCard card : oneColourCards) {
       Rectangle satchelMark = new Rectangle();
       // TODO: Colour will be assigned differently if the card is linked
-      //satchelMark.setFill(Color.WHITESMOKE);
-      satchelMark.setFill(Color.BLUE);
-      satchelMark.setWidth(20);
-      satchelMark.setHeight(150);
+      if (card.isPaired()) {
+        satchelMark.setFill(Color.BLUE);
+      } else {
+        satchelMark.setFill(Color.WHITESMOKE);
+      }
+      Image img;
+      // TODO: check the card type in some way in the future...
+      img = new Image(App.getBaseCardPath(card.getCardName(), card.getLevel()));
+      //if (card instanceof DevelopmentCard) {
+      //  img = new Image(App.getBaseCardPath(card.getCardName(), card.getLevel()));
+      //} else {
+      //  img = new Image(App.getOrientCardPath(card.getCardName(), card.getLevel()));
+      //}
+      ImageView imgV = new ImageView(img);
       imgV.setFitWidth(100);
       imgV.setFitHeight(150);
+      satchelMark.setWidth(20);
+      satchelMark.setHeight(150);
       HBox container = new HBox(imgV, satchelMark);
       result.add(container);
     }
@@ -55,11 +78,10 @@ public class PurchaseHandController {
     }
   }
 
-  public void initialize() {
+
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
     Colour[] baseColours = App.getBaseColours();
-
-
-
     // assigning colour to each group
     for (int i = 0; i < 5; i++) {
       Colour curColour = baseColours[i];
@@ -68,27 +90,36 @@ public class PurchaseHandController {
     }
     // TODO: Send request and get the list of cards the player has and make it
     // (currently, HARDCODED!)
-    for (Group colourGroup : colourGroupMap.values()) {
-      // TODO: Replace these images later from server response
-      List<ImageView> allImageViews = new ArrayList<>();
-      for (int i = 0; i < 3; i++) {
-        Image img = new Image(String.format("project/pictures/level2/b1.png"));
-        ImageView imgV = new ImageView(img);
-        allImageViews.add(imgV);
+
+    for (Colour c: colourGroupMap.keySet()) {
+      if (colourCardsMap.containsKey(c)) {
+        List<DevelopmentCard> cardsOfOneColour = colourCardsMap.get(c);
+        List<HBox> allPairs = generateCardSatchelPair(cardsOfOneColour);
+        addCardSatchelPairToColourGroup(allPairs, colourGroupMap.get(c));
       }
-      List<HBox> allPairs = generateCardSatchelPair(allImageViews);
-      addCardSatchelPairToColourGroup(allPairs, colourGroup);
     }
 
-    VBox orientGoldTokenCardVbox = (VBox) cardStackHbox.getChildren().get(5);
-    // initializing the GUI of the gold token dev card in ORIENT
-    for (int i = 0; i < 3; i++) {
-      Image img = new Image("project/pictures/orient/1/o1b1.png");
-      ImageView imgV = new ImageView(img);
-      imgV.setFitHeight(150);
-      imgV.setFitWidth(100);
-      orientGoldTokenCardVbox.getChildren().add(imgV);
-    }
+    //for (Group colourGroup : colourGroupMap.values()) {
+    //  // TODO: Replace these images later from server response
+    //  List<ImageView> allImageViews = new ArrayList<>();
+    //  for (int i = 0; i < 3; i++) {
+    //    Image img = new Image(App.getBaseCardPath("b1", 2));
+    //    ImageView imgV = new ImageView(img);
+    //    allImageViews.add(imgV);
+    //  }
+    //  List<HBox> allPairs = generateCardSatchelPair(allImageViews);
+    //  addCardSatchelPairToColourGroup(allPairs, colourGroup);
+    //}
+    //
+    //VBox orientGoldTokenCardVbox = (VBox) cardStackHbox.getChildren().get(5);
+    //// initializing the GUI of the gold token dev card in ORIENT
+    //for (int i = 0; i < 3; i++) {
+    //  Image img = new Image(App.getOrientCardPath("o1b1", 1));
+    //  ImageView imgV = new ImageView(img);
+    //  imgV.setFitHeight(150);
+    //  imgV.setFitWidth(100);
+    //  orientGoldTokenCardVbox.getChildren().add(imgV);
+    //}
 
   }
 }

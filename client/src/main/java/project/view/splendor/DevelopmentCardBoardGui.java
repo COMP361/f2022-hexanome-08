@@ -5,7 +5,7 @@ import javafx.scene.image.ImageView;
 import project.view.splendor.gameitems.DevelopmentCard;
 
 public interface DevelopmentCardBoardGui {
-  void setup(List<DevelopmentCard> cards);
+  void setup();
   List<ImageView> getAllCardsGui();
   ImageView getOneCardGui(int cardIndex);
 }
