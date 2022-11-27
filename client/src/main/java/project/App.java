@@ -11,7 +11,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import project.connection.LobbyServiceRequestSender;
 import project.view.lobby.User;
@@ -65,8 +64,8 @@ public class App extends Application {
     }
 
     scene = new Scene(loadFxml("start_page"),
-        guiLayouts.getBoardLayoutX(),
-        guiLayouts.getBoardLayoutX());
+        guiLayouts.getAppWidth(),
+        guiLayouts.getAppHeight());
     // Every time we loadFxml("a_file"), the file corresponding
     // controller's initialize method will get called
     //lobby = new Scene(loadFxml("admin_lobby_page"), 1000, 800);
