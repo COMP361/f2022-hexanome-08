@@ -1,23 +1,21 @@
 package project;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import project.view.splendor.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import project.view.splendor.gameitems.BaseCard;
+import project.view.splendor.gameitems.DevelopmentCard;
 
 /**
  * Game controller for game GUI.
@@ -36,6 +34,13 @@ public class GameController {
   /**
    * Opening the development cards pop up once "My Cards" button is pressed.
    */
+
+  private final Map<Integer, Map<CardType, DevelopmentCardBoardGui>>
+      levelCardsMap = new HashMap<>();
+
+  private final Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap = new HashMap<>();
+
+  private List<String> sortedPlayerNames;
 
   @FXML
   protected void onExitGameClick() throws IOException {
@@ -69,18 +74,16 @@ public class GameController {
     return resultMap;
   }
 
-
   public void initialize() {
 
     GameBoardLayoutConfig config = App.getGuiLayouts();
     // TODO: change based on number of players, get the info from server later
-    String firstPlayer = "A"; // needs to highlight the boarder of this player
-    String curPlayer = "D";
-    String[] allPlayerNames = new String[] {"C","A","D","B"};
+    String firstPlayer = "D"; // needs to highlight the boarder of this player
+    String curPlayer = "A";
+    String[] allPlayerNames = new String[] {"C","A", "D", "B"};
     List<String> playerNames = new ArrayList<>(Arrays.asList(allPlayerNames));
+    sortedPlayerNames = sortPlayerNames(curPlayer, playerNames);
     int curPlayerNum = playerNames.size();
-    Map<PlayerPosition, String> sortedPositionPlayerNameMap =
-        setPlayerToPosition(curPlayer, playerNames);
 
     // initialize noble area
     NobleBoardGui nobleBoard = new NobleBoardGui(100,100,5);
@@ -97,12 +100,11 @@ public class GameController {
     });
 
     // initialize player area
-    Map<String, PlayerInfoGui> playerNameGuiMap = new HashMap<>();
     List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
     List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
     if (curPlayerNum >= 2) {
-      String btmPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.BOTTOM);
-      String leftPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.LEFT);
+      String btmPlayerName = sortedPlayerNames.get(0);
+      String leftPlayerName = sortedPlayerNames.get(1);
       HorizontalPlayerInfoGui btmPlayerGui =
           new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM, btmPlayerName, 3);
       VerticalPlayerInfoGui leftPlayerGui =
@@ -111,22 +113,22 @@ public class GameController {
       leftPlayerGui.setup(config.getLeftPlayerLayoutX(),config.getLeftPlayerLayoutY());
       horizontalPlayers.add(btmPlayerGui);
       verticalPlayers.add(leftPlayerGui);
-      playerNameGuiMap.put(btmPlayerName, btmPlayerGui);
-      playerNameGuiMap.put(leftPlayerName, leftPlayerGui);
+      nameToPlayerInfoGuiMap.put(btmPlayerName, btmPlayerGui);
+      nameToPlayerInfoGuiMap.put(leftPlayerName, leftPlayerGui);
       if (curPlayerNum >= 3) {
-        String topPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.TOP);
+        String topPlayerName = sortedPlayerNames.get(2);
         HorizontalPlayerInfoGui topPlayerGui =
             new HorizontalPlayerInfoGui(PlayerPosition.TOP, topPlayerName, 3);
         topPlayerGui.setup(config.getTopPlayerLayoutX(),config.getTopPlayerLayoutY());
         horizontalPlayers.add(topPlayerGui);
-        playerNameGuiMap.put(topPlayerName, topPlayerGui);
+        nameToPlayerInfoGuiMap.put(topPlayerName, topPlayerGui);
         if (curPlayerNum == 4) {
-          String rightPlayerName = sortedPositionPlayerNameMap.get(PlayerPosition.RIGHT);
+          String rightPlayerName = sortedPlayerNames.get(3);
           VerticalPlayerInfoGui rightPlayerGui =
               new VerticalPlayerInfoGui(PlayerPosition.RIGHT, rightPlayerName, 3);
           rightPlayerGui.setup(config.getRightPlayerLayoutX(),config.getRightPlayerLayoutY());
           verticalPlayers.add(rightPlayerGui);
-          playerNameGuiMap.put(rightPlayerName, rightPlayerGui);
+          nameToPlayerInfoGuiMap.put(rightPlayerName, rightPlayerGui);
         }
       }
     }
@@ -143,37 +145,68 @@ public class GameController {
 
 
     // check how to highlight which player
-    String currentTurnPlayerName = "A";
-    for (String name : playerNameGuiMap.keySet()) {
+    // TODO: Before switching off to next player, remember to setHighlight(false) to last player
+    String currentTurnPlayerName = "D";
+    for (String name : nameToPlayerInfoGuiMap.keySet()) {
       if(name.equals(currentTurnPlayerName)) {
-        playerNameGuiMap.get(name).setHighlight(true);
+        nameToPlayerInfoGuiMap.get(name).setHighlight(true);
       }
     }
 
     // initialize cardboard area
 
-    // base card area
-    baseCardDeck.setLayoutX(config.getBaseCardBoardLayoutX());
-    baseCardDeck.setLayoutY(config.getBaseCardBoardLayoutY());
+    // ----------------------------------------------------------------------------------------
+    // DUMMY CARDS TESTING
+    EnumMap<Colour, Integer> cardPrice = new EnumMap<>(Colour.class);
+    cardPrice.put(Colour.RED, 0);
+    cardPrice.put(Colour.BLACK, 0);
+    cardPrice.put(Colour.BLUE, 4);
+    cardPrice.put(Colour.WHITE, 0);
+    cardPrice.put(Colour.GREEN, 0);
+
+    EnumMap<Colour, Integer> cardPrice2 = new EnumMap<>(Colour.class);
+    cardPrice2.put(Colour.RED, 0);
+    cardPrice2.put(Colour.BLACK, 0);
+    cardPrice2.put(Colour.BLUE, 0);
+    cardPrice2.put(Colour.WHITE, 0);
+    cardPrice2.put(Colour.GREEN, 3);
+    DevelopmentCard c1 = new DevelopmentCard(1,
+        cardPrice, "b1", 1,
+        Optional.of(Colour.BLACK),false, -1, 1);
+
+
+    DevelopmentCard c2 = new DevelopmentCard(1,
+        cardPrice2, "o1g1", 1,
+        Optional.empty(),false, -1, 0);
+
+    List<DevelopmentCard> cards = new ArrayList<>();
+    List<DevelopmentCard> cards2 = new ArrayList<>();
+    for (int i = 0; i < 2; i++) {
+      cards2.add(c2);
+    }
+    for (int i = 0; i < 4; i++) {
+      cards.add(c1);
+    }
+    // ----------------------------------------------------------------------------------------
+
+    // base card and orient card area
     for (int i = 3; i >= 1; i--) {
+      Map<CardType, DevelopmentCardBoardGui> oneLevelCardsMap = new HashMap<>();
       BaseCardLevelGui baseCardLevelGui = new BaseCardLevelGui(i);
-      baseCardLevelGui.setup();
+      OrientCardLevelGui orientCardLevelGui = new OrientCardLevelGui(i);
+
+      baseCardLevelGui.setup(cards);
+      orientCardLevelGui.setup(cards2);
+      oneLevelCardsMap.put(CardType.BASE, baseCardLevelGui);
+      oneLevelCardsMap.put(CardType.ORIENT, orientCardLevelGui);
+
       Platform.runLater(() -> {
         baseCardDeck.getChildren().add(baseCardLevelGui);
-      });
-    }
-
-    // orient card area (HardCoded Card Images)
-    orientCardDeck.setLayoutX(config.getOrientCardBoardLayoutX());
-    orientCardDeck.setLayoutY(config.getOrientCardBoardLayoutY());
-
-    for (int i = 3; i >= 1; i--) {
-      OrientCardLevelGui orientCardLevelGui = new OrientCardLevelGui(i);
-      orientCardLevelGui.setup();
-      Platform.runLater(() -> {
         orientCardDeck.getChildren().add(orientCardLevelGui);
       });
+      levelCardsMap.put(i, oneLevelCardsMap);
     }
+
 
   }
 
