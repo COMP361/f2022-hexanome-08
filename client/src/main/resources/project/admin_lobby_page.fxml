@@ -78,7 +78,7 @@
       <HBox maxWidth="1200.0" prefHeight="100.0" prefWidth="1200.0">
          <Region maxWidth="180.0" prefHeight="373.0" prefWidth="180.0" HBox.hgrow="ALWAYS" />
          <ScrollPane fx:id="allSessionScrollPane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="860.0" vbarPolicy="ALWAYS">
-            <VBox fx:id="sessionVbox" prefHeight="420.0" prefWidth="808.0" />
+            <VBox fx:id="sessionVbox" prefHeight="420.0" prefWidth="840.0" />
          </ScrollPane>
       </HBox>
    </VBox>

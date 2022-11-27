@@ -72,7 +72,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     private EventHandler<MouseEvent> createClickOnCardHandler(DevelopmentCard curCard) {
         return event -> {
             try {
-                App.loadPopUpWithController("splendor_card_action.fxml",
+                App.loadPopUpWithController("card_action.fxml",
                     new CardActionController(curCard), 360, 170);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -83,7 +83,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     private EventHandler<MouseEvent> createClickOnDeckHandler() {
         return event -> {
             try {
-                App.loadPopUpWithController("splendor_deck_action.fxml",
+                App.loadPopUpWithController("deck_action.fxml",
                     new DeckActionController(), 360, 170);
             } catch (IOException e) {
                 throw new RuntimeException(e);
