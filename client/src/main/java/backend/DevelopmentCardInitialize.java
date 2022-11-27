@@ -2,15 +2,15 @@ package backend;
 
 import java.util.ArrayList;
 
-public class developmentCardInitialize {
-    ArrayList<developmentCard> developmentCardlevel1 = new ArrayList<>(40);
-    ArrayList<developmentCard> developmentCardlevel2 = new ArrayList<>(30);
-    ArrayList<developmentCard> developmentCardlevel3 = new ArrayList<>(20);
+public class DevelopmentCardInitialize {
+    ArrayList<DevelopmentCard> developmentCardlevel1 = new ArrayList<>(40);
+    ArrayList<DevelopmentCard> developmentCardlevel2 = new ArrayList<>(30);
+    ArrayList<DevelopmentCard> developmentCardlevel3 = new ArrayList<>(20);
 
 
 
     public void developmentCardInitializelevel1() {
-        developmentCard b1 = new developmentCard();
+        DevelopmentCard b1 = new DevelopmentCard();
         b1.setCardID("b1_3");
         b1.setGemColour(GemColour.BLACK);
         b1.setGemNumber(1);

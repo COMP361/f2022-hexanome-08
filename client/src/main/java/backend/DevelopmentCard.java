@@ -3,7 +3,7 @@ package backend;
 import java.util.ArrayList;
 import java.util.List;
 
-public class developmentCard implements Card{
+public class DevelopmentCard implements Card{
     String cardID = "";
     Integer prestigePoint = 0;
     List<Integer>  price = new ArrayList<>();
