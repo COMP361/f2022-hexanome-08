@@ -3,20 +3,32 @@ import ca.group8.gameservice.splendorgame.controller.GameRestController;
 import ca.group8.gameservice.splendorgame.controller.SplendorRegistrator;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
+import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.SplendorGameManager;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import com.google.gson.Gson;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.tomcat.util.json.ParseException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -63,6 +75,43 @@ public class SplendorRestController implements GameRestController {
   @GetMapping("/api/games")
   public String getAllGames() {
     return splendorGameManager.getActiveGames().keySet().toString();
+  }
+
+  private void parseCardObject(JSONObject card) {
+    String cardName = (String) card.get("cardName");
+    logger.info("Card name is: " + cardName);
+  }
+
+  @GetMapping("/cards")
+  public void generateCards() {
+    JSONParser jsonParser = new JSONParser();
+    try (FileReader reader = new FileReader(ResourceUtils.getFile("classpath:cardinfo_basecard.json"))){
+      Object obj = jsonParser.parse(reader);
+
+      JSONArray cardList = (JSONArray) obj;
+      cardList.forEach(card -> parseCardObject ((JSONObject) card));
+
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } catch (org.json.simple.parser.ParseException e) {
+      throw new RuntimeException(e);
+    }
+
+    //try {
+    //  File file = ResourceUtils.getFile("classpath:cardinfo_basecard.json");
+    //
+    //  logger.info("file info: " + file.getAbsolutePath());
+    //  Gson gson = new Gson();
+    //  JsonReader reader = new JsonReader(new FileReader(file));
+    //  DevelopmentCard[] availableCards = gson.fromJson(reader,DevelopmentCard[].class);
+    //  logger.info("One card: " + availableCards[0].getCardName());
+    //  return availableCards[0].getCardName();
+    //} catch (IOException e) {
+    ////  logger.error(e.getMessage());
+    //  return "error!";
+    //}
   }
 
   @Override

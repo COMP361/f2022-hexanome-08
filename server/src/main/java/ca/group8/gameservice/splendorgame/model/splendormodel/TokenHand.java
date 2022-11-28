@@ -29,13 +29,13 @@ public class TokenHand {
   }
 
 
-  /**
-   * Adds a certain amount (quantity) of a certain GemColour colour from the TokenHand.
-   *
-   * @param colour = Gem Colour.
-   * @param quantity = quantity to add.
-   *
-   */
+  ///**
+  // * Adds a certain amount (quantity) of a certain GemColour colour from the TokenHand.
+  // *
+  // * @param colour = Gem Colour.
+  // * @param quantity = quantity to add.
+  // *
+  // */
 
   public void addToken(EnumMap<Colour,Integer> paramTokens) {
     //add Tokens
