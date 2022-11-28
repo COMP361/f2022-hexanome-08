@@ -5,10 +5,7 @@ import ca.group8.gameservice.splendorgame.model.Game;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class GameInfo { // TODO add gametype
 
