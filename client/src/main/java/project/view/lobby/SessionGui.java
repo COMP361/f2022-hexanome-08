@@ -190,8 +190,9 @@ public class SessionGui extends HBox {
         btmButton.setText("Launch");
         btmButton.setOnAction(createLaunchSessionHandler());
         // launchButton greyed out
-        btmButton.setDisable(true);
-
+        int curSessionPlayersCount = curSessionPlayers.size();
+        int minSessionPlayerCount = curSession.getGameParameters().getMinSessionPlayers();
+        btmButton.setDisable(curSessionPlayersCount != minSessionPlayerCount);
       } else {
         String buttonContent;
         if (curSessionPlayers.contains(curUserName)) {
@@ -218,62 +219,42 @@ public class SessionGui extends HBox {
     topButton.setVisible(false);
     btmButton.setVisible(false);
 
-    if (curPlayers.contains(curUserName)) {
-      // creator must be in curPlayers
-      int curPlayersCount = curPlayers.size();
-      int minPlayersCount = curSession.getGameParameters().getMinSessionPlayers();
-      if (curUserName.equals(curSession.getCreator()) && curPlayersCount == minPlayersCount) {
-        // if curUser is the creator, and we have enough players, we should change
-        // launch to disable(false)
-        topButton.setVisible(true);
-        topButton.setDisable(false);
-        btmButton.setVisible(true);
-      }
-      if (curSession.isLaunched()) {
-        topButton.setVisible(true);
+    if (curSession.isLaunched()) {
+      topButton.setVisible(true);
+      if (curPlayers.contains(curUserName)) {
+        // Play button case
         topButton.setText("Play");
         topButton.setOnAction(createPlayGameHandler());
+      } else {
+        // Watch button case
+        topButton.setText("Watch");
+        topButton.setOnAction(createWatchGameHandler());
       }
     } else {
-      if (curSession.isLaunched()) {
+      String sessionCreator = curSession.getCreator();
+      if (curUserName.equals(sessionCreator)) {
+        int curPlayersCount = curPlayers.size();
+        int minPlayersCount = curSession.getGameParameters().getMinSessionPlayers();
         topButton.setVisible(true);
-        topButton.setText("Watch");
-        topButton.setOnAction(createPlayGameHandler());
+        btmButton.setVisible(true);
+        topButton.setText("Delete");
+        btmButton.setText("Launch");
+        topButton.setOnAction(createDeleteSessionHandler());
+        btmButton.setOnAction(createLaunchSessionHandler());
+        // delete and launch (clickable or not depends on minPlayer == curPlayer or not)
+        btmButton.setDisable(minPlayersCount != curPlayersCount);
+      } else {
+        topButton.setVisible(true);
+        topButton.setOnAction(createJoinLeaveSessionHandler());
+        if (curPlayers.contains(curUserName)) {
+          // leave button case
+          topButton.setText("Leave");
+        } else {
+          // join button case
+          topButton.setText("Join");
+        }
       }
     }
-
-    //String creatorName = curSession.getCreator();
-    //int curPlayersCount = curPlayers.size();
-    //int minPlayersCount = localSession.getGameParameters().getMinSessionPlayers();
-    //if (curUserName.equals(creatorName)) {
-    //  Button launchButton = (Button) sessionHbox.getChildren().get(3);
-    //  // If it's curUser, then we must check for set Enable for him/her
-    //  if (launchButton.isDisabled()) {
-    //    // only setDisable(false) for the launch button if we have enough players
-    //    if (curPlayersCount == minPlayersCount) {
-    //      Platform.runLater(() -> {
-    //        launchButton.setDisable(false);
-    //      });
-    //    }
-    //  } else {
-    //    // if launchButton.isDisabled() == false, means we can click it
-    //    // if it's clickable, then we should replace it here
-    //    Platform.runLater(() -> {
-    //      sessionHbox.getChildren().remove(2);
-    //      sessionHbox.getChildren().remove(2);
-    //      sessionHbox.getChildren().add(replaceButton);
-    //    });
-    //  }
-    //} else {
-    //  // if the user is not creator, there is no point updating the launch for one
-    //  // thus ONLY the remove / replace button logic here for user
-    //  Platform.runLater(() -> {
-    //    // remove the Button on index 2 (0: Label, 1: Region, 2: Button)
-    //    sessionHbox.getChildren().remove(2);
-    //    sessionHbox.getChildren().add(replaceButton);
-    //  });
-    //}
-
   }
 
   public void setup() {
