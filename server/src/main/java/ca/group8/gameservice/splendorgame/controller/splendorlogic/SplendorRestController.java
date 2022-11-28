@@ -12,6 +12,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.SplendorGameManage
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import com.google.gson.Gson;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
+import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -133,13 +134,25 @@ public class SplendorRestController implements GameRestController {
   @GetMapping(value="/api/games/{gameId}/tableTop", produces = "application/json; charset=utf-8")
   public DeferredResult<ResponseEntity<String>> getBoard(
       @PathVariable long gameId, @RequestParam(required = false) String hash) {
-    //try{
-    //  if (hash == null || hash.equals("")) {
-    //    hash = "-";
-    //  }
-    //  return null;
-    //}
-    return null;
+    try{
+      if (hash == null || hash.equals("")) {
+        hash = "-";
+      }
+
+      // if the game does not exist in the game manager, throw an exception
+      if(!splendorGameManager.isExistentGameId(gameId)){
+        throw new ModelAccessException("There is no game with game id: "
+            + gameId + " launched, try again later");
+      }
+
+      // hash is either "-" or the hashed value from previous payload, use long polling
+      return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, broadcastContentManagers.get(gameId), hash);
+    }catch (ModelAccessException e) {
+      // Request does not go through, we need a deferred result
+      DeferredResult<ResponseEntity<String>> deferredResult = new DeferredResult<>();
+      deferredResult.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()));
+      return deferredResult;
+    }
   }
 
   @Override
