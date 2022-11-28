@@ -1,22 +1,11 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
-
-<<<<<<< HEAD
-import org.springframework.stereotype.Controller;
-
-@Controller
-public class SplendorActionInterpreter {
-
-=======
 import ca.group8.gameservice.splendorgame.controller.Action;
 import ca.group8.gameservice.splendorgame.controller.SplendorLogicException;
-import ca.group8.gameservice.splendorgame.controller.SplendorLogicException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.*;
-
-
-import java.awt.*;
 import java.util.List;
 import java.util.EnumMap;
 
+//@Component
 public class SplendorActionInterpreter {
     private final Action action;
     private final List<Action> actionList;
@@ -67,12 +56,12 @@ public class SplendorActionInterpreter {
     }
 
     private void purchase(SplendorPurchaseAction paramAction){
-        Player player = paramAction.getPlayer();
+        PlayerInGame playerInGame = paramAction.getPlayer();
         DevelopmentCard card = (DevelopmentCard) paramAction.getCard();
-        PurchasedHand hand = player.getPurchasedHand();
-        TokenHand tokenHand = player.getTokenHand();
+        PurchasedHand hand = playerInGame.getPurchasedHand();
+        TokenHand tokenHand = playerInGame.getTokenHand();
         int goldTokens = paramAction.getGoldTokenRequired();
-        EnumMap<Colour, Integer> playerGems = player.getTotalGems();
+        EnumMap<Colour, Integer> playerGems = playerInGame.getTotalGems();
         for(Colour colour:Colour.values()){
             if(colour==Colour.GOLD){
                 if(goldTokens>0){
@@ -125,5 +114,4 @@ public class SplendorActionInterpreter {
     }
 
     private void checkWinner(){}
->>>>>>> d9497a78c32faf75b76579bb5d7284625abbf298
 }

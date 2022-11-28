@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -16,23 +15,23 @@ import java.util.Objects;
 
 public class TableTop {
   private Map<Integer, Deck> decks= new HashMap<>();
-  private ArrayList<Player> players;
+  private ArrayList<PlayerInGame> playerInGames;
   private BaseBoard baseBoard;
   private NobleBoard nobleBoard;
   private Bank bank;
 
   //assuming both board and deck will initialise in their constructors
-  public TableTop(ArrayList<Player> players){
+  public TableTop(ArrayList<PlayerInGame> playerInGames){
     for (int i = 1; i<4; i++){
       decks.put(i,new Deck(i));
     }
     initialiseBaseDecks();
-    this.players=players;
+    this.playerInGames = playerInGames;
     this.baseBoard = new BaseBoard(4,3);
-    this.nobleBoard = new NobleBoard(1, players.size()+1);
+    this.nobleBoard = new NobleBoard(1, playerInGames.size()+1);
     initialiseNobleBoard();
     initialiseDevelopmentCardBoard();
-    bank = new Bank(players.size());
+    bank = new Bank(playerInGames.size());
   }
 
   private void initialiseDevelopmentCardBoard(){
@@ -46,7 +45,7 @@ public class TableTop {
 
   private void initialiseNobleBoard(){
     List<NobleCard> nobles = generateNobleCards();
-    for(int i=0; i<= players.size() +1; i++){
+    for(int i = 0; i<= playerInGames.size() +1; i++){
       nobleBoard.add(i,0, nobles.get(i));
     }
   }
@@ -104,8 +103,8 @@ public class TableTop {
     return decks;
   }
 
-  public ArrayList<Player> getPlayers() {
-    return players;
+  public ArrayList<PlayerInGame> getPlayers() {
+    return playerInGames;
   }
 
   public BaseBoard getBaseBoard() {
