@@ -6,16 +6,20 @@ import java.util.EnumMap;
 public class PlayerInGame implements PlayerReadOnly {
 
   private final String name;
-  private TokenHand tokenHand = new TokenHand();
-  private PurchasedHand purchasedHand = new PurchasedHand();
-  private ReservedHand reservedHand = new ReservedHand();
+  private TokenHand tokenHand;
+  private PurchasedHand purchasedHand;
+  private ReservedHand reservedHand;
 
   //need get reserved card number,
-  private EnumMap<Colour, Integer> wealth = new EnumMap<>(Colour.class);
+  private EnumMap<Colour, Integer> wealth;
 
 
   public PlayerInGame(String paramName){
-    name = paramName;
+    this.name = paramName;
+    this.tokenHand = new TokenHand();
+    this.purchasedHand = new PurchasedHand();
+    this.reservedHand = new ReservedHand();
+    this.wealth = new EnumMap<>(Colour.class);
   }
 
 
@@ -23,8 +27,10 @@ public class PlayerInGame implements PlayerReadOnly {
     EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
 
     for(DevelopmentCard card: purchasedHand.getDevelopmentCards()){
-      int oldValue = totalGems.get(card.getGemColor());
-      totalGems.put(card.getGemColor().get(), oldValue+card.getGemNumber());
+      if(card.getGemColor().isPresent()){
+        int oldValue = totalGems.get(card.getGemColor().get());
+        totalGems.put(card.getGemColor().get(), oldValue+card.getGemNumber());
+      }
     }
     return totalGems;
   }
@@ -32,9 +38,7 @@ public class PlayerInGame implements PlayerReadOnly {
 
 
   public EnumMap<Colour, Integer> getWealth(){
-    EnumMap<Colour, Integer> wealth = new EnumMap<>(Colour.class);
     EnumMap<Colour, Integer> gems = getTotalGems();
-
     for(Colour colour : Colour.values()) {
       wealth.put(colour, tokenHand.getAllTokens().get(colour)+gems.get(colour));
     }

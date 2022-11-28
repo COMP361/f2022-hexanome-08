@@ -31,17 +31,18 @@ public class SplendorRegistrator {
   private String gameServiceLocation;
 
   //@Value("${lobbyService.location}")
-  @Value("http://76.66.139.161:4242")
+  //@Value("http://76.66.139.161:4242")
   private String lobbyServiceAddress;
 
   //@Value("${server.port}")
-  @Value("4246")
+  //@Value("4246")
   private String gameServicePort;
   //@Value("${game.username}")
-  @Value("splendor")
+  //@Value("splendor")
   private String gameServiceUsername;
+
+  //@Value("a123_A123")
   //@Value("${game.password}")
-  @Value("a123_A123")
   private String gameServicePassword;
 
   private GameServerParameters registrationGameServerParams;
@@ -51,10 +52,18 @@ public class SplendorRegistrator {
 
   @Autowired
   SplendorRegistrator(@Value("${gameservice.name}") String gameServiceName,
-                      @Value("${gameService.displayName}") String gameServiceDisplayName,
-                      @Value("${gameservice.location}") String gameServiceLocation) {
+                      @Value("${gameservice.displayName}") String gameServiceDisplayName,
+                      @Value("${gameservice.location}") String gameServiceLocation,
+                      @Value("${game.password}") String gameServicePassword,
+                      @Value("${game.username}") String gameServiceUsername,
+                      @Value("${server.port}") String gameServicePort,
+                      @Value("${lobbyservice.location}") String lobbyServiceAddress) {
 
     // first assigning all fields first, then construct the GameServerParameter class
+    this.gameServicePassword = gameServicePassword;
+    this.gameServiceUsername = gameServiceUsername;
+    this.gameServicePort = gameServicePort;
+    this.lobbyServiceAddress = lobbyServiceAddress;
     this.gameServiceName = gameServiceName;
     this.gameServiceDisplayName = gameServiceDisplayName;
     this.gameServiceLocation = gameServiceLocation;

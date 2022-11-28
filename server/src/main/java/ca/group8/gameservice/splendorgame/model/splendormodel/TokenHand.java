@@ -14,6 +14,7 @@ public class TokenHand {
    * Initialize all token values to zero.
    */
   protected TokenHand() {
+    allTokens = new EnumMap<>(Colour.class);
     for (Colour colour : Colour.values()) {
       allTokens.put(colour, 0);
     }

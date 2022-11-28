@@ -1,6 +1,8 @@
 package ca.group8.gameservice.splendorgame.controller;
 
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
+import ca.group8.gameservice.splendorgame.model.ModelAccessException;
+import java.io.FileNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -21,7 +23,8 @@ public interface GameRestController {
      * @param gameId       as the game key.
      * @param launcherInfo as additional parameters for the game to be created
      */
-    ResponseEntity<String> launchGame(long gameId, LauncherInfo launcherInfo);
+    ResponseEntity<String> launchGame(long gameId, LauncherInfo launcherInfo)
+        throws ModelAccessException, FileNotFoundException;
 
     /**
      * Deletes a new game, identified by the provided unique long value. This endpoint is commonly not exposed by the

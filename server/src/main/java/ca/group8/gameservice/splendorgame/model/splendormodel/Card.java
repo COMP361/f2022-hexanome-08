@@ -6,9 +6,9 @@ import java.util.Optional;
 
 public class Card {
 
-    int prestigePoints;
-    EnumMap<Colour,Integer> price;
-    String cardName;
+    private int prestigePoints;
+    private EnumMap<Colour,Integer> price;
+    private String cardName;
 
     public Card(int paramPrestigePoints, EnumMap<Colour,Integer> paramPrice, String paramCardName){
 
@@ -25,6 +25,10 @@ public class Card {
 
     public EnumMap<Colour, Integer> getPrice() {
         return price;
+    }
+
+    public String getCardName() {
+        return cardName;
     }
 
 }

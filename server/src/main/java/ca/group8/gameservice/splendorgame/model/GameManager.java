@@ -1,6 +1,9 @@
 package ca.group8.gameservice.splendorgame.model;
 
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Player;
+import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @Date: December 2020
  */
 @Component
-public interface GameManager<T extends Game> {
+public interface GameManager {
 
     /**
      * Retrieves a specific game, by Id.
@@ -21,7 +24,7 @@ public interface GameManager<T extends Game> {
      * @param gameId as the game to look up.
      * @return the referenced game, if found.
      */
-    T getGameById(long gameId) throws ModelAccessException;
+    GameInfo getGameById(long gameId) throws ModelAccessException;
 
     /**
      * Tells whether a provided game id is known.
@@ -38,7 +41,8 @@ public interface GameManager<T extends Game> {
      * @param players as game participants in the order of joining
      * @return
      */
-    T addGame(long gameId, Player[] players) throws ModelAccessException;
+    GameInfo addGame(long gameId, ArrayList<String> playerNames)
+        throws ModelAccessException, FileNotFoundException;
 
     /**
      * Removes an indexed game. The action is rejected adn a IllegalModelAccessException is thrown, if the game is not
@@ -48,5 +52,5 @@ public interface GameManager<T extends Game> {
      * @param evenIfUnfinished as a safety flag to prevent unitended deletion of running games
      * @throws ModelAccessException in case the game is still runnung by the previous parameter is set to false
      */
-    void removeGame(long gameId, boolean evenIfUnfinished) throws ModelAccessException;
+    void removeGame(long gameId) throws ModelAccessException;
 }
