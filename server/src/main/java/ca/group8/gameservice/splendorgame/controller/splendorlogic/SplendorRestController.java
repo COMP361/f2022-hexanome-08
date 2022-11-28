@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -51,14 +52,17 @@ public class SplendorRestController implements GameRestController {
 
   private final Map<Long, BroadcastContentManager<TableTop>> broadcastContentManagers;
 
+  private final long longPollTimeOut;
   private final Logger logger;
 
   public SplendorRestController(
       @Autowired SplendorRegistrator splendorRegistrator, SplendorGameManager splendorGameManager,
-                                @Value("${gameservice.name}") String gameServiceName) {
+                                @Value("${gameservice.name}") String gameServiceName,
+      @Value("long.poll.timeout") long longPollTimeOut) {
     this.splendorRegistrator = splendorRegistrator;
     this.splendorGameManager = splendorGameManager;
     this.gameServiceName = gameServiceName;
+    this.longPollTimeOut = longPollTimeOut;
     this.broadcastContentManagers = new HashMap<>();
     this.logger = LoggerFactory.getLogger(SplendorRestController.class);
   }
@@ -81,51 +85,6 @@ public class SplendorRestController implements GameRestController {
   public String getAllGames() {
     return splendorGameManager.getActiveGames().keySet().toString();
   }
-
-  //private BaseCard parseCardObject(JSONObject card) {
-  //  String cardName = (String) card.get("cardName");
-  //  logger.info("card level is: " + card.get("level"));
-  //  int cardLevel = ((Long) card.get("level")).intValue();
-  //  int prestigePoints = ((Long) card.get("prestigePoints")).intValue();
-  //  Optional<Colour> gemColour = Optional.of(Colour.valueOf((String) card.get("gemColour")));
-  //  int gemNumber = ((Long) card.get("gemNumber")).intValue();
-  //  Boolean isPaired = (Boolean) card.get("isPaired");
-  //  String pairedCardId = (String) card.get("pairedCardId");
-  //  EnumMap<Colour, Integer> price = parsePriceObject((JSONObject) card.get("price"));
-  //  return new BaseCard(prestigePoints, price, cardName, cardLevel, gemColour, isPaired, pairedCardId, gemNumber);
-  //}
-  //
-  //
-  //private EnumMap<Colour, Integer> parsePriceObject(JSONObject price) {
-  //  EnumMap<Colour, Integer> result = new EnumMap<>(Colour.class);
-  //  int bluePrice = ((Long) price.get("BLUE")).intValue();
-  //  result.put(Colour.BLUE, bluePrice);
-  //  int blackPrice = ((Long) price.get("BLACK")).intValue();
-  //  result.put(Colour.BLACK, blackPrice);
-  //  int redPrice = ((Long) price.get("RED")).intValue();
-  //  result.put(Colour.RED, redPrice);
-  //  int greenPrice = ((Long) price.get("GREEN")).intValue();
-  //  result.put(Colour.GREEN, greenPrice);
-  //  int whitePrice = ((Long) price.get("WHITE")).intValue();
-  //  result.put(Colour.WHITE, whitePrice);
-  //  return result;
-  //}
-  //
-  //@GetMapping("/cards")
-  //public void generateCards() {
-  //  JSONParser jsonParser = new JSONParser();
-  //  try (FileReader reader = new FileReader(ResourceUtils.getFile("classpath:cardinfo_basecard.json"))){
-  //    Object obj = jsonParser.parse(reader);
-  //    JSONArray cardList = (JSONArray) obj;
-  //    for (Object o : cardList) {
-  //      BaseCard c = parseCardObject((JSONObject) o);
-  //      logger.info(c.getCardName());
-  //    }
-  //
-  //  } catch (ParseException | IOException e) {
-  //    throw new RuntimeException(e);
-  //  }
-  //}
 
   @Override
   @PutMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
@@ -170,7 +129,16 @@ public class SplendorRestController implements GameRestController {
   }
 
   @Override
-  public DeferredResult<ResponseEntity<String>> getBoard(long gameId, String hash) {
+  // Long polling for the game board content, optional hash value
+  @GetMapping(value="/api/games/{gameId}/tableTop", produces = "application/json; charset=utf-8")
+  public DeferredResult<ResponseEntity<String>> getBoard(
+      @PathVariable long gameId, @RequestParam(required = false) String hash) {
+    //try{
+    //  if (hash == null || hash.equals("")) {
+    //    hash = "-";
+    //  }
+    //  return null;
+    //}
     return null;
   }
 
