@@ -27,9 +27,9 @@ public class PlayerInGame implements PlayerReadOnly {
     EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
 
     for(DevelopmentCard card: purchasedHand.getDevelopmentCards()){
-      if(card.getGemColor().isPresent()){
-        int oldValue = totalGems.get(card.getGemColor().get());
-        totalGems.put(card.getGemColor().get(), oldValue+card.getGemNumber());
+      if(card.getGemColour().isPresent()){
+        int oldValue = totalGems.get(card.getGemColour().get());
+        totalGems.put(card.getGemColour().get(), oldValue+card.getGemNumber());
       }
     }
     return totalGems;
