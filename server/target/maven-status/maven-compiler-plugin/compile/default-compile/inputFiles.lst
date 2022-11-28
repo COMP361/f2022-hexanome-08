@@ -13,7 +13,6 @@
 /Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/communicationbeans/LauncherInfo.java
 /Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/BaseBoard.java
 /Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Colour.java
-/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/AvailableCards.java
 /Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/Action.java
 /Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/TokenHand.java
 /Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Position.java
