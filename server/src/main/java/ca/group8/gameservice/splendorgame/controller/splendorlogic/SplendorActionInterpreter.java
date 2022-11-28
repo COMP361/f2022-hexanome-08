@@ -99,7 +99,7 @@ public class SplendorActionInterpreter {
         if (reserveCard instanceof NobleCard) {
             reservedHand.addNobleCard((NobleCard) reserveCard);
         } else {
-            reservedHand.addDevelopmentCard((DevelopmentCard) reserveCard);
+                reservedHand.addDevelopmentCard((DevelopmentCard) reserveCard);
         }
 
     }

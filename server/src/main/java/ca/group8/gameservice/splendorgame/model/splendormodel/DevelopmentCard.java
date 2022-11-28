@@ -43,8 +43,8 @@ public class DevelopmentCard extends Card {
     return isPaired;
   }
 
-  public int getPairedCardID() {
-    return 0;
+  public String getPairedCardId() {
+    return pairedCardId;
   }
 
   public int getGemNumber() { return gemNumber; }
@@ -56,4 +56,5 @@ public class DevelopmentCard extends Card {
   public void setPairedCardId(String paramPairedCardId) {
     pairedCardId = paramPairedCardId;
   }
+
 }

@@ -10,13 +10,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
@@ -27,7 +22,11 @@ public class TableTop implements BroadcastContent {
   private ArrayList<PlayerInGame> playerInGames;
   private BaseBoard baseBoard;
   private NobleBoard nobleBoard;
+
+  private Optional<Board> orientBoard; //TODO: implement orientBoard
   private Bank bank;
+
+
 
   private Logger logger = LoggerFactory.getLogger(TableTop.class);
   //assuming both board and deck will initialise in their constructors
@@ -39,7 +38,7 @@ public class TableTop implements BroadcastContent {
     }
     initialiseBaseDecks();
     this.playerInGames = playerInGames;
-    this.baseBoard = new BaseBoard(4,3);
+    this.baseBoard = new BaseBoard(3,4);
     this.nobleBoard = new NobleBoard(1, playerInGames.size()+1);
     initialiseNobleBoard();
     initialiseDevelopmentCardBoard();

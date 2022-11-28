@@ -61,7 +61,6 @@ public class GameInfo { // TODO add gametype
   }
 
 
-
   public boolean isFinished(){
     return winner.isPresent();
   }
@@ -109,4 +108,7 @@ public class GameInfo { // TODO add gametype
     return tableTop;
   }
 
+  public ArrayList<PlayerInGame> getActivePlayerInGames() {
+    return activePlayerInGames;
+  }
 }
