@@ -23,7 +23,7 @@ public class SplendorRestController implements GameRestController {
     return "Hello";
   }
 
-  @GetMapping("/splendor/test")
+  @GetMapping("/test")
   public String test() {
     return "This is working!";
   }
