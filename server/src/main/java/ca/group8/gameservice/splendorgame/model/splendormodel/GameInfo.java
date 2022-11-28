@@ -26,10 +26,15 @@ public class GameInfo { // TODO add gametype
     //Random random = new Random(); //create a new random object
     this.playerNames = playerNames;
     this.winner = Optional.empty();
+
+    // TODO: 1
     activePlayerInGames = initializePlayers(playerNames);
     //generates a random number between 1 and size of playerNames list
-    firstPlayer = playerNames.get(0);
-    currentPlayer = firstPlayer;
+    String randomFirstPlayer = playerNames.get(0); //TODO: Make it random first player later
+    firstPlayer = randomFirstPlayer;
+    currentPlayer = randomFirstPlayer;
+
+    // TODO: 2
     tableTop = new TableTop(activePlayerInGames);
 
 

@@ -29,10 +29,17 @@ import org.springframework.util.ResourceUtils;
 
 public class TableTop implements BroadcastContent {
   private Map<Integer, Deck> decks;
-  private Map<Integer, Deck> orientDecks;
-  private ArrayList<PlayerInGame> playerInGames;
   private BaseBoard baseBoard;
+
+
+  private Map<Integer, Deck> orientDecks;
+  private OrientBoard orientBoard;
+
+  private ArrayList<PlayerInGame> playerInGames;
+
   private NobleBoard nobleBoard;
+
+
   private Bank bank;
 
   private Logger logger = LoggerFactory.getLogger(TableTop.class);
