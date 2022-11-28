@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @Author: Maximilian Schiedermeier
  * @Date: December 2020
  */
-@Component
+//@Component
 public interface GameManager {
 
     /**

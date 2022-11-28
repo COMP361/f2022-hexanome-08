@@ -28,19 +28,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
 
 public class TableTop implements BroadcastContent {
-  private Map<Integer, Deck> decks;
   private BaseBoard baseBoard;
-
-
-  private Map<Integer, Deck> orientDecks;
-  private OrientBoard orientBoard;
-
+  private Map<Integer, Deck> decks;
   private ArrayList<PlayerInGame> playerInGames;
 
   private NobleBoard nobleBoard;
 
-
+  private Optional<Board> orientBoard; //TODO: implement orientBoard
+  private Optional<Map<Integer,Deck>> orientDeck;
   private Bank bank;
+
+
 
   private Logger logger = LoggerFactory.getLogger(TableTop.class);
   //assuming both board and deck will initialise in their constructors
@@ -52,7 +50,7 @@ public class TableTop implements BroadcastContent {
     }
     initialiseBaseDecks();
     this.playerInGames = playerInGames;
-    this.baseBoard = new BaseBoard(4,3);
+    this.baseBoard = new BaseBoard(3,4);
     this.nobleBoard = new NobleBoard(1, playerInGames.size()+1);
     initialiseNobleBoard();
     initialiseDevelopmentCardBoard();
