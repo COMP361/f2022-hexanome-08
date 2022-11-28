@@ -32,7 +32,7 @@ public class TableTop implements BroadcastContent {
   private Logger logger = LoggerFactory.getLogger(TableTop.class);
   //assuming both board and deck will initialise in their constructors
 
-  public TableTop(ArrayList<PlayerInGame> playerInGames) throws FileNotFoundException {
+  public TableTop(ArrayList<PlayerInGame> playerInGames) {
     this.decks = new HashMap<>();
     for (int i = 1; i<4; i++){
       decks.put(i,new Deck(i));
@@ -55,7 +55,7 @@ public class TableTop implements BroadcastContent {
   }
 
 
-  private void initialiseNobleBoard() throws FileNotFoundException {
+  private void initialiseNobleBoard() {
     List<NobleCard> nobles = generateNobleCards();
     for(int i = 0; i<= playerInGames.size() +1; i++){
       nobleBoard.add(i,0, nobles.get(i));
@@ -94,7 +94,7 @@ public class TableTop implements BroadcastContent {
     }
   }
 
-  private void initialiseBaseDecks() throws FileNotFoundException {
+  private void initialiseBaseDecks(){
     for(DevelopmentCard card :  generateBaseCards()){
       int level = card.getLevel();
       decks.get(level).add(card);

@@ -79,32 +79,6 @@ public class SplendorRestController implements GameRestController {
     return splendorGameManager.getActiveGames().keySet().toString();
   }
 
-  private BaseCard parseCardObject(JSONObject card) {
-    String cardName = (String) card.get("cardName");
-    int cardLevel = (Integer) card.get("level");
-    int prestigePoints = (Integer) card.get("prestigePoints");
-    Colour gemColour = (Colour) card.get("gemColour");
-
-    logger.info("Card name is: " + cardName);
-  }
-
-  @GetMapping("/cards")
-  public void generateCards() {
-    JSONParser jsonParser = new JSONParser();
-    try (FileReader reader = new FileReader(ResourceUtils.getFile("classpath:cardinfo_basecard.json"))){
-      Object obj = jsonParser.parse(reader);
-
-      JSONArray cardList = (JSONArray) obj;
-      cardList.forEach(card -> parseCardObject ((JSONObject) card));
-
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (org.json.simple.parser.ParseException e) {
-      throw new RuntimeException(e);
-    }
-
     //try {
     //  File file = ResourceUtils.getFile("classpath:cardinfo_basecard.json");
     //
@@ -118,7 +92,7 @@ public class SplendorRestController implements GameRestController {
     ////  logger.error(e.getMessage());
     //  return "error!";
     //}
-  }
+
 
   @Override
   @PutMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
