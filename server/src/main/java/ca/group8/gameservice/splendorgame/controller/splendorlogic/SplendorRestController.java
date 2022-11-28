@@ -3,6 +3,7 @@ import ca.group8.gameservice.splendorgame.controller.GameRestController;
 import ca.group8.gameservice.splendorgame.controller.SplendorRegistrator;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
+import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
@@ -17,13 +18,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.tomcat.util.json.ParseException;
+import java.util.Optional;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,46 +82,50 @@ public class SplendorRestController implements GameRestController {
     return splendorGameManager.getActiveGames().keySet().toString();
   }
 
-  private BaseCard parseCardObject(JSONObject card) {
-    String cardName = (String) card.get("cardName");
-    int cardLevel = (Integer) card.get("level");
-    int prestigePoints = (Integer) card.get("prestigePoints");
-    Colour gemColour = (Colour) card.get("gemColour");
-
-    logger.info("Card name is: " + cardName);
-  }
-
-  @GetMapping("/cards")
-  public void generateCards() {
-    JSONParser jsonParser = new JSONParser();
-    try (FileReader reader = new FileReader(ResourceUtils.getFile("classpath:cardinfo_basecard.json"))){
-      Object obj = jsonParser.parse(reader);
-
-      JSONArray cardList = (JSONArray) obj;
-      cardList.forEach(card -> parseCardObject ((JSONObject) card));
-
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (org.json.simple.parser.ParseException e) {
-      throw new RuntimeException(e);
-    }
-
-    //try {
-    //  File file = ResourceUtils.getFile("classpath:cardinfo_basecard.json");
-    //
-    //  logger.info("file info: " + file.getAbsolutePath());
-    //  Gson gson = new Gson();
-    //  JsonReader reader = new JsonReader(new FileReader(file));
-    //  DevelopmentCard[] availableCards = gson.fromJson(reader,DevelopmentCard[].class);
-    //  logger.info("One card: " + availableCards[0].getCardName());
-    //  return availableCards[0].getCardName();
-    //} catch (IOException e) {
-    ////  logger.error(e.getMessage());
-    //  return "error!";
-    //}
-  }
+  //private BaseCard parseCardObject(JSONObject card) {
+  //  String cardName = (String) card.get("cardName");
+  //  logger.info("card level is: " + card.get("level"));
+  //  int cardLevel = ((Long) card.get("level")).intValue();
+  //  int prestigePoints = ((Long) card.get("prestigePoints")).intValue();
+  //  Optional<Colour> gemColour = Optional.of(Colour.valueOf((String) card.get("gemColour")));
+  //  int gemNumber = ((Long) card.get("gemNumber")).intValue();
+  //  Boolean isPaired = (Boolean) card.get("isPaired");
+  //  String pairedCardId = (String) card.get("pairedCardId");
+  //  EnumMap<Colour, Integer> price = parsePriceObject((JSONObject) card.get("price"));
+  //  return new BaseCard(prestigePoints, price, cardName, cardLevel, gemColour, isPaired, pairedCardId, gemNumber);
+  //}
+  //
+  //
+  //private EnumMap<Colour, Integer> parsePriceObject(JSONObject price) {
+  //  EnumMap<Colour, Integer> result = new EnumMap<>(Colour.class);
+  //  int bluePrice = ((Long) price.get("BLUE")).intValue();
+  //  result.put(Colour.BLUE, bluePrice);
+  //  int blackPrice = ((Long) price.get("BLACK")).intValue();
+  //  result.put(Colour.BLACK, blackPrice);
+  //  int redPrice = ((Long) price.get("RED")).intValue();
+  //  result.put(Colour.RED, redPrice);
+  //  int greenPrice = ((Long) price.get("GREEN")).intValue();
+  //  result.put(Colour.GREEN, greenPrice);
+  //  int whitePrice = ((Long) price.get("WHITE")).intValue();
+  //  result.put(Colour.WHITE, whitePrice);
+  //  return result;
+  //}
+  //
+  //@GetMapping("/cards")
+  //public void generateCards() {
+  //  JSONParser jsonParser = new JSONParser();
+  //  try (FileReader reader = new FileReader(ResourceUtils.getFile("classpath:cardinfo_basecard.json"))){
+  //    Object obj = jsonParser.parse(reader);
+  //    JSONArray cardList = (JSONArray) obj;
+  //    for (Object o : cardList) {
+  //      BaseCard c = parseCardObject((JSONObject) o);
+  //      logger.info(c.getCardName());
+  //    }
+  //
+  //  } catch (ParseException | IOException e) {
+  //    throw new RuntimeException(e);
+  //  }
+  //}
 
   @Override
   @PutMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
@@ -127,22 +134,15 @@ public class SplendorRestController implements GameRestController {
       throws FileNotFoundException{
     // TODO: Handle the logic of how the game is managed in game manager
     try {
-      logger.info("Current game id:" + gameId);
-      logger.info("Launching info: " + launcherInfo.toString());
 
-      logger.info("Condition 1 result check:" + (launcherInfo == null || launcherInfo.getGameServer() == null));
       if (launcherInfo == null || launcherInfo.getGameServer() == null) {
         throw new ModelAccessException("Invalid launcher info provided");
       }
 
-      logger.info("Condition 2 result check:" + (splendorGameManager.isExistentGameId(gameId)));
-      logger.info("Condition 2, all games: " + splendorGameManager.getActiveGames().toString());
       if(splendorGameManager.isExistentGameId(gameId)) {
         throw new ModelAccessException("Duplicate game instance, can not launch it!");
       }
 
-      logger.info("launcher info game server name: " + launcherInfo.getGameServer());
-      logger.info("actual server name: " + gameServiceName);
       if(!launcherInfo.getGameServer().equals(gameServiceName)){
         throw new ModelAccessException("No such game registered in LS");
       }

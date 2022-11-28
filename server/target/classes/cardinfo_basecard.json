@@ -10,7 +10,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -26,7 +26,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -42,7 +42,7 @@
             "GREEN":5,
             "WHITE":3
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -58,7 +58,7 @@
             "GREEN":3,
             "WHITE":5
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -74,7 +74,7 @@
             "GREEN":0,
             "WHITE":5
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -90,7 +90,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -106,7 +106,7 @@
             "GREEN":2,
             "WHITE":0
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -122,7 +122,7 @@
             "GREEN":5,
             "WHITE":0
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -138,7 +138,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -154,7 +154,7 @@
             "GREEN":2,
             "WHITE":2
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -170,7 +170,7 @@
             "GREEN":2,
             "WHITE":3
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -186,7 +186,7 @@
             "GREEN":3,
             "WHITE":0
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -202,7 +202,7 @@
             "GREEN":0,
             "WHITE":2
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -218,7 +218,7 @@
             "GREEN":4,
             "WHITE":0
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -234,7 +234,7 @@
             "GREEN":1,
             "WHITE":1
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -250,7 +250,7 @@
             "GREEN":3,
             "WHITE":3
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -266,7 +266,7 @@
             "GREEN":1,
             "WHITE":1
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -282,7 +282,7 @@
             "GREEN":1,
             "WHITE":1
         },
-        "gemColor":"BLACK",
+        "gemColour":"BLACK",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -298,7 +298,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -314,7 +314,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -330,7 +330,7 @@
             "GREEN":0,
             "WHITE":7
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -346,7 +346,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -362,7 +362,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -378,7 +378,7 @@
             "GREEN":3,
             "WHITE":3
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -394,7 +394,7 @@
             "GREEN":0,
             "WHITE":1
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -410,7 +410,7 @@
             "GREEN":0,
             "WHITE":2
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -426,7 +426,7 @@
             "GREEN":0,
             "WHITE":6
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -442,7 +442,7 @@
             "GREEN":2,
             "WHITE":0
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -458,7 +458,7 @@
             "GREEN":5,
             "WHITE":0
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -474,7 +474,7 @@
             "GREEN":0,
             "WHITE":7
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -490,7 +490,7 @@
             "GREEN":2,
             "WHITE":1
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -506,7 +506,7 @@
             "GREEN":3,
             "WHITE":0
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -522,7 +522,7 @@
             "GREEN":3,
             "WHITE":0
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -538,7 +538,7 @@
             "GREEN":2,
             "WHITE":0
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -554,7 +554,7 @@
             "GREEN":1,
             "WHITE":1
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -570,7 +570,7 @@
             "GREEN":1,
             "WHITE":1
         },
-        "gemColor":"BLUE",
+        "gemColour":"BLUE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -586,7 +586,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -602,7 +602,7 @@
             "GREEN":6,
             "WHITE":0
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -618,7 +618,7 @@
             "GREEN":0,
             "WHITE":5
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -634,7 +634,7 @@
             "GREEN":0,
             "WHITE":2
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -650,7 +650,7 @@
             "GREEN":0,
             "WHITE":2
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -666,7 +666,7 @@
             "GREEN":3,
             "WHITE":0
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -682,7 +682,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -698,7 +698,7 @@
             "GREEN":2,
             "WHITE":3
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -714,7 +714,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -730,7 +730,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -746,7 +746,7 @@
             "GREEN":0,
             "WHITE":4
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -762,7 +762,7 @@
             "GREEN":3,
             "WHITE":3
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -778,7 +778,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -794,7 +794,7 @@
             "GREEN":0,
             "WHITE":3
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -810,7 +810,7 @@
             "GREEN":1,
             "WHITE":1
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -826,7 +826,7 @@
             "GREEN":5,
             "WHITE":0
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -842,7 +842,7 @@
             "GREEN":0,
             "WHITE":1
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -858,7 +858,7 @@
             "GREEN":0,
             "WHITE":1
         },
-        "gemColor":"GREEN",
+        "gemColour":"GREEN",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -874,7 +874,7 @@
             "GREEN":1,
             "WHITE":2
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -890,7 +890,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -906,7 +906,7 @@
             "GREEN":6,
             "WHITE":0
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -922,7 +922,7 @@
             "GREEN":0,
             "WHITE":3
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -938,7 +938,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -954,7 +954,7 @@
             "GREEN":7,
             "WHITE":0
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -970,7 +970,7 @@
             "GREEN":0,
             "WHITE":4
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -986,7 +986,7 @@
             "GREEN":0,
             "WHITE":3
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1002,7 +1002,7 @@
             "GREEN":3,
             "WHITE":3
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1018,7 +1018,7 @@
             "GREEN":1,
             "WHITE":0
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1034,7 +1034,7 @@
             "GREEN":2,
             "WHITE":1
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1050,7 +1050,7 @@
             "GREEN":7,
             "WHITE":0
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1066,7 +1066,7 @@
             "GREEN":0,
             "WHITE":2
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1082,7 +1082,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1098,7 +1098,7 @@
             "GREEN":0,
             "WHITE":1
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1114,7 +1114,7 @@
             "GREEN":0,
             "WHITE":2
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1130,7 +1130,7 @@
             "GREEN":1,
             "WHITE":1
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1146,7 +1146,7 @@
             "GREEN":1,
             "WHITE":2
         },
-        "gemColor":"RED",
+        "gemColour":"RED",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1162,7 +1162,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1178,7 +1178,7 @@
             "GREEN":0,
             "WHITE":6
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1194,7 +1194,7 @@
             "GREEN":0,
             "WHITE":3
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1210,7 +1210,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1226,7 +1226,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1242,7 +1242,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1258,7 +1258,7 @@
             "GREEN":4,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1274,7 +1274,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1290,7 +1290,7 @@
             "GREEN":0,
             "WHITE":3
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1306,7 +1306,7 @@
             "GREEN":0,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1322,7 +1322,7 @@
             "GREEN":1,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1338,7 +1338,7 @@
             "GREEN":3,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1354,7 +1354,7 @@
             "GREEN":1,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1370,7 +1370,7 @@
             "GREEN":3,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1386,7 +1386,7 @@
             "GREEN":2,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1402,7 +1402,7 @@
             "GREEN":0,
             "WHITE":2
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1418,7 +1418,7 @@
             "GREEN":0,
             "WHITE":3
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null
@@ -1434,7 +1434,7 @@
             "GREEN":2,
             "WHITE":0
         },
-        "gemColor":"WHITE",
+        "gemColour":"WHITE",
         "gemNumber":1,
         "isPaired":false,
         "pairedCardId":null

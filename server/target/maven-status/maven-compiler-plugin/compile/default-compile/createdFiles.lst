@@ -14,7 +14,6 @@ ca/group8/gameservice/splendorgame/model/splendormodel/ReservedHand.class
 ca/group8/gameservice/splendorgame/controller/communicationbeans/LauncherInfo.class
 ca/group8/gameservice/splendorgame/controller/splendorlogic/SplendorPurchaseAction.class
 ca/group8/gameservice/splendorgame/controller/GameRestController.class
-ca/group8/gameservice/splendorgame/model/splendormodel/AvailableCards.class
 ca/group8/gameservice/splendorgame/controller/splendorlogic/SplendorTakeTokenAction.class
 ca/group8/gameservice/splendorgame/model/splendormodel/Position.class
 ca/group8/gameservice/splendorgame/controller/Action.class

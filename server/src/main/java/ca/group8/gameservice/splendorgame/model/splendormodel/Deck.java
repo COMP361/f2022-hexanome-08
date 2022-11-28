@@ -18,7 +18,7 @@ public class Deck {
 
   public Deck(int paramLevel) {
     //initialize by adding Cards to cards field
-    level = paramLevel;
+    this.level = paramLevel;
   }
 
   /**
