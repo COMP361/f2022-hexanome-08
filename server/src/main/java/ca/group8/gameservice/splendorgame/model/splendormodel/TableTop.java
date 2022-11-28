@@ -23,6 +23,7 @@ import org.springframework.util.ResourceUtils;
 
 public class TableTop implements BroadcastContent {
   private Map<Integer, Deck> decks;
+  private Map<Integer, Deck> orientDecks;
   private ArrayList<PlayerInGame> playerInGames;
   private BaseBoard baseBoard;
   private NobleBoard nobleBoard;
@@ -30,6 +31,7 @@ public class TableTop implements BroadcastContent {
 
   private Logger logger = LoggerFactory.getLogger(TableTop.class);
   //assuming both board and deck will initialise in their constructors
+
   public TableTop(ArrayList<PlayerInGame> playerInGames) throws FileNotFoundException {
     this.decks = new HashMap<>();
     for (int i = 1; i<4; i++){
