@@ -29,7 +29,7 @@ public class GameInfo { // TODO add gametype
     //Random random = new Random(); //create a new random object
     this.playerNames = playerNames;
     this.winner = Optional.empty();
-    activePlayerInGames = initializePlayers();
+    activePlayerInGames = initializePlayers(playerNames);
     //generates a random number between 1 and size of playerNames list
     firstPlayer = playerNames.get(0);
     currentPlayer = firstPlayer;
@@ -42,7 +42,7 @@ public class GameInfo { // TODO add gametype
   /**
    * This initializes Player objects.
    */
-  private ArrayList<PlayerInGame> initializePlayers() {
+  private ArrayList<PlayerInGame> initializePlayers(ArrayList<String> playerNames) {
     ArrayList<PlayerInGame> playerInGames = new ArrayList<>();
     for(String name:playerNames){
         playerInGames.add(new PlayerInGame(name));

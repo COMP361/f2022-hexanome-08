@@ -16,7 +16,7 @@ public class PlayerInGame implements PlayerReadOnly {
 
   public PlayerInGame(String paramName){
     this.name = paramName;
-    this.tokenHand = new TokenHand();
+    this.tokenHand = new TokenHand(3); // TODO: HARDCODED 3 FOR M5 ONLY
     this.purchasedHand = new PurchasedHand();
     this.reservedHand = new ReservedHand();
     this.wealth = new EnumMap<>(Colour.class);
