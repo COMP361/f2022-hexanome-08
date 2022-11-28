@@ -11,7 +11,7 @@ public class Board {
   private final int columns;
   private final int rows;
 
-  public Board(int paramWidth, int paramHeight) {
+  public Board(int paramHeight, int paramWidth) {
     columns = paramWidth;
     rows = paramHeight;
     cardBoard = new Card[rows][columns];
