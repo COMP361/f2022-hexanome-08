@@ -2,7 +2,7 @@
     {
         "cardName":"b1",
         "level":1,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":4,
             "BLACK":0,
@@ -18,7 +18,7 @@
     {
         "cardName":"b1",
         "level":2,
-        "prestigePoint":3,
+        "prestigePoints":3,
         "price":{
             "BLUE":0,
             "BLACK":6,
@@ -34,7 +34,7 @@
     {
         "cardName":"b1",
         "level":3,
-        "prestigePoint":3,
+        "prestigePoints":3,
         "price":{
             "BLUE":3,
             "BLACK":0,
@@ -50,7 +50,7 @@
     {
         "cardName":"b2",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -66,7 +66,7 @@
     {
         "cardName":"b2",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -82,7 +82,7 @@
     {
         "cardName":"b2",
         "level":3,
-        "prestigePoint":5,
+        "prestigePoints":5,
         "price":{
             "BLUE":0,
             "BLACK":3,
@@ -98,7 +98,7 @@
     {
         "cardName":"b3",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -114,7 +114,7 @@
     {
         "cardName":"b3",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -130,7 +130,7 @@
     {
         "cardName":"b3",
         "level":3,
-        "prestigePoint":4,
+        "prestigePoints":4,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -146,7 +146,7 @@
     {
         "cardName":"b4",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -162,7 +162,7 @@
     {
         "cardName":"b4",
         "level":2,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":2,
             "BLACK":0,
@@ -178,7 +178,7 @@
     {
         "cardName":"b4",
         "level":3,
-        "prestigePoint":3,
+        "prestigePoints":3,
         "price":{
             "BLUE":0,
             "BLACK":3,
@@ -194,7 +194,7 @@
     {
         "cardName":"b5",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":2,
             "BLACK":0,
@@ -210,7 +210,7 @@
     {
         "cardName":"b5",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":1,
             "BLACK":0,
@@ -226,7 +226,7 @@
     {
         "cardName":"b6",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":0,
@@ -242,7 +242,7 @@
     {
         "cardName":"b6",
         "level":2,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":0,
             "BLACK":2,
@@ -258,7 +258,7 @@
     {
         "cardName":"b7",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":0,
@@ -274,7 +274,7 @@
     {
         "cardName":"b8",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":2,
             "BLACK":0,
@@ -290,7 +290,7 @@
     {
         "cardName":"bl1",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":3,
@@ -306,7 +306,7 @@
     {
         "cardName":"bl1",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":5,
             "BLACK":0,
@@ -322,7 +322,7 @@
     {
         "cardName":"bl1",
         "level":3,
-        "prestigePoint":4,
+        "prestigePoints":4,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -338,7 +338,7 @@
     {
         "cardName":"bl2",
         "level":1,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -354,7 +354,7 @@
     {
         "cardName":"bl2",
         "level":2,
-        "prestigePoint":3,
+        "prestigePoints":3,
         "price":{
             "BLUE":6,
             "BLACK":0,
@@ -370,7 +370,7 @@
     {
         "cardName":"bl2",
         "level":3,
-        "prestigePoint":3,
+        "prestigePoints":3,
         "price":{
             "BLUE":0,
             "BLACK":5,
@@ -386,7 +386,7 @@
     {
         "cardName":"bl3",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":2,
@@ -402,7 +402,7 @@
     {
         "cardName":"bl3",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":0,
             "BLACK":4,
@@ -418,7 +418,7 @@
     {
         "cardName":"bl3",
         "level":3,
-        "prestigePoint":4,
+        "prestigePoints":4,
         "price":{
             "BLUE":3,
             "BLACK":3,
@@ -434,7 +434,7 @@
     {
         "cardName":"bl4",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":2,
@@ -450,7 +450,7 @@
     {
         "cardName":"bl4",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":3,
             "BLACK":0,
@@ -466,7 +466,7 @@
     {
         "cardName":"bl4",
         "level":3,
-        "prestigePoint":5,
+        "prestigePoints":5,
         "price":{
             "BLUE":3,
             "BLACK":0,
@@ -482,7 +482,7 @@
     {
         "cardName":"bl5",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -498,7 +498,7 @@
     {
         "cardName":"bl5",
         "level":2,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":2,
             "BLACK":3,
@@ -514,7 +514,7 @@
     {
         "cardName":"bl6",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":0,
@@ -530,7 +530,7 @@
     {
         "cardName":"bl6",
         "level":2,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":2,
             "BLACK":0,
@@ -546,7 +546,7 @@
     {
         "cardName":"bl7",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":1,
@@ -562,7 +562,7 @@
     {
         "cardName":"bl8",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":1,
@@ -578,7 +578,7 @@
     {
         "cardName":"g1",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":2,
             "BLACK":0,
@@ -594,7 +594,7 @@
     {
         "cardName":"g1",
         "level":2,
-        "prestigePoint":3,
+        "prestigePoints":3,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -610,7 +610,7 @@
     {
         "cardName":"g1",
         "level":3,
-        "prestigePoint":3,
+        "prestigePoints":3,
         "price":{
             "BLUE":3,
             "BLACK":3,
@@ -626,7 +626,7 @@
     {
         "cardName":"g2",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":0,
@@ -642,7 +642,7 @@
     {
         "cardName":"g2",
         "level":2,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":3,
             "BLACK":2,
@@ -658,7 +658,7 @@
     {
         "cardName":"g2",
         "level":3,
-        "prestigePoint":5,
+        "prestigePoints":5,
         "price":{
             "BLUE":7,
             "BLACK":0,
@@ -674,7 +674,7 @@
     {
         "cardName":"g3",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -690,7 +690,7 @@
     {
         "cardName":"g3",
         "level":2,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -706,7 +706,7 @@
     {
         "cardName":"g3",
         "level":3,
-        "prestigePoint":4,
+        "prestigePoints":4,
         "price":{
             "BLUE":7,
             "BLACK":0,
@@ -722,7 +722,7 @@
     {
         "cardName":"g4",
         "level":1,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":0,
             "BLACK":4,
@@ -738,7 +738,7 @@
     {
         "cardName":"g4",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":2,
             "BLACK":1,
@@ -754,7 +754,7 @@
     {
         "cardName":"g4",
         "level":3,
-        "prestigePoint":4,
+        "prestigePoints":4,
         "price":{
             "BLUE":6,
             "BLACK":0,
@@ -770,7 +770,7 @@
     {
         "cardName":"g5",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":2,
@@ -786,7 +786,7 @@
     {
         "cardName":"g5",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":5,
             "BLACK":0,
@@ -802,7 +802,7 @@
     {
         "cardName":"g6",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":3,
             "BLACK":0,
@@ -818,7 +818,7 @@
     {
         "cardName":"g6",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -834,7 +834,7 @@
     {
         "cardName":"g7",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":2,
@@ -850,7 +850,7 @@
     {
         "cardName":"g8",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":1,
@@ -866,7 +866,7 @@
     {
         "cardName":"r1",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":2,
@@ -882,7 +882,7 @@
     {
         "cardName":"r1",
         "level":2,
-        "prestigePoint":3,
+        "prestigePoints":3,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -898,7 +898,7 @@
     {
         "cardName":"r1",
         "level":3,
-        "prestigePoint":4,
+        "prestigePoints":4,
         "price":{
             "BLUE":3,
             "BLACK":0,
@@ -914,7 +914,7 @@
     {
         "cardName":"r2",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -930,7 +930,7 @@
     {
         "cardName":"r2",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":0,
             "BLACK":5,
@@ -946,7 +946,7 @@
     {
         "cardName":"r2",
         "level":3,
-        "prestigePoint":5,
+        "prestigePoints":5,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -962,7 +962,7 @@
     {
         "cardName":"r3",
         "level":1,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -978,7 +978,7 @@
     {
         "cardName":"r3",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":0,
             "BLACK":5,
@@ -994,7 +994,7 @@
     {
         "cardName":"r3",
         "level":3,
-        "prestigePoint":3,
+        "prestigePoints":3,
         "price":{
             "BLUE":5,
             "BLACK":3,
@@ -1010,7 +1010,7 @@
     {
         "cardName":"r4",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":2,
             "BLACK":0,
@@ -1026,7 +1026,7 @@
     {
         "cardName":"r4",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":4,
             "BLACK":0,
@@ -1042,7 +1042,7 @@
     {
         "cardName":"r4",
         "level":3,
-        "prestigePoint":4,
+        "prestigePoints":4,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -1058,7 +1058,7 @@
     {
         "cardName":"r5",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -1074,7 +1074,7 @@
     {
         "cardName":"r5",
         "level":2,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":3,
             "BLACK":3,
@@ -1090,7 +1090,7 @@
     {
         "cardName":"r6",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":3,
@@ -1106,7 +1106,7 @@
     {
         "cardName":"r6",
         "level":2,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":0,
             "BLACK":3,
@@ -1122,7 +1122,7 @@
     {
         "cardName":"r7",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":1,
@@ -1138,7 +1138,7 @@
     {
         "cardName":"r8",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":1,
@@ -1154,7 +1154,7 @@
     {
         "cardName":"w1",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":2,
             "BLACK":2,
@@ -1170,7 +1170,7 @@
     {
         "cardName":"w1",
         "level":2,
-        "prestigePoint":3,
+        "prestigePoints":3,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -1186,7 +1186,7 @@
     {
         "cardName":"w1",
         "level":3,
-        "prestigePoint":4,
+        "prestigePoints":4,
         "price":{
             "BLUE":0,
             "BLACK":6,
@@ -1202,7 +1202,7 @@
     {
         "cardName":"w2",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":0,
             "BLACK":1,
@@ -1218,7 +1218,7 @@
     {
         "cardName":"w2",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -1234,7 +1234,7 @@
     {
         "cardName":"w2",
         "level":3,
-        "prestigePoint":4,
+        "prestigePoints":4,
         "price":{
             "BLUE":0,
             "BLACK":7,
@@ -1250,7 +1250,7 @@
     {
         "cardName":"w3",
         "level":1,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":0,
             "BLACK":0,
@@ -1266,7 +1266,7 @@
     {
         "cardName":"w3",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":0,
             "BLACK":3,
@@ -1282,7 +1282,7 @@
     {
         "cardName":"w3",
         "level":3,
-        "prestigePoint":5,
+        "prestigePoints":5,
         "price":{
             "BLUE":0,
             "BLACK":7,
@@ -1298,7 +1298,7 @@
     {
         "cardName":"w4",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":3,
             "BLACK":0,
@@ -1314,7 +1314,7 @@
     {
         "cardName":"w4",
         "level":2,
-        "prestigePoint":2,
+        "prestigePoints":2,
         "price":{
             "BLUE":0,
             "BLACK":2,
@@ -1330,7 +1330,7 @@
     {
         "cardName":"w4",
         "level":3,
-        "prestigePoint":3,
+        "prestigePoints":3,
         "price":{
             "BLUE":3,
             "BLACK":3,
@@ -1346,7 +1346,7 @@
     {
         "cardName":"w5",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":1,
@@ -1362,7 +1362,7 @@
     {
         "cardName":"w5",
         "level":2,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":0,
             "BLACK":2,
@@ -1378,7 +1378,7 @@
     {
         "cardName":"w6",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":1,
@@ -1394,7 +1394,7 @@
     {
         "cardName":"w6",
         "level":2,
-        "prestigePoint":1,
+        "prestigePoints":1,
         "price":{
             "BLUE":3,
             "BLACK":0,
@@ -1410,7 +1410,7 @@
     {
         "cardName":"w7",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":1,
             "BLACK":1,
@@ -1426,7 +1426,7 @@
     {
         "cardName":"w8",
         "level":1,
-        "prestigePoint":0,
+        "prestigePoints":0,
         "price":{
             "BLUE":2,
             "BLACK":1,
