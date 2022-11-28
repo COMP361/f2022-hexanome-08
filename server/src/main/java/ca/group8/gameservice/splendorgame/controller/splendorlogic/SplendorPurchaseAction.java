@@ -9,11 +9,19 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Player;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 
 public class SplendorPurchaseAction extends CardAction {
+  int goldTokenRequired;
 
   public SplendorPurchaseAction(Player player,
                                 GameInfo game,
                                 Position position,
-                                Card card) {
+                                Card card, int goldTokenRequired) {
     super(player, game, position, card);
+    this.goldTokenRequired= goldTokenRequired;
   }
+
+   public int getGoldTokenRequired(){
+      return goldTokenRequired;
+    }
+
+
 }
