@@ -28,8 +28,8 @@
         <VBox fx:id="leftPlayer" alignment="BOTTOM_LEFT" layoutY="67.0" maxHeight="665.0" maxWidth="125.0" prefHeight="665.0" prefWidth="125.0" BorderPane.alignment="BOTTOM_LEFT" />
         <VBox fx:id="rightPlayer" alignment="BOTTOM_LEFT" layoutX="1075.0" layoutY="67.0" maxHeight="800.0" maxWidth="125.0" prefHeight="665.0" prefWidth="125.0" />
         <HBox fx:id="currentPlayer" alignment="TOP_RIGHT" layoutX="267.0" layoutY="705.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0" />
-        <Button fx:id="myCardButton" layoutX="1008.0" layoutY="745.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Cards" />
-        <Button fx:id="myReservedCardsButton" layoutX="1008.0" layoutY="772.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Reserved Cards" />
+        <Button fx:id="myCardButton" layoutX="1008.0" layoutY="745.0" mnemonicParsing="false" onAction="#onOpenMyPurchaseCardClick" prefHeight="26.0" prefWidth="134.0" text="My Cards" />
+        <Button fx:id="myReservedCardsButton" layoutX="1008.0" layoutY="772.0" mnemonicParsing="false" onAction="#onOpenMyReserveCardClick" prefHeight="26.0" prefWidth="134.0" text="My Reserved Cards" />
         <Button fx:id="settingButton" layoutX="1133.0" layoutY="14.0" mnemonicParsing="false" text="Quit" />
     </children>
 </AnchorPane>

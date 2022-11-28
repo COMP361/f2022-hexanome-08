@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import project.connection.LobbyServiceRequestSender;
+import project.view.lobby.SessionGuiManager;
 import project.view.lobby.User;
 import project.view.splendor.Colour;
 
@@ -62,7 +63,7 @@ public class App extends Application {
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
-
+    SessionGuiManager.getInstance();
     scene = new Scene(loadFxml("start_page"),
         guiLayouts.getAppWidth(),
         guiLayouts.getAppHeight());
