@@ -1,5 +1,12 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+<<<<<<< HEAD
+import org.springframework.stereotype.Controller;
+
+@Controller
+public class SplendorActionInterpreter {
+
+=======
 import ca.group8.gameservice.splendorgame.controller.Action;
 import ca.group8.gameservice.splendorgame.controller.SplendorLogicException;
 import ca.group8.gameservice.splendorgame.controller.SplendorLogicException;
@@ -118,4 +125,5 @@ public class SplendorActionInterpreter {
     }
 
     private void checkWinner(){}
+>>>>>>> d9497a78c32faf75b76579bb5d7284625abbf298
 }
