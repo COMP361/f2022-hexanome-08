@@ -22,7 +22,7 @@ public class GameInfo { // TODO add gametype
    * @param playerNames NOTE: In this implementation, activePlayers is an arrayList meaning you cannot get(Player)
    *               based on giving the player name that is in the list.(can only index list)
    */
-  public GameInfo(ArrayList<String> playerNames) throws FileNotFoundException {
+  public GameInfo(ArrayList<String> playerNames){
     //Random random = new Random(); //create a new random object
     this.playerNames = playerNames;
     this.winner = Optional.empty();
@@ -36,8 +36,6 @@ public class GameInfo { // TODO add gametype
 
     // TODO: 2
     tableTop = new TableTop(activePlayerInGames);
-
-
   }
 
 
