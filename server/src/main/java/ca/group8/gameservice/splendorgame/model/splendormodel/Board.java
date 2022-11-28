@@ -68,7 +68,6 @@ public class Board {
         allCards.add(cardBoard[i][j]);
       }
     }
-    return null;
+    return allCards;
   }
-
 }
