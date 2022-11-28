@@ -1,4 +1,5 @@
 package ca.group8.gameservice.splendorgame.controller.communicationbeans;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -10,8 +11,7 @@ public class LauncherInfo {
     // The name of the game that registered in LS
     String gameServer;
 
-    // Players in order, so that we are sure client will receive an ordered player list
-    LinkedList<Player> players;
+    ArrayList<Player> players;
 
     String creator;
 
@@ -22,7 +22,7 @@ public class LauncherInfo {
     }
 
     // by not providing the save game id, we create a new game
-    public LauncherInfo(String gameServer, LinkedList<Player> players, String creator) {
+    public LauncherInfo(String gameServer, ArrayList<Player> players, String creator) {
         this.gameServer = gameServer;
         this.players = players;
         this.creator = creator;
@@ -30,7 +30,7 @@ public class LauncherInfo {
     }
 
     // by providing the save game id, we create a game based a previous saved game states
-    public LauncherInfo(String gameServer, LinkedList<Player> players, String creator, String savegame) {
+    public LauncherInfo(String gameServer, ArrayList<Player> players, String creator, String savegame) {
         this.gameServer = gameServer;
         this.players = players;
         this.creator = creator;
@@ -41,7 +41,7 @@ public class LauncherInfo {
         return gameServer;
     }
 
-    public LinkedList<Player> getPlayers() {
+    public ArrayList<Player> getPlayers() {
         return players;
     }
 
@@ -51,6 +51,14 @@ public class LauncherInfo {
 
     public String getSavegame() {
         return savegame;
+    }
+
+    public ArrayList<String> getPlayerNames() {
+        ArrayList<String> names = new ArrayList<>();
+        for (Player p : players) {
+            names.add(p.getName());
+        }
+        return names;
     }
 
 }

@@ -1,7 +1,12 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 
+import ca.group8.gameservice.splendorgame.model.Game;
+import ca.group8.gameservice.splendorgame.model.ModelAccessException;
+import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
@@ -9,7 +14,7 @@ public class GameInfo { // TODO add gametype
 
 
   private String currentPlayer; //represents which player's turn it is currently
-  private Optional<String> winner = Optional.empty(); //made optional for when Winner is not defined yet;
+  private Optional<String> winner; //made optional for when Winner is not defined yet;
   private String firstPlayer; //should be Player Name of first player.
   private ArrayList<PlayerInGame> activePlayerInGames;
   private ArrayList<String> playerNames;
@@ -20,12 +25,13 @@ public class GameInfo { // TODO add gametype
    * @param playerNames NOTE: In this implementation, activePlayers is an arrayList meaning you cannot get(Player)
    *               based on giving the player name that is in the list.(can only index list)
    */
-  public GameInfo(ArrayList<String> playerNames) {
-    Random random = new Random(); //create a new random object
+  public GameInfo(ArrayList<String> playerNames) throws FileNotFoundException {
+    //Random random = new Random(); //create a new random object
     this.playerNames = playerNames;
+    this.winner = Optional.empty();
     activePlayerInGames = initializePlayers();
     //generates a random number between 1 and size of playerNames list
-    firstPlayer = playerNames.get(random.nextInt(playerNames.size()) + 1);
+    firstPlayer = playerNames.get(0);
     currentPlayer = firstPlayer;
     tableTop = new TableTop(activePlayerInGames);
 
@@ -57,6 +63,8 @@ public class GameInfo { // TODO add gametype
     return activePlayerInGames.size();
   }
 
+
+
   public boolean isFinished(){
     return winner.isPresent();
   }
@@ -65,14 +73,14 @@ public class GameInfo { // TODO add gametype
    * @return Current player object (as a Player).
    */
   public PlayerInGame getCurrentPlayer() {
-    PlayerInGame curPlayerInGame =null;
+    PlayerInGame curPlayerInGame = null;
     for (PlayerInGame playerInGame : activePlayerInGames) {
-      if (playerInGame.getName()==currentPlayer) {
+      if (Objects.equals(playerInGame.getName(), currentPlayer)) {
         curPlayerInGame = playerInGame;
         break;
       }
     }
-    if(curPlayerInGame ==null) {
+    if(curPlayerInGame == null) {
       throw new IllegalStateException("Cannot find this current player in the active player list.");
     }
     return curPlayerInGame;

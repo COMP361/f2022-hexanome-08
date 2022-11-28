@@ -1,15 +1,20 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
-
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
-public class SplendorGameManager {
-    private Map<Long, GameInfo> activeGames = new HashMap<>();
+@Component
+public class SplendorGameManager{
+    private Map<Long, GameInfo> activeGames;
 
+
+    public SplendorGameManager() {
+        this.activeGames = new HashMap<>();
+    }
 
     public GameInfo getGameById(long gameId) throws ModelAccessException {
         if (!isExistentGameId(gameId)){
@@ -18,21 +23,28 @@ public class SplendorGameManager {
         return activeGames.get(gameId);
     }
 
+
     public boolean isExistentGameId(long gameId) {
-        if (activeGames.containsKey(gameId)) {
-            return true;
-        }
-        return false;
+        return activeGames.containsKey(gameId);
     }
 
-
-    public void addGame(long gameId, ArrayList<String> playerNames) {
-        activeGames.put(gameId, new GameInfo(playerNames));
-
+    public GameInfo addGame(long gameId, ArrayList<String> playerNames)
+        throws ModelAccessException, FileNotFoundException {
+        GameInfo newGameInfo = new GameInfo(playerNames);
+        activeGames.put(gameId,newGameInfo);
+        return newGameInfo;
     }
-
 
     public void removeGame(long gameId) {
         activeGames.remove(gameId);
     }
+
+
+
+    public Map<Long, GameInfo> getActiveGames() {
+        return activeGames;
+    }
+
+
+
 }
