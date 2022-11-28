@@ -3,6 +3,8 @@ import ca.group8.gameservice.splendorgame.controller.GameRestController;
 import ca.group8.gameservice.splendorgame.controller.SplendorRegistrator;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
+import ca.group8.gameservice.splendorgame.model.splendormodel.BaseCard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.SplendorGameManager;
@@ -77,8 +79,12 @@ public class SplendorRestController implements GameRestController {
     return splendorGameManager.getActiveGames().keySet().toString();
   }
 
-  private void parseCardObject(JSONObject card) {
+  private BaseCard parseCardObject(JSONObject card) {
     String cardName = (String) card.get("cardName");
+    int cardLevel = (Integer) card.get("level");
+    int prestigePoints = (Integer) card.get("prestigePoints");
+    Colour gemColour = (Colour) card.get("gemColour");
+
     logger.info("Card name is: " + cardName);
   }
 
