@@ -91,13 +91,16 @@ public class SplendorRegistrator {
 
   public void registerGameAtLobby(String accessToken) throws UnirestException {
     String requestJsonString = new Gson().toJson(registrationGameServerParams);
-    JSONObject body = new JSONObject(requestJsonString);
     String url = lobbyServiceAddress + "/api/gameservices/" + gameServiceName;
-    logger.warn(requestJsonString);
     Unirest.put(url)
-        .header("Content-Type", "application/json")
         .queryString("access_token", accessToken)
-        .body(requestJsonString).getBody();
+        .header("Content-Type", "application/json")
+        .body(requestJsonString).asString();
+    //HttpResponse<String> response = Unirest.put(url)
+    //    .header("Authorization", "Bearer " + accessToken)
+    //    .header("Content-Type", "application/json")
+    //    .body(requestJsonString).asString();
+    //logger.warn("register status: " + response.getStatus());
   }
 
   public String sendAuthorityRequest(String accessToken) throws UnirestException {

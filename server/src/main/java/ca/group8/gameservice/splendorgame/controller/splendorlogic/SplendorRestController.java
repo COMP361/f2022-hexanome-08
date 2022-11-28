@@ -14,6 +14,7 @@ public class SplendorRestController implements GameRestController {
 
   @Autowired
   private SplendorRegistrator splendorRegistrator;
+
   public SplendorRestController() {
 
   }
@@ -22,6 +23,10 @@ public class SplendorRestController implements GameRestController {
     return "Hello";
   }
 
+  @GetMapping("/splendor/test")
+  public String test() {
+    return "This is working!";
+  }
 
   @Override
   public ResponseEntity<String> launchGame(long gameId, LauncherInfo launcherInfo) {
