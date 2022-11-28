@@ -16,7 +16,7 @@ public class AvailableCards {
     this.cardName = cardName;
     this.level = level;
     this.prestigePoint = prestigePoint;
-    this.price = new HashMap<>();
+    this.price = new HashMap<Colour,Integer>();
     this.isOrient = isOrient;
     this.needsBurn = needsBurn;
   }

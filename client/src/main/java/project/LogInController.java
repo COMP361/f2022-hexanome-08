@@ -58,7 +58,7 @@ public class LogInController {
         // App.setRoot("player_lobby_page");
         App.setRoot("LobbyService");
       }
-      lobbyRequestSender.updateSessionMapping();
+      //lobbyRequestSender.getRemoteSessions();
 
     } catch (Exception e) {
       logInPageErrorMessage.setText("Please enter both valid username and password");
@@ -71,6 +71,11 @@ public class LogInController {
   protected void onQuitGameButtonClick() {
     Stage curStage = (Stage) quitGameButton.getScene().getWindow();
     curStage.close();
+  }
+
+  public void initialize() {
+    userName.setText("ruoyu");
+    userPassword.setText("Dd991218?");
   }
 
 }
