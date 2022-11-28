@@ -1,9 +1,7 @@
 package ca.group8.gameservice.splendorgame.controller;
 
-import ca.group8.gameservice.splendorgame.model.Game;
-import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Player;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 
 /**
  * Generic Action interface for blackboard architecture. Implement your own actions, representing kinds of actions
@@ -11,17 +9,17 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Player;
  * a custom ActionInterpreter.
  */
 public class Action {
-  private final Player player;
+  private final PlayerInGame playerInGame;
   private final GameInfo game;
 
 
-  public Action(Player player, GameInfo game) {
-    this.player = player;
+  public Action(PlayerInGame playerInGame, GameInfo game) {
+    this.playerInGame = playerInGame;
     this.game = game;
   }
 
-  public Player getPlayer() {
-    return player;
+  public PlayerInGame getPlayer() {
+    return playerInGame;
   }
 
   public GameInfo getGame() {

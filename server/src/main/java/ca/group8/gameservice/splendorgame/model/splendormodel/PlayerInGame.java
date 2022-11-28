@@ -3,7 +3,7 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
 import java.util.EnumMap;
 
-public class Player implements PlayerReadOnly {
+public class PlayerInGame implements PlayerReadOnly {
 
   private final String name;
   private TokenHand tokenHand = new TokenHand();
@@ -14,7 +14,7 @@ public class Player implements PlayerReadOnly {
   private EnumMap<Colour, Integer> wealth = new EnumMap<>(Colour.class);
 
 
-  public Player(String paramName){
+  public PlayerInGame(String paramName){
     name = paramName;
   }
 
