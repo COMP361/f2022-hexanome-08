@@ -1,3 +1,5 @@
+package ca.group8.gameservice.splendorgame.model.splendormodel;
+
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import org.junit.jupiter.api.BeforeAll;
@@ -60,8 +62,8 @@ class GameInfoTest {
 
     @org.junit.jupiter.api.Test
     void getActivePlayers() {
-        assert(activePlayerInGames.equals(g1.getActivePlayers()));
-
+        assert(activePlayerInGames.get(0).getName().equals(g1.getActivePlayers().get(0).getName()));
+        assert(activePlayerInGames.get(1).getName().equals(g1.getActivePlayers().get(1).getName()));
     }
 
     @org.junit.jupiter.api.Test

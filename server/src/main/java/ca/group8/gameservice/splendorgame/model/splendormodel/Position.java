@@ -26,4 +26,10 @@ public class Position {
   public void setY(int y) {
     this.y = y;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    Position position = (Position) o;
+    return (position.getX() == this.getX() && position.getY() == this.getY());
+  }
 }
