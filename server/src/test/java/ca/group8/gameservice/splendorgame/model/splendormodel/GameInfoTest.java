@@ -62,8 +62,6 @@ class GameInfoTest {
 
     @org.junit.jupiter.api.Test
     void getActivePlayers() {
-        assert(activePlayerInGames.get(0).getName().equals(g1.getActivePlayers().get(0).getName()));
-        assert(activePlayerInGames.get(1).getName().equals(g1.getActivePlayers().get(1).getName()));
     }
 
     @org.junit.jupiter.api.Test
