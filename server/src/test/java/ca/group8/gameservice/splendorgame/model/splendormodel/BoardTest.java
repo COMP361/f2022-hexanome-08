@@ -61,5 +61,6 @@ class BoardTest {
 
     @Test
     void getCards() {
+        assert (b1.getCards().size() == 12);
     }
 }
