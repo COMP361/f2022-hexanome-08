@@ -64,8 +64,13 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
       for (int i = 0; i < colours.length; i++){
         Map<PlayerWealthInfo, Text> mapInMap = new HashMap<>();
         Group curGroup = (Group) allChildren.get(i+1);
+<<<<<<< HEAD
         mapInMap.put(PlayerWealthInfo.GEM,(Text) curGroup.getChildren().get(2));
         mapInMap.put(PlayerWealthInfo.TOKEN,(Text) curGroup.getChildren().get(3));
+=======
+        mapInMap.put(PlayerTokenInfo.GEM,(Text) curGroup.getChildren().get(1));
+        mapInMap.put(PlayerTokenInfo.TOKEN,(Text) curGroup.getChildren().get(3));
+>>>>>>> adaf53f4f969c247a84e76fc5d035fdefec894bc
         resultMap.put(colours[i], mapInMap);
       }
       Group curGroup = (Group) allChildren.get(6);
