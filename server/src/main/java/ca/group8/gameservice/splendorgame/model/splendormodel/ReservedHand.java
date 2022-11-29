@@ -24,6 +24,10 @@ public class ReservedHand {
         return developmentCards.size() == 3;
     }
 
+    public int getSize(){
+        return developmentCards.size();
+    }
+
     public List<DevelopmentCard> getDevelopmentCards() {
         return developmentCards;
     }
