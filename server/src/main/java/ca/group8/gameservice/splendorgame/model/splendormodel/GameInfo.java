@@ -11,7 +11,8 @@ public class GameInfo { // TODO add gametype
 
 
   private String currentPlayer; //represents which player's turn it is currently
-  private Optional<String> winner; //made optional for when Winner is not defined yet;
+  //private Optional<String> winner; //made optional for when Winner is not defined yet;
+  private List<String> winners;
   private String firstPlayer; //should be Player Name of first player.
   private ArrayList<PlayerInGame> activePlayerInGames;
   private ArrayList<String> playerNames;
@@ -25,7 +26,7 @@ public class GameInfo { // TODO add gametype
   public GameInfo(ArrayList<String> playerNames) throws FileNotFoundException {
     //Random random = new Random(); //create a new random object
     this.playerNames = playerNames;
-    this.winner = Optional.empty();
+    this.winners = new ArrayList<>();
 
     // TODO: 1
     activePlayerInGames = initializePlayers(playerNames);
@@ -53,10 +54,12 @@ public class GameInfo { // TODO add gametype
   }
 
   //TODO Figure out if this should be public/private/... based on what needs to call this method
-  protected void setWinner(String player) {
-    winner = Optional.of(player);
+  //protected void setWinner(String player) {
+  //  winner = Optional.of(player);
+  //}
+  public void addWinner(String potentialWinner) {
+    winners.add(potentialWinner);
   }
-
   protected void checkWinner() {
     //TODO: Implement this operation (will be based on TableTop implementation)
   }
@@ -67,7 +70,7 @@ public class GameInfo { // TODO add gametype
 
 
   public boolean isFinished(){
-    return winner.isPresent();
+    return winners.size() > 0;
   }
 
   /**
@@ -93,8 +96,8 @@ public class GameInfo { // TODO add gametype
     currentPlayer= playerNames.get((index+1)%4);
   }
 
-  public Optional<String> getWinner() {
-    return winner;
+  public List<String> getWinners() {
+    return new ArrayList<>(winners);
   }
 
   public String getFirstPlayer() {

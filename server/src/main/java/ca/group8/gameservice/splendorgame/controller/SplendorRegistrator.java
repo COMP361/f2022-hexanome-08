@@ -30,19 +30,11 @@ public class SplendorRegistrator {
   private String gameServiceDisplayName;
   private String gameServiceLocation;
 
-  //@Value("${lobbyService.location}")
-  //@Value("http://76.66.139.161:4242")
   private String lobbyServiceAddress;
 
-  //@Value("${server.port}")
-  //@Value("4246")
   private String gameServicePort;
-  //@Value("${game.username}")
-  //@Value("splendor")
   private String gameServiceUsername;
 
-  //@Value("a123_A123")
-  //@Value("${game.password}")
   private String gameServicePassword;
 
   private GameServerParameters registrationGameServerParams;

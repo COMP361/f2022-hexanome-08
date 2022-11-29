@@ -18,15 +18,23 @@ public class SessionGuiManager extends VBox {
     return sessionsVbox;
   }
 
-  public static void removeSessionGui(SessionGui newSessionGui, Long sessionId) {
+  public static void removeSessionGui(SessionGui newSessionGui) {
     sessionsVbox.getChildren().remove(newSessionGui);
+  }
+  public static void removeSessionIdGuiMap(Long sessionId) {
     sessionIdGuiMap.remove(sessionId);
-
   }
 
-  public static void addSessionGui(SessionGui newSessionGui, Long sessionId) {
+
+
+
+  public static void addSessionGui(SessionGui newSessionGui) {
     sessionsVbox.getChildren().add(newSessionGui);
+  }
+
+  public static void addSessionIdGuiMap(SessionGui newSessionGui, Long sessionId) {
     sessionIdGuiMap.put(sessionId, newSessionGui);
+
   }
 
   public static Map<Long, SessionGui> getSessionIdGuiMap() {
