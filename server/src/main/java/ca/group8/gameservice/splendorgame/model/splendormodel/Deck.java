@@ -49,6 +49,10 @@ public class Deck {
     Collections.shuffle(cards);
   }
 
+  public int getLevel() {
+    return level;
+  }
+
   /**
    * Check if ca.group8.gameservice.splendorgame.model.splendormodel.Deck is empty.
    */

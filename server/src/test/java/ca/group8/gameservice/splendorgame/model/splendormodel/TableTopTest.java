@@ -23,28 +23,23 @@ class TableTopTest {
         t1 = new TableTop(activePlayerInGames);
     }
 
-    @Test
-    void isEmpty() {
-        assert (t1.isEmpty());
-    }
 
     @Test
-    void getDecks() {
+    void testIsNew(){
+        for(PlayerInGame player :activePlayerInGames){
+            assert(player.isEmpty());
+        }
+        for(int i=0; i<3; i++){
+            for(int j=0; j<4; j++){
+                assert(t1.getBaseBoard().getCard(i,j) instanceof DevelopmentCard);
+            }
+        }
+        for(int i = 0; i < activePlayerInGames.size() +1; i++){
+            assert(t1.getNobleBoard().getCard(i,0) instanceof NobleCard);
+        }
+        assert(t1.getDecks().size()==3);
+        assert(t1.getDecks().get(1).size()==36);
     }
 
-    @Test
-    void getPlayers() {
-    }
 
-    @Test
-    void getBaseBoard() {
-    }
-
-    @Test
-    void getNobleBoard() {
-    }
-
-    @Test
-    void getBank() {
-    }
 }

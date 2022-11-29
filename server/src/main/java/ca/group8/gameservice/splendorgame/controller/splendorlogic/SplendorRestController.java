@@ -34,7 +34,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 @RestController
 public class SplendorRestController {
 
-
   // Game instance and game state change related fields
   private SplendorGameManager splendorGameManager;
   private SplendorActionInterpreter splendorActionInterpreter;
@@ -389,4 +388,5 @@ public class SplendorRestController {
   public ResponseEntity<String> getRanking(long gameId) {
     return null;
   }
+
 }
