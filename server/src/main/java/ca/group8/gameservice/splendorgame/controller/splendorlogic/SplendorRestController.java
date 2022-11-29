@@ -1,11 +1,10 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 import ca.group8.gameservice.splendorgame.controller.GameRestController;
-import ca.group8.gameservice.splendorgame.controller.SplendorRegistrator;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
-import ca.group8.gameservice.splendorgame.model.splendormodel.SplendorGameManager;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
@@ -15,7 +14,6 @@ import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -24,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
 @RestController
-public class SplendorRestController implements GameRestController {
+public class SplendorRestController {
 
 
   // Game instance and game state change related fields
@@ -50,7 +49,8 @@ public class SplendorRestController implements GameRestController {
   // Long polling specific fields (Broadcast Content Managers and time out time)
   private final long longPollTimeOut;
   private final Map<Long, BroadcastContentManager<TableTop>> tableTopBroadcastContentManager;
-  private final Map<Long, List<BroadcastContentManager<PlayerInGame>>> playerInfoBroadcastContentManager;
+  // Long: gameId, String: playerName
+  private final Map<Long, Map<String, BroadcastContentManager<PlayerInGame>>> playerInfoBroadcastContentManager;
 
 
   // Debug fields
@@ -96,12 +96,18 @@ public class SplendorRestController implements GameRestController {
     return splendorGameManager.getActiveGames().keySet().toString();
   }
 
-  @Override
+
   @PutMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> launchGame(@PathVariable long gameId,
                                            @RequestBody LauncherInfo launcherInfo)
       throws FileNotFoundException{
     // TODO: Handle the logic of how the game is managed in game manager
+
+    //TODO: When the game is launched, there are several things to do
+    // 1. construct the instance of GameInfo
+    // 2. Add <gameId, tableTop> pair to tableTopBroadcastContentManager (gameId from pathVariable)
+    // 3. Add <gameId, <playerName, PlayerInGame>> map to playerInfoBroadcastContentManager for each playerName
+    //      - the playerName are from launcherInfo.getPlayerNames()
     try {
 
       if (launcherInfo == null || launcherInfo.getGameServer() == null) {
@@ -133,8 +139,43 @@ public class SplendorRestController implements GameRestController {
     }
   }
 
-  @Override
-  public ResponseEntity<String> deleteGame(long gameId) {
+
+
+  // TODO: Finish this later
+
+  @DeleteMapping(value="/api/games/{gameId}", consumes = "application/json; charset=utf-8")
+  public ResponseEntity<String> deleteGame(@PathVariable long gameId,
+                                           @RequestParam(value = "access_token") String accessToken,
+                                           @RequestParam(value = "savegameid", required = false)
+                                             String saveGameId)
+      throws ModelAccessException {
+    if (saveGameId == null) {
+      saveGameId = "";
+    }
+    // if it's empty, then player does not want to save it (saveGameId) can be randomly generated
+    // from client side
+    GameInfo gameInfo = splendorGameManager.getGameById(gameId);
+
+
+    if (!saveGameId.equals("")) { // not empty, then we need to send a saveGameRequest to LS
+      // prepare player names as array to construct Savegame object
+      String[] playerNames = new String[gameInfo.getNumOfPlayers()];
+      for (int i = 0; i < gameInfo.getNumOfPlayers(); i++) {
+        playerNames[i] = gameInfo.getPlayerNames().get(i);
+      }
+      // no matter what, we have a non-empty savegameid that we can send to LS
+      Savegame saveGameInfo = new Savegame(playerNames, gameServiceName, saveGameId);
+      // TODO: Send the PUT request to save game under
+      //  /api/gameservices/{gameservice}/savegames/{savegame} to LS
+
+      // Unirest.put().......
+
+    }
+    // no matter we sent the request to save it or not, we delete the running instance of
+    // game in game service
+
+    // TODO: Delete the game from gameManager and the 2 broadcast managers
+
     return null;
   }
 
@@ -149,8 +190,26 @@ public class SplendorRestController implements GameRestController {
   //  Ex 2) Purchase or Reserve or TakeToken can only happens when access_token_player == curPLayer
 
 
+  // logic to heck whether if it's this player's turn
+  // We need to check all these:
+  // 1. isValidToken()
+  // 2. gameExists() (running and managed by gameManager)
+  //      -> MUST have a gameInfo
+  //      -> Can have a String curPlayer
+  // 3. playerInGame()
+  // 4. curPlayer.equals(playerNameToCheck) or not....
 
-  @Override
+
+
+  private boolean isValidToken(String accessToken, String playerName) throws UnirestException {
+    HttpResponse<String> nameResponse =
+        Unirest.get(lobbyServiceAddress + "/oauth/username")
+            .queryString("access_token", accessToken).asString();
+    String responseUserName = nameResponse.getBody();
+    return responseUserName.equals(playerName);
+
+  }
+
   // Long polling for the game board content, optional hash value
   @GetMapping(value="/api/games/{gameId}/tableTop", produces = "application/json; charset=utf-8")
   public DeferredResult<ResponseEntity<String>> getBoard(
@@ -209,19 +268,7 @@ public class SplendorRestController implements GameRestController {
 
   }
 
-  // TODO: Send a request to /oauth/username to see if it's the same player name
-  private boolean isValidToken(String accessToken, String playerName) throws UnirestException {
-    HttpResponse<String> nameResponse =
-        Unirest.get(lobbyServiceAddress + "/oauth/username")
-            .queryString("access_token", accessToken).asString();
 
-    String responseUserName = nameResponse.getBody();
-
-    return responseUserName.equals(playerName);
-
-  }
-
-  @Override
   @GetMapping(value="/api/games/{gameId}/players", produces = "application/json; charset=utf-8")
   public ResponseEntity<String> getPlayers(@PathVariable long gameId) {
     try {
@@ -239,18 +286,16 @@ public class SplendorRestController implements GameRestController {
     }
   }
 
-  @Override
+
   public ResponseEntity<String> getActions(long gameId, String player, String accessToken) {
     return null;
   }
 
-  @Override
   public ResponseEntity<String> selectAction(long gameId, String player, String actionMD5,
                                              String accessToken) {
     return null;
   }
 
-  @Override
   public ResponseEntity<String> getRanking(long gameId) {
     return null;
   }

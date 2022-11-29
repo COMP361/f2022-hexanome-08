@@ -1,9 +1,5 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
-import ca.group8.gameservice.splendorgame.controller.SplendorLogicException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.*;
-import java.util.List;
-import java.util.EnumMap;
-import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
