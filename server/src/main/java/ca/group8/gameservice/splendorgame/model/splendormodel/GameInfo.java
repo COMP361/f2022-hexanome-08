@@ -35,9 +35,7 @@ public class GameInfo { // TODO add gametype
     // TODO: 2
     tableTop = new TableTop(playersInGame);
 
-
   }
-
 
   /**
    * This initializes Player objects.

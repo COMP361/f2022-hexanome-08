@@ -48,7 +48,7 @@ public class TableTop implements BroadcastContent {
     initialiseBaseDecks();
     this.playerInGames = playerInGames;
     this.baseBoard = new BaseBoard(3,4);
-    this.nobleBoard = new NobleBoard(1, playerInGames.size()+1);
+    this.nobleBoard = new NobleBoard(playerInGames.size()+1, 1);
     initialiseNobleBoard();
     initialiseDevelopmentCardBoard();
     bank = new Bank(playerInGames.size());
@@ -88,7 +88,7 @@ public class TableTop implements BroadcastContent {
 
   private void initialiseNobleBoard() {
     List<NobleCard> nobles = generateNobleCards();
-    for(int i = 0; i<= playerInGames.size() +1; i++){
+    for(int i = 0; i < playerInGames.size() +1; i++){
       nobleBoard.add(i,0, nobles.get(i));
     }
   }

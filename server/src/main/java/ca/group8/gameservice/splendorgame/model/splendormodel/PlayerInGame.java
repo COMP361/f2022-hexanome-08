@@ -6,6 +6,7 @@ import java.util.EnumMap;
 
 public class PlayerInGame implements BroadcastContent {
 
+
   private final String name;
   private TokenHand tokenHand;
   private PurchasedHand purchasedHand;
