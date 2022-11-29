@@ -39,7 +39,6 @@ public class LobbyController {
 
   @FXML
   private ScrollPane allSessionScrollPane;
-  private List<Thread> updateThreadPool;
 
   @FXML
   protected void onCreateSessionButtonClick() throws UnirestException {
@@ -60,7 +59,6 @@ public class LobbyController {
   protected void onLogOutFromLobbyMenu() throws IOException {
     // clean up local lobby session cache before logging out
     App.setUser(null);
-    stopAndClearThreads();
     App.setRoot("start_page");
   }
 
@@ -116,17 +114,19 @@ public class LobbyController {
   private void createAndAddSessionGui(Session curSession, Long sessionId, User user){
     // create the new GUI
     SessionGui curSessionGui = new SessionGui(curSession, sessionId, user);
-
     // set up the session gui
     curSessionGui.setup();
+
+    // store the reference to the global singleton gui map
+    SessionGuiManager.addSessionIdGuiMap(curSessionGui, sessionId);
+
     // create and start the thread that is responsible for updating this newly
     // created Session Pane, add the new sessionGui to the Singleton VBox
     Platform.runLater(() -> {
-      SessionGuiManager.addSessionGui(curSessionGui, sessionId);
+      SessionGuiManager.addSessionGui(curSessionGui);
     });
 
     Thread updateSessionInfoThread = getUpdateOneSessionGuiThread(sessionId);
-    //updateThreadPool.add(updateSessionInfoThread);
     updateSessionInfoThread.start();
   }
 
@@ -151,13 +151,6 @@ public class LobbyController {
     return resultSet;
   }
 
-  private void stopAndClearThreads() {
-    for (Thread t : updateThreadPool) {
-      t.interrupt();
-    }
-    updateThreadPool.clear();
-  }
-
 
   /**
    * Initializing info for local lobby.
@@ -170,7 +163,6 @@ public class LobbyController {
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
-    updateThreadPool = new ArrayList<>();
 
     for (GameParameters g : gameParameters) {
       gameDisplayNames.add(g.getDisplayName());
@@ -206,6 +198,7 @@ public class LobbyController {
         if (responseCode == 200) {
           // long pulling ends in success, we obtain the list of new sessions
           hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
+          System.out.println("One session info updated, break the long polling of main updating thread");
           if (isFirstCheck) {
             // the SessionList which contains Session objects from the remote side
             localSessionList = new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
@@ -235,8 +228,12 @@ public class LobbyController {
               for (Long diffSessionId : diffSessionIds) {
                 SessionGui curSessionGui =
                     SessionGuiManager.getSessionIdGuiMap().get(diffSessionId);
+
+                // remove the reference from the global reference sessionId -> GUI map
+                SessionGuiManager.removeSessionIdGuiMap(diffSessionId);
+
                 Platform.runLater(() -> {
-                  SessionGuiManager.removeSessionGui(curSessionGui,diffSessionId);
+                  SessionGuiManager.removeSessionGui(curSessionGui);
                 });
               }
             } else if (remoteSessionCount > localSessionCount) {
@@ -257,7 +254,6 @@ public class LobbyController {
         });
       }
     });
-    updateThreadPool.add(updateAddRemoveSessionThread);
     updateAddRemoveSessionThread.start();
 
   }

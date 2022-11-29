@@ -3,38 +3,27 @@ import ca.group8.gameservice.splendorgame.controller.GameRestController;
 import ca.group8.gameservice.splendorgame.controller.SplendorRegistrator;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
-import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
-import ca.group8.gameservice.splendorgame.model.splendormodel.BaseCard;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
-import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.SplendorGameManager;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import com.google.gson.Gson;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import java.util.Optional;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,22 +38,30 @@ public class SplendorRestController implements GameRestController {
   private SplendorRegistrator splendorRegistrator;
   private SplendorGameManager splendorGameManager;
 
+
   private String gameServiceName;
 
-  private final Map<Long, BroadcastContentManager<TableTop>> broadcastContentManagers;
-
+  // Long polling specific fields
   private final long longPollTimeOut;
+  private final Map<Long, BroadcastContentManager<TableTop>> tableTopBroadcastContentManager;
+  private final Map<Long, List<BroadcastContentManager<PlayerInGame>>> playerInfoBroadcastContentManager;
+
+
+  // Debug fields
   private final Logger logger;
+
+  private String lobbyServiceAddress;
 
   public SplendorRestController(
       @Autowired SplendorRegistrator splendorRegistrator, SplendorGameManager splendorGameManager,
-                                @Value("${gameservice.name}") String gameServiceName,
+      @Value("${gameservice.name}") String gameServiceName, @Value("${lobbyservice.location}") String lobbyServiceAddress,
       @Value("long.poll.timeout") long longPollTimeOut) {
     this.splendorRegistrator = splendorRegistrator;
     this.splendorGameManager = splendorGameManager;
+    this.lobbyServiceAddress = lobbyServiceAddress;
     this.gameServiceName = gameServiceName;
     this.longPollTimeOut = longPollTimeOut;
-    this.broadcastContentManagers = new HashMap<>();
+    this.tableTopBroadcastContentManager = new HashMap<>();
     this.logger = LoggerFactory.getLogger(SplendorRestController.class);
   }
   @GetMapping("/splendor/hello")
@@ -115,7 +112,7 @@ public class SplendorRestController implements GameRestController {
       logger.warn("Launcher player names:" + launcherInfo.getPlayerNames());
       TableTop curTableTop = splendorGameManager.getGameById(gameId).getTableTop();
       // store the gameId -> broadcast content map to the broadcast manager
-      broadcastContentManagers.put(gameId, new BroadcastContentManager<>(curTableTop));
+      tableTopBroadcastContentManager.put(gameId, new BroadcastContentManager<>(curTableTop));
       return ResponseEntity.status(HttpStatus.OK).build();
 
     } catch (ModelAccessException e) {
@@ -128,6 +125,18 @@ public class SplendorRestController implements GameRestController {
   public ResponseEntity<String> deleteGame(long gameId) {
     return null;
   }
+
+
+  // TODO: Write a method, providing playerName and gameId, find the
+  //  corresponding GameInfo and PlayerInGame
+
+
+  // TODO: Write a general method to check if the access_token -> playerName refers to
+  //  a valid request (Action request or Other request)
+  //  Ex 1) Click on MyPurchase Cards do not need to be current player
+  //  Ex 2) Purchase or Reserve or TakeToken can only happens when access_token_player == curPLayer
+
+
 
   @Override
   // Long polling for the game board content, optional hash value
@@ -146,13 +155,58 @@ public class SplendorRestController implements GameRestController {
       }
 
       // hash is either "-" or the hashed value from previous payload, use long polling
-      return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, broadcastContentManagers.get(gameId), hash);
+      return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, tableTopBroadcastContentManager.get(gameId), hash);
     }catch (ModelAccessException e) {
       // Request does not go through, we need a deferred result
       DeferredResult<ResponseEntity<String>> deferredResult = new DeferredResult<>();
       deferredResult.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()));
       return deferredResult;
     }
+  }
+
+  @GetMapping(value="/api/games/{gameId}/players/{playerName}/inventory", produces = "application/json; charset=utf-8")
+  public DeferredResult<ResponseEntity<String>> getPlayerInventory(
+      @PathVariable long gameId, @PathVariable String playerName,
+      @RequestParam(value = "access_token") String accessToken,
+      @RequestParam(required = false) String hash
+  ) {
+
+    try{
+      if (hash == null || hash.equals("")) {
+        hash = "-";
+      }
+      // if the game does not exist in the game manager, throw an exception
+      if(!splendorGameManager.isExistentGameId(gameId)){
+        throw new ModelAccessException("There is no game with game id: "
+            + gameId + " launched, try again later");
+      }
+
+      if(!isValidToken(accessToken, playerName)) {
+        throw new ModelAccessException("User token and user name does not match");
+      }
+
+
+      // hash is either "-" or the hashed value from previous payload, use long polling
+      return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, tableTopBroadcastContentManager.get(gameId), hash);
+    }catch (ModelAccessException | UnirestException e) {
+      // Request does not go through, we need a deferred result
+      DeferredResult<ResponseEntity<String>> deferredResult = new DeferredResult<>();
+      deferredResult.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()));
+      return deferredResult;
+    }
+
+  }
+
+  // TODO: Send a request to /oauth/username to see if it's the same player name
+  private boolean isValidToken(String accessToken, String playerName) throws UnirestException {
+    HttpResponse<String> nameResponse =
+        Unirest.get(lobbyServiceAddress + "/oauth/username")
+            .queryString("access_token", accessToken).asString();
+
+    String responseUserName = nameResponse.getBody();
+
+    return responseUserName.equals(playerName);
+
   }
 
   @Override

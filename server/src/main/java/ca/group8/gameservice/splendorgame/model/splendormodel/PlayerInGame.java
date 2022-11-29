@@ -1,9 +1,10 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
+import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
 import java.util.EnumMap;
 
-public class PlayerInGame implements PlayerReadOnly {
+public class PlayerInGame implements BroadcastContent {
 
   private final String name;
   private TokenHand tokenHand;
@@ -57,16 +58,14 @@ public class PlayerInGame implements PlayerReadOnly {
     return reservedHand;
   }
 
-
-
-
-  @Override
   public String getName() {
     return name;
   }
 
   @Override
-  public String getPreferredColour() {
-    return getPreferredColour();
+  public boolean isEmpty() {
+    return this.name != null && !tokenHand.getAllTokens().isEmpty()
+        && !purchasedHand.getDevelopmentCards().isEmpty()
+        && !reservedHand.getDevelopmentCards().isEmpty();
   }
 }
