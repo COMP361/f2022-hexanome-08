@@ -53,31 +53,35 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
   @Override
   public Map<Colour, Map<PlayerTokenInfo, Text>> getPlayerColourWealthMap(PlayerPosition playerPosition) {
     Map<Colour, Map<PlayerTokenInfo, Text>> result = new HashMap<>();
-    Colour[] colours = App.getAllColours();
-    Map<PlayerTokenInfo, Text> info = new HashMap<>();
-    Map<PlayerTokenInfo, Text> goldInfo = new HashMap<>();
+    Colour[] colours = App.getBaseColours();
     if (playerPosition.equals(PlayerPosition.TOP)) {
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < colours.length; i++) {
+        Map<PlayerTokenInfo, Text> info = new HashMap<>();
         Group curGroup = (Group) this.getChildren().get(i);
         info.put(PlayerTokenInfo.GEM, (Text) curGroup.getChildren().get(1));
         info.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         result.put(colours[i], info);
       }
+      Map<PlayerTokenInfo, Text> goldInfo = new HashMap<>();
       Group curGroup = (Group) this.getChildren().get(5);
       goldInfo.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(1));
+      result.put(Colour.GOLD, goldInfo);
     } else if (playerPosition.equals(PlayerPosition.BOTTOM)) {
       for (int i = 1; i < 6; i++) {
+        Map<PlayerTokenInfo, Text> info = new HashMap<>();
         VBox currBox = (VBox) this.getChildren().get(i);
         Group curGroup = (Group) currBox.getChildren().get(1);
         info.put(PlayerTokenInfo.GEM, (Text) curGroup.getChildren().get(1));
         info.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         result.put(colours[i-1], info);
       }
+      Map<PlayerTokenInfo, Text> goldInfo = new HashMap<>();
       VBox currBox = (VBox) this.getChildren().get(6);
       Group curGroup = (Group) currBox.getChildren().get(1);
       goldInfo.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(1));
+      result.put(Colour.GOLD, goldInfo);
     }
-    result.put(Colour.GOLD, goldInfo);
+
     return result;
   }
 
