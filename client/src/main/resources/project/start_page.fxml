@@ -2,34 +2,31 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" styleClass="bodyback" stylesheets="@splendor_background.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.LogInController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="830.0" prefWidth="1200.0" styleClass="bodyback" stylesheets="@splendor_background.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.LogInController">
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="userName" alignment="CENTER" layoutX="610.0" layoutY="387.0" promptText="username">
+            <TextField fx:id="userName" alignment="CENTER" layoutX="762.0" layoutY="390.0" promptText="username" style="-fx-background-color: #cde8ff;">
                <font>
                   <Font size="25.0" />
                </font>
             </TextField>
-            <Button fx:id="quitGameButton" layoutX="848.0" layoutY="541.0" mnemonicParsing="false" onAction="#onQuitGameButtonClick" text="Quit">
+            <Button fx:id="quitGameButton" layoutX="1000.0" layoutY="544.0" mnemonicParsing="false" onAction="#onQuitGameButtonClick" style="-fx-background-color: #cde8ff;" text="Quit">
                <font>
                   <Font size="22.0" />
                </font></Button>
-            <Button layoutX="610.0" layoutY="541.0" mnemonicParsing="false" onAction="#onLogInButtonClick" text="Log In">
+            <Button layoutX="762.0" layoutY="544.0" mnemonicParsing="false" onAction="#onLogInButtonClick" style="-fx-background-color: #cde8ff;" text="Log In">
                <font>
                   <Font size="22.0" />
                </font>
             </Button>
-            <PasswordField fx:id="userPassword" alignment="CENTER" layoutX="610.0" layoutY="462.0" promptText="password">
+            <PasswordField fx:id="userPassword" alignment="CENTER" layoutX="762.0" layoutY="465.0" promptText="password" style="-fx-background-color: #cde8ff;">
                <font>
                   <Font size="25.0" />
                </font>
@@ -42,15 +39,4 @@
          </children>
       </AnchorPane>
    </center>
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="Settings">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Volume" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </top>
 </BorderPane>

@@ -1,19 +1,16 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.controller.Action;
-import ca.group8.gameservice.splendorgame.model.Game;
-import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Player;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 
-public class CardAction extends Action {
+public abstract class CardAction extends Action {
   private Position position;
   private Card card;
 
-  public CardAction(Player player, GameInfo game, Position position, Card card) {
-    super(player, game);
+  public CardAction(boolean isCardAction, Position position, Card card) {
+    super(isCardAction);
     this.position = position;
     this.card = card;
   }
@@ -26,34 +23,31 @@ public class CardAction extends Action {
     return card;
   }
 
-  /*
-  1. Same class
-  2. same player
-  3. same game info
-  4. same card
-   */
-
-  // Overriding equals() to compare two Complex objects
   @Override
-  public boolean equals(Object o) {
+  public abstract void execute(GameInfo currentGameState, PlayerInGame playerState);
 
-    // If the object is compared with itself then return true
-    if (o == this) {
-      return true;
-    }
+  //// Overriding equals() to compare two Complex objects
+  //
+  //// TODO: Override the equals for Card (do we need the equal for Card?)
+  //@Override
+  //public boolean equals(Object o) {
+  //
+  //  // If the object is compared with itself then return true
+  //  if (o == this) {
+  //    return true;
+  //  }
+  //
+  //      /* Check if o is an instance of Complex or not
+  //        "null instanceof [type]" also returns false */
+  //  if (!(this.getClass()==o.getClass())) {
+  //    return false;
+  //  }
+  //
+  //  // typecast o to CardAction so that we can compare data members
+  //  CardAction c = (CardAction) o;
+  //
+  //  // Compare the Player, Game, and Card fields
+  //  return this.getCard().equals(c.getCard());
+  //}
 
-        /* Check if o is an instance of Complex or not
-          "null instanceof [type]" also returns false */
-    if (!(this.getClass()==o.getClass())) {
-      return false;
-    }
-
-    // typecast o to CardAction so that we can compare data members
-    CardAction c = (CardAction) o;
-
-    // Compare the Player, Game, and Card fields
-    return this.getPlayer()==(c.getPlayer())
-            && this.getGame().equals(c.getGame())
-            && this.getCard().equals(c.getCard());
-  }
 }

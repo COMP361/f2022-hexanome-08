@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.model;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.Board;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 
 /**
  * Generic game interface with methods common to all board game implementations. The Game represents a persistable game
@@ -26,7 +27,7 @@ public interface Game {
      *
      * @return the board of a game.
      */
-    Board getBoard();
+    TableTop getTableTop();
 
     /**
      * Retrieves the array (in order of registration) of players associated to a game object. Only returns a deep copy

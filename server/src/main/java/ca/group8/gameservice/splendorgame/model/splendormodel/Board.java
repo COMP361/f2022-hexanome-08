@@ -11,7 +11,7 @@ public class Board {
   private final int columns;
   private final int rows;
 
-  public Board(int paramWidth, int paramHeight) {
+  public Board(int paramHeight, int paramWidth) {
     columns = paramWidth;
     rows = paramHeight;
     cardBoard = new Card[rows][columns];
@@ -19,14 +19,26 @@ public class Board {
 
   }
 
+  public int getColumns() {
+    return columns;
+  }
+
+  public int getRows() {
+    return rows;
+  }
+
   public void add(int row, int column, Card card){
     cardBoard[row][column] = card;
+  }
+
+  public Card getCard(int row,int column) {
+    return cardBoard[row][column];
   }
 
   boolean hasCard(Card paramCard) {
     for (Card[] array : cardBoard) {
       for (Card card : array) {
-        if (card == paramCard) {
+        if (card.equals(paramCard)) {
           return true;
         }
       }
@@ -42,7 +54,7 @@ public class Board {
 
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
-        if (cardBoard[i][j] == paramCard) {
+        if (cardBoard[i][j].equals(paramCard)) {
           return new Position(j, i);
         }
       }
@@ -68,7 +80,6 @@ public class Board {
         allCards.add(cardBoard[i][j]);
       }
     }
-    return null;
+    return allCards;
   }
-
 }

@@ -6,9 +6,9 @@ public class Position {
   private int x;
   private int y;
 
-  public Position(int paramWidth, int paramHeight) {
-    x = paramWidth;
-    y = paramHeight;
+  public Position(int paramX, int paramY) {
+    x = paramX;
+    y = paramY;
   }
 
   public int getX() {
@@ -25,5 +25,11 @@ public class Position {
 
   public void setY(int y) {
     this.y = y;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    Position position = (Position) o;
+    return (position.getX() == this.getX() && position.getY() == this.getY());
   }
 }
