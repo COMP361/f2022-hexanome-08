@@ -80,4 +80,10 @@ public class PlayerInGame implements BroadcastContent {
     prestigePoints = newPrestigePoints;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    PlayerInGame player = (PlayerInGame) o;
+    return (this.getName().equals((player).getName()));
+  }
+
 }
