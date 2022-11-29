@@ -25,7 +25,6 @@ class TableTopTest {
         t1 = new TableTop(activePlayerInGames);
     }
 
-
     @Test
     void isEmpty() {
         //TODO need to implement the orient board
