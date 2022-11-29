@@ -12,6 +12,7 @@ public class Player implements PlayerReadOnly {
     this.preferredColour = preferredColour;
   }
 
+
   @Override
   public String getName() {
     return name;

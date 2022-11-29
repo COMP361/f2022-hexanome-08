@@ -1,5 +1,5 @@
 package project.view.splendor;
 
-public enum PlayerTokenInfo {
+public enum PlayerWealthInfo {
     GEM,TOKEN;
 }
