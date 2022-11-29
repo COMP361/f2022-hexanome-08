@@ -8,34 +8,19 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class SplendorActionListGenerator {
 
     private static boolean isParticipant(GameInfo gameInfo, PlayerInGame player) {
         return gameInfo.getActivePlayers().contains(player);
     }
-
-//  private static Map<String, Action> emptyCellsToActions(XoxBoard board, PlayerReadOnly player) throws LogicException {
-//    Map<String, Action> actionMap = new LinkedHashMap();
-//
-//    // Iterate over board
-//    for (int yPos = 0; yPos < 3; yPos++) {
-//      for (int xPos = 0; xPos < 3; xPos++) {
-//        // Add an action if the position is free
-//        if (board.isFree(xPos, yPos)) {
-//          Action action = new XoxClaimFieldAction(xPos, yPos, player);
-//          String actionMd5 = DigestUtils.md5Hex(new Gson().toJson(action)).toUpperCase();
-//          actionMap.put(actionMd5, action);
-//        }
-//      }
-//    }
-//    return actionMap;
-//  }
 
     /**
      1. create a new map -- DONE
@@ -90,31 +75,6 @@ public class SplendorActionListGenerator {
         return actionOptions;
     }
 
-
-
-//  public Map<String, Action> generateActions(Game game, PlayerReadOnly player) throws LogicException {
-//
-//    // Verify and cast the game type
-//    if (game.getClass() != XoxGame.class)
-//      throw new LogicException("Xox Action Generator can only handle Xox games.");
-//    XoxGame xoxGame = (XoxGame) game;
-//
-//    // Non participants (observers) always receive an empty action bundle.
-//    if (player == null || !isParticipant(xoxGame, player))
-//      return new LinkedHashMap<>();
-//
-//    // If the game is already over, return an empty set
-//    if (xoxGame.isFinished())
-//      return new LinkedHashMap<>();
-//
-//    // If not the player's turn, return an empty set. (Check is performed by comparing the name of the current player)
-//    if (!player.getName().toLowerCase().equals(xoxGame.getCurrentPlayerName().toLowerCase()))
-//      return new LinkedHashMap<>();
-//
-//    // Iterate over board and add an action for every unoccupied cell.
-//    return emptyCellsToActions(xoxGame.getBoard(), player);
-//  }
-
     public Map<String,Action> generateActions(GameInfo gameInfo, PlayerInGame player){
         if(isParticipant(gameInfo,player)){
             return new HashMap<>();
@@ -128,13 +88,12 @@ public class SplendorActionListGenerator {
 
         Map<String,Action> actions = new HashMap<>();
         for(Action action : cardsToActions(gameInfo,player)){
-            actions.put(Integer.toString(action.hashCode()),action);
+            String actionMd5 = DigestUtils.md5Hex(new Gson().toJson(action)).toUpperCase();
+            actions.put(actionMd5, action);
         }
         SplendorTakeTokenAction takeTokenAction = new SplendorTakeTokenAction(player, gameInfo);
-        actions.put(Integer.toString(takeTokenAction.hashCode()),takeTokenAction);
-
-
-
+        String takeTokenActionMd5 = DigestUtils.md5Hex(new Gson().toJson(takeTokenAction)).toUpperCase();
+        actions.put(takeTokenActionMd5,takeTokenAction);
         return actions;
     }
 
