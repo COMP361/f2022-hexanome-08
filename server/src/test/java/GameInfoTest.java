@@ -15,7 +15,7 @@ class GameInfoTest {
     GameInfo g1;
 
     @BeforeEach
-    void setup(){
+    void setup() throws FileNotFoundException {
         playerNames.add("P1");
         playerNames.add("p2");
         PlayerInGame p1 = new PlayerInGame("P1");
