@@ -6,42 +6,32 @@ import java.util.Optional;
 
 public class DevelopmentCard extends Card {
 
+<<<<<<< HEAD
   private EnumMap<Colour,Integer> price;
+=======
+>>>>>>> 426b71b8fa406072bbe86730f93ee5c006d7d399
   private int level;
-  private Optional<Colour> gemColor;
-  private boolean isPaired = false;
-  private int pairedCardId = -1;
+  private Optional<Colour> gemColour;
+  private boolean isPaired;
+  private String pairedCardId;
   private int gemNumber;
 
 
 
   public DevelopmentCard(int paramPrestigePoints,
-      EnumMap<Colour, Integer> paramPrice, String cardName,
-      EnumMap<Colour, Integer> price, int level,
-      Optional<Colour> gemColor, boolean isPaired, int pairedCardId, int gemNumber) {
-    super(paramPrestigePoints, paramPrice, cardName);
 
-
-    this.price = price;
+      EnumMap<Colour, Integer> paramPrice, String paramCardName,
+                         int level, Optional<Colour> gemColour, boolean isPaired, String pairedCardId, int gemNumber) {
+    super(paramPrestigePoints, paramPrice, paramCardName);
     this.level = level;
-    if(gemColor.isPresent()){
-      this.gemColor = gemColor;
+    if(gemColour.isPresent()){
+      this.gemColour = gemColour;
     }else{
-      this.gemColor= Optional.empty();
+      this.gemColour= Optional.empty();
     }
     this.isPaired = isPaired;
     this.pairedCardId = pairedCardId;
     this.gemNumber=gemNumber;
-  }
-
-
-  public int getPrestigePoints() {
-    return prestigePoints;
-  }
-
-  public EnumMap<Colour, Integer> getPrice() {
-    return price;
-
   }
 
   public int getLevel() {
@@ -52,24 +42,24 @@ public class DevelopmentCard extends Card {
    *
    * @return Optional type of Colour.
    */
-  public Optional<Colour> getGemColor() {
-    return gemColor;
-  }
+  public Optional<Colour> getGemColour() { return gemColour; }
 
   public Boolean isPaired() {
     return isPaired;
   }
 
-  public int getPairedCardID() {
-    return 0;
+  public String getPairedCardId() {
+    return pairedCardId;
   }
 
+  public int getGemNumber() { return gemNumber; }
 
-  public int getGemNumber() {
-
-    return gemNumber;
+  public void setPaired(boolean paramPaired) {
+    isPaired = paramPaired;
   }
 
-
+  public void setPairedCardId(String paramPairedCardId) {
+    pairedCardId = paramPairedCardId;
+  }
 
 }

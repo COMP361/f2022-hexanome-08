@@ -13,9 +13,10 @@ public class TokenHand {
    * Relies on Game Info to know how many players are in the game.
    * Initialize all token values to zero.
    */
-  protected TokenHand() {
+  protected TokenHand(int initialAmount) {
+    allTokens = new EnumMap<>(Colour.class);
     for (Colour colour : Colour.values()) {
-      allTokens.put(colour, 0);
+      allTokens.put(colour, initialAmount);
     }
   }
 
@@ -28,13 +29,13 @@ public class TokenHand {
   }
 
 
-  /**
-   * Adds a certain amount (quantity) of a certain GemColour colour from the TokenHand.
-   *
-   * @param colour = Gem Colour.
-   * @param quantity = quantity to add.
-   *
-   */
+  ///**
+  // * Adds a certain amount (quantity) of a certain GemColour colour from the TokenHand.
+  // *
+  // * @param colour = Gem Colour.
+  // * @param quantity = quantity to add.
+  // *
+  // */
 
   public void addToken(EnumMap<Colour,Integer> paramTokens) {
     //add Tokens
@@ -45,17 +46,19 @@ public class TokenHand {
   }
 
   /**
-   * Removes a certain amount (quantity) of a certain GemColour colour from the TokenHand.
-   *
-   * @param colour = Gem Colour.
-   * @param quantity = quantity to remove.
-   *
+   * Removes a Map of Tokens from the tokenHand.
    */
-  public void removeToken(Colour colour, int quantity) {
-    //verify that this number of tokens can be removed (meaning new sum >=0)
-    assert (allTokens.get(colour) - quantity) >= 0;
+  public void removeToken(EnumMap<Colour,Integer> paramTokens) {
+    //verify that this number of gems can be removed (meaning new sum will not be less than 0)
+    //Must be done before the next loop to ensure it passes for all colours
+    for(Colour colour: Colour.values()){
+      assert (allTokens.get(colour) - paramTokens.get(colour)) >= 0;
+    }
     //remove Tokens
-    allTokens.put(colour, (allTokens.get(colour) - quantity));
+    for(Colour colour: Colour.values()){
+      int newVal = allTokens.get(colour) - paramTokens.get(colour);
+      allTokens.replace(colour,newVal);
+    }
   }
 }
 

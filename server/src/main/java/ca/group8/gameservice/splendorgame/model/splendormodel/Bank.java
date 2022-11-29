@@ -7,7 +7,7 @@ import java.util.EnumMap;
  */
 public class Bank {
 
-  private EnumMap<Colour, Integer> allGems;
+  private EnumMap<Colour, Integer> allTokens;
   private final int initialValue; //this is the value all gems (excl. gold) are initialized too
 
   /**
@@ -22,44 +22,56 @@ public class Bank {
   //TODO: Do we want to have this param?? Or should we implement this logic in GameState
   //TODO: and pass an integer value to Bank representing the initial gem values.
   protected Bank(int numPlayers) {
+    this.allTokens = new EnumMap<>(Colour.class);
     initialValue = (numPlayers * 2) - 1;
     for (Colour colour : Colour.values()) {
       if (colour == Colour.GOLD) {
-        allGems.put(colour, 5);
+        allTokens.put(colour, 5);
       } else {
-        allGems.put(colour, initialValue);
+        allTokens.put(colour, initialValue);
       }
     }
   }
 
   /**
-   * Adds a certain amount (quantity) of a certain GemColour colour to the Bank.
-   *
-   * @param colour = Gem Colour.
-   * @param quantity = quantity to add.
-   *
+   * Adds a map of tokens to the bank.
    */
-  //TODO: Is it going to be called Gems or tokens? Cause in concept model we called it Gems
-  public void addGem(Colour colour, int quantity) {
+  public void addToken(EnumMap<Colour,Integer> paramTokens) {
     //verify that this number of gems can be added (meaning new sum will not exceed initial value)
-    assert (allGems.get(colour) + quantity) <= initialValue;
-    //add Gems
-    allGems.put(colour, (allGems.get(colour) + quantity));
+    for(Colour colour: Colour.values()){
+      assert (allTokens.get(colour) + paramTokens.get(colour)) <= initialValue;
+    }
+    //add Tokens
+    for(Colour colour: Colour.values()){
+      int newVal = allTokens.get(colour) + paramTokens.get(colour);
+      allTokens.replace(colour,newVal);
+    }
   }
 
+
+
   /**
-   * Removes a certain amount (quantity) of a certain GemColour colour from the Bank.
-   *
-   * @param colour = Gem Colour.
-   * @param quantity = quantity to remove.
-   *
+   * Removes a Map of Tokens from the Bank.
    */
-  //TODO: Is it going to be called Gems or tokens? Cause in concept model we called it Gems
-  public void removeGem(Colour colour, int quantity) {
-    //verify that this number of gems can be removed (meaning new sum >=0)
-    assert (allGems.get(colour) - quantity) >= 0;
-    //remove Gems
-    allGems.put(colour, (allGems.get(colour) - quantity));
+
+  public void removeToken(EnumMap<Colour,Integer> paramTokens) {
+    //verify that this number of gems can be removed (meaning new sum will not be less than 0)
+    for(Colour colour: Colour.values()){
+      assert (allTokens.get(colour) - paramTokens.get(colour)) >= 0;
+    }
+    //remove Tokens
+    for(Colour colour: Colour.values()){
+      int newVal = allTokens.get(colour) - paramTokens.get(colour);
+      allTokens.replace(colour,newVal);
+    }
+  }
+
+  public EnumMap<Colour, Integer> getAllTokens() {
+    return allTokens;
+  }
+
+  public int getInitialValue() {
+    return initialValue;
   }
 }
 

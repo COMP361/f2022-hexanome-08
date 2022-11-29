@@ -11,14 +11,14 @@ public class Deck {
 
 
   //TODO: Depends on Card interface
-  private List<Card> cards = new ArrayList();
+  private List<Card> cards = new ArrayList<>();
 
   //TODO Make a LEVEL enum to assign to ca.group8.gameservice.splendorgame.model.splendormodel.Deck? Or do we want an int?
   private int level;
 
-  public Deck(int level) {
+  public Deck(int paramLevel) {
     //initialize by adding Cards to cards field
-    this.level = level;
+    this.level = paramLevel;
   }
 
   /**
@@ -38,7 +38,6 @@ public class Deck {
     } else {
       throw new UnsupportedOperationException(); //TODO Throw a more relevant exception
     }
-
     return card;
   }
 

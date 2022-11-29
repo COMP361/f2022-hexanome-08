@@ -7,11 +7,11 @@ public class BaseCard extends DevelopmentCard {
 
 
     public BaseCard(int paramPrestigePoints,
-        EnumMap<Colour, Integer> paramPrice, String cardName,
-        EnumMap<Colour, Integer> price, int level,
-        Optional<Colour> gemColor, boolean isPaired, int pairedCardId, int gemNumber) {
-        super(paramPrestigePoints, paramPrice, cardName, price, level,
-            gemColor, isPaired, pairedCardId, gemNumber);
+        EnumMap<Colour, Integer> paramPrice, String cardName, int level,
+        Optional<Colour> gemColour, boolean isPaired, String pairedCardId, int gemNumber) {
+        super(paramPrestigePoints, paramPrice, cardName, level,
+            gemColour, isPaired, pairedCardId, gemNumber);
+
 
     }
 

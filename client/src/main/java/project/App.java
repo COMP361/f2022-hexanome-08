@@ -1,23 +1,21 @@
 package project;
 
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
+import java.util.Objects;
 import javafx.application.Application;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.SubScene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import project.connection.LobbyServiceRequestSender;
-import project.view.lobby.Session;
+import project.view.lobby.SessionGuiManager;
 import project.view.lobby.User;
+import project.view.splendor.Colour;
 
 
 /**
@@ -37,7 +35,17 @@ public class App extends Application {
   private static final LobbyServiceRequestSender lobbyRequestSender =
       new LobbyServiceRequestSender("http://76.66.139.161:4242");
 
+  private static final Colour[] allColours = new Colour[] {
+    Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
+  };
+  private static final Colour[] baseColours = new Colour[] {
+      Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
+  };
+
   private static User user;
+
+  private static GameBoardLayoutConfig guiLayouts;
+
 
   /**
    * Override the start() method to launch the whole project.
@@ -47,7 +55,18 @@ public class App extends Application {
    */
   @Override
   public void start(Stage stage) throws IOException {
-    scene = new Scene(loadFxml("start_page"), 1000, 800);
+    try {
+      FileReader f = new FileReader(Objects.requireNonNull(
+          App.class.getClassLoader().getResource("appConfig.json")).getFile());
+      JsonReader jfReader = new JsonReader(f);
+      guiLayouts = new Gson().fromJson(jfReader, GameBoardLayoutConfig.class);
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    SessionGuiManager.getInstance();
+    scene = new Scene(loadFxml("start_page"),
+        guiLayouts.getAppWidth(),
+        guiLayouts.getAppHeight());
     // Every time we loadFxml("a_file"), the file corresponding
     // controller's initialize method will get called
     //lobby = new Scene(loadFxml("admin_lobby_page"), 1000, 800);
@@ -70,7 +89,7 @@ public class App extends Application {
    * @param fxml The fxml file where we read the GUI setup
    * @throws IOException when fxml not found
    */
-  static void setRoot(String fxml) throws IOException {
+  public static void setRoot(String fxml) throws IOException {
     scene.setRoot(loadFxml(fxml));
   }
 
@@ -83,7 +102,7 @@ public class App extends Application {
    * @param title  Title of the new stage
    * @throws IOException when fxml not found
    */
-  static void setRootWithSizeTitle(String fxml, int height, int width, String title)
+  public static void setRootWithSizeTitle(String fxml, int height, int width, String title)
       throws IOException {
     Stage newStage = new Stage();
     newStage.setTitle(title);
@@ -99,7 +118,7 @@ public class App extends Application {
    * @param curScene The current scene of the pop-up
    * @throws IOException when fxml not found
    */
-  static void setPopUpRoot(String fxml, Scene curScene) throws IOException {
+  public static void setPopUpRoot(String fxml, Scene curScene) throws IOException {
     curScene.setRoot(loadFxml(fxml));
   }
 
@@ -142,6 +161,14 @@ public class App extends Application {
     return lobbyRequestSender;
   }
 
+  public static Colour[] getAllColours() {
+    return allColours;
+  }
+
+  public static Colour[] getBaseColours() {
+    return baseColours;
+  }
+
   public static User getUser() {
     return user;
   }
@@ -149,5 +176,32 @@ public class App extends Application {
   public static void setUser(User puser) {
     user = puser;
   }
+  public static GameBoardLayoutConfig getGuiLayouts() {
+    return guiLayouts;
+  }
 
+  public static String getNoblePath(String cardName) {
+    return String.format("project/pictures/noble/%s.png",cardName);
+  }
+
+  public static String getOrientCardPath(String cardName, int level) {
+    assert level >= 1 && level <= 3;
+    return String.format("project/pictures/orient/%d/%s.png",level, cardName);
+  }
+
+  public static String getBaseCardPath(String cardName, int level) {
+    assert level >= 1 && level <= 3;
+    return String.format("project/pictures/level%d/%s.png",level, cardName);
+  }
+
+  public static void loadPopUpWithController(String fxmlName, Object controller,
+                                             double popUpStageWidth, double popUpStageHeight)
+      throws IOException {
+    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
+    fxmlLoader.setController(controller);
+    Stage newStage = new Stage();
+    newStage.setScene(new Scene(fxmlLoader.load(), 360, 170));
+    newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+    newStage.show();
+  }
 }
