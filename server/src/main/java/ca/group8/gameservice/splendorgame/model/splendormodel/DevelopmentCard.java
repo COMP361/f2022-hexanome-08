@@ -6,10 +6,6 @@ import java.util.Optional;
 
 public class DevelopmentCard extends Card {
 
-<<<<<<< HEAD
-  private EnumMap<Colour,Integer> price;
-=======
->>>>>>> 426b71b8fa406072bbe86730f93ee5c006d7d399
   private int level;
   private Optional<Colour> gemColour;
   private boolean isPaired;
@@ -19,7 +15,6 @@ public class DevelopmentCard extends Card {
 
 
   public DevelopmentCard(int paramPrestigePoints,
-
       EnumMap<Colour, Integer> paramPrice, String paramCardName,
                          int level, Optional<Colour> gemColour, boolean isPaired, String pairedCardId, int gemNumber) {
     super(paramPrestigePoints, paramPrice, paramCardName);

@@ -12,7 +12,6 @@ public class BaseCard extends DevelopmentCard {
         super(paramPrestigePoints, paramPrice, cardName, level,
             gemColour, isPaired, pairedCardId, gemNumber);
 
-
     }
 
 }
