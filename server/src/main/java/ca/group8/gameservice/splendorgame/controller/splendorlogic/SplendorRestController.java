@@ -35,13 +35,19 @@ import org.springframework.web.context.request.async.DeferredResult;
 @RestController
 public class SplendorRestController implements GameRestController {
 
-  private SplendorRegistrator splendorRegistrator;
+
+  // Game instance and game state change related fields
   private SplendorGameManager splendorGameManager;
+  private SplendorActionInterpreter splendorActionInterpreter;
+  private SplendorActionListGenerator splendorActionListGenerator;
 
 
+  // Game registration related fields
   private String gameServiceName;
+  private String lobbyServiceAddress;
+  private SplendorRegistrator splendorRegistrator;
 
-  // Long polling specific fields
+  // Long polling specific fields (Broadcast Content Managers and time out time)
   private final long longPollTimeOut;
   private final Map<Long, BroadcastContentManager<TableTop>> tableTopBroadcastContentManager;
   private final Map<Long, List<BroadcastContentManager<PlayerInGame>>> playerInfoBroadcastContentManager;
@@ -50,18 +56,24 @@ public class SplendorRestController implements GameRestController {
   // Debug fields
   private final Logger logger;
 
-  private String lobbyServiceAddress;
-
   public SplendorRestController(
-      @Autowired SplendorRegistrator splendorRegistrator, SplendorGameManager splendorGameManager,
-      @Value("${gameservice.name}") String gameServiceName, @Value("${lobbyservice.location}") String lobbyServiceAddress,
+      @Autowired SplendorRegistrator splendorRegistrator,
+      @Autowired SplendorGameManager splendorGameManager,
+      @Autowired SplendorActionListGenerator splendorActionListGenerator,
+      @Autowired SplendorActionInterpreter splendorActionInterpreter,
+      @Value("${gameservice.name}") String gameServiceName,
+      @Value("${lobbyservice.location}") String lobbyServiceAddress,
       @Value("long.poll.timeout") long longPollTimeOut) {
     this.splendorRegistrator = splendorRegistrator;
     this.splendorGameManager = splendorGameManager;
+    this.splendorActionListGenerator = splendorActionListGenerator;
+    this.splendorActionInterpreter = splendorActionInterpreter;
     this.lobbyServiceAddress = lobbyServiceAddress;
     this.gameServiceName = gameServiceName;
     this.longPollTimeOut = longPollTimeOut;
     this.tableTopBroadcastContentManager = new HashMap<>();
+    this.playerInfoBroadcastContentManager = new HashMap<>();
+    // for debug
     this.logger = LoggerFactory.getLogger(SplendorRestController.class);
   }
   @GetMapping("/splendor/hello")

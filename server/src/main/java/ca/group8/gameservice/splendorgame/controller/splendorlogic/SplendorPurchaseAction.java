@@ -32,7 +32,12 @@ public class SplendorPurchaseAction extends CardAction {
     PurchasedHand hand = playerState.getPurchasedHand();
     TokenHand tokenHand = playerState.getTokenHand();
     EnumMap<Colour, Integer> playerGems = playerState.getTotalGems();
+    // update player's prestige points
+    int cardPoints = card.getPrestigePoints();
+    int playerCurPoints = playerState.getPrestigePoints();
+    playerState.setPrestigePoints(cardPoints + playerCurPoints);
 
+    // update player's purchase hand
     for(Colour colour:Colour.values()){
       if(colour.equals(Colour.GOLD)){
         if(goldTokenRequired > 0){
@@ -49,6 +54,8 @@ public class SplendorPurchaseAction extends CardAction {
     }
     hand.addDevelopmentCard(card);
     int level = card.getLevel();
+
+    // replace the card with another new card draw from deck
     Card newCard = currentGameState.getTableTop().getDecks().get(level).pop();
     Position curCardPosition = super.getPosition();
     currentGameState.getTableTop().getBaseBoard().takeAndReplaceCard(newCard, curCardPosition);

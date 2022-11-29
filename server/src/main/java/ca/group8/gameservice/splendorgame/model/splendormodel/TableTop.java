@@ -4,9 +4,6 @@ import ca.group8.gameservice.splendorgame.controller.Launcher;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +40,7 @@ public class TableTop implements BroadcastContent {
   private Logger logger = LoggerFactory.getLogger(TableTop.class);
   //assuming both board and deck will initialise in their constructors
 
-  public TableTop(ArrayList<PlayerInGame> playerInGames) throws FileNotFoundException {
+  public TableTop(ArrayList<PlayerInGame> playerInGames) {
     this.decks = new HashMap<>();
     for (int i = 1; i<4; i++){
       decks.put(i,new Deck(i));
@@ -57,6 +54,29 @@ public class TableTop implements BroadcastContent {
     bank = new Bank(playerInGames.size());
   }
 
+  @Override
+  public boolean isEmpty() {
+
+    boolean baseBoardEmptyCheck = baseBoard.getCards().isEmpty()
+        && decks.isEmpty()
+        && playerInGames.isEmpty()
+        && nobleBoard.getCards().isEmpty()
+        && bank.getAllTokens().isEmpty();
+
+    boolean orientEmptyCheck;
+    if (orientBoard.isPresent() && orientDeck.isPresent()) {
+      // if both board and deck are not Optional.empty(), then we need to check if the
+      // action content in them are empty or not to decide the final result is empty or not
+      orientEmptyCheck = orientBoard.get().getCards().isEmpty()
+          && orientDeck.get().isEmpty();
+      return baseBoardEmptyCheck && orientEmptyCheck;
+    } else {
+      // if either of the orient related thing is not present, no need to check
+      // they are empty or not
+      return baseBoardEmptyCheck;
+    }
+  }
+
   private void initialiseDevelopmentCardBoard(){
     for(int i=0; i<3; i++){
       for(int j=0; j<4; j++){
@@ -66,7 +86,7 @@ public class TableTop implements BroadcastContent {
   }
 
 
-  private void initialiseNobleBoard() throws FileNotFoundException {
+  private void initialiseNobleBoard() {
     List<NobleCard> nobles = generateNobleCards();
     for(int i = 0; i<= playerInGames.size() +1; i++){
       nobleBoard.add(i,0, nobles.get(i));
@@ -177,8 +197,4 @@ public class TableTop implements BroadcastContent {
     return bank;
   }
 
-  @Override
-  public boolean isEmpty() {
-    return false;
-  }
 }
