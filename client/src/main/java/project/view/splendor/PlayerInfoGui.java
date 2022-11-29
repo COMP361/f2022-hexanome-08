@@ -5,8 +5,7 @@ import javafx.scene.text.Text;
 
 public interface PlayerInfoGui {
   void setup(double layoutX, double layoutY);
-  Map<Colour, Map<PlayerTokenInfo, Text>> getPlayerColourWealthMap(PlayerPosition playerPosition);
+  Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(PlayerPosition playerPosition);
   Map<PlayerVisibleInfo, Text> getPlayerVisibleInfoMap(PlayerPosition playerPosition);
-
   void setHighlight(boolean highlightChoice);
 }

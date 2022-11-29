@@ -51,31 +51,31 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
   }
 
   @Override
-  public Map<Colour, Map<PlayerTokenInfo, Text>> getPlayerColourWealthMap(PlayerPosition playerPosition) {
-    Map<Colour, Map<PlayerTokenInfo, Text>> result = new HashMap<>();
+  public Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(PlayerPosition playerPosition) {
+    Map<Colour, Map<PlayerWealthInfo, Text>> result = new HashMap<>();
     Colour[] colours = App.getAllColours();
-    Map<PlayerTokenInfo, Text> info = new HashMap<>();
-    Map<PlayerTokenInfo, Text> goldInfo = new HashMap<>();
+    Map<PlayerWealthInfo, Text> info = new HashMap<>();
+    Map<PlayerWealthInfo, Text> goldInfo = new HashMap<>();
     if (playerPosition.equals(PlayerPosition.TOP)) {
       for (int i = 0; i < 5; i++) {
         Group curGroup = (Group) this.getChildren().get(i);
-        info.put(PlayerTokenInfo.GEM, (Text) curGroup.getChildren().get(1));
-        info.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(3));
+        info.put(PlayerWealthInfo.GEM, (Text) curGroup.getChildren().get(1));
+        info.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         result.put(colours[i], info);
       }
       Group curGroup = (Group) this.getChildren().get(5);
-      goldInfo.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(1));
+      goldInfo.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(1));
     } else if (playerPosition.equals(PlayerPosition.BOTTOM)) {
       for (int i = 1; i < 6; i++) {
         VBox currBox = (VBox) this.getChildren().get(i);
         Group curGroup = (Group) currBox.getChildren().get(1);
-        info.put(PlayerTokenInfo.GEM, (Text) curGroup.getChildren().get(1));
-        info.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(3));
+        info.put(PlayerWealthInfo.GEM, (Text) curGroup.getChildren().get(1));
+        info.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         result.put(colours[i-1], info);
       }
       VBox currBox = (VBox) this.getChildren().get(6);
       Group curGroup = (Group) currBox.getChildren().get(1);
-      goldInfo.put(PlayerTokenInfo.TOKEN, (Text) curGroup.getChildren().get(1));
+      goldInfo.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(1));
     }
     result.put(Colour.GOLD, goldInfo);
     return result;
@@ -122,15 +122,13 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
 
 
   private void giveInitialStartTokens() {
-    Map<Colour, Map<PlayerTokenInfo, Text>> allTokenColourMap = getPlayerColourWealthMap(playerPosition);
-    Colour[] baseColours = App.getBaseColours();
-    for (Colour c : baseColours) {
-      Map<PlayerTokenInfo, Text> oneColourMap = allTokenColourMap.get(c);
-      Text tokenText = oneColourMap.get(PlayerTokenInfo.TOKEN);
+    Map<Colour, Map<PlayerWealthInfo, Text>> allTokenColourMap = getPlayerColourWealthMap(playerPosition);
+    Colour[] allColours = App.getAllColours();
+    for (Colour c : allColours) {
+      Map<PlayerWealthInfo, Text> oneColourMap = allTokenColourMap.get(c);
+      Text tokenText = oneColourMap.get(PlayerWealthInfo.TOKEN);
       tokenText.setText(initialTokenNum+"");
     }
-    Text goldTokenText = allTokenColourMap.get(Colour.GOLD).get(PlayerTokenInfo.TOKEN);
-    goldTokenText.setText(initialTokenNum+"");
   }
 
 
