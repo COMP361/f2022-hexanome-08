@@ -7,8 +7,9 @@ public class ReservedHand {
     private List<DevelopmentCard> developmentCards = new ArrayList<>();
     private List<NobleCard> nobleCards = new ArrayList<>();
 
+
     public void addDevelopmentCard(DevelopmentCard card){
-        developmentCards.add(card);
+            developmentCards.add(card);
     }
 
     public void addNobleCard(NobleCard card){
@@ -20,8 +21,7 @@ public class ReservedHand {
     }
 
     public boolean isFull(){
-
-        return developmentCards.size()== 3;
+        return developmentCards.size() == 3;
     }
 
     public List<DevelopmentCard> getDevelopmentCards() {
