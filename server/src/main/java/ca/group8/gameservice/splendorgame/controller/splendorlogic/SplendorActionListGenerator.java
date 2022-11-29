@@ -112,11 +112,9 @@ public class SplendorActionListGenerator {
         //    return new HashMap<>();
         //}
 
-
         String curPlayerName = gameInfo.getCurrentPlayer().getName();
         String askedActionsPlayerName = player.getName();
         Map<String, Action> hashActionMap = new HashMap<>();
-
         if ((!gameInfo.isFinished()) && (curPlayerName.equals(askedActionsPlayerName))) {
             // only generate the actions if the game is NOT finished and
             // the player asked for actions IS the current turn player
