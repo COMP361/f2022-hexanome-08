@@ -6,9 +6,9 @@ public class Position {
   private int x;
   private int y;
 
-  public Position(int paramWidth, int paramHeight) {
-    x = paramWidth;
-    y = paramHeight;
+  public Position(int paramX, int paramY) {
+    x = paramX;
+    y = paramY;
   }
 
   public int getX() {
