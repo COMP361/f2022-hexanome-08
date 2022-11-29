@@ -5,7 +5,7 @@ import java.util.Optional;
 //import org.graalvm.compiler.nodes.calc.IntegerDivRemNode.Op;
 
 public class DevelopmentCard extends Card {
-  private int prestigePoints;
+
   private EnumMap<Colour,Integer> price;
   private int level;
   private Optional<Colour> gemColor;
@@ -16,12 +16,12 @@ public class DevelopmentCard extends Card {
 
 
   public DevelopmentCard(int paramPrestigePoints,
-      EnumMap<Colour, Integer> paramPrice, String cardName, int prestigePoints,
+      EnumMap<Colour, Integer> paramPrice, String cardName,
       EnumMap<Colour, Integer> price, int level,
       Optional<Colour> gemColor, boolean isPaired, int pairedCardId, int gemNumber) {
     super(paramPrestigePoints, paramPrice, cardName);
 
-    this.prestigePoints = prestigePoints;
+
     this.price = price;
     this.level = level;
     if(gemColor.isPresent()){
