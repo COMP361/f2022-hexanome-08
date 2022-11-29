@@ -1,4 +1,5 @@
 package ca.group8.gameservice.splendorgame.controller;
+import java.io.FileNotFoundException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
