@@ -5,9 +5,9 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 
-public class SplendorReserveAction extends CardAction {
+public class ReserveAction extends CardAction {
 
-  public SplendorReserveAction(boolean isCardAction, Position position, Card card) {
+  public ReserveAction(boolean isCardAction, Position position, Card card) {
     super(isCardAction, position, card);
   }
 

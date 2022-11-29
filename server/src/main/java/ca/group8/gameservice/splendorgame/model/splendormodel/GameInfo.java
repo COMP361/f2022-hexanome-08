@@ -1,9 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 
-import ca.group8.gameservice.splendorgame.model.Game;
-import ca.group8.gameservice.splendorgame.model.ModelAccessException;
-import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
 import java.io.FileNotFoundException;
 import java.util.*;
 
@@ -14,7 +11,7 @@ public class GameInfo { // TODO add gametype
   //private Optional<String> winner; //made optional for when Winner is not defined yet;
   private List<String> winners;
   private String firstPlayer; //should be Player Name of first player.
-  private ArrayList<PlayerInGame> activePlayerInGames;
+  private ArrayList<PlayerInGame> playersInGame;
   private ArrayList<String> playerNames;
   private TableTop tableTop;
 
@@ -29,14 +26,14 @@ public class GameInfo { // TODO add gametype
     this.winners = new ArrayList<>();
 
     // TODO: 1
-    activePlayerInGames = initializePlayers(playerNames);
+    playersInGame = initializePlayers(playerNames);
     //generates a random number between 1 and size of playerNames list
     String randomFirstPlayer = playerNames.get(0); //TODO: Make it random first player later
     firstPlayer = randomFirstPlayer;
     currentPlayer = randomFirstPlayer;
 
     // TODO: 2
-    tableTop = new TableTop(activePlayerInGames);
+    tableTop = new TableTop(playersInGame);
 
 
   }
@@ -65,7 +62,7 @@ public class GameInfo { // TODO add gametype
   }
 
   public int getNumOfPlayers() {
-    return activePlayerInGames.size();
+    return playersInGame.size();
   }
 
 
@@ -78,7 +75,7 @@ public class GameInfo { // TODO add gametype
    */
   public PlayerInGame getCurrentPlayer() {
     PlayerInGame curPlayerInGame = null;
-    for (PlayerInGame playerInGame : activePlayerInGames) {
+    for (PlayerInGame playerInGame : playersInGame) {
       if (Objects.equals(playerInGame.getName(), currentPlayer)) {
         curPlayerInGame = playerInGame;
         break;
@@ -105,7 +102,7 @@ public class GameInfo { // TODO add gametype
   }
 
   public ArrayList<PlayerInGame> getActivePlayers() {
-    return activePlayerInGames;
+    return playersInGame;
   }
 
   public ArrayList<String> getPlayerNames() {
@@ -116,7 +113,7 @@ public class GameInfo { // TODO add gametype
     return tableTop;
   }
 
-  public ArrayList<PlayerInGame> getActivePlayerInGames() {
-    return activePlayerInGames;
+  public ArrayList<PlayerInGame> getPlayersInGame() {
+    return playersInGame;
   }
 }

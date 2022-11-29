@@ -10,12 +10,12 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
 import java.util.EnumMap;
 
-public class SplendorPurchaseAction extends CardAction {
+public class PurchaseAction extends CardAction {
   int goldTokenRequired;
 
-  public SplendorPurchaseAction(boolean isCardAction,
-                                Position position,
-                                Card card, int goldTokenRequired) {
+  public PurchaseAction(boolean isCardAction,
+                        Position position,
+                        Card card, int goldTokenRequired) {
     super(isCardAction, position, card);
     this.goldTokenRequired = goldTokenRequired;
   }

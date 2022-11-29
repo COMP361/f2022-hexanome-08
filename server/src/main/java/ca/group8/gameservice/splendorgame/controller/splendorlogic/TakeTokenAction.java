@@ -6,10 +6,10 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import java.util.EnumMap;
 
-public class SplendorTakeTokenAction extends Action{
+public class TakeTokenAction extends Action{
   private EnumMap<Colour,Integer> tokens;
 
-  public SplendorTakeTokenAction(boolean isCardAction, EnumMap<Colour,Integer> tokens) {
+  public TakeTokenAction(boolean isCardAction, EnumMap<Colour,Integer> tokens) {
     super(isCardAction);
     this.tokens = tokens;
   }
