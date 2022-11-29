@@ -70,7 +70,7 @@ public class TableTop implements BroadcastContent {
 
   private void initialiseNobleBoard() throws FileNotFoundException {
     List<NobleCard> nobles = generateNobleCards();
-    for(int i = 0; i<= playerInGames.size() +1; i++){
+    for(int i = 0; i< playerInGames.size() +1; i++){
       nobleBoard.add(i,0, nobles.get(i));
     }
   }

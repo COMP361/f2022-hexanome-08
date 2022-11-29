@@ -1,3 +1,5 @@
+package ca.group8.gameservice.splendorgame.model.splendormodel;
+
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import org.junit.jupiter.api.BeforeEach;

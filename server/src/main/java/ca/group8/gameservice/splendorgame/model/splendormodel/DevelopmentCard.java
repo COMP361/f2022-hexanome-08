@@ -56,4 +56,6 @@ public class DevelopmentCard extends Card {
   public void setPairedCardId(String paramPairedCardId) {
     pairedCardId = paramPairedCardId;
   }
+
+
 }

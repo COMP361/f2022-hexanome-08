@@ -1,9 +1,8 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
 import java.util.EnumMap;
 
-public class PlayerInGame implements PlayerReadOnly {
+public class PlayerInGame {
 
   private final String name;
   private TokenHand tokenHand;
@@ -58,15 +57,8 @@ public class PlayerInGame implements PlayerReadOnly {
   }
 
 
-
-
-  @Override
   public String getName() {
     return name;
   }
 
-  @Override
-  public String getPreferredColour() {
-    return getPreferredColour();
-  }
 }
