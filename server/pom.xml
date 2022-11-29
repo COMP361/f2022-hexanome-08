@@ -79,6 +79,10 @@
             <artifactId>asyncrestlib</artifactId>
             <version>1.5.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
 
 
     </dependencies>
