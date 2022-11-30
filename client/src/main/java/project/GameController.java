@@ -126,8 +126,12 @@ public class GameController {
   }
 
   public void initialize() {
-
     GameBoardLayoutConfig config = App.getGuiLayouts();
+
+    // TASK1: Get all player and the player names
+
+
+
     // TODO: change based on number of players, get the info from server later
     String firstPlayer = "D"; // needs to highlight the boarder of this player
     String curPlayer = "A";
