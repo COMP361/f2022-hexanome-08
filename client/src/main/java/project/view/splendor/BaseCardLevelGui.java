@@ -19,7 +19,6 @@ import javafx.scene.text.Text;
 import project.App;
 import project.CardActionController;
 import project.DeckActionController;
-import project.view.splendor.gameitems.DevelopmentCard;
 
 public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 

@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import project.view.splendor.gameitems.DevelopmentCard;
 
 public class CardActionController implements Initializable {
   private final DevelopmentCard cardPurchased;

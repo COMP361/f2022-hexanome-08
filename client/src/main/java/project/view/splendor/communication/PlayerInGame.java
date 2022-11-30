@@ -1,6 +1,7 @@
 package project.view.splendor.communication;
 
 import java.util.EnumMap;
+import project.view.splendor.Colour;
 
 
 public class PlayerInGame {
