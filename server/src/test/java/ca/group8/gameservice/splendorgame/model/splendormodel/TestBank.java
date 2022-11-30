@@ -1,13 +1,10 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumMap;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class BankTest {
+class TestBank {
     Bank b1 = new Bank(3);
 
 
