@@ -6,6 +6,7 @@ package ca.group8.gameservice.splendorgame.controller.communicationbeans;
  *
  */
 public class GameServerParameters {
+
     private String name;
 
     private String displayName;
@@ -51,6 +52,30 @@ public class GameServerParameters {
 
     public String getWebSupport() {
         return webSupport;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setMaxSessionPlayers(int maxSessionPlayers) {
+        this.maxSessionPlayers = maxSessionPlayers;
+    }
+
+    public void setMinSessionPlayers(int minSessionPlayers) {
+        this.minSessionPlayers = minSessionPlayers;
+    }
+
+    public void setWebSupport(String webSupport) {
+        this.webSupport = webSupport;
     }
 
 

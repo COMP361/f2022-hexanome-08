@@ -5,10 +5,14 @@ import java.util.List;
 
 public class PurchasedHand {
 
-    private List<DevelopmentCard> developmentCards = new ArrayList<>();
-    private List<NobleCard> nobleCards = new ArrayList<>();
+    private List<DevelopmentCard> developmentCards;
+    private List<NobleCard> nobleCards;
 
 
+    public PurchasedHand() {
+        this.developmentCards = new ArrayList<>();
+        this.nobleCards = new ArrayList<>();
+    }
     public void addDevelopmentCard(DevelopmentCard card){
         developmentCards.add(card);
     }

@@ -1,20 +1,22 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
 import java.util.EnumMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlayerInGame implements BroadcastContent {
 
 
   private final String name;
+  private EnumMap<Colour, Integer> wealth;
+  private int prestigePoints;
   private TokenHand tokenHand;
   private PurchasedHand purchasedHand;
-  private ReservedHand reservedHand;
-  // need get reserved card number,
-  private EnumMap<Colour, Integer> wealth;
 
-  private int prestigePoints;
+  // need get reserved card number
+  private ReservedHand reservedHand;
+
 
 
   public PlayerInGame(String name){
@@ -38,19 +40,35 @@ public class PlayerInGame implements BroadcastContent {
   public EnumMap<Colour, Integer> getTotalGems(){
     EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
 
-    for(DevelopmentCard card: purchasedHand.getDevelopmentCards()){
-      if(card.getGemColour().isPresent()){
-        int oldValue = totalGems.get(card.getGemColour().get());
-        totalGems.put(card.getGemColour().get(), oldValue+card.getGemNumber());
+      // initialize first
+      for (Colour c : Colour.values()) {
+        totalGems.put(c, 0);
       }
-    }
-    return totalGems;
+
+      if (purchasedHand.getDevelopmentCards().size() > 0) {
+        for(DevelopmentCard card: purchasedHand.getDevelopmentCards()){
+          Colour colour = card.getGemColour();
+          if (!totalGems.containsKey(colour)) {
+            // if gem map does not contain the colour, put the value in map
+            totalGems.put(colour, card.getGemNumber());
+          } else {
+            // if it contains it, increment on the old value
+            int oldValue = totalGems.get(colour);
+            totalGems.put(colour, oldValue + card.getGemNumber());
+          }
+        }
+      }
+      return totalGems;
   }
 
 
 
   public EnumMap<Colour, Integer> getWealth(){
+    Logger logger = LoggerFactory.getLogger(PlayerInGame.class);
     EnumMap<Colour, Integer> gems = getTotalGems();
+    logger.info("All tokens in token hand: " + tokenHand.getAllTokens());
+    logger.info("All gems as a enum map: " + gems);
+
     for(Colour colour : Colour.values()) {
       wealth.put(colour, tokenHand.getAllTokens().get(colour)+gems.get(colour));
     }

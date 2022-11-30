@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
@@ -12,7 +13,9 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -46,14 +49,15 @@ public class SplendorRestController {
   private SplendorRegistrator splendorRegistrator;
 
   // Long polling specific fields (Broadcast Content Managers and time out time)
-  private final long longPollTimeOut;
-  private final Map<Long, BroadcastContentManager<TableTop>> tableTopBroadcastContentManager;
+  private long longPollTimeOut;
+  private Map<Long, BroadcastContentManager<TableTop>> tableTopBroadcastContentManager;
   // Long: gameId, String: playerName
-  private final Map<Long, Map<String, BroadcastContentManager<PlayerInGame>>> playerInfoBroadcastContentManager;
+  private Map<Long, Map<String, BroadcastContentManager<PlayerInGame>>> playerInfoBroadcastContentManager;
 
+  //private Map<Integer, BroadcastContentManager<TableTopTest>> testManager;
 
   // Debug fields
-  private final Logger logger;
+  private Logger logger;
 
   public SplendorRestController(
       @Autowired SplendorRegistrator splendorRegistrator,
@@ -62,7 +66,7 @@ public class SplendorRestController {
       @Autowired SplendorActionInterpreter splendorActionInterpreter,
       @Value("${gameservice.name}") String gameServiceName,
       @Value("${lobbyservice.location}") String lobbyServiceAddress,
-      @Value("long.poll.timeout") long longPollTimeOut) {
+      @Value("${long.poll.timeout}") long longPollTimeOut) {
     this.splendorRegistrator = splendorRegistrator;
     this.splendorGameManager = splendorGameManager;
     this.splendorActionListGenerator = splendorActionListGenerator;
@@ -70,31 +74,41 @@ public class SplendorRestController {
     this.lobbyServiceAddress = lobbyServiceAddress;
     this.gameServiceName = gameServiceName;
     this.longPollTimeOut = longPollTimeOut;
-    this.tableTopBroadcastContentManager = new HashMap<>();
-    this.playerInfoBroadcastContentManager = new HashMap<>();
+    this.tableTopBroadcastContentManager = new LinkedHashMap<>();
+    this.playerInfoBroadcastContentManager = new LinkedHashMap<>();
+    //this.testManager = new HashMap<>();
     // for debug
     this.logger = LoggerFactory.getLogger(SplendorRestController.class);
   }
-  @GetMapping("/splendor/hello")
-  public String hello() {
-    return "Hello";
+
+  @GetMapping(value = "/test")
+  public String helloWorld() {
+    return "Hello, World!";
   }
 
-  @GetMapping("/test")
-  public String test() {
-    return "This is working!";
-  }
 
-  @GetMapping("/splendor/api/test")
-  public String test2() {
-    return "This is working!";
-  }
-
-  @GetMapping("/api/games")
-  public String getAllGames() {
-    return splendorGameManager.getActiveGames().keySet().toString();
-  }
-
+  //@GetMapping(value = "/test/{gameId}", produces = "application/json; charset=utf-8")
+  //public DeferredResult<ResponseEntity<String>> debugEndPoint(@RequestParam(required = false) String hash,
+  //                                                            @PathVariable long gameId)
+  //    throws ModelAccessException {
+  //
+  //  // No hash provided at all -> return a synced update. We achieve this by setting a hash that clearly differs from any valid hash.
+  //  if (hash == null)
+  //    hash = "-";
+  //
+  //  // Hash was provided, but is empty -> return an asynchronous update, as soon as something has changed
+  //  if (hash.isEmpty())
+  //    ResponseGenerator.getAsyncUpdate(longPollTimeOut, testManager.get(0));
+  //
+  //  GameInfo g = splendorGameManager.getGameById(gameId);
+  //  ArrayList<PlayerInGame> names = g.getPlayersInGame();
+  //  TableTopTest t = new TableTopTest(names);
+  //  BroadcastContentManager<TableTopTest> test = new BroadcastContentManager<>(t);
+  //
+  //  testManager.put(0, test);
+  //  // A hash was provided, or we want to provoke a hash mismatch because no hash (not even an empty hash) was provided
+  //  return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, testManager.get(0), hash);
+  //}
 
   @PutMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> launchGame(@PathVariable long gameId,
@@ -113,6 +127,7 @@ public class SplendorRestController {
         throw new ModelAccessException("Invalid launcher info provided");
       }
 
+      // this one should avoid duplicates, thus it throws error when it is TRUE!!!
       if(splendorGameManager.isExistentGameId(gameId)) {
         throw new ModelAccessException("Duplicate game instance, can not launch it!");
       }
@@ -121,15 +136,30 @@ public class SplendorRestController {
         throw new ModelAccessException("No such game registered in LS");
       }
 
-      // seems like we can safely add the game to the game manager
-      logger.info("before adding game info: " + splendorGameManager.getActiveGames());
-      GameInfo gi = splendorGameManager.addGame(gameId, launcherInfo.getPlayerNames());
-      logger.info("after adding game info: " + splendorGameManager.getActiveGames());
 
-      logger.warn("Launcher player names:" + launcherInfo.getPlayerNames());
-      TableTop curTableTop = splendorGameManager.getGameById(gameId).getTableTop();
-      // store the gameId -> broadcast content map to the broadcast manager
-      tableTopBroadcastContentManager.put(gameId, new BroadcastContentManager<>(curTableTop));
+      // seems like we can safely add the game to the game manager
+      ArrayList<String> playerNames = new ArrayList<>();
+      for (PlayerInfo p : launcherInfo.getPlayers()) {
+        playerNames.add(p.getName());
+      }
+      GameInfo newGameInfo = new GameInfo(playerNames);
+      logger.info("Current game id: " + gameId);
+
+      TableTop curTableTop = newGameInfo.getTableTop();
+      logger.info("This table top is empty? " + curTableTop.isEmpty());
+      BroadcastContentManager<TableTop> broadcastContentManager
+          = new BroadcastContentManager<>(curTableTop);
+      splendorGameManager.addGame(gameId, newGameInfo);
+      tableTopBroadcastContentManager.put(gameId, broadcastContentManager);
+
+      // Now for each player, we need put one mapping for PlayerInGame info update
+      // note that they are BroadcastContentManager<PlayerInGame> not PlayerInGame!!!
+
+      Map<String, BroadcastContentManager<PlayerInGame>> playerInGameMap = new HashMap<>();
+      for (PlayerInGame curPlayerInGame : newGameInfo.getPlayersInGame()) {
+        playerInGameMap.put(curPlayerInGame.getName(), new BroadcastContentManager<>(curPlayerInGame));
+      }
+      playerInfoBroadcastContentManager.put(gameId, playerInGameMap);
       return ResponseEntity.status(HttpStatus.OK).build();
 
     } catch (ModelAccessException e) {
@@ -199,8 +229,11 @@ public class SplendorRestController {
   private boolean isValidToken(String accessToken, String playerName) throws UnirestException {
     HttpResponse<String> nameResponse =
         Unirest.get(lobbyServiceAddress + "/oauth/username")
-            .queryString("access_token", accessToken).asString();
+            .header("Authorization", "Bearer " + accessToken).asString();
+
     String responseUserName = nameResponse.getBody();
+    logger.info("access token represents: " + responseUserName);
+    logger.info("current player is: " +  playerName);
     return responseUserName.equals(playerName);
 
   }
@@ -215,17 +248,21 @@ public class SplendorRestController {
   public DeferredResult<ResponseEntity<String>> getBoard(
       @PathVariable long gameId, @RequestParam(required = false) String hash) {
     try{
-      if (hash == null || hash.equals("")) {
-        hash = "-";
-      }
 
       // if the game does not exist in the game manager, throw an exception
       if(!splendorGameManager.isExistentGameId(gameId)){
         throw new ModelAccessException("There is no game with game id: "
             + gameId + " launched, try again later");
       }
+      if (hash == null) {
+        hash = "-";
+      }
 
       // hash is either "-" or the hashed value from previous payload, use long polling
+      //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
+      if(hash.isEmpty()) {
+        ResponseGenerator.getAsyncUpdate(longPollTimeOut, tableTopBroadcastContentManager.get(gameId));
+      }
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, tableTopBroadcastContentManager.get(gameId), hash);
     }catch (ModelAccessException e) {
       // Request does not go through, we need a deferred result
@@ -262,9 +299,6 @@ public class SplendorRestController {
       @RequestParam(required = false) String hash) {
 
     try{
-      if (hash == null || hash.equals("")) {
-        hash = "-";
-      }
 
       // Merged several logical checks before perform any actions to the server data
       gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
@@ -277,9 +311,16 @@ public class SplendorRestController {
             "sent to this resource location yet!");
       }
 
+      if (hash == null) {
+        hash = "-";
+      }
       BroadcastContentManager<PlayerInGame> playerInfoToBroadcast =
           playerInfoBroadcastContentManager.get(gameId).get(playerName);
+      if(hash.isEmpty()) {
+        ResponseGenerator.getAsyncUpdate(longPollTimeOut, playerInfoToBroadcast);
+      }
       // hash is either "-" or the hashed value from previous payload, use long polling
+      //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, playerInfoToBroadcast, hash);
     }catch (ModelAccessException | UnirestException e) {
       // Request does not go through, we need a deferred result (something went wrong...)
@@ -290,12 +331,15 @@ public class SplendorRestController {
 
   }
 
-
   @GetMapping(value="/api/games/{gameId}/players", produces = "application/json; charset=utf-8")
   public ResponseEntity<String> getPlayers(@PathVariable long gameId) {
     try {
       // check if our game manager contains this game id, if not, we did not PUT it correctly!
-      if (splendorGameManager.isExistentGameId(gameId)) {
+      logger.info("Current gameId:" + gameId);
+      logger.info("Stored key set of game ids: " + splendorGameManager.getActiveGames().keySet());
+      logger.info("boolean result of splendorGameManager.isExistentGameId(gameId): "
+          + splendorGameManager.isExistentGameId(gameId));
+      if (!splendorGameManager.isExistentGameId(gameId)) {
         throw new ModelAccessException("Can not get players for game " + gameId +
             ". The game has not been launched or does not exist!");
       }
@@ -308,7 +352,7 @@ public class SplendorRestController {
     }
   }
 
-  // TODO: send GET request to this location TWICE per turn, one at begining, one at the end
+  // TODO: send GET request to this location TWICE per turn, one at beginning, one at the end
   @GetMapping(value = "/api/games/{gameId}/players/{playerName}/actions",
       produces = "application/json; charset=utf-8")
   public ResponseEntity<String> getActions(@PathVariable long gameId,
@@ -323,6 +367,7 @@ public class SplendorRestController {
       // looks good, we can generate the actions for this player now
       GameInfo gameInfo = splendorGameManager.getGameById(gameId);
       PlayerInGame playerInGame = splendorGameManager.getPlayerInGame(gameId, playerName);
+      // failed to generate the map
       splendorActionListGenerator.generateActions(gameId, gameInfo, playerInGame);
 
       // check if the generation went well and generate a mapping even it's empty it's fine
@@ -342,15 +387,12 @@ public class SplendorRestController {
     }
   }
 
-  @PostMapping(value = "/api/games/{gameId}/players/{playerName}/actions/{actionId}",
-  consumes = "application/json; charset=utf-8")
+  @PostMapping(value = "/api/games/{gameId}/players/{playerName}/actions/{actionId}")
   public ResponseEntity<String> selectAction(@PathVariable long gameId,
                                              @PathVariable String playerName,
                                              @PathVariable String actionId,
                                              @RequestParam(value = "access_token")
-                                               String accessToken,
-                                             @RequestParam(value = "user_action",required = false)
-                                               Action userAction) {
+                                               String accessToken) {
 
     try {
       gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
@@ -365,15 +407,16 @@ public class SplendorRestController {
       }
 
       Action newAction;
-      if (userAction == null) {
-        // the actions provided from GET is not changed, we just need the actionId to retrieve
-        // the action from actionGenerator map
-        newAction = splendorActionListGenerator.lookUpActions(gameId, playerName).get(actionId);
-
-      } else {
-        // otherwise, we interpret based on this newly generated action userAction
-        newAction = userAction;
-      }
+      //if (userAction == null) {
+      //  // the actions provided from GET is not changed, we just need the actionId to retrieve
+      //  // the action from actionGenerator map
+      //  newAction = splendorActionListGenerator.lookUpActions(gameId, playerName).get(actionId);
+      //
+      //} else {
+      //  // otherwise, we interpret based on this newly generated action userAction
+      //  newAction = userAction;
+      //}
+      newAction = splendorActionListGenerator.lookUpActions(gameId, playerName).get(actionId);
 
       PlayerInGame playerInGame = splendorGameManager.getPlayerInGame(gameId, playerName);
       // interpret this action regardless is modified by user or not
