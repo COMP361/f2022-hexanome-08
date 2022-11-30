@@ -78,10 +78,12 @@ class GameInfoTest {
         assert (playerNames.equals(g1.getPlayerNames()));
     }
 
-    @org.junit.jupiter.api.Test
+   /* @org.junit.jupiter.api.Test
     void getTableTop() {
         assert (g1.getTableTop().getPlayers().size() == activePlayerInGames.size());
         assert (g1.getTableTop().getPlayers().get(0).equals(activePlayerInGames.get(0)));
         assert (g1.getTableTop().getPlayers().get(1).equals(activePlayerInGames.get(1)));
     }
+    */
+
 }
