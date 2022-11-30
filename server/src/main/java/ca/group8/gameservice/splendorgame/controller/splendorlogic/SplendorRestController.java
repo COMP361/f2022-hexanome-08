@@ -84,6 +84,11 @@ public class SplendorRestController {
     this.logger = LoggerFactory.getLogger(SplendorRestController.class);
   }
 
+  @GetMapping(value = "/test")
+  public String helloWorld() {
+    return "Hello, World!";
+  }
+
 
   //@GetMapping(value = "/test/{gameId}", produces = "application/json; charset=utf-8")
   //public DeferredResult<ResponseEntity<String>> debugEndPoint(@RequestParam(required = false) String hash,
