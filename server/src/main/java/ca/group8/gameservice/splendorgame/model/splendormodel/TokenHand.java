@@ -8,6 +8,7 @@ import java.util.EnumMap;
 public class TokenHand {
 
   private EnumMap<Colour, Integer> allTokens;
+  private int initialAmount;
 
   /**
    * Relies on Game Info to know how many players are in the game.
@@ -18,6 +19,7 @@ public class TokenHand {
     for (Colour colour : Colour.values()) {
       allTokens.put(colour, initialAmount);
     }
+    this.initialAmount = initialAmount;
   }
 
   public EnumMap<Colour, Integer> getAllTokens() {
