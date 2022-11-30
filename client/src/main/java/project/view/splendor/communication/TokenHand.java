@@ -1,0 +1,65 @@
+package project.view.splendor.communication;
+
+import java.util.EnumMap;
+
+/**
+ * Represents the Tokens that a Player has in their hand.
+ */
+public class TokenHand {
+
+  private EnumMap<Colour, Integer> allTokens;
+
+  /**
+   * Relies on Game Info to know how many players are in the game.
+   * Initialize all token values to zero.
+   */
+  public TokenHand(int initialAmount) {
+    allTokens = new EnumMap<>(Colour.class);
+    for (Colour colour : Colour.values()) {
+      allTokens.put(colour, initialAmount);
+    }
+  }
+
+  public EnumMap<Colour, Integer> getAllTokens() {
+    return allTokens;
+  }
+
+  public int getGoldTokenNumber(){
+    return allTokens.get(Colour.GOLD);
+  }
+
+
+  ///**
+  // * Adds a certain amount (quantity) of a certain GemColour colour from the TokenHand.
+  // *
+  // * @param colour = Gem Colour.
+  // * @param quantity = quantity to add.
+  // *
+  // */
+
+  public void addToken(EnumMap<Colour,Integer> paramTokens) {
+    //add Tokens
+    for(Colour colour: Colour.values()){
+      int newVal = allTokens.get(colour) + paramTokens.get(colour);
+      allTokens.replace(colour,newVal);
+    }
+  }
+
+  /**
+   * Removes a Map of Tokens from the tokenHand.
+   */
+  public void removeToken(EnumMap<Colour,Integer> paramTokens) {
+    //verify that this number of gems can be removed (meaning new sum will not be less than 0)
+    //Must be done before the next loop to ensure it passes for all colours
+    for(Colour colour: Colour.values()){
+      assert (allTokens.get(colour) - paramTokens.get(colour)) >= 0;
+    }
+    //remove Tokens
+    for(Colour colour: Colour.values()){
+      int newVal = allTokens.get(colour) - paramTokens.get(colour);
+      allTokens.replace(colour,newVal);
+    }
+  }
+}
+
+

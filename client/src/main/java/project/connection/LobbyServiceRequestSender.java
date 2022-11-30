@@ -105,6 +105,27 @@ public class LobbyServiceRequestSender {
         .getObject();
   }
 
+
+  /**
+   * Send request to keep refreshing and get the refreshed new access_token of this user
+   *
+   * @param refreshToken
+   * @return
+   * @throws UnirestException
+   */
+  public String sendRefreshTokenRequest(String refreshToken) throws UnirestException {
+    JSONObject refreshResponseJson = Unirest.post(lobbyUrl + "/oauth/token")
+        .basicAuth("bgp-client-name", "bgp-client-pw")
+        .field("grant_type", "refresh_token")
+        .field("refresh_token", refreshToken)
+        .asJson()
+        .getBody()
+        .getObject();
+    return refreshResponseJson.getString("access_token");
+
+  }
+
+
   /**
    * send request to check user authority.
    *
@@ -245,5 +266,7 @@ public class LobbyServiceRequestSender {
     Unirest.post(lobbyUrl + "/api/sessions/" + sessionId.toString())
         .queryString("access_token", accessToken).asString();
   }
+
+
 
 }

@@ -6,7 +6,9 @@ package project.view.lobby;
 public class User {
 
   private final String username;
-  private final String accessToken;
+  private String accessToken;
+
+  private final String refreshToken;
   private final String authority;
 
   /**
@@ -16,9 +18,10 @@ public class User {
    * @param paccessToken user access token
    * @param pauthority user authority
    */
-  public User(String pusername, String paccessToken, String pauthority) {
+  public User(String pusername, String paccessToken, String refreshToken, String pauthority) {
     username = pusername;
     accessToken = paccessToken;
+    this.refreshToken = refreshToken;
     authority = pauthority;
   }
 
@@ -33,5 +36,14 @@ public class User {
   public String getAuthority() {
     return authority;
   }
+
+  public String getRefreshToken() {
+    return refreshToken;
+  }
+
+  public void setAccessToken(String newAccessToken) {
+    accessToken = newAccessToken;
+  }
+
 
 }
