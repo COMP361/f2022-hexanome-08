@@ -1,4 +1,5 @@
 package project.view.splendor;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +16,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import project.App;
 
-public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
+/**
+ * Create the GUI for the bank.
+ */
+public class TokenBankGui extends HBox implements NumOfPlayerDependentGui {
 
+  /**
+   * Construct the Token Bank GUI.
+   */
   public TokenBankGui() {
     // TODO: The fxml associated with this class, must be bind to controller = project.App
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/project/token_bank.fxml"));
@@ -30,9 +37,10 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
 
   private Button getConfirmButton() {
     ObservableList<Node> allChildren = this.getChildren();
-    VBox confirmVbox = (VBox) allChildren.get(allChildren.size()-1);
+    VBox confirmVbox = (VBox) allChildren.get(allChildren.size() - 1);
     return (Button) confirmVbox.getChildren().get(1);
   }
+
   private EventHandler<ActionEvent> createTakeTokenHandler(
       Label displayZone, Colour curColour) {
     return event -> {
@@ -44,7 +52,7 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
       // can only increment if 0 <= takeNum < 2 && bank > 0
 
       int uniqueColourTakenCount = 0;
-      for (Colour c: this.getTakeTokenDecision().keySet()) {
+      for (Colour c : this.getTakeTokenDecision().keySet()) {
         int curColourTake = this.getTakeTokenDecision().get(c);
         if (curColourTake > 0) {
           uniqueColourTakenCount += 1;
@@ -57,10 +65,10 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
         displayZone.setText(newNum);
       } else {
         if (!(curNum == 1 && uniqueColourTakenCount == 2)
-        && curNum < 2 && curNum >= 0 && tokenLeft > 0
-        && !banFromTaking(uniqueColourTakenCount)){
+            && curNum < 2 && curNum >= 0 && tokenLeft > 0
+            && !banFromTaking(uniqueColourTakenCount)) {
           // then we can have this Label being changed
-          if(curNum == 1) {
+          if (curNum == 1) {
             if (tokenLeft >= 4) {
               curNum += 1;
               String newNum = curNum + "";
@@ -75,7 +83,7 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
         }
       }
       uniqueColourTakenCount = 0;
-      for (Colour c: this.getTakeTokenDecision().keySet()) {
+      for (Colour c : this.getTakeTokenDecision().keySet()) {
         int curColourTake = this.getTakeTokenDecision().get(c);
         if (curColourTake > 0) {
           uniqueColourTakenCount += 1;
@@ -116,7 +124,7 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
           int curTokenTake = playerDecision.get(c);
           int newBankBalance = curTokenLeft - curTokenTake;
           playerNewChoice.setText("0");
-          bankBalanceText.setText(newBankBalance+"");
+          bankBalanceText.setText(newBankBalance + "");
         }
       }
       getConfirmButton().setDisable(true);
@@ -134,7 +142,7 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
     //      1. if the colour has remaining (>0)
     //      2. if the colour has at least 4 left
     int totalTokenTakeCount = 0;
-    for (Colour c: this.getTakeTokenDecision().keySet()) {
+    for (Colour c : this.getTakeTokenDecision().keySet()) {
       int curColourTake = this.getTakeTokenDecision().get(c);
       if (curColourTake > 0) {
         totalTokenTakeCount += curColourTake;
@@ -152,13 +160,13 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
 
   private Map<Colour, Label> getColourTokenTakeMap() {
     // processing token number Text of 5 regular token
-    Map<Colour,Label> resultMap = new HashMap<>();
+    Map<Colour, Label> resultMap = new HashMap<>();
     ObservableList<Node> allChildren = this.getChildren();
     Colour[] colours = App.getBaseColours();
     for (int i = 0; i < 5; i++) {
       Group curGroup = (Group) allChildren.get(i);
-      Label takeTokenNum = (Label) curGroup.getChildren().get(curGroup.getChildren().size()-2);
-      resultMap.put(colours[i],takeTokenNum);
+      Label takeTokenNum = (Label) curGroup.getChildren().get(curGroup.getChildren().size() - 2);
+      resultMap.put(colours[i], takeTokenNum);
     }
     return resultMap;
   }
@@ -168,15 +176,15 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
    *
    * @return a map from colour to the GUI object Text containing the bank balance
    */
-  public Map<Colour,Text> getColourTokenBankMap() {
-    Map<Colour,Text> resultTextList = new HashMap<>();
+  public Map<Colour, Text> getColourTokenBankMap() {
+    Map<Colour, Text> resultTextList = new HashMap<>();
     ObservableList<Node> allChildren = this.getChildren();
     Colour[] colours = App.getAllColours();
     // processing token number Text of 5 regular token
     for (int i = 0; i < 5; i++) {
       Group curGroup = (Group) allChildren.get(i);
-      Text curTokenNum = (Text) curGroup.getChildren().get(curGroup.getChildren().size()-1);
-      resultTextList.put(colours[i],curTokenNum);
+      Text curTokenNum = (Text) curGroup.getChildren().get(curGroup.getChildren().size() - 1);
+      resultTextList.put(colours[i], curTokenNum);
     }
 
     // processing the gold token number Text
@@ -187,13 +195,13 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
     return resultTextList;
   }
 
-  private void setColourTokenBankMap(Map<Colour,Integer> bankBalanceMap) {
+  private void setColourTokenBankMap(Map<Colour, Integer> bankBalanceMap) {
     Map<Colour, Text> curBankTokenBankMap = getColourTokenBankMap();
     Colour[] allColours = App.getAllColours();
-    for(Colour c : allColours) {
+    for (Colour c : allColours) {
       Text curText = curBankTokenBankMap.get(c);
       int newBalance = bankBalanceMap.get(c);
-      curText.setText(newBalance+"");
+      curText.setText(newBalance + "");
     }
   }
 
@@ -206,14 +214,13 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
     Map<Colour, Integer> result = new HashMap<>();
     for (Colour c : this.getColourTokenTakeMap().keySet()) {
       int curTake = Integer.parseInt(this.getColourTokenTakeMap().get(c).getText());
-      result.put(c,curTake);
+      result.put(c, curTake);
     }
     return result;
   }
 
   /**
    * Bind all functionality to the GUI objects we care.
-   *
    */
   private void bindActionToButtonAndLabel() {
     ObservableList<Node> allChildren = this.getChildren();
@@ -224,7 +231,7 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
       Colour curColour = colours[i];
       Button plusButton = (Button) curGroup.getChildren().get(1);
       Button minusButton = (Button) curGroup.getChildren().get(2);
-      Label displayLabel = (Label) curGroup.getChildren().get(curGroup.getChildren().size()-2);
+      Label displayLabel = (Label) curGroup.getChildren().get(curGroup.getChildren().size() - 2);
       plusButton.setOnAction(createTakeTokenHandler(displayLabel, curColour));
       minusButton.setOnAction(createBackTokenHandler(displayLabel));
     }
@@ -233,7 +240,13 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
     confirmButton.setOnAction(createConfirmTakeTokenHandler());
   }
 
-
+  /**
+   * TODO.
+   *
+   * @param numOfPlayer TODO: number of players in the game.
+   * @param layoutX TODO.
+   * @param layoutY TODO.
+   */
   public void setup(int numOfPlayer, double layoutX, double layoutY) {
     // set the layout of the GUI
     setLayoutX(layoutX);
@@ -245,16 +258,16 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui{
       baseTokenCount = 7;
     } else if (numOfPlayer == 3) {
       baseTokenCount = 5;
-    } else if (numOfPlayer == 2){
+    } else if (numOfPlayer == 2) {
       baseTokenCount = 4;
     }
-    Colour[] colours =  App.getAllColours();
+    Colour[] colours = App.getAllColours();
     Map<Colour, Integer> bankMap = new HashMap<>();
     for (Colour c : colours) {
-      if(c.equals(Colour.GOLD)) {
+      if (c.equals(Colour.GOLD)) {
         bankMap.put(c, 5);
       } else {
-        bankMap.put(c,baseTokenCount);
+        bankMap.put(c, baseTokenCount);
       }
     }
     setColourTokenBankMap(bankMap);

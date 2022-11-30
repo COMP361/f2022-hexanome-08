@@ -14,6 +14,9 @@ import javafx.scene.layout.VBox;
 import project.App;
 import project.connection.LobbyServiceRequestSender;
 
+/**
+ * TODO.
+ */
 public class SessionGui extends HBox {
 
   private Session curSession;
@@ -22,11 +25,19 @@ public class SessionGui extends HBox {
 
   private final User curUser;
 
+  /**
+   * This constructs a new SessionGUI.
+   *
+   * @param curSession provides the current Session object.
+   * @param curSessionId provides the current Session's ID.
+   * @param curUser provides the current User object.
+   */
   public SessionGui(Session curSession, Long curSessionId, User curUser) {
     this.curSession = curSession;
     this.curSessionId = curSessionId;
     this.curUser = curUser;
-    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/project/session_template.fxml"));
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass()
+        .getResource("/project/session_template.fxml"));
     fxmlLoader.setRoot(this);
     try {
       fxmlLoader.load();
@@ -67,6 +78,9 @@ public class SessionGui extends HBox {
     this.curSession = newSession;
   }
 
+  /**
+   * Sets the text information for the current session.
+   */
   public void setSessionInfoText() {
     String sessionInfo = formatSessionInfo(curSession);
     Label sessionInfoLabel = (Label) this.getChildren().get(0);
@@ -153,6 +167,9 @@ public class SessionGui extends HBox {
     };
   }
 
+  /**
+   * Sets the available buttons for the sessions.
+   */
   public void setSessionButtons() {
     String curUserName = curUser.getUsername();
     String sessionCreatorName = curSession.getCreator();
@@ -207,6 +224,9 @@ public class SessionGui extends HBox {
     }
   }
 
+  /**
+   * TODO.
+   */
   public void updateSessionGui() {
     // if user is in this game, then we only need to delete the Leave button to Play
     // if user is NOT in this game, change the Join button to Watch
@@ -233,14 +253,16 @@ public class SessionGui extends HBox {
     } else {
       String sessionCreator = curSession.getCreator();
       if (curUserName.equals(sessionCreator)) {
-        int curPlayersCount = curPlayers.size();
-        int minPlayersCount = curSession.getGameParameters().getMinSessionPlayers();
         topButton.setVisible(true);
         btmButton.setVisible(true);
         topButton.setText("Delete");
         btmButton.setText("Launch");
         topButton.setOnAction(createDeleteSessionHandler());
         btmButton.setOnAction(createLaunchSessionHandler());
+
+        int curPlayersCount = curPlayers.size();
+        int minPlayersCount = curSession.getGameParameters().getMinSessionPlayers();
+
         // delete and launch (clickable or not depends on minPlayer == curPlayer or not)
         btmButton.setDisable(minPlayersCount != curPlayersCount);
       } else {

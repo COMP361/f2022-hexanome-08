@@ -52,6 +52,7 @@ public class CardActionController implements Initializable {
       curWindow.close();
     };
   }
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     purchaseButton.setOnAction(createOnClickPurchaseHandler());

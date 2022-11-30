@@ -36,7 +36,7 @@ public class App extends Application {
       new LobbyServiceRequestSender("http://76.66.139.161:4242");
 
   private static final Colour[] allColours = new Colour[] {
-    Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
+      Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
   };
   private static final Colour[] baseColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
@@ -156,7 +156,6 @@ public class App extends Application {
   }
 
 
-
   public static LobbyServiceRequestSender getLobbyServiceRequestSender() {
     return lobbyRequestSender;
   }
@@ -176,22 +175,23 @@ public class App extends Application {
   public static void setUser(User puser) {
     user = puser;
   }
+
   public static GameBoardLayoutConfig getGuiLayouts() {
     return guiLayouts;
   }
 
   public static String getNoblePath(String cardName) {
-    return String.format("project/pictures/noble/%s.png",cardName);
+    return String.format("project/pictures/noble/%s.png", cardName);
   }
 
   public static String getOrientCardPath(String cardName, int level) {
     assert level >= 1 && level <= 3;
-    return String.format("project/pictures/orient/%d/%s.png",level, cardName);
+    return String.format("project/pictures/orient/%d/%s.png", level, cardName);
   }
 
   public static String getBaseCardPath(String cardName, int level) {
     assert level >= 1 && level <= 3;
-    return String.format("project/pictures/level%d/%s.png",level, cardName);
+    return String.format("project/pictures/level%d/%s.png", level, cardName);
   }
 
   public static void loadPopUpWithController(String fxmlName, Object controller,

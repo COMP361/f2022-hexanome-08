@@ -6,31 +6,31 @@ import project.view.splendor.Colour;
 
 public class Card {
 
-    int prestigePoints;
-    EnumMap<Colour,Integer> price;
+  int prestigePoints;
+  EnumMap<Colour, Integer> price;
 
-    String cardName;
+  String cardName;
 
-    public Card(int paramPrestigePoints, EnumMap<Colour,Integer> paramPrice, String paramCardName){
+  public Card(int paramPrestigePoints, EnumMap<Colour, Integer> paramPrice, String paramCardName) {
 
 
-        prestigePoints = paramPrestigePoints;
-        price= paramPrice;
-        cardName=paramCardName;
-    }
+    prestigePoints = paramPrestigePoints;
+    price = paramPrice;
+    cardName = paramCardName;
+  }
 
-    public int getPrestigePoints() {
+  public int getPrestigePoints() {
 
-        return prestigePoints;
-    }
+    return prestigePoints;
+  }
 
-    public EnumMap<Colour, Integer> getPrice() {
-        return price;
-    }
+  public EnumMap<Colour, Integer> getPrice() {
+    return price;
+  }
 
-    public String getCardName() {
-        return cardName;
-    }
+  public String getCardName() {
+    return cardName;
+  }
 
 
 }

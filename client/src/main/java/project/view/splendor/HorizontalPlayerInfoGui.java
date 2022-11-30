@@ -3,7 +3,6 @@ package project.view.splendor;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.layout.HBox;
@@ -13,12 +12,23 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import project.App;
 
-public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
+/**
+ * TODO.
+ */
+public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
   private final PlayerPosition playerPosition;
   private final String playerName;
   private final int initialTokenNum;
 
-  public HorizontalPlayerInfoGui(PlayerPosition playerPosition, String playerName,int initialTokenNum) {
+  /**
+   * TODO.
+   *
+   * @param playerPosition TODO.
+   * @param playerName Player name as a string.
+   * @param initialTokenNum TODO.
+   */
+  public HorizontalPlayerInfoGui(PlayerPosition playerPosition, String playerName,
+                                 int initialTokenNum) {
     this.playerPosition = playerPosition;
     this.playerName = playerName;
     this.initialTokenNum = initialTokenNum;
@@ -41,17 +51,17 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
   }
 
 
-
   public PlayerPosition getPlayerPosition() {
     return playerPosition;
   }
 
-  public String getPlayerName(){
+  public String getPlayerName() {
     return playerName;
   }
 
   @Override
-  public Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(PlayerPosition playerPosition) {
+  public Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(
+      PlayerPosition playerPosition) {
     Map<Colour, Map<PlayerWealthInfo, Text>> result = new HashMap<>();
     Colour[] colours = App.getBaseColours();
     if (playerPosition.equals(PlayerPosition.TOP)) {
@@ -73,7 +83,7 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
         Group curGroup = (Group) currBox.getChildren().get(1);
         info.put(PlayerWealthInfo.GEM, (Text) curGroup.getChildren().get(1));
         info.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(3));
-        result.put(colours[i-1], info);
+        result.put(colours[i - 1], info);
       }
       Map<PlayerWealthInfo, Text> goldInfo = new HashMap<>();
       VBox currBox = (VBox) this.getChildren().get(6);
@@ -86,15 +96,15 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
   }
 
   @Override
-  public Map<PlayerVisibleInfo, Text> getPlayerVisibleInfoMap(PlayerPosition playerPosition){
+  public Map<PlayerVisibleInfo, Text> getPlayerVisibleInfoMap(PlayerPosition playerPosition) {
     Map<PlayerVisibleInfo, Text> resultMap = new HashMap<>();
-    if (playerPosition.equals(PlayerPosition.TOP)){
+    if (playerPosition.equals(PlayerPosition.TOP)) {
       Group group = (Group) this.getChildren().get(6);
       resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(6));
       resultMap.put(PlayerVisibleInfo.RESERVED_CARDS, (Text) group.getChildren().get(9));
       resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(8));
 
-    } else if (playerPosition.equals(PlayerPosition.BOTTOM)){
+    } else if (playerPosition.equals(PlayerPosition.BOTTOM)) {
       Group group = (Group) this.getChildren().get(0);
       resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(7));
       resultMap.put(PlayerVisibleInfo.RESERVED_CARDS, (Text) group.getChildren().get(9));
@@ -105,19 +115,19 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
 
   @Override
   public void setHighlight(boolean highlightChoice) {
-    if (highlightChoice && playerPosition.equals(PlayerPosition.BOTTOM)){
+    if (highlightChoice && playerPosition.equals(PlayerPosition.BOTTOM)) {
       Group groupPlayer = (Group) this.getChildren().get(0);
       Rectangle highlight = (Rectangle) groupPlayer.getChildren().get(0);
       highlight.setFill(Color.GREEN);
-    } else if (highlightChoice && playerPosition.equals(PlayerPosition.TOP)){
+    } else if (highlightChoice && playerPosition.equals(PlayerPosition.TOP)) {
       Group groupPlayer = (Group) this.getChildren().get(6);
       Rectangle highlight = (Rectangle) groupPlayer.getChildren().get(0);
       highlight.setFill(Color.GREEN);
-    } else if (!highlightChoice && playerPosition.equals(PlayerPosition.BOTTOM)){
+    } else if (!highlightChoice && playerPosition.equals(PlayerPosition.BOTTOM)) {
       Group groupPlayer = (Group) this.getChildren().get(0);
       Rectangle highlight = (Rectangle) groupPlayer.getChildren().get(0);
       highlight.setFill(Color.WHITE);
-    } else if (!highlightChoice && playerPosition.equals(PlayerPosition.TOP)){
+    } else if (!highlightChoice && playerPosition.equals(PlayerPosition.TOP)) {
       Group groupPlayer = (Group) this.getChildren().get(6);
       Rectangle highlight = (Rectangle) groupPlayer.getChildren().get(0);
       highlight.setFill(Color.WHITE);
@@ -126,12 +136,13 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui{
 
 
   private void giveInitialStartTokens() {
-    Map<Colour, Map<PlayerWealthInfo, Text>> allTokenColourMap = getPlayerColourWealthMap(playerPosition);
+    Map<Colour, Map<PlayerWealthInfo, Text>> allTokenColourMap =
+        getPlayerColourWealthMap(playerPosition);
     Colour[] allColours = App.getAllColours();
     for (Colour c : allColours) {
       Map<PlayerWealthInfo, Text> oneColourMap = allTokenColourMap.get(c);
       Text tokenText = oneColourMap.get(PlayerWealthInfo.TOKEN);
-      tokenText.setText(initialTokenNum+"");
+      tokenText.setText(initialTokenNum + "");
     }
   }
 
