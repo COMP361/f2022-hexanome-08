@@ -21,7 +21,7 @@ public class PlayerInGame implements BroadcastContent {
 
   public PlayerInGame(String name){
     this.name = name;
-    this.tokenHand = new TokenHand(0); // TODO: HARDCODED 3 FOR M5 ONLY
+    this.tokenHand = new TokenHand(3); // TODO: HARDCODED 3 FOR M5 ONLY
     this.purchasedHand = new PurchasedHand();
     this.reservedHand = new ReservedHand();
     this.wealth = new EnumMap<>(Colour.class);
