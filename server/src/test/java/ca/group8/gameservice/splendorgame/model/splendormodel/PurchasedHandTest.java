@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 public class PurchasedHandTest {
 
         PurchasedHand p1;
-        Optional <Colour> red = Optional.of(Colour.RED);
+        Colour red = Colour.RED;
         EnumMap<Colour,Integer> price = new EnumMap<>(Colour.class);
         DevelopmentCard c1 = new DevelopmentCard(1,price,"card1",1,red,false,"-1",1);
         DevelopmentCard c2 = new DevelopmentCard(2,price,"card2",1,red,false,"-1",1);
