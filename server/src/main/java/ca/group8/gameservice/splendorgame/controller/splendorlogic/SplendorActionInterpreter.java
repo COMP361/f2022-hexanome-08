@@ -1,5 +1,7 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 import ca.group8.gameservice.splendorgame.model.splendormodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,8 +18,10 @@ public class SplendorActionInterpreter {
      * @param currentGameState current game state that might be changed from this action execution
      * @param playerState the player specific game state that might be changed from this action execution
      */
-    public void interpretAction(Action playerChosenAction,
-                                GameInfo currentGameState, PlayerInGame playerState) {
+    public void interpretAction(Action playerChosenAction, GameInfo currentGameState,
+                                PlayerInGame playerState) {
+        Logger logger = LoggerFactory.getLogger(SplendorActionInterpreter.class);
+        logger.info("Before execute the action" + playerChosenAction.checkIsCardAction());
         playerChosenAction.execute(currentGameState, playerState);
     }
 

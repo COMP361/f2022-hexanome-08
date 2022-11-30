@@ -13,7 +13,7 @@ public class TokenHand {
    * Relies on Game Info to know how many players are in the game.
    * Initialize all token values to zero.
    */
-  protected TokenHand(int initialAmount) {
+  public TokenHand(int initialAmount) {
     allTokens = new EnumMap<>(Colour.class);
     for (Colour colour : Colour.values()) {
       allTokens.put(colour, initialAmount);

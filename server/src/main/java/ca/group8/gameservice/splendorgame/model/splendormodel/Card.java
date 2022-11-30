@@ -2,8 +2,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.EnumMap;
-import java.util.Optional;
-
 public class Card {
 
     private int prestigePoints;
