@@ -4,6 +4,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
 import java.util.EnumMap;
 
 public class TakeTokenAction extends Action{
@@ -20,6 +21,12 @@ public class TakeTokenAction extends Action{
 
   @Override
   public void execute(GameInfo currentGameState, PlayerInGame playerState) {
-    // TODO: Concrete implementation of how TakeTokenAction is executed
+      TokenHand tokenHand = playerState.getTokenHand();
+      tokenHand.addToken(this.tokens);
+
+      for(Colour colour:Colour.values()){
+        int oldValue = currentGameState.getTableTop().getBank().getAllTokens().get(colour);
+        currentGameState.getTableTop().getBank().getAllTokens().put(colour, oldValue-tokens.get(colour));
+      }
   }
 }

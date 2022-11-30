@@ -19,15 +19,15 @@ public class TestActionInterpreter {
   TakeTokenAction takeTokenAction;
   ArrayList<String> playerNames = new ArrayList<>();
   GameInfo game;
-  EnumMap<Colour,Integer> tokens = new EnumMap<Colour, Integer>(Colour.class);
+  EnumMap<Colour,Integer> tokens;
   PlayerInGame curPlayer;
   DevelopmentCard card;
-
-
+  SplendorActionInterpreter interpreter = new SplendorActionInterpreter();
 
 
   @BeforeEach
   void initialise() throws Exception{
+    tokens = new EnumMap<Colour, Integer>(Colour.class);
     playerNames.add("Young");
     playerNames.add("Julia");
     game = new GameInfo(playerNames);
@@ -36,6 +36,9 @@ public class TestActionInterpreter {
     card = (DevelopmentCard) game.getTableTop().getBaseBoard().getCard(2,2);
     purchaseAction = new PurchaseAction(true, position, card, 0);
     reserveAction = new ReserveAction(true, position,card);
+    for(Colour colour:Colour.values()){
+      tokens.put(colour, 0);
+    }
     tokens.put(Colour.BLUE, 2);
     takeTokenAction = new TakeTokenAction(false, tokens);
 
@@ -52,20 +55,36 @@ public class TestActionInterpreter {
 
   @Test
   void testPurchase(){
-    purchaseAction.execute(game, curPlayer);
+    interpreter.interpretAction(purchaseAction, game, curPlayer);
     assert(curPlayer.getPurchasedHand().getSize()==1);
     assert(curPlayer.getPurchasedHand().getDevelopmentCards().get(0)==card);
     assert(game.getTableTop().getBaseBoard().getCard(2,2)!=card);
     assert(game.getTableTop().getDecks().get(1).size()==35);
   }
 
-
+  @Test
   void testReserve(){
-    reserveAction.execute(game, curPlayer);
-
+    interpreter.interpretAction(reserveAction, game, curPlayer);
+    assert(curPlayer.getReservedHand().getSize()==1);
+    assert(curPlayer.getReservedHand().getDevelopmentCards().get(0)==card);
+    assert(game.getTableTop().getBaseBoard().getCard(2,2)!=card);
+    assert(game.getTableTop().getDecks().get(1).size()==35);
   }
 
+  @Test
+  void testTakeTokens(){
+    int initialBlueValue = game.getTableTop().getBank().getAllTokens().get(Colour.BLUE);
 
-  //TODO: test next player
-  // test purchase, reserve take token
+
+    interpreter.interpretAction(takeTokenAction, game, curPlayer);
+
+    for(Colour colour: Colour.values()){
+      if(colour == Colour.BLUE){
+        assert(curPlayer.getTokenHand().getAllTokens().get(colour)==5);
+        assert(initialBlueValue-2==game.getTableTop().getBank().getAllTokens().get(colour));
+      }else{
+        assert(curPlayer.getTokenHand().getAllTokens().get(colour)==3);
+      }
+    }
+  }
 }
