@@ -7,6 +7,7 @@ import java.util.EnumMap;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
+
 public class ReservedHandTest {
     ReservedHand r1;
     Optional <Colour> red = Optional.of(Colour.RED);
@@ -36,11 +37,32 @@ public class ReservedHandTest {
     }
 
     @Test
-    void addTest() {
+    void addDevelopmentTest() {
         assertEquals(r1.getSize(),0);
         r1.addDevelopmentCard(c1);
         assertEquals(r1.getSize(),1);
+        assertSame(r1.getDevelopmentCards().get(0),c1);
     }
 
-    
+    @Test
+    void removeDevelopmentTest() {
+        r1.addDevelopmentCard(c1);
+        assertEquals(r1.getSize(),1);
+        r1.removeDevelopmentCard(c1);
+        assertEquals(r1.getSize(),0);
+    }
+
+    @Test
+    void addNobleTest() {
+        r1.addNobleCard(n1);
+        assertSame(r1.getNobleCards().get(0),n1);
+    }
+
+    @Test
+    void removeNobleTest() {
+        r1.addNobleCard(n1);
+        r1.removeNobleCard(n1);
+        assertEquals(r1.getNobleCards().size(),0);
+    }
+
 }

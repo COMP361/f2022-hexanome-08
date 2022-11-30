@@ -20,6 +20,10 @@ public class ReservedHand {
         developmentCards.remove(card);
     }
 
+    public void removeNobleCard(NobleCard card){
+        nobleCards.remove(card);
+    }
+
     public boolean isFull(){
         return developmentCards.size() == 3;
     }

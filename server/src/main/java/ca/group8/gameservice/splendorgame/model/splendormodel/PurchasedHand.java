@@ -18,9 +18,11 @@ public class PurchasedHand {
     }
 
     public void removeDevelopmentCard(DevelopmentCard card){
-
         developmentCards.remove(card);
+    }
 
+    public int getSize(){
+        return developmentCards.size();
     }
 
     public List<DevelopmentCard> getDevelopmentCards() {
