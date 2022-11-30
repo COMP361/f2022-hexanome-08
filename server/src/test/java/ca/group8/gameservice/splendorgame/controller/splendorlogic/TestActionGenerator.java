@@ -45,7 +45,7 @@ public class TestActionGenerator {
         g1.getCurrentPlayer().getTokenHand().removeToken(price1);
         generator.generateActions(gameID,g1,g1.getCurrentPlayer());
         Map<String, Action> listOfActions = generator.lookUpActions(gameID,g1.getCurrentPlayer().getName());
-        System.out.println(listOfActions.size());
+        assertEquals(listOfActions.size(),13);
     }
 
 
