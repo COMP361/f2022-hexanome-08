@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.Player;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
@@ -141,7 +142,11 @@ public class SplendorRestController {
 
 
       // seems like we can safely add the game to the game manager
-      GameInfo newGameInfo = new GameInfo(launcherInfo.getPlayerNames());
+      ArrayList<String> playerNames = new ArrayList<>();
+      for (Player p : launcherInfo.getPlayers()) {
+        playerNames.add(p.getName());
+      }
+      GameInfo newGameInfo = new GameInfo(playerNames);
 
       logger.info("Current game id: " + gameId);
 
