@@ -1,6 +1,5 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import ch.qos.logback.core.subst.Token;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +8,7 @@ import java.util.EnumMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-public class TokenHandTest {
+public class TestTokenHand {
     TokenHand t1;
     EnumMap<Colour,Integer> price1;
     EnumMap<Colour,Integer> price2;

@@ -4,11 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumMap;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 
-public class ReservedHandTest {
+public class TestReservedHand {
     ReservedHand r1;
     Colour red = Colour.RED;
     EnumMap<Colour,Integer> price = new EnumMap<>(Colour.class);

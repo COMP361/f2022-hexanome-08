@@ -1,12 +1,10 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.util.EnumMap;
-import java.util.Optional;
-import static org.junit.Assert.*;
-public class PurchasedHandTest {
+
+public class TestPurchasedHand {
 
         PurchasedHand p1;
         Colour red = Colour.RED;

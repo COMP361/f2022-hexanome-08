@@ -4,10 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
 
-
-import java.util.EnumMap;
-
-public class PositionTest {
+public class TestPosition {
     Position p1;
 
     @BeforeEach

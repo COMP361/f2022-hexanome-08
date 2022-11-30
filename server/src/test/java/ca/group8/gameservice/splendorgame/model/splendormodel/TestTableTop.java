@@ -1,16 +1,12 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class TableTopTest {
+class TestTableTop {
 
     TableTop t1;
     ArrayList<PlayerInGame> activePlayerInGames = new ArrayList<PlayerInGame>();
