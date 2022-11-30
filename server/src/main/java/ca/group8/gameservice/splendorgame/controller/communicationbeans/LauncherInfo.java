@@ -70,12 +70,4 @@ public class LauncherInfo {
         this.savegame = savegame;
     }
 
-    public ArrayList<String> getPlayerNames() {
-        ArrayList<String> names = new ArrayList<>();
-        for (Player p : players) {
-            names.add(p.getName());
-        }
-        return names;
-    }
-
 }
