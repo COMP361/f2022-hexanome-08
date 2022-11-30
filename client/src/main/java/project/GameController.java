@@ -205,6 +205,8 @@ public class GameController implements Initializable {
         }
         // no point of updating if the GUI is not there yet OR nothing changed
         if (responseCode == 200 && stringPlayerInfoGuiMap.containsKey(playerName)) {
+          // Get the player gui
+          PlayerInfoGui playerInfoGui = stringPlayerInfoGuiMap.get(playerName);
           // update the MD5 hash of previous response
           hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
           // decode this response into PlayerInGame class with Gson
@@ -217,7 +219,7 @@ public class GameController implements Initializable {
           List<DevelopmentCard> allDevCards = curPlayerInventory.getPurchasedHand()
               .getDevelopmentCards();
 
-
+          // waiting
 
         }
       }
