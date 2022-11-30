@@ -1,6 +1,12 @@
 package project;
 
+
+import com.google.gson.Gson;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -8,24 +14,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.json.JSONArray;
+import project.connection.SplendorServiceRequestSender;
+import project.view.lobby.User;
 import project.view.splendor.*;
+import project.view.splendor.communication.GameInfo;
 import project.view.splendor.gameitems.BaseCard;
 import project.view.splendor.gameitems.DevelopmentCard;
 
 /**
  * Game controller for game GUI.
  */
-public class GameController {
+public class GameController implements Initializable {
 
 
   @FXML
@@ -36,6 +49,17 @@ public class GameController {
 
   @FXML
   private VBox orientCardDeck;
+
+  @FXML
+  private Button myCardButton;
+
+  private final long gameId;
+
+  public GameController(long gameId) {
+    this.gameId = gameId;
+  }
+
+
   /**
    * Opening the development cards pop up once "My Cards" button is pressed.
    */
@@ -54,13 +78,14 @@ public class GameController {
 
   @FXML
   protected void onOpenMyReserveCardClick() throws IOException {
-    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("my_reserved_cards.fxml"));
+
     Image img2 = new Image("project/pictures/noble/noble1.png");
     List<ImageView> testNobleImageViews = new ArrayList<>();
     for (int i = 0; i < 5; i++) {
       ImageView imgV = new ImageView(img2);
       testNobleImageViews.add(imgV);
     }
+    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("my_reserved_cards.fxml"));
     fxmlLoader.setController(new ReservedHandController(testNobleImageViews, testNobleImageViews));
     Stage newStage = new Stage();
     newStage.setTitle("My Reserved Cards");
@@ -74,8 +99,8 @@ public class GameController {
     // TODO: Add a parameter for this method: Map<Colour, List<DevelopmentCard>> cardsMap here
 
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("my_development_cards.fxml"));
-    Map<Colour, List<DevelopmentCard>> colourToCardStackMap = new HashMap<>();
 
+    Map<Colour, List<DevelopmentCard>> colourToCardStackMap = new HashMap<>();
     EnumMap<Colour, Integer> cardPrice = new EnumMap<>(Colour.class);
     cardPrice.put(Colour.RED, 0);
     cardPrice.put(Colour.BLACK, 0);
@@ -96,8 +121,8 @@ public class GameController {
     oneColourImageVs.add(c2);
 
     colourToCardStackMap.put(Colour.BLACK, oneColourImageVs);
-
     fxmlLoader.setController(new PurchaseHandController(colourToCardStackMap));
+
     Pane reserveHandPopup = fxmlLoader.load();
     Stage newStage = new Stage();
     newStage.setTitle("My Purchased Cards");
@@ -125,20 +150,54 @@ public class GameController {
     return resultMap;
   }
 
-  public void initialize() {
+
+  @Override
+  // TODO: This method contains what's gonna happen after clicking "play" on the board
+  public void initialize(URL url, ResourceBundle resourceBundle) {
     GameBoardLayoutConfig config = App.getGuiLayouts();
-
-    // TASK1: Get all player and the player names
-
-
+    SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
+    User curUser = App.getUser(); // at this point, user will not be Null
 
     // TODO: change based on number of players, get the info from server later
-    String firstPlayer = "D"; // needs to highlight the boarder of this player
-    String curPlayer = "A";
-    String[] allPlayerNames = new String[] {"C", "A", "D", "B"};
+    String firstPlayer = "D"; // Read it from GameInfo
+    String[] allPlayerNames = gameRequestSender.sendGetAllPlayerNamesList(gameId);
+    String curPlayer = App.getUser().getUsername();
+
+    String gameInfoResponse =
+        gameRequestSender.sendGetGameInfoRequest(gameId, "").getBody();
+    GameInfo gameInfo = new Gson().fromJson(gameInfoResponse, GameInfo.class);
+    System.out.println(gameInfo.getCurrentPlayer());
     List<String> playerNames = new ArrayList<>(Arrays.asList(allPlayerNames));
     sortedPlayerNames = sortPlayerNames(curPlayer, playerNames);
     int curPlayerNum = playerNames.size();
+
+
+
+    try {
+      App.refreshUserToken(curUser); // with calling this, we can make sure any requests involve
+      // using access token will not fail due to expiration
+    } catch (UnirestException e) {
+      throw new RuntimeException(e);
+    }
+
+    // First thing, we have the gameId, we need to get the player names (no need to get it again)
+
+
+    // Then get the tableTop: decks, boards, nobles, .... (NEED TO LONG POLLING FOR THIS)
+    // As the part of get updates on the game board, we need to do ONE GET request from
+    // the CURRENT PLAYER's /actions, once anything changed on the topTop (currentPlayer,
+    // any card board....) then the actions map must be updated accordingly, and so is the
+    // current player info, if so, we will check whether the user of this client IS
+    // the current player in server, if so, GET request from server will provide a lot of
+    // actions, otherwise, it will not provide anything
+
+    // To avoid token problem, send a renewRequest at the end of this while(true) loop for updating
+    // the board
+
+    // Then the player's inventory (gems, tokens, purchased hand)... LONG POLLING
+
+
+
 
     // initialize noble area
     NobleBoardGui nobleBoard = new NobleBoardGui(100, 100, 5);
@@ -264,5 +323,4 @@ public class GameController {
 
 
   }
-
 }

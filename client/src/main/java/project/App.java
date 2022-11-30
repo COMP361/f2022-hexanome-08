@@ -2,6 +2,7 @@ package project;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import project.connection.LobbyServiceRequestSender;
+import project.connection.SplendorServiceRequestSender;
 import project.view.lobby.SessionGuiManager;
 import project.view.lobby.User;
 import project.view.splendor.Colour;
@@ -34,6 +36,9 @@ public class App extends Application {
   // One and the only one requestSender
   private static final LobbyServiceRequestSender lobbyRequestSender =
       new LobbyServiceRequestSender("http://76.66.139.161:4242");
+
+  private static final SplendorServiceRequestSender gameRequestSender =
+      new SplendorServiceRequestSender("http://76.66.139.161:4246/splendor");
 
   private static final Colour[] allColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
@@ -160,6 +165,10 @@ public class App extends Application {
     return lobbyRequestSender;
   }
 
+  public static SplendorServiceRequestSender getGameRequestSender() {
+    return gameRequestSender;
+  }
+
   public static Colour[] getAllColours() {
     return allColours;
   }
@@ -200,8 +209,19 @@ public class App extends Application {
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
     fxmlLoader.setController(controller);
     Stage newStage = new Stage();
-    newStage.setScene(new Scene(fxmlLoader.load(), 360, 170));
+    newStage.setScene(new Scene(fxmlLoader.load(), popUpStageWidth, popUpStageHeight));
     newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     newStage.show();
+  }
+
+  /**
+   * A static method to refresh the user's access token
+   *
+   * @param user
+   * @throws UnirestException
+   */
+  public static void refreshUserToken(User user) throws UnirestException {
+    String newAccessToken = lobbyRequestSender.sendRefreshTokenRequest(user.getRefreshToken());
+    user.setAccessToken(newAccessToken);
   }
 }

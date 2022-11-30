@@ -44,9 +44,11 @@ public class LogInController {
     // extract fields from the object, in case of failing to extract "access_token",
     // update the error message
     try {
+      // set up the permanent refresh_token for user
       String accessToken = logInResponseJson.getString("access_token");
+      String refreshToken = logInResponseJson.getString("refresh_token");
       String authority = lobbyRequestSender.sendAuthorityRequest(accessToken);
-      User curUser = new User(userNameStr, accessToken, authority);
+      User curUser = new User(userNameStr, accessToken, refreshToken, authority);
       App.setUser(curUser);
 
       // if user is player, display admin_lobby_page
