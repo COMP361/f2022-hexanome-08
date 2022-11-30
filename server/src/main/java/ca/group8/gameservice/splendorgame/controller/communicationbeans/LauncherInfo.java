@@ -8,6 +8,12 @@ import java.util.LinkedList;
  */
 public class LauncherInfo {
 
+
+
+    public void setSavegame(String savegame) {
+        this.savegame = savegame;
+    }
+
     // The name of the game that registered in LS
     String gameServer;
 
@@ -53,12 +59,19 @@ public class LauncherInfo {
         return savegame;
     }
 
-    public ArrayList<String> getPlayerNames() {
-        ArrayList<String> names = new ArrayList<>();
-        for (Player p : players) {
-            names.add(p.getName());
-        }
-        return names;
+    public void setGameServer(String gameServer) {
+        this.gameServer = gameServer;
     }
+
+    public void setPlayers(
+        ArrayList<Player> players) {
+        this.players = players;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+
 
 }
