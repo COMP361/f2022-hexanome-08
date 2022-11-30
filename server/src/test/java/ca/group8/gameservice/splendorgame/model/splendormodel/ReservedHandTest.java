@@ -23,6 +23,7 @@ public class ReservedHandTest {
     void setup() {
         r1 = new ReservedHand();
     }
+
     @Test
     void isNotFullTest() {
         assertFalse (r1.isFull());
