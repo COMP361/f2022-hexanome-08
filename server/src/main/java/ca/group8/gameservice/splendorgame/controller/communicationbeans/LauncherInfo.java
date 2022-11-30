@@ -11,7 +11,7 @@ public class LauncherInfo {
     // The name of the game that registered in LS
     String gameServer;
 
-    ArrayList<Player> players;
+    LinkedList<PlayerInfo> players;
 
     String creator;
 
@@ -22,7 +22,7 @@ public class LauncherInfo {
     }
 
     // by not providing the save game id, we create a new game
-    public LauncherInfo(String gameServer, ArrayList<Player> players, String creator) {
+    public LauncherInfo(String gameServer, LinkedList<PlayerInfo> players, String creator) {
         this.gameServer = gameServer;
         this.players = players;
         this.creator = creator;
@@ -30,7 +30,7 @@ public class LauncherInfo {
     }
 
     // by providing the save game id, we create a game based a previous saved game states
-    public LauncherInfo(String gameServer, ArrayList<Player> players, String creator, String savegame) {
+    public LauncherInfo(String gameServer, LinkedList<PlayerInfo> players, String creator, String savegame) {
         this.gameServer = gameServer;
         this.players = players;
         this.creator = creator;
@@ -41,7 +41,7 @@ public class LauncherInfo {
         return gameServer;
     }
 
-    public ArrayList<Player> getPlayers() {
+    public LinkedList<PlayerInfo> getPlayers() {
         return players;
     }
 
@@ -57,8 +57,7 @@ public class LauncherInfo {
         this.gameServer = gameServer;
     }
 
-    public void setPlayers(
-        ArrayList<Player> players) {
+    public void setPlayers(LinkedList<PlayerInfo> players) {
         this.players = players;
     }
 
