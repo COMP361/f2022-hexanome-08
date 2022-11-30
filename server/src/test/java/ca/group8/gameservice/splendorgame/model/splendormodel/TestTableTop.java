@@ -63,9 +63,6 @@ class TestTableTop {
 
     @Test
     void testIsNew(){
-        for(PlayerInGame player :activePlayerInGames){
-            assert(player.isEmpty());
-        }
         for(int i=0; i<3; i++){
             for(int j=0; j<4; j++){
                 assert(t1.getBaseBoard().getCard(i,j) instanceof DevelopmentCard);
