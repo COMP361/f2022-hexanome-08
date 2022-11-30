@@ -89,7 +89,7 @@ public class GameInfo { // TODO add gametype
   public void setNextPlayer(){
     int index = playerNames.indexOf(currentPlayer);
     //if last player in list return to first player
-    currentPlayer= playerNames.get((index+1)%4);
+    currentPlayer= playerNames.get((index+1)%playerNames.size());
   }
 
   public List<String> getWinners() {
