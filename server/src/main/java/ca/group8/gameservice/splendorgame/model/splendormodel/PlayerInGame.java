@@ -1,6 +1,5 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import ca.group8.gameservice.splendorgame.model.PlayerReadOnly;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
 import java.util.EnumMap;
 import org.slf4j.Logger;
