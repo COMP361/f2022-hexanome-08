@@ -25,20 +25,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
 
 public class TableTop implements BroadcastContent {
-  private BaseBoard baseBoard;
+
   private Map<Integer, Deck> decks;
   private ArrayList<PlayerInGame> playerInGames;
 
+  private BaseBoard baseBoard;
   private NobleBoard nobleBoard;
-
-  private Optional<Board> orientBoard; //TODO: implement orientBoard
-  private Optional<Map<Integer,Deck>> orientDeck;
   private Bank bank;
 
 
+  // TODO: implement orientBoard later WITHOUT Optional
+  //private Optional<Board> orientBoard; //
+  //private Optional<Map<Integer,Deck>> orientDeck;
 
-  private Logger logger = LoggerFactory.getLogger(TableTop.class);
-  //assuming both board and deck will initialise in their constructors
 
   public TableTop(ArrayList<PlayerInGame> playerInGames) {
     this.decks = new HashMap<>();
@@ -57,24 +56,11 @@ public class TableTop implements BroadcastContent {
   @Override
   public boolean isEmpty() {
 
-    boolean baseBoardEmptyCheck = baseBoard.getCards().isEmpty()
+    return baseBoard.getCards().isEmpty()
         && decks.isEmpty()
         && playerInGames.isEmpty()
         && nobleBoard.getCards().isEmpty()
         && bank.getAllTokens().isEmpty();
-
-    boolean orientEmptyCheck;
-    if (orientBoard.isPresent() && orientDeck.isPresent()) {
-      // if both board and deck are not Optional.empty(), then we need to check if the
-      // action content in them are empty or not to decide the final result is empty or not
-      orientEmptyCheck = orientBoard.get().getCards().isEmpty()
-          && orientDeck.get().isEmpty();
-      return baseBoardEmptyCheck && orientEmptyCheck;
-    } else {
-      // if either of the orient related thing is not present, no need to check
-      // they are empty or not
-      return baseBoardEmptyCheck;
-    }
   }
 
   private void initialiseDevelopmentCardBoard(){
@@ -98,7 +84,7 @@ public class TableTop implements BroadcastContent {
     String cardName = (String) card.get("cardName");
     int cardLevel = ((Long) card.get("level")).intValue();
     int prestigePoints = ((Long) card.get("prestigePoints")).intValue();
-    Optional<Colour> gemColour = Optional.of(Colour.valueOf((String) card.get("gemColour")));
+    Colour gemColour = Colour.valueOf((String) card.get("gemColour"));
     int gemNumber = ((Long) card.get("gemNumber")).intValue();
     Boolean isPaired = (Boolean) card.get("isPaired");
     String pairedCardId = (String) card.get("pairedCardId");

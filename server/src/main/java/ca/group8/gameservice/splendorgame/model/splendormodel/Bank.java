@@ -21,7 +21,7 @@ public class Bank {
    */
   //TODO: Do we want to have this param?? Or should we implement this logic in GameState
   //TODO: and pass an integer value to Bank representing the initial gem values.
-  protected Bank(int numPlayers) {
+  public Bank(int numPlayers) {
     this.allTokens = new EnumMap<>(Colour.class);
     initialValue = (numPlayers * 2) - 1;
     for (Colour colour : Colour.values()) {
