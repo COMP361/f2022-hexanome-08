@@ -54,6 +54,7 @@ public class TokenHand {
     //verify that this number of gems can be removed (meaning new sum will not be less than 0)
     //Must be done before the next loop to ensure it passes for all colours
     for(Colour colour: Colour.values()){
+      System.out.println(colour.toString() + " " + (allTokens.get(colour) - paramTokens.get(colour)));
       assert (allTokens.get(colour) - paramTokens.get(colour)) >= 0;
     }
     //remove Tokens

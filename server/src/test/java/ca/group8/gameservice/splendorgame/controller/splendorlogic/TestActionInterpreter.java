@@ -16,7 +16,6 @@ public class TestActionInterpreter {
 
   @BeforeEach
   void initialiseActions(){
-    purchaseAction = new PurchaseAction()
   }
 
   //TODO: test next player
