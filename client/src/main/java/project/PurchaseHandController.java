@@ -34,7 +34,7 @@ public class PurchaseHandController implements Initializable {
     this.colourCardsMap = colourCardsMap;
   }
 
-  private List<HBox> generateCardSatchelPair(List<DevelopmentCard> oneColourCards){
+  private List<HBox> generateCardSatchelPair(List<DevelopmentCard> oneColourCards) {
     List<HBox> result = new ArrayList<>();
     for (DevelopmentCard card : oneColourCards) {
       Rectangle satchelMark = new Rectangle();
@@ -72,9 +72,9 @@ public class PurchaseHandController implements Initializable {
 
     int i = 0;
     for (Node n : groupOfOneColour.getChildren()) {
-      n.setLayoutX(i*10);
-      n.setLayoutY(i*20);
-      i+=1;
+      n.setLayoutX(i * 10);
+      n.setLayoutY(i * 20);
+      i += 1;
     }
   }
 
@@ -91,7 +91,7 @@ public class PurchaseHandController implements Initializable {
     // TODO: Send request and get the list of cards the player has and make it
     // (currently, HARDCODED!)
 
-    for (Colour c: colourGroupMap.keySet()) {
+    for (Colour c : colourGroupMap.keySet()) {
       if (colourCardsMap.containsKey(c)) {
         List<DevelopmentCard> cardsOfOneColour = colourCardsMap.get(c);
         List<HBox> allPairs = generateCardSatchelPair(cardsOfOneColour);

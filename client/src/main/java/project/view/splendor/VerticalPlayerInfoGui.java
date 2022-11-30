@@ -3,7 +3,6 @@ package project.view.splendor;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -15,15 +14,25 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import project.App;
 
-
-public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
+/**
+ * A class to visually represent a player in the game (vertical layout of player info).
+ */
+public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
 
   private final PlayerPosition playerPosition;
   private final String playerName;
 
   private final int initialTokenNum;
 
-  public VerticalPlayerInfoGui(PlayerPosition playerPosition, String playerName, int initialTokenNum) {
+  /**
+   * Construct new visual display of player.
+   *
+   * @param playerPosition the position the player will be on the client's display.
+   * @param playerName represents the player's name as a String.
+   * @param initialTokenNum TODO.
+   */
+  public VerticalPlayerInfoGui(PlayerPosition playerPosition, String playerName,
+                               int initialTokenNum) {
     this.playerPosition = playerPosition;
     this.playerName = playerName;
     this.initialTokenNum = initialTokenNum;
@@ -49,40 +58,42 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
     return playerPosition;
   }
 
-  public String getPlayerName(){
+  public String getPlayerName() {
     return playerName;
   }
+
   public int getInitialTokenNum() {
     return initialTokenNum;
   }
 
-  public Map<Colour,Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(PlayerPosition playerPosition){
+  public Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(
+      PlayerPosition playerPosition) {
     Map<Colour, Map<PlayerWealthInfo, Text>> resultMap = new HashMap<>();
     Colour[] colours = App.getBaseColours();
     ObservableList<Node> allChildren = this.getChildren();
-    if (playerPosition.equals(PlayerPosition.LEFT)){
-      for (int i = 0; i < colours.length; i++){
+    if (playerPosition.equals(PlayerPosition.LEFT)) {
+      for (int i = 0; i < colours.length; i++) {
         Map<PlayerWealthInfo, Text> mapInMap = new HashMap<>();
-        Group curGroup = (Group) allChildren.get(i+1);
-        mapInMap.put(PlayerWealthInfo.GEM,(Text) curGroup.getChildren().get(1));
-        mapInMap.put(PlayerWealthInfo.TOKEN,(Text) curGroup.getChildren().get(3));
+        Group curGroup = (Group) allChildren.get(i + 1);
+        mapInMap.put(PlayerWealthInfo.GEM, (Text) curGroup.getChildren().get(1));
+        mapInMap.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         resultMap.put(colours[i], mapInMap);
       }
       Group curGroup = (Group) allChildren.get(6);
-      Map<PlayerWealthInfo, Text> goldMap= new HashMap<>();
+      Map<PlayerWealthInfo, Text> goldMap = new HashMap<>();
       goldMap.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(1));
       resultMap.put(Colour.GOLD, goldMap);
     } else if (playerPosition.equals(PlayerPosition.RIGHT)) {
-      for (int i = 0; i < colours.length; i++){
+      for (int i = 0; i < colours.length; i++) {
         Map<PlayerWealthInfo, Text> mapInMap = new HashMap<>();
         HBox curBox = (HBox) allChildren.get(i);
         Group curGroup = (Group) curBox.getChildren().get(1);
         mapInMap.put(PlayerWealthInfo.GEM, (Text) curGroup.getChildren().get(1));
-        mapInMap.put(PlayerWealthInfo.TOKEN,(Text) curGroup.getChildren().get(3));
+        mapInMap.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         resultMap.put(colours[i], mapInMap);
       }
       HBox curBox = (HBox) allChildren.get(5);
-      Map<PlayerWealthInfo, Text> goldMap= new HashMap<>();
+      Map<PlayerWealthInfo, Text> goldMap = new HashMap<>();
       Group curGroup = (Group) curBox.getChildren().get(1);
       goldMap.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(1));
       resultMap.put(Colour.GOLD, goldMap);
@@ -90,16 +101,16 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
     return resultMap;
   }
 
-  public Map<PlayerVisibleInfo, Text> getPlayerVisibleInfoMap(PlayerPosition playerPosition){
+  public Map<PlayerVisibleInfo, Text> getPlayerVisibleInfoMap(PlayerPosition playerPosition) {
     Map<PlayerVisibleInfo, Text> resultMap = new HashMap<>();
     ObservableList<Node> allChildren = this.getChildren();
-    if (playerPosition.equals(PlayerPosition.LEFT)){
+    if (playerPosition.equals(PlayerPosition.LEFT)) {
       Group group = (Group) allChildren.get(0);
       resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(5));
       resultMap.put(PlayerVisibleInfo.RESERVED_CARDS, (Text) group.getChildren().get(7));
       resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(8));
 
-    } else if (playerPosition.equals(PlayerPosition.RIGHT)){
+    } else if (playerPosition.equals(PlayerPosition.RIGHT)) {
       Group group = (Group) allChildren.get(6);
 
       resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(6));
@@ -111,15 +122,15 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
 
   @Override
   public void setHighlight(boolean highlightChoice) {
-    if(highlightChoice && playerPosition.equals(PlayerPosition.RIGHT)){
+    if (highlightChoice && playerPosition.equals(PlayerPosition.RIGHT)) {
       Group groupPlayer = (Group) this.getChildren().get(6);
       Rectangle highlight = (Rectangle) groupPlayer.getChildren().get(0);
       highlight.setFill(Color.GREEN);
-    } else if (highlightChoice && playerPosition.equals(PlayerPosition.LEFT)){
+    } else if (highlightChoice && playerPosition.equals(PlayerPosition.LEFT)) {
       Group groupPlayer = (Group) this.getChildren().get(0);
       Rectangle highlight = (Rectangle) groupPlayer.getChildren().get(0);
       highlight.setFill(Color.GREEN);
-    } else if (!highlightChoice && playerPosition.equals(PlayerPosition.RIGHT)){
+    } else if (!highlightChoice && playerPosition.equals(PlayerPosition.RIGHT)) {
       Group groupPlayer = (Group) this.getChildren().get(6);
       Rectangle highlight = (Rectangle) groupPlayer.getChildren().get(0);
       highlight.setFill(Color.WHITE);
@@ -132,12 +143,13 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
 
 
   private void giveInitialStartTokens() {
-    Map<Colour, Map<PlayerWealthInfo, Text>> allTokenColourMap = getPlayerColourWealthMap(playerPosition);
+    Map<Colour, Map<PlayerWealthInfo, Text>> allTokenColourMap =
+        getPlayerColourWealthMap(playerPosition);
     Colour[] allColours = App.getAllColours();
     for (Colour c : allColours) {
       Map<PlayerWealthInfo, Text> oneColourMap = allTokenColourMap.get(c);
       Text tokenText = oneColourMap.get(PlayerWealthInfo.TOKEN);
-      tokenText.setText(initialTokenNum+"");
+      tokenText.setText(initialTokenNum + "");
     }
   }
 
@@ -147,7 +159,6 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui{
     setLayoutX(layoutX);
     setLayoutY(layoutY);
     giveInitialStartTokens();
-
 
 
   }

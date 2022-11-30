@@ -21,7 +21,7 @@ public class ReservedHandController implements Initializable {
   private final List<ImageView> playerCards;
   private final List<ImageView> playerNobles;
 
-  public ReservedHandController (List<ImageView> playerCards, List<ImageView> playerNobles) {
+  public ReservedHandController(List<ImageView> playerCards, List<ImageView> playerNobles) {
     this.playerCards = playerCards;
     this.playerNobles = playerNobles;
   }
