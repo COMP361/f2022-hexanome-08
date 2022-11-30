@@ -392,8 +392,7 @@ public class SplendorRestController {
     }
   }
 
-  @PostMapping(value = "/api/games/{gameId}/players/{playerName}/actions/{actionId}",
-  consumes = "application/json; charset=utf-8")
+  @PostMapping(value = "/api/games/{gameId}/players/{playerName}/actions/{actionId}")
   public ResponseEntity<String> selectAction(@PathVariable long gameId,
                                              @PathVariable String playerName,
                                              @PathVariable String actionId,
