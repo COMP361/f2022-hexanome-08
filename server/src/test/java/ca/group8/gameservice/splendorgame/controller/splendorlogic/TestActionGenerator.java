@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.Map;
+
 import static org.junit.Assert.*;
 
 public class TestActionGenerator {
@@ -14,6 +16,8 @@ public class TestActionGenerator {
     SplendorActionListGenerator generator;
     GameInfo g1;
     Long gameID = Long.valueOf(123);
+    EnumMap<Colour,Integer> price1;
+    EnumMap<Colour,Integer> price2;
 
     @BeforeEach
     void setUp() {
@@ -26,23 +30,24 @@ public class TestActionGenerator {
         } catch (Exception e) {
             System.out.println("TestActionGenerator can't make GameInfo");
         }
+        price1 = new EnumMap<>(Colour.class);
+        price2 = new EnumMap<>(Colour.class);
+        int counter = 1;
+        for (Colour colour : Colour.values()) {
+            price1.put(colour, 3);
+            price2.put(colour, counter);
+            counter++;
+        }
     }
 
     @Test
     void firstTurnActions(){
-
+        g1.getCurrentPlayer().getTokenHand().removeToken(price1);
+        generator.generateActions(gameID,g1,g1.getCurrentPlayer());
+        Map<String, Action> listOfActions = generator.lookUpActions(gameID,g1.getCurrentPlayer().getName());
+        System.out.println(listOfActions.size());
     }
 
-    EnumMap<Colour,Integer> makeMap(int red, int blue,
-                                     int green, int white, int black, int gold){
-        EnumMap<Colour,Integer> price = new EnumMap<>(Colour.class);
-        price.replace(Colour.RED,red);
-        price.replace(Colour.BLUE,blue);
-        price.replace(Colour.GREEN,green);
-        price.replace(Colour.WHITE,white);
-        price.replace(Colour.BLACK,black);
-        price.replace(Colour.GOLD,gold);
-        return price;
-    }
+
 
 }

@@ -27,8 +27,6 @@ import org.springframework.util.ResourceUtils;
 public class TableTop implements BroadcastContent {
 
   private Map<Integer, Deck> decks;
-  private ArrayList<PlayerInGame> playerInGames;
-
   private BaseBoard baseBoard;
   private NobleBoard nobleBoard;
   private Bank bank;
@@ -45,10 +43,10 @@ public class TableTop implements BroadcastContent {
       decks.put(i,new Deck(i));
     }
     initialiseBaseDecks();
-    this.playerInGames = playerInGames;
+    //this.playerInGames = playerInGames;
     this.baseBoard = new BaseBoard(3,4);
     this.nobleBoard = new NobleBoard(playerInGames.size()+1, 1);
-    initialiseNobleBoard();
+    initialiseNobleBoard(playerInGames);
     initialiseDevelopmentCardBoard();
     bank = new Bank(playerInGames.size());
   }
@@ -58,7 +56,7 @@ public class TableTop implements BroadcastContent {
 
     return baseBoard.getCards().isEmpty()
         && decks.isEmpty()
-        && playerInGames.isEmpty()
+        //&& playerInGames.isEmpty()
         && nobleBoard.getCards().isEmpty()
         && bank.getAllTokens().isEmpty();
   }
@@ -72,7 +70,7 @@ public class TableTop implements BroadcastContent {
   }
 
 
-  private void initialiseNobleBoard() {
+  private void initialiseNobleBoard(ArrayList<PlayerInGame> playerInGames) {
     List<NobleCard> nobles = generateNobleCards();
     for(int i = 0; i < playerInGames.size() +1; i++){
       nobleBoard.add(i,0, nobles.get(i));
@@ -165,10 +163,6 @@ public class TableTop implements BroadcastContent {
 
   public Map<Integer, Deck> getDecks() {
     return decks;
-  }
-
-  public ArrayList<PlayerInGame> getPlayers() {
-    return playerInGames;
   }
 
   public BaseBoard getBaseBoard() {

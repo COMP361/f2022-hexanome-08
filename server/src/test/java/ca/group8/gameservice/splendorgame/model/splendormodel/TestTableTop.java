@@ -35,13 +35,7 @@ class TestTableTop {
         assert (decks.get(3).size() == 16);
     }
 
-    @Test
-    void getPlayers() {
-        ArrayList<PlayerInGame> result = t1.getPlayers();
-        assert (result.get(0).equals(activePlayerInGames.get(0)));
-        assert (result.get(1).equals(activePlayerInGames.get(1)));
-        assert (result.get(2).equals(activePlayerInGames.get(2)));
-    }
+
 
     @Test
     void getBaseBoard() {
