@@ -2,9 +2,8 @@ package project;
 
 
 import com.google.gson.Gson;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,6 +15,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,13 +28,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import org.json.JSONArray;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.http.ResponseEntity;
 import project.connection.SplendorServiceRequestSender;
 import project.view.lobby.User;
 import project.view.splendor.*;
+import project.view.splendor.communication.DevelopmentCard;
 import project.view.splendor.communication.GameInfo;
-import project.view.splendor.gameitems.BaseCard;
-import project.view.splendor.gameitems.DevelopmentCard;
+import project.view.splendor.communication.NobleCard;
+import project.view.splendor.communication.PlayerInGame;
 
 /**
  * Game controller for game GUI.
@@ -45,13 +48,20 @@ public class GameController implements Initializable {
   private AnchorPane playerBoardAnchorPane;
 
   @FXML
-  private VBox baseCardDeck;
+  private VBox baseCardBoard;
 
   @FXML
-  private VBox orientCardDeck;
+  private VBox orientCardBoard;
 
   @FXML
   private Button myCardButton;
+
+  @FXML
+  private Button myReservedCardsButton;
+
+  // TODO: assign function to it later
+  @FXML
+  private Button quitButton;
 
   private final long gameId;
 
@@ -69,7 +79,7 @@ public class GameController implements Initializable {
 
   private final Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap = new HashMap<>();
 
-  private List<String> sortedPlayerNames;
+  private List<String> sortedPlayerNames = new ArrayList<>();
 
   @FXML
   protected void onExitGameClick() throws IOException {
@@ -96,41 +106,51 @@ public class GameController implements Initializable {
 
   @FXML
   protected void onOpenMyPurchaseCardClick() throws IOException {
-    // TODO: Add a parameter for this method: Map<Colour, List<DevelopmentCard>> cardsMap here
 
-    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("my_development_cards.fxml"));
-
-    Map<Colour, List<DevelopmentCard>> colourToCardStackMap = new HashMap<>();
-    EnumMap<Colour, Integer> cardPrice = new EnumMap<>(Colour.class);
-    cardPrice.put(Colour.RED, 0);
-    cardPrice.put(Colour.BLACK, 0);
-    cardPrice.put(Colour.BLUE, 4);
-    cardPrice.put(Colour.WHITE, 0);
-    cardPrice.put(Colour.GREEN, 0);
-
-    DevelopmentCard c1 = new DevelopmentCard(1,
-        cardPrice, "b1", 1,
-        Optional.of(Colour.BLACK), false, -1, 1);
-
-    DevelopmentCard c2 = new DevelopmentCard(1,
-        cardPrice, "b1", 1,
-        Optional.of(Colour.BLACK), true, -1, 1);
-
-    List<DevelopmentCard> oneColourImageVs = new ArrayList<>();
-    oneColourImageVs.add(c1);
-    oneColourImageVs.add(c2);
-
-    colourToCardStackMap.put(Colour.BLACK, oneColourImageVs);
-    fxmlLoader.setController(new PurchaseHandController(colourToCardStackMap));
-
-    Pane reserveHandPopup = fxmlLoader.load();
-    Stage newStage = new Stage();
-    newStage.setTitle("My Purchased Cards");
-    newStage.setScene(new Scene(reserveHandPopup, 800, 600));
-    newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
-    newStage.show();
   }
 
+  private EventHandler<ActionEvent> createOpenMyPurchaseCardClick() {
+    return event -> {
+      // TODO: Add a parameter for this method: Map<Colour, List<DevelopmentCard>> cardsMap here
+
+      FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("my_development_cards.fxml"));
+
+      Map<Colour, List<DevelopmentCard>> colourToCardStackMap = new HashMap<>();
+      EnumMap<Colour, Integer> cardPrice = new EnumMap<>(Colour.class);
+      cardPrice.put(Colour.RED, 0);
+      cardPrice.put(Colour.BLACK, 0);
+      cardPrice.put(Colour.BLUE, 4);
+      cardPrice.put(Colour.WHITE, 0);
+      cardPrice.put(Colour.GREEN, 0);
+
+      DevelopmentCard c1 = new DevelopmentCard(1,
+          cardPrice, "b1", 1,
+          Optional.of(Colour.BLACK), false, -1, 1);
+
+      DevelopmentCard c2 = new DevelopmentCard(1,
+          cardPrice, "b1", 1,
+          Optional.of(Colour.BLACK), true, -1, 1);
+
+      List<DevelopmentCard> oneColourImageVs = new ArrayList<>();
+      oneColourImageVs.add(c1);
+      oneColourImageVs.add(c2);
+
+      colourToCardStackMap.put(Colour.BLACK, oneColourImageVs);
+      fxmlLoader.setController(new PurchaseHandController(colourToCardStackMap));
+
+      Pane reserveHandPopup = null;
+      try {
+        reserveHandPopup = fxmlLoader.load();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+      Stage newStage = new Stage();
+      newStage.setTitle("My Purchased Cards");
+      newStage.setScene(new Scene(reserveHandPopup, 800, 600));
+      newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+      newStage.show();
+    };
+  }
 
   private List<String> sortPlayerNames(String curPlayerName, List<String> allPlayerNames) {
     while (!allPlayerNames.get(0).equals(curPlayerName)) {
@@ -151,6 +171,139 @@ public class GameController implements Initializable {
   }
 
 
+
+  private void runGameInfoUpdateThread() {
+    // implicitly contains the GUI update to tableTop as well
+    Thread mainThread = new Thread(() -> {
+
+
+    });
+
+    mainThread.start();
+
+  }
+
+  // This will update the current player's Inventory in time
+  private Thread generateCurrentPlayerUpdateThread (
+      SplendorServiceRequestSender gameRequestSender,
+      long gameId, String playerName, String accessToken,
+      Map<String,PlayerInfoGui> stringPlayerInfoGuiMap) {
+    // player specific updates happen here
+    return new Thread(() -> {
+      String hashedResponse = "";
+      ResponseEntity<String> longPullResponse = null;
+      // For now, even it's now the first check, we generate ALL
+      // the GUI on the fly, we don't care about speed for now
+      boolean isFirstCheck = true;
+      while (true){
+        int responseCode = 408;
+        while (responseCode == 408) {
+          longPullResponse =
+              gameRequestSender.sendGetPlayerInventoryRequest(
+                  gameId, playerName, accessToken, hashedResponse);
+          responseCode = longPullResponse.getStatusCode().value();
+        }
+        // no point of updating if the GUI is not there yet OR nothing changed
+        if (responseCode == 200 && stringPlayerInfoGuiMap.containsKey(playerName)) {
+          // update the MD5 hash of previous response
+          hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
+          // decode this response into PlayerInGame class with Gson
+          String responseInJsonString = longPullResponse.getBody();
+          PlayerInGame curPlayerInventory =
+              new Gson().fromJson(responseInJsonString, PlayerInGame.class);
+          int newPoints = curPlayerInventory.getPrestigePoints();
+          EnumMap<Colour, Integer> newTokenInHand =
+              curPlayerInventory.getTokenHand().getAllTokens();
+          List<DevelopmentCard> allDevCards = curPlayerInventory.getPurchasedHand()
+              .getDevelopmentCards();
+
+
+
+        }
+      }
+
+    });
+
+  }
+
+
+  //private void addPlayerGui(List<String> playerNamesSorted,
+  //                          AnchorPane playerBoardAnchorPane,
+  //                          GameBoardLayoutConfig config,
+  //                          Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap,
+  //                          SplendorServiceRequestSender gameRequestSender) {
+  //  int curPlayerNum = playerNamesSorted.size();
+  //  List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
+  //  List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
+  //  if (nameToPlayerInfoGuiMap.isEmpty()) {
+  //    // TODO: Add the GUI for the first time with PUTTING THEM INTO THE MAP
+  //
+  //
+  //
+  //
+  //    generateCurrentPlayerUpdateThread(gameRequestSender,
+  //        gameId, App.getUser().getUsername(), App.getUser().getAccessToken());
+  //
+  //  }
+  //
+  //  else {
+  //
+  //
+  //  }
+  //  // initialize player area
+  //  if (curPlayerNum >= 2) {
+  //    // after sorting, the name at index 0 will be the player using this current client
+  //    // in here, we are just
+  //    String btmPlayerName = playerNamesSorted.get(0);
+  //    String leftPlayerName = playerNamesSorted.get(1);
+  //    VerticalPlayerInfoGui leftPlayerGui =
+  //        new VerticalPlayerInfoGui(PlayerPosition.LEFT, leftPlayerName, 3);
+  //    HorizontalPlayerInfoGui btmPlayerGui =
+  //        new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM, btmPlayerName, 3);
+  //
+  //    btmPlayerGui.setup(config.getBtmPlayerLayoutX(), config.getBtmPlayerLayoutY());
+  //    leftPlayerGui.setup(config.getLeftPlayerLayoutX(), config.getLeftPlayerLayoutY());
+  //    horizontalPlayers.add(btmPlayerGui);
+  //    verticalPlayers.add(leftPlayerGui);
+  //    nameToPlayerInfoGuiMap.put(btmPlayerName, btmPlayerGui);
+  //    nameToPlayerInfoGuiMap.put(leftPlayerName, leftPlayerGui);
+  //    if (curPlayerNum >= 3) {
+  //      String topPlayerName = playerNamesSorted.get(2);
+  //      HorizontalPlayerInfoGui topPlayerGui =
+  //          new HorizontalPlayerInfoGui(PlayerPosition.TOP, topPlayerName, 3);
+  //      topPlayerGui.setup(config.getTopPlayerLayoutX(), config.getTopPlayerLayoutY());
+  //      horizontalPlayers.add(topPlayerGui);
+  //      nameToPlayerInfoGuiMap.put(topPlayerName, topPlayerGui);
+  //      if (curPlayerNum == 4) {
+  //        String rightPlayerName = playerNamesSorted.get(3);
+  //        VerticalPlayerInfoGui rightPlayerGui =
+  //            new VerticalPlayerInfoGui(PlayerPosition.RIGHT, rightPlayerName, 3);
+  //        rightPlayerGui.setup(config.getRightPlayerLayoutX(), config.getRightPlayerLayoutY());
+  //        verticalPlayers.add(rightPlayerGui);
+  //        nameToPlayerInfoGuiMap.put(rightPlayerName, rightPlayerGui);
+  //      }
+  //    }
+  //  }
+  //
+  //
+  //
+  //  Platform.runLater(() -> {
+  //    for (VerticalPlayerInfoGui verticalPlayer : verticalPlayers) {
+  //      playerBoardAnchorPane.getChildren().add(verticalPlayer);
+  //    }
+  //
+  //    for (HorizontalPlayerInfoGui horizontalPlayer : horizontalPlayers) {
+  //      playerBoardAnchorPane.getChildren().add(horizontalPlayer);
+  //    }
+  //  });
+  //
+  //}
+
+
+  private void setUpDefaultButtons() {
+    myCardButton.setOnAction(createOpenMyPurchaseCardClick());
+  }
+
   @Override
   // TODO: This method contains what's gonna happen after clicking "play" on the board
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -158,21 +311,151 @@ public class GameController implements Initializable {
     SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
     User curUser = App.getUser(); // at this point, user will not be Null
 
+    Thread mainGameUpdateThread = new Thread(() -> {
+      // basic stuff needed for a long pull
+      String hashedResponse = "";
+      ResponseEntity<String> longPullResponse = null;
+      boolean isFirstCheck = true;
+
+      while (true){
+        // always do one, just in case
+        try {
+          App.refreshUserToken(curUser);
+          // after this, curUser.getAccessToken() will for sure have a valid token
+        } catch (UnirestException e) {
+          throw new RuntimeException(e);
+        }
+
+        int responseCode = 408;
+        while (responseCode == 408) {
+          longPullResponse = gameRequestSender.sendGetGameInfoRequest(gameId, hashedResponse);
+          responseCode = longPullResponse.getStatusCode().value();
+        }
+
+        if (responseCode == 200) {
+          // update the MD5 hash of previous response
+          hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
+          // decode this response into PlayerInGame class with Gson
+          String responseInJsonString = longPullResponse.getBody();
+          GameInfo curGameInfo = new Gson().fromJson(responseInJsonString, GameInfo.class);
+
+          // how we are going to parse fromo this curGameInfo depends on first check or not
+          if (isFirstCheck){
+            String curTurnPlayer = curGameInfo.getCurrentPlayer();
+            String firstPlayer = curGameInfo.getFirstPlayer();
+            // sort the names, and this shall never happen again
+            if (sortedPlayerNames.isEmpty()) {
+              sortedPlayerNames = sortPlayerNames(curUser.getUsername(), curGameInfo.getPlayerNames());
+            }
+            int curPlayersCount = sortedPlayerNames.size();
+            int initTokenToStart = curGameInfo.getTableTop().getBank().getInitialValue();
+
+            HorizontalPlayerInfoGui btmPlayerGui =
+                new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM, curUser.getUsername(), initTokenToStart);
+            nameToPlayerInfoGuiMap.put(curUser.getUsername(), btmPlayerGui);
+            btmPlayerGui.setup(config.getBtmPlayerLayoutX(), config.getBtmPlayerLayoutY());
+            List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
+            horizontalPlayers.add(btmPlayerGui);
+            // The thread that monitors changes related to this player specifically
+            Thread playerSpecificThread =
+                generateCurrentPlayerUpdateThread(gameRequestSender,
+                    gameId, curUser.getUsername(), curUser.getAccessToken(),
+                    nameToPlayerInfoGuiMap);
+
+            // set up player area with data from server
+            String leftPlayerName = sortedPlayerNames.get(1);
+            List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
+            if (curPlayersCount >= 2) {
+              VerticalPlayerInfoGui leftPlayerGui =
+                  new VerticalPlayerInfoGui(PlayerPosition.LEFT, leftPlayerName, initTokenToStart);
+              // set up
+              leftPlayerGui.setup(config.getLeftPlayerLayoutX(), config.getLeftPlayerLayoutY());
+              // add to array, so that we can add them to gui at the same time later
+              verticalPlayers.add(leftPlayerGui);
+
+              // put them into global map for !firstCheck case
+              nameToPlayerInfoGuiMap.put(leftPlayerName, leftPlayerGui);
+
+              if (curPlayersCount >= 3) {
+                String topPlayerName = sortedPlayerNames.get(2);
+                HorizontalPlayerInfoGui topPlayerGui =
+                    new HorizontalPlayerInfoGui(PlayerPosition.TOP, topPlayerName,
+                        initTokenToStart);
+                topPlayerGui.setup(config.getTopPlayerLayoutX(), config.getTopPlayerLayoutY());
+
+                horizontalPlayers.add(topPlayerGui);
+
+                nameToPlayerInfoGuiMap.put(topPlayerName, topPlayerGui);
+                if (curPlayersCount == 4) {
+                  String rightPlayerName = sortedPlayerNames.get(3);
+                  VerticalPlayerInfoGui rightPlayerGui =
+                      new VerticalPlayerInfoGui(PlayerPosition.RIGHT, rightPlayerName,
+                          initTokenToStart);
+
+                  rightPlayerGui.setup(config.getRightPlayerLayoutX(),
+                      config.getRightPlayerLayoutY());
+                  verticalPlayers.add(rightPlayerGui);
+                  nameToPlayerInfoGuiMap.put(rightPlayerName, rightPlayerGui);
+                }
+              }
+            }
+
+            // now the gui is set, add them
+            Platform.runLater(() -> {
+              for (VerticalPlayerInfoGui verticalPlayer : verticalPlayers) {
+                playerBoardAnchorPane.getChildren().add(verticalPlayer);
+              }
+
+              for (HorizontalPlayerInfoGui horizontalPlayer : horizontalPlayers) {
+                playerBoardAnchorPane.getChildren().add(horizontalPlayer);
+              }
+            });
+
+
+            isFirstCheck = false;
+            playerSpecificThread.start();
+          }
+
+
+
+
+
+
+        }
+      }
+
+
+
+
+    });
+
+    mainGameUpdateThread.start();
+
+
+
+
+
     // TODO: change based on number of players, get the info from server later
     String firstPlayer = "D"; // Read it from GameInfo
     String[] allPlayerNames = gameRequestSender.sendGetAllPlayerNamesList(gameId);
     String curPlayer = App.getUser().getUsername();
 
-    String gameInfoResponse =
+    String previousResponse;
+
+    String gameInfoResponseStr =
         gameRequestSender.sendGetGameInfoRequest(gameId, "").getBody();
-    GameInfo gameInfo = new Gson().fromJson(gameInfoResponse, GameInfo.class);
+    GameInfo gameInfo = new Gson().fromJson(gameInfoResponseStr, GameInfo.class);
+    String firstPlayerName = gameInfo.getFirstPlayer();
+    String currentPlayerName = gameInfo.getCurrentPlayer();
+    System.out.println(firstPlayerName);
+    System.out.println(currentPlayerName);
+    previousResponse = DigestUtils.md5Hex(gameInfoResponseStr);
     System.out.println(gameInfo.getCurrentPlayer());
     List<String> playerNames = new ArrayList<>(Arrays.asList(allPlayerNames));
     sortedPlayerNames = sortPlayerNames(curPlayer, playerNames);
     int curPlayerNum = playerNames.size();
 
-
-
+    // TODO: Always refresh the token of this curUser every time an updates happen in GameInfo
     try {
       App.refreshUserToken(curUser); // with calling this, we can make sure any requests involve
       // using access token will not fail due to expiration
@@ -315,8 +598,8 @@ public class GameController implements Initializable {
       oneLevelCardsMap.put(CardType.ORIENT, orientCardLevelGui);
 
       Platform.runLater(() -> {
-        baseCardDeck.getChildren().add(baseCardLevelGui);
-        orientCardDeck.getChildren().add(orientCardLevelGui);
+        baseCardBoard.getChildren().add(baseCardLevelGui);
+        orientCardBoard.getChildren().add(orientCardLevelGui);
       });
       levelCardsMap.put(i, oneLevelCardsMap);
     }

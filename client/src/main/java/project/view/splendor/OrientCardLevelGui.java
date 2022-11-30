@@ -18,7 +18,6 @@ import javafx.scene.text.Text;
 import project.App;
 import project.CardActionController;
 import project.DeckActionController;
-import project.view.splendor.gameitems.DevelopmentCard;
 
 /**
  * TODO: Creates the GUI for a list of orient level cards.

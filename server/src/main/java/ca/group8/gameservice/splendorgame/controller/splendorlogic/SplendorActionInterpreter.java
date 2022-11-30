@@ -23,6 +23,7 @@ public class SplendorActionInterpreter {
         Logger logger = LoggerFactory.getLogger(SplendorActionInterpreter.class);
         logger.info("Before execute the action" + playerChosenAction.checkIsCardAction());
         playerChosenAction.execute(currentGameState, playerState);
+        currentGameState.setNextPlayer();
     }
 
     //// gameId, playerId -> Map<String, Action>

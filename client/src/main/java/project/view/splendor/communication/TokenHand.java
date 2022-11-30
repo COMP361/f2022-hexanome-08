@@ -1,65 +1,39 @@
 package project.view.splendor.communication;
 
 import java.util.EnumMap;
+import project.view.splendor.Colour;
 
 /**
  * Represents the Tokens that a Player has in their hand.
  */
 public class TokenHand {
 
-  private EnumMap<Colour, Integer> allTokens;
-
-  /**
-   * Relies on Game Info to know how many players are in the game.
-   * Initialize all token values to zero.
-   */
-  public TokenHand(int initialAmount) {
-    allTokens = new EnumMap<>(Colour.class);
-    for (Colour colour : Colour.values()) {
-      allTokens.put(colour, initialAmount);
-    }
+  public TokenHand(EnumMap<Colour, Integer> allTokens, int initialAmount) {
+    this.allTokens = allTokens;
+    this.initialAmount = initialAmount;
   }
 
   public EnumMap<Colour, Integer> getAllTokens() {
     return allTokens;
   }
 
-  public int getGoldTokenNumber(){
-    return allTokens.get(Colour.GOLD);
+  public int getInitialAmount() {
+    return initialAmount;
   }
 
-
-  ///**
-  // * Adds a certain amount (quantity) of a certain GemColour colour from the TokenHand.
-  // *
-  // * @param colour = Gem Colour.
-  // * @param quantity = quantity to add.
-  // *
-  // */
-
-  public void addToken(EnumMap<Colour,Integer> paramTokens) {
-    //add Tokens
-    for(Colour colour: Colour.values()){
-      int newVal = allTokens.get(colour) + paramTokens.get(colour);
-      allTokens.replace(colour,newVal);
-    }
+  public void setAllTokens(
+      EnumMap<Colour, Integer> allTokens) {
+    this.allTokens = allTokens;
   }
 
-  /**
-   * Removes a Map of Tokens from the tokenHand.
-   */
-  public void removeToken(EnumMap<Colour,Integer> paramTokens) {
-    //verify that this number of gems can be removed (meaning new sum will not be less than 0)
-    //Must be done before the next loop to ensure it passes for all colours
-    for(Colour colour: Colour.values()){
-      assert (allTokens.get(colour) - paramTokens.get(colour)) >= 0;
-    }
-    //remove Tokens
-    for(Colour colour: Colour.values()){
-      int newVal = allTokens.get(colour) - paramTokens.get(colour);
-      allTokens.replace(colour,newVal);
-    }
+  public void setInitialAmount(int initialAmount) {
+    this.initialAmount = initialAmount;
   }
+
+  private EnumMap<Colour, Integer> allTokens;
+  private int initialAmount;
+
+
 }
 
 
