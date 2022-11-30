@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 public class SplendorGameManager{
     private Map<Long, GameInfo> activeGames;
 
-
     public SplendorGameManager() {
         this.activeGames = new HashMap<>();
     }
@@ -30,11 +29,8 @@ public class SplendorGameManager{
         return activeGames.containsKey(gameId);
     }
 
-    public GameInfo addGame(long gameId, ArrayList<String> playerNames)
-        throws ModelAccessException, FileNotFoundException {
-        GameInfo newGameInfo = new GameInfo(playerNames);
+    public void addGame(long gameId, GameInfo newGameInfo) throws ModelAccessException{
         activeGames.put(gameId,newGameInfo);
-        return newGameInfo;
     }
 
     public void removeGame(long gameId) {

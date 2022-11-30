@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -59,14 +61,27 @@ public class SplendorActionListGenerator {
         Board baseBoard = gameInfo.getTableTop().getBaseBoard();
         List<Card> baseBoardCards = baseBoard.getCards();
 
+        Logger logger = LoggerFactory.getLogger(SplendorActionListGenerator.class);
+        logger.info("Baseboad card 1: " + baseBoardCards.get(0));
+        logger.info("Size of the board cards: " + baseBoardCards.size());
+
         for (Card card : baseBoardCards) {
             Position position = baseBoard.getCardPosition(card);
             //start of purchase card verification
-
             //this creates a goldCounter, to see if gold tokens are needed
             int goldCounter = 0;
+
+            logger.info("Card prices: " + card.getPrice());
             EnumMap<Colour, Integer> cardPrice = card.getPrice();
             for(Colour col : Colour.values()){
+                // TODO: Gold is not part of the card price!!!!!!!!!!!!!!!!!!
+                //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                if (col.equals(Colour.GOLD)) {
+                    continue;
+                }
                 if(cardPrice.get(col) != 0){
                     if(cardPrice.get(col) > wealth.get(col)){
                         goldCounter += cardPrice.get(col) - wealth.get(col);

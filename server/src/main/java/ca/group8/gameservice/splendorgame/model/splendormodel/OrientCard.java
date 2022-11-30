@@ -8,7 +8,7 @@ public class OrientCard extends DevelopmentCard{
 
     public OrientCard(int paramPrestigePoints,
                     EnumMap<Colour, Integer> paramPrice, String cardName, int level,
-                    Optional<Colour> gemColour, boolean isPaired, String pairedCardId, int gemNumber, OrientType paramType) {
+                    Colour gemColour, boolean isPaired, String pairedCardId, int gemNumber, OrientType paramType) {
         super(paramPrestigePoints, paramPrice, cardName, level,
                 gemColour, isPaired, pairedCardId, gemNumber);
         type = paramType;

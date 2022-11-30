@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReservedHand {
-    private List<DevelopmentCard> developmentCards = new ArrayList<>();
-    private List<NobleCard> nobleCards = new ArrayList<>();
+    private List<DevelopmentCard> developmentCards;
+    private List<NobleCard> nobleCards;
+
+    public ReservedHand() {
+        this.developmentCards = new ArrayList<>();
+        this.nobleCards = new ArrayList<>();
+    }
 
 
     public void addDevelopmentCard(DevelopmentCard card){
