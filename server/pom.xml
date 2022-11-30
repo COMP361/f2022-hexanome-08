@@ -89,7 +89,7 @@
 
     <build>
         <!-- Override default name of generated jars -->
-        <finalName>xox</finalName>
+        <finalName>splendor</finalName>
 
         <plugins>
             <!-- enforce passing junit tests as build precondition -->
