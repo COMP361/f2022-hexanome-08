@@ -50,6 +50,8 @@ public class SplendorRestController {
 
   // Long polling specific fields (Broadcast Content Managers and time out time)
   private long longPollTimeOut;
+
+  private Map<Long, BroadcastContentManager<GameInfo>> gameInfoBroadcastContentManager;
   private Map<Long, BroadcastContentManager<TableTop>> tableTopBroadcastContentManager;
   // Long: gameId, String: playerName
   private Map<Long, Map<String, BroadcastContentManager<PlayerInGame>>> playerInfoBroadcastContentManager;
@@ -76,7 +78,7 @@ public class SplendorRestController {
     this.longPollTimeOut = longPollTimeOut;
     this.tableTopBroadcastContentManager = new LinkedHashMap<>();
     this.playerInfoBroadcastContentManager = new LinkedHashMap<>();
-    //this.testManager = new HashMap<>();
+    this.gameInfoBroadcastContentManager = new LinkedHashMap<>();
     // for debug
     this.logger = LoggerFactory.getLogger(SplendorRestController.class);
   }
@@ -109,6 +111,36 @@ public class SplendorRestController {
   //  // A hash was provided, or we want to provoke a hash mismatch because no hash (not even an empty hash) was provided
   //  return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, testManager.get(0), hash);
   //}
+
+
+  @GetMapping(value = "/api/games/{gameId}", produces = "application/json; charset=utf-8")
+  public DeferredResult<ResponseEntity<String>> getGameDetail(@PathVariable long gameId,
+                                                              @RequestParam(required = false)
+                                                              String hash) {
+    try{
+      // if the game does not exist in the game manager, throw an exception
+      if(!splendorGameManager.isExistentGameId(gameId)){
+        throw new ModelAccessException("There is no game with game id: "
+            + gameId + " launched, try again later");
+      }
+      if (hash == null) {
+        hash = "-";
+      }
+
+      // hash is either "-" or the hashed value from previous payload, use long polling
+      //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
+      if(hash.isEmpty()) {
+        ResponseGenerator.getAsyncUpdate(longPollTimeOut, gameInfoBroadcastContentManager.get(gameId));
+      }
+      return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, gameInfoBroadcastContentManager.get(gameId), hash);
+    }catch (ModelAccessException e) {
+      // Request does not go through, we need a deferred result
+      DeferredResult<ResponseEntity<String>> deferredResult = new DeferredResult<>();
+      deferredResult.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()));
+      return deferredResult;
+    }
+
+  }
 
   @PutMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> launchGame(@PathVariable long gameId,
@@ -143,14 +175,13 @@ public class SplendorRestController {
         playerNames.add(p.getName());
       }
       GameInfo newGameInfo = new GameInfo(playerNames);
-      logger.info("Current game id: " + gameId);
-
-      TableTop curTableTop = newGameInfo.getTableTop();
-      logger.info("This table top is empty? " + curTableTop.isEmpty());
-      BroadcastContentManager<TableTop> broadcastContentManager
-          = new BroadcastContentManager<>(curTableTop);
+      // we should do long pulling from gameInfo now as well
       splendorGameManager.addGame(gameId, newGameInfo);
-      tableTopBroadcastContentManager.put(gameId, broadcastContentManager);
+      gameInfoBroadcastContentManager.put(gameId, new BroadcastContentManager<>(newGameInfo));
+      logger.info("Current game id: " + gameId);
+      tableTopBroadcastContentManager.put(gameId,
+          new BroadcastContentManager<>(newGameInfo.getTableTop()));
+
 
       // Now for each player, we need put one mapping for PlayerInGame info update
       // note that they are BroadcastContentManager<PlayerInGame> not PlayerInGame!!!

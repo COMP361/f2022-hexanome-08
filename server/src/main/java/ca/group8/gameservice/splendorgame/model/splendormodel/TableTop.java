@@ -55,12 +55,7 @@ public class TableTop implements BroadcastContent {
 
   @Override
   public boolean isEmpty() {
-
-    return baseBoard.getCards().isEmpty()
-        && decks.isEmpty()
-        && playerInGames.isEmpty()
-        && nobleBoard.getCards().isEmpty()
-        && bank.getAllTokens().isEmpty();
+    return false;
   }
 
   private void initialiseDevelopmentCardBoard(){

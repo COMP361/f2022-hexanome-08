@@ -1,10 +1,11 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 
+import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class GameInfo { // TODO add gametype
+public class GameInfo implements BroadcastContent { // TODO add gametype
 
 
   private String currentPlayer; //represents which player's turn it is currently
@@ -21,7 +22,7 @@ public class GameInfo { // TODO add gametype
    * @param playerNames NOTE: In this implementation, activePlayers is an arrayList meaning you cannot get(Player)
    *               based on giving the player name that is in the list.(can only index list)
    */
-  public GameInfo(ArrayList<String> playerNames) throws FileNotFoundException {
+  public GameInfo(ArrayList<String> playerNames) {
     //Random random = new Random(); //create a new random object
     this.playerNames = playerNames;
     this.winners = new ArrayList<>();
@@ -114,5 +115,10 @@ public class GameInfo { // TODO add gametype
 
   public ArrayList<PlayerInGame> getPlayersInGame() {
     return playersInGame;
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return false;
   }
 }
