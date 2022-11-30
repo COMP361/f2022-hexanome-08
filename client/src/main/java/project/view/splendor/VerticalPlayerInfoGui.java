@@ -1,7 +1,9 @@
 package project.view.splendor;
 
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import project.App;
+import project.view.splendor.communication.DevelopmentCard;
 
 /**
  * A class to visually represent a player in the game (vertical layout of player info).
@@ -27,8 +30,8 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
   /**
    * Construct new visual display of player.
    *
-   * @param playerPosition the position the player will be on the client's display.
-   * @param playerName represents the player's name as a String.
+   * @param playerPosition  the position the player will be on the client's display.
+   * @param playerName      represents the player's name as a String.
    * @param initialTokenNum TODO.
    */
   public VerticalPlayerInfoGui(PlayerPosition playerPosition, String playerName,
@@ -67,7 +70,7 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
   }
 
   public Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(
-      PlayerPosition playerPosition) {
+          PlayerPosition playerPosition) {
     Map<Colour, Map<PlayerWealthInfo, Text>> resultMap = new HashMap<>();
     Colour[] colours = App.getBaseColours();
     ObservableList<Node> allChildren = this.getChildren();
@@ -118,6 +121,38 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
       resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(7));
     }
     return resultMap;
+  }
+
+  @Override
+  public void setNewPrestigePoints(int newPoints) {
+    Map<PlayerVisibleInfo, Text> visibleInfoTextMap = this.getPlayerVisibleInfoMap(this.playerPosition);
+    visibleInfoTextMap.get(PlayerVisibleInfo.POINT).setText(Integer.toString(newPoints));
+  }
+
+  @Override
+  public void setNewTokenInHand(EnumMap<Colour, Integer> newTokens) {
+    Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo = this.getPlayerColourWealthMap(this.playerPosition);
+    for (Colour colour : Colour.values()) {
+      Map<PlayerWealthInfo, Text> info = wealthInfo.get(colour);
+      info.get(PlayerWealthInfo.TOKEN).setText(Integer.toString(newTokens.get(colour)));
+    }
+  }
+
+  @Override
+  public void setGemsInHand(List<DevelopmentCard> allDevCardsInHand) {
+    EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
+    for (Colour c : Colour.values()) {
+      totalGems.put(c, 0);
+    }
+    for (DevelopmentCard card : allDevCardsInHand) {
+      Colour colour = card.getGemColour();
+      int oldValue = totalGems.get(colour);
+      totalGems.put(colour, oldValue + card.getGemNumber());
+    }
+    Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo = this.getPlayerColourWealthMap(this.playerPosition);
+    for (Colour colour: Colour.values()) {
+      wealthInfo.get(colour).get(PlayerWealthInfo.GEM).setText(Integer.toString(totalGems.get(colour)));
+    }
   }
 
   @Override
