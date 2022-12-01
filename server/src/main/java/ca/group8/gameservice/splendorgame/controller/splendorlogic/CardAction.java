@@ -8,17 +8,19 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 /**
  * Includes purchase and reserve actions.
  */
-public abstract class CardAction extends Action {
+public class CardAction implements Action {
   private Position position;
   private Card card;
 
+  private boolean isCardAction;
   /**
    * Constructor.
    */
   public CardAction(boolean isCardAction, Position position, Card card) {
-    super(isCardAction);
+    //super(isCardAction);
     this.position = position;
     this.card = card;
+    this.isCardAction = isCardAction;
   }
 
   public Position getPosition() {
@@ -30,8 +32,12 @@ public abstract class CardAction extends Action {
   }
 
   @Override
-  public abstract void execute(GameInfo currentGameState, PlayerInGame playerState);
+  public void execute(GameInfo currentGameState, PlayerInGame playerState) {}
 
+  @Override
+  public boolean checkIsCardAction() {
+    return true;
+  }
   //// Overriding equals() to compare two Complex objects
   //
   //// TODO: Override the equals for Card (do we need the equal for Card?)
