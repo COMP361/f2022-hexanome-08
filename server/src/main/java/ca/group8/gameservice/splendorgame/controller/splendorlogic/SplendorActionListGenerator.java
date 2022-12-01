@@ -139,7 +139,7 @@ public class SplendorActionListGenerator {
         hashActionMap.put(actionMd5, action);
       }
       EnumMap<Colour, Integer> playerTokens = player.getTokenHand().getAllTokens();
-      TakeTokenAction takeTokenAction = new TakeTokenAction(false, playerTokens);
+      TakeTokenAction takeTokenAction = new TakeTokenAction(playerTokens);
       String takeTokenActionMd5 =
           DigestUtils.md5Hex(new Gson().toJson(takeTokenAction)).toUpperCase();
 

@@ -9,11 +9,10 @@ import java.util.EnumMap;
 /**
  * Action available every turn, taking tokens from bank.
  */
-public class TakeTokenAction extends Action {
+public class TakeTokenAction implements Action {
   private EnumMap<Colour, Integer> tokens;
 
-  public TakeTokenAction(boolean isCardAction, EnumMap<Colour, Integer> tokens) {
-    super(isCardAction);
+  public TakeTokenAction(EnumMap<Colour, Integer> tokens) {
     this.tokens = tokens;
   }
 
@@ -31,5 +30,10 @@ public class TakeTokenAction extends Action {
       currentGameState.getTableTop().getBank().getAllTokens().put(colour,
           oldValue - tokens.get(colour));
     }
+  }
+
+  @Override
+  public boolean checkIsCardAction() {
+    return false;
   }
 }
