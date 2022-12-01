@@ -1,5 +1,8 @@
 package ca.group8.gameservice.splendorgame.controller.communicationbeans;
 
+/**
+ * Player info outside of game.
+ */
 public class PlayerInfo {
 
   String name;

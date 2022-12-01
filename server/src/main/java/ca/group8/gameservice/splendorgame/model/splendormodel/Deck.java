@@ -13,13 +13,17 @@ public class Deck {
   //TODO: Depends on Card interface
   private List<Card> cards;
 
-  //TODO Make a LEVEL enum to assign to ca.group8.gameservice.splendorgame.model.splendormodel.Deck? Or do we want an int?
+  //TODO Make a LEVEL enum to assign to
+  // ca.group8.gameservice.splendorgame.model.splendormodel.Deck? Or do we want an int?
   private int level;
 
+  /**
+   * Constructor.
+   */
   public Deck(int paramLevel) {
     //initialize by adding Cards to cards field
     this.level = paramLevel;
-    this.cards  = new ArrayList<>();
+    this.cards = new ArrayList<>();
   }
 
   /**
@@ -42,11 +46,11 @@ public class Deck {
     return card;
   }
 
-  public void add(Card card){
+  public void add(Card card) {
     cards.add(card);
   }
 
-  public void shuffle(){
+  public void shuffle() {
     Collections.shuffle(cards);
   }
 

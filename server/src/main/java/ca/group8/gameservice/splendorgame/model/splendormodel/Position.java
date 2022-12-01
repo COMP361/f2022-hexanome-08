@@ -1,30 +1,33 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+/**
+ * X and Y coordinates on board.
+ */
 public class Position {
 
   // indexing starting from zero
-  private int x;
-  private int y;
+  private int coordinateX;
+  private int coordinateY;
 
   public Position(int paramX, int paramY) {
-    x = paramX;
-    y = paramY;
+    coordinateX = paramX;
+    coordinateY = paramY;
   }
 
   public int getX() {
-    return x;
+    return coordinateX;
   }
 
   public void setX(int x) {
-    this.x = x;
+    this.coordinateX = x;
   }
 
   public int getY() {
-    return y;
+    return coordinateY;
   }
 
   public void setY(int y) {
-    this.y = y;
+    this.coordinateY = y;
   }
 
   @Override

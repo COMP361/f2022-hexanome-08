@@ -1,7 +1,8 @@
 package ca.group8.gameservice.splendorgame.controller.communicationbeans;
 
 /**
- * Simple bean to wrap up the information passed from client to BGP upon registration of a new savegame.
+ * Simple bean to wrap up the information passed from client to BGP
+ * upon registration of a new savegame.
  *
  * @author Maximilian Schiedermeier, August 2020
  */
@@ -13,9 +14,13 @@ public class Savegame {
   // Name of the gameserver, as registered at the BGP;
   String gamename;
 
-  // Unique identifier, that will be sent to the gameserver as additional session start information, if this savegame was loaded by a session.
+  // Unique identifier, that will be sent to the gameserver as
+  // additional session start information, if this savegame was loaded by a session.
   String savegameid;
 
+  /**
+   * Constructor.
+   */
   public Savegame(String[] players, String gamename, String savegameid) {
     this.players = players;
     this.gamename = gamename;

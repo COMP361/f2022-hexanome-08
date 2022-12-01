@@ -3,7 +3,7 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import java.util.ArrayList;
 
 /**
- * Interface for board for the three boards
+ * Interface for board for the three boards.
  */
 public class Board {
 
@@ -11,6 +11,9 @@ public class Board {
   private final int columns;
   private final int rows;
 
+  /**
+   * TODO: initialize method.
+   */
   public Board(int paramHeight, int paramWidth) {
     columns = paramWidth;
     rows = paramHeight;
@@ -27,11 +30,11 @@ public class Board {
     return rows;
   }
 
-  public void add(int row, int column, Card card){
+  public void add(int row, int column, Card card) {
     cardBoard[row][column] = card;
   }
 
-  public Card getCard(int row,int column) {
+  public Card getCard(int row, int column) {
     return cardBoard[row][column];
   }
 
@@ -46,7 +49,9 @@ public class Board {
     return false;
   }
 
-
+  /**
+   * Get x,y position of a card on the board.
+   */
   public Position getCardPosition(Card paramCard) {
     if (!hasCard(paramCard)) {
       throw new IllegalArgumentException("aaaahhhh");
@@ -62,20 +67,21 @@ public class Board {
     return null;
   }
 
-
+  /**
+   * Remove card and replace with new card from deck.
+   */
   public Card takeAndReplaceCard(Card paramCard, Position paramPosition) {
     Card takenCard = cardBoard[paramPosition.getY()][paramPosition.getX()];
     cardBoard[paramPosition.getY()][paramPosition.getX()] = paramCard;
     return takenCard;
   }
 
-  public void remove(Position paramPosition){
+  public void remove(Position paramPosition) {
     cardBoard[paramPosition.getY()][paramPosition.getX()] = null;
   }
 
   /**
-   *
-   * @return a list of all cards in the board
+   * return a list of all cards in the board.
    */
   public ArrayList<Card> getCards() {
     ArrayList<Card> allCards = new ArrayList<>();
