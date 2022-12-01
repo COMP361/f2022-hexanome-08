@@ -2,6 +2,7 @@ package project.view.splendor;
 
 import java.util.List;
 import javafx.scene.image.ImageView;
+import project.view.splendor.communication.Position;
 
 public interface DevelopmentCardBoardGui {
 
@@ -10,4 +11,6 @@ public interface DevelopmentCardBoardGui {
   List<ImageView> getAllCardsGui();
 
   ImageView getOneCardGui(int cardIndex);
+
+  void bindActionToCardAndDeck(String[][] actionHashLookUp, long gameId);
 }

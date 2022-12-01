@@ -116,7 +116,7 @@ public class SessionGui extends HBox {
         // TODO: Replace this hard coded gameId later to curSessionId!!!!
 
         App.loadPopUpWithController("splendor_base_game_board.fxml",
-            new GameController(5279247389805949635L), config.getAppWidth(), config.getAppHeight());
+            new GameController(curSessionId), config.getAppWidth(), config.getAppHeight());
 
         Button playButton = (Button) event.getSource();
         Stage lobbyWindow = (Stage) playButton.getScene().getWindow();
