@@ -10,6 +10,9 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
 import java.util.EnumMap;
 
+/**
+ * Action that allows you to purchase a card.
+ */
 public class PurchaseAction extends CardAction {
   int goldTokenRequired;
 
@@ -20,9 +23,9 @@ public class PurchaseAction extends CardAction {
     this.goldTokenRequired = goldTokenRequired;
   }
 
-   public int getGoldTokenRequired(){
-      return goldTokenRequired;
-    }
+  public int getGoldTokenRequired() {
+    return goldTokenRequired;
+  }
 
 
   @Override
@@ -38,16 +41,16 @@ public class PurchaseAction extends CardAction {
     playerState.setPrestigePoints(cardPoints + playerCurPoints);
 
     // update player's purchase hand
-    for(Colour colour:Colour.values()){
-      if(colour.equals(Colour.GOLD)){
-        if(goldTokenRequired > 0){
+    for (Colour colour : Colour.values()) {
+      if (colour.equals(Colour.GOLD)) {
+        if (goldTokenRequired > 0) {
           int currentGoldTokenHeld = tokenHand.getAllTokens().get(colour);
           tokenHand.getAllTokens().put(colour, currentGoldTokenHeld - goldTokenRequired);
         }
         continue;
       }
-      int discountedPrice = card.getPrice().get(colour)-playerGems.get(colour);
-      if(discountedPrice>0){
+      int discountedPrice = card.getPrice().get(colour) - playerGems.get(colour);
+      if (discountedPrice > 0) {
         int remainingTokens = tokenHand.getAllTokens().get(colour) - discountedPrice;
         tokenHand.getAllTokens().put(colour, Math.max(remainingTokens, 0));
       }

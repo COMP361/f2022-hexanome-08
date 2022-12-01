@@ -1,4 +1,5 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
+
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
@@ -17,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
+/**
+ * Controls Rest actions.
+ */
 @RestController
 public class SplendorRestController {
 
@@ -52,13 +55,17 @@ public class SplendorRestController {
   private long longPollTimeOut;
   private Map<Long, BroadcastContentManager<TableTop>> tableTopBroadcastContentManager;
   // Long: gameId, String: playerName
-  private Map<Long, Map<String, BroadcastContentManager<PlayerInGame>>> playerInfoBroadcastContentManager;
+  private Map<Long, Map<String,
+      BroadcastContentManager<PlayerInGame>>> playerInfoBroadcastContentManager;
 
   //private Map<Integer, BroadcastContentManager<TableTopTest>> testManager;
 
   // Debug fields
   private Logger logger;
 
+  /**
+   * Constructor.
+   */
   public SplendorRestController(
       @Autowired SplendorRegistrator splendorRegistrator,
       @Autowired SplendorGameManager splendorGameManager,
@@ -88,15 +95,18 @@ public class SplendorRestController {
 
 
   //@GetMapping(value = "/test/{gameId}", produces = "application/json; charset=utf-8")
-  //public DeferredResult<ResponseEntity<String>> debugEndPoint(@RequestParam(required = false) String hash,
+  //public DeferredResult<ResponseEntity<String>>
+  // debugEndPoint(@RequestParam(required = false) String hash,
   //                                                            @PathVariable long gameId)
   //    throws ModelAccessException {
   //
-  //  // No hash provided at all -> return a synced update. We achieve this by setting a hash that clearly differs from any valid hash.
+  //  // No hash provided at all -> return a synced update. We achieve this by setting a hash that
+  //  clearly differs from any valid hash.
   //  if (hash == null)
   //    hash = "-";
   //
-  //  // Hash was provided, but is empty -> return an asynchronous update, as soon as something has changed
+  //  // Hash was provided, but is empty -> return an asynchronous update,
+  //  as soon as something has changed
   //  if (hash.isEmpty())
   //    ResponseGenerator.getAsyncUpdate(longPollTimeOut, testManager.get(0));
   //
@@ -106,20 +116,25 @@ public class SplendorRestController {
   //  BroadcastContentManager<TableTopTest> test = new BroadcastContentManager<>(t);
   //
   //  testManager.put(0, test);
-  //  // A hash was provided, or we want to provoke a hash mismatch because no hash (not even an empty hash) was provided
+  //  // A hash was provided, or we want to provoke a hash mismatch because no hash
+  //  (not even an empty hash) was provided
   //  return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, testManager.get(0), hash);
   //}
 
+  /**
+   * Launch Game.
+   */
   @PutMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> launchGame(@PathVariable long gameId,
                                            @RequestBody LauncherInfo launcherInfo)
-      throws FileNotFoundException{
+      throws FileNotFoundException {
     // TODO: Handle the logic of how the game is managed in game manager
 
     //TODO: When the game is launched, there are several things to do
     // 1. construct the instance of GameInfo
     // 2. Add <gameId, tableTop> pair to tableTopBroadcastContentManager (gameId from pathVariable)
-    // 3. Add <gameId, <playerName, PlayerInGame>> map to playerInfoBroadcastContentManager for each playerName
+    // 3. Add <gameId, <playerName, PlayerInGame>> map to
+    // playerInfoBroadcastContentManager for each playerName
     //      - the playerName are from launcherInfo.getPlayerNames()
     try {
 
@@ -128,11 +143,11 @@ public class SplendorRestController {
       }
 
       // this one should avoid duplicates, thus it throws error when it is TRUE!!!
-      if(splendorGameManager.isExistentGameId(gameId)) {
+      if (splendorGameManager.isExistentGameId(gameId)) {
         throw new ModelAccessException("Duplicate game instance, can not launch it!");
       }
 
-      if(!launcherInfo.getGameServer().equals(gameServiceName)){
+      if (!launcherInfo.getGameServer().equals(gameServiceName)) {
         throw new ModelAccessException("No such game registered in LS");
       }
 
@@ -157,7 +172,8 @@ public class SplendorRestController {
 
       Map<String, BroadcastContentManager<PlayerInGame>> playerInGameMap = new HashMap<>();
       for (PlayerInGame curPlayerInGame : newGameInfo.getPlayersInGame()) {
-        playerInGameMap.put(curPlayerInGame.getName(), new BroadcastContentManager<>(curPlayerInGame));
+        playerInGameMap.put(curPlayerInGame.getName(),
+            new BroadcastContentManager<>(curPlayerInGame));
       }
       playerInfoBroadcastContentManager.put(gameId, playerInGameMap);
       return ResponseEntity.status(HttpStatus.OK).build();
@@ -169,13 +185,14 @@ public class SplendorRestController {
   }
 
 
-
-  // TODO: Finish this later
-  @DeleteMapping(value="/api/games/{gameId}", consumes = "application/json; charset=utf-8")
+  /**
+   * TODO: Finish this later.
+   */
+  @DeleteMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> deleteGame(@PathVariable long gameId,
                                            @RequestParam(value = "access_token") String accessToken,
                                            @RequestParam(value = "savegameid", required = false)
-                                             String saveGameId)
+                                           String saveGameId)
       throws ModelAccessException {
     if (saveGameId == null) {
       saveGameId = "";
@@ -233,7 +250,7 @@ public class SplendorRestController {
 
     String responseUserName = nameResponse.getBody();
     logger.info("access token represents: " + responseUserName);
-    logger.info("current player is: " +  playerName);
+    logger.info("current player is: " + playerName);
     return responseUserName.equals(playerName);
 
   }
@@ -243,14 +260,16 @@ public class SplendorRestController {
     return curPlayerName.equals(playerNameInRequest);
   }
 
-  // Long polling for the game board content, optional hash value
-  @GetMapping(value="/api/games/{gameId}/tableTop", produces = "application/json; charset=utf-8")
+  /**
+   * Long polling for the game board content, optional hash value.
+   */
+  @GetMapping(value = "/api/games/{gameId}/tableTop", produces = "application/json; charset=utf-8")
   public DeferredResult<ResponseEntity<String>> getBoard(
       @PathVariable long gameId, @RequestParam(required = false) String hash) {
-    try{
+    try {
 
       // if the game does not exist in the game manager, throw an exception
-      if(!splendorGameManager.isExistentGameId(gameId)){
+      if (!splendorGameManager.isExistentGameId(gameId)) {
         throw new ModelAccessException("There is no game with game id: "
             + gameId + " launched, try again later");
       }
@@ -260,11 +279,13 @@ public class SplendorRestController {
 
       // hash is either "-" or the hashed value from previous payload, use long polling
       //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
-      if(hash.isEmpty()) {
-        ResponseGenerator.getAsyncUpdate(longPollTimeOut, tableTopBroadcastContentManager.get(gameId));
+      if (hash.isEmpty()) {
+        ResponseGenerator.getAsyncUpdate(longPollTimeOut,
+            tableTopBroadcastContentManager.get(gameId));
       }
-      return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, tableTopBroadcastContentManager.get(gameId), hash);
-    }catch (ModelAccessException e) {
+      return ResponseGenerator.getHashBasedUpdate(longPollTimeOut,
+          tableTopBroadcastContentManager.get(gameId), hash);
+    } catch (ModelAccessException e) {
       // Request does not go through, we need a deferred result
       DeferredResult<ResponseEntity<String>> deferredResult = new DeferredResult<>();
       deferredResult.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()));
@@ -275,30 +296,34 @@ public class SplendorRestController {
   private void gameIdPlayerNameValidCheck(String accessToken, String playerName, long gameId)
       throws ModelAccessException, UnirestException {
     // if the access token and player name does not match, throw an error
-    if(!isValidToken(accessToken, playerName)) {
+    if (!isValidToken(accessToken, playerName)) {
       throw new ModelAccessException("User token and user name does not match");
     }
 
     // if the game does not exist in the game manager, throw an exception
-    if(!splendorGameManager.isExistentGameId(gameId)){
+    if (!splendorGameManager.isExistentGameId(gameId)) {
       throw new ModelAccessException("There is no game with game id: "
           + gameId + " launched, try again later");
     }
 
     // if the current player is not in the game, there is no need to update anything
-    if(!splendorGameManager.isPlayerInGame(gameId, playerName)) {
+    if (!splendorGameManager.isPlayerInGame(gameId, playerName)) {
       throw new ModelAccessException("Player:" + playerName + " is not in game: " + gameId);
     }
 
   }
 
-  @GetMapping(value="/api/games/{gameId}/players/{playerName}/inventory", produces = "application/json; charset=utf-8")
+  /**
+   * Get player inventory.
+   */
+  @GetMapping(value = "/api/games/{gameId}/players/{playerName}/inventory",
+      produces = "application/json; charset=utf-8")
   public DeferredResult<ResponseEntity<String>> getPlayerInventory(
       @PathVariable long gameId, @PathVariable String playerName,
       @RequestParam(value = "access_token") String accessToken,
       @RequestParam(required = false) String hash) {
 
-    try{
+    try {
 
       // Merged several logical checks before perform any actions to the server data
       gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
@@ -306,9 +331,9 @@ public class SplendorRestController {
       // if the client accidentally sends a request to server to ask for updates on inventory,
       // it will be wrong because the player is not supposed to have updates on inventory
       // outside out their turn
-      if(!isPlayerTurn(playerName, gameInfo)) {
-        throw new ModelAccessException("It is not this player's turn, no GET request should be" +
-            "sent to this resource location yet!");
+      if (!isPlayerTurn(playerName, gameInfo)) {
+        throw new ModelAccessException("It is not this player's turn, no GET request should be"
+            + "sent to this resource location yet!");
       }
 
       if (hash == null) {
@@ -316,13 +341,13 @@ public class SplendorRestController {
       }
       BroadcastContentManager<PlayerInGame> playerInfoToBroadcast =
           playerInfoBroadcastContentManager.get(gameId).get(playerName);
-      if(hash.isEmpty()) {
+      if (hash.isEmpty()) {
         ResponseGenerator.getAsyncUpdate(longPollTimeOut, playerInfoToBroadcast);
       }
       // hash is either "-" or the hashed value from previous payload, use long polling
       //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, playerInfoToBroadcast, hash);
-    }catch (ModelAccessException | UnirestException e) {
+    } catch (ModelAccessException | UnirestException e) {
       // Request does not go through, we need a deferred result (something went wrong...)
       DeferredResult<ResponseEntity<String>> deferredResult = new DeferredResult<>();
       deferredResult.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()));
@@ -331,7 +356,10 @@ public class SplendorRestController {
 
   }
 
-  @GetMapping(value="/api/games/{gameId}/players", produces = "application/json; charset=utf-8")
+  /**
+   * Get players.
+   */
+  @GetMapping(value = "/api/games/{gameId}/players", produces = "application/json; charset=utf-8")
   public ResponseEntity<String> getPlayers(@PathVariable long gameId) {
     try {
       // check if our game manager contains this game id, if not, we did not PUT it correctly!
@@ -340,11 +368,12 @@ public class SplendorRestController {
       logger.info("boolean result of splendorGameManager.isExistentGameId(gameId): "
           + splendorGameManager.isExistentGameId(gameId));
       if (!splendorGameManager.isExistentGameId(gameId)) {
-        throw new ModelAccessException("Can not get players for game " + gameId +
-            ". The game has not been launched or does not exist!");
+        throw new ModelAccessException("Can not get players for game " + gameId
+            + ". The game has not been launched or does not exist!");
       }
       // if we can find the game, print the list of player names
-      String allPlayersInGame = new Gson().toJson(splendorGameManager.getGameById(gameId).getPlayerNames());
+      String allPlayersInGame =
+          new Gson().toJson(splendorGameManager.getGameById(gameId).getPlayerNames());
       return ResponseEntity.status(HttpStatus.OK).body(allPlayersInGame);
     } catch (ModelAccessException e) {
       // something went wrong.
@@ -352,13 +381,15 @@ public class SplendorRestController {
     }
   }
 
-  // TODO: send GET request to this location TWICE per turn, one at beginning, one at the end
+  /**
+   * TODO: send GET request to this location TWICE per turn, one at beginning, one at the end.
+   */
   @GetMapping(value = "/api/games/{gameId}/players/{playerName}/actions",
       produces = "application/json; charset=utf-8")
   public ResponseEntity<String> getActions(@PathVariable long gameId,
                                            @PathVariable String playerName,
                                            @RequestParam(value = "access_token")
-                                             String accessToken) {
+                                           String accessToken) {
     try {
       // Merged several logical checks before perform any actions to the server data
       // equivalent to the condition check of
@@ -387,12 +418,15 @@ public class SplendorRestController {
     }
   }
 
+  /**
+   * Select action.
+   */
   @PostMapping(value = "/api/games/{gameId}/players/{playerName}/actions/{actionId}")
   public ResponseEntity<String> selectAction(@PathVariable long gameId,
                                              @PathVariable String playerName,
                                              @PathVariable String actionId,
                                              @RequestParam(value = "access_token")
-                                               String accessToken) {
+                                             String accessToken) {
 
     try {
       gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
@@ -401,9 +435,9 @@ public class SplendorRestController {
       // it will be wrong because the player is not supposed to have updates on inventory
       // outside out their turn
       GameInfo gameInfo = splendorGameManager.getGameById(gameId);
-      if(!isPlayerTurn(playerName, gameInfo)) {
-        throw new ModelAccessException("It is not this player's turn, no GET request should be" +
-            "sent to this resource location yet!");
+      if (!isPlayerTurn(playerName, gameInfo)) {
+        throw new ModelAccessException("It is not this player's turn, no GET request should be"
+            + "sent to this resource location yet!");
       }
 
       Action newAction;

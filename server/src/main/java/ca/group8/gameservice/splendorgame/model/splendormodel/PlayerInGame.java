@@ -5,6 +5,9 @@ import java.util.EnumMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Players.
+ */
 public class PlayerInGame implements BroadcastContent {
 
 
@@ -18,8 +21,10 @@ public class PlayerInGame implements BroadcastContent {
   private ReservedHand reservedHand;
 
 
-
-  public PlayerInGame(String name){
+  /**
+   * Constructor.
+   */
+  public PlayerInGame(String name) {
     this.name = name;
     this.tokenHand = new TokenHand(3); // TODO: HARDCODED 3 FOR M5 ONLY
     this.purchasedHand = new PurchasedHand();
@@ -28,49 +33,52 @@ public class PlayerInGame implements BroadcastContent {
     this.prestigePoints = 0;
   }
 
+  /**
+   * If all hands are empty.
+   */
   @Override
   public boolean isEmpty() {
-
     return tokenHand.getAllTokens().isEmpty()
         && purchasedHand.getDevelopmentCards().isEmpty()
         && reservedHand.getDevelopmentCards().isEmpty();
   }
 
-
-  public EnumMap<Colour, Integer> getTotalGems(){
+  /**
+   * Returns map of total gems a layer has.
+   */
+  public EnumMap<Colour, Integer> getTotalGems() {
     EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
-
-      // initialize first
-      for (Colour c : Colour.values()) {
-        totalGems.put(c, 0);
-      }
-
-      if (purchasedHand.getDevelopmentCards().size() > 0) {
-        for(DevelopmentCard card: purchasedHand.getDevelopmentCards()){
-          Colour colour = card.getGemColour();
-          if (!totalGems.containsKey(colour)) {
-            // if gem map does not contain the colour, put the value in map
-            totalGems.put(colour, card.getGemNumber());
-          } else {
-            // if it contains it, increment on the old value
-            int oldValue = totalGems.get(colour);
-            totalGems.put(colour, oldValue + card.getGemNumber());
-          }
+    // initialize first
+    for (Colour c : Colour.values()) {
+      totalGems.put(c, 0);
+    }
+    if (purchasedHand.getDevelopmentCards().size() > 0) {
+      for (DevelopmentCard card : purchasedHand.getDevelopmentCards()) {
+        Colour colour = card.getGemColour();
+        if (!totalGems.containsKey(colour)) {
+          // if gem map does not contain the colour, put the value in map
+          totalGems.put(colour, card.getGemNumber());
+        } else {
+          // if it contains it, increment on the old value
+          int oldValue = totalGems.get(colour);
+          totalGems.put(colour, oldValue + card.getGemNumber());
         }
       }
-      return totalGems;
+    }
+    return totalGems;
   }
 
-
-
-  public EnumMap<Colour, Integer> getWealth(){
+  /**
+   * Gems plus tokens.
+   */
+  public EnumMap<Colour, Integer> getWealth() {
     Logger logger = LoggerFactory.getLogger(PlayerInGame.class);
     EnumMap<Colour, Integer> gems = getTotalGems();
     logger.info("All tokens in token hand: " + tokenHand.getAllTokens());
     logger.info("All gems as a enum map: " + gems);
 
-    for(Colour colour : Colour.values()) {
-      wealth.put(colour, tokenHand.getAllTokens().get(colour)+gems.get(colour));
+    for (Colour colour : Colour.values()) {
+      wealth.put(colour, tokenHand.getAllTokens().get(colour) + gems.get(colour));
     }
     return wealth;
   }
