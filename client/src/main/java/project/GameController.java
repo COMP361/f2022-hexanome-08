@@ -2,6 +2,7 @@ package project;
 
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -44,6 +45,8 @@ import project.view.splendor.communication.NobleCard;
 import project.view.splendor.communication.PlayerInGame;
 import project.view.splendor.communication.Position;
 import project.view.splendor.communication.PurchaseAction;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import project.view.splendor.communication.TakeTokenAction;
 
 /**
  * Game controller for game GUI.
@@ -338,6 +341,18 @@ public class GameController implements Initializable {
 
 
 
+  public static Gson getActionGson() {
+    RuntimeTypeAdapterFactory<Action> actionFactory =
+        RuntimeTypeAdapterFactory
+            .of(Action.class)
+            .registerSubtype(CardAction.class, "type")
+            .registerSubtype(TakeTokenAction.class, "type");
+    Gson polymophicActioJson = new GsonBuilder()
+        .registerTypeAdapterFactory(actionFactory).create();
+
+    return polymophicActioJson;
+
+  }
 
   @Override
   // TODO: This method contains what's gonna happen after clicking "play" on the board
@@ -410,7 +425,8 @@ public class GameController implements Initializable {
             ResponseEntity<String> actionMapResponse = gameRequestSender.sendGetPlayerActionsRequest(
                 gameId, curUser.getUsername(), curUser.getAccessToken());
             Type empMapType = new TypeToken<Map<String,Action>>(){}.getType();
-            Map<String, Action> resultActionsMap = new Gson().fromJson(actionMapResponse.getBody(), empMapType);
+            Gson actionGson = GameController.getActionGson();
+            Map<String, Action> resultActionsMap = actionGson.fromJson(actionMapResponse.getBody(), empMapType);
 
             // if the action map is not empty
             if (!resultActionsMap.isEmpty()) {
@@ -434,7 +450,7 @@ public class GameController implements Initializable {
               String[][][] actionHashesLookUp = new String[3][4][2];
               for (String actionHash : resultActionsMap.keySet()) {
                 Action curAction = resultActionsMap.get(actionHash);
-                if(curAction.isCardAction()) {
+                if(curAction.checkIsCardAction()) {
                   CardAction cardAction = (CardAction) curAction;
                   Position cardPosition = cardAction.getPosition();
                   DevelopmentCard curCard = (DevelopmentCard) cardAction.getCard();

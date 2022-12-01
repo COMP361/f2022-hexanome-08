@@ -8,6 +8,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -441,12 +442,27 @@ public class SplendorRestController {
 
       // actionsAvailableToPlayer is either empty hash map or have something, not important,
       // just give it to client
-      String actionHashedMapInStr = new Gson().toJson(actionsAvailableToPlayer);
+      Gson actionGson = SplendorRestController.getActionGson();
+
+      String actionHashedMapInStr = actionGson.toJson(actionsAvailableToPlayer);
       return ResponseEntity.status(HttpStatus.OK).body(actionHashedMapInStr);
     } catch (ModelAccessException | UnirestException e) {
       // something went wrong, reply with a bad request
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+  }
+
+
+  public static Gson getActionGson() {
+    RuntimeTypeAdapterFactory<Action> actionFactory =
+        RuntimeTypeAdapterFactory
+            .of(Action.class)
+            .registerSubtype(CardAction.class, "type")
+            .registerSubtype(TakeTokenAction.class, "type");
+
+    return new GsonBuilder()
+        .registerTypeAdapterFactory(actionFactory).create();
+
   }
 
   /**
