@@ -6,18 +6,22 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * Registrator class.
+ */
 @Component
 public class SplendorRegistrator {
 
+  private final Logger logger;
   // Since we first need the value to construct this singleton class
   // prior to assign value to this filed, we use @Value annotation
   // in the constructor and then assign it to the field,
@@ -26,17 +30,11 @@ public class SplendorRegistrator {
   private String gameServiceName;
   private String gameServiceDisplayName;
   private String gameServiceLocation;
-
   private String lobbyServiceAddress;
-
   private String gameServicePort;
   private String gameServiceUsername;
-
   private String gameServicePassword;
-
   private GameServerParameters registrationGameServerParams;
-
-  private final Logger logger;
 
 
   @Autowired
@@ -57,16 +55,18 @@ public class SplendorRegistrator {
     this.gameServiceDisplayName = gameServiceDisplayName;
     this.gameServiceLocation = gameServiceLocation;
     this.registrationGameServerParams =
-        new GameServerParameters(gameServiceName,gameServiceDisplayName,gameServiceLocation,
-            4,2,"false");
+        new GameServerParameters(gameServiceName, gameServiceDisplayName, gameServiceLocation,
+            4, 2, "false");
     // for error messages
     this.logger = LoggerFactory.getLogger(SplendorRegistrator.class);
   }
+
   @PostConstruct
   private void init() throws UnirestException {
     // TODO: 1. Send a POST request under lobbyUrl + /oauth/token -> access_token
-    //  then 2. With the token, send a GET to lobbyUrl + /oauth/role -> get the role (must be "authority": "ROLE_SERVICE")
-    //  then 3. We can now send PUT request to lobbyUrl + /api/gameservices/{gameservicename} to register the game
+    //  then 2. With the token, send a GET to lobbyUrl + /oauth/role -> get the role
+    //  (must be "authority": "ROLE_SERVICE") then 3. We can now send PUT request
+    //  to lobbyUrl + /api/gameservices/{gameservicename} to register the game
 
     String accessToken;
     try {
@@ -87,6 +87,9 @@ public class SplendorRegistrator {
 
   }
 
+  /**
+   * Adds game to lobby.
+   */
   public void registerGameAtLobby(String accessToken) throws UnirestException {
     String requestJsonString = new Gson().toJson(registrationGameServerParams);
     String url = lobbyServiceAddress + "/api/gameservices/" + gameServiceName;
@@ -97,6 +100,9 @@ public class SplendorRegistrator {
     logger.warn("register status: " + response.getStatus());
   }
 
+  /**
+   * Sends request.
+   */
   public String sendAuthorityRequest(String accessToken) throws UnirestException {
     // queryString: request param
     HttpResponse<JsonNode> authorityResponse = Unirest.get(lobbyServiceAddress + "/oauth/role")
@@ -108,25 +114,26 @@ public class SplendorRegistrator {
 
   /**
    * Get the OAuth token associated with the "Splendor_base" service user.
+   *
    * @return OAuth token
    */
   private String getOauthToken() throws UnirestException {
-      JSONObject tokenResponse =  Unirest.post(lobbyServiceAddress + "/oauth/token")
-          .basicAuth("bgp-client-name", "bgp-client-pw")
-          .field("grant_type", "password")
-          .field("username", gameServiceUsername)
-          .field("password", gameServicePassword)
-          .asJson()
-          .getBody()
-          .getObject();
+    JSONObject tokenResponse = Unirest.post(lobbyServiceAddress + "/oauth/token")
+        .basicAuth("bgp-client-name", "bgp-client-pw")
+        .field("grant_type", "password")
+        .field("username", gameServiceUsername)
+        .field("password", gameServicePassword)
+        .asJson()
+        .getBody()
+        .getObject();
 
     String accessToken;
     try {
-        accessToken = tokenResponse.getString("access_token");
+      accessToken = tokenResponse.getString("access_token");
 
-      } catch (Exception e) {
-        accessToken = "";
-      }
+    } catch (Exception e) {
+      accessToken = "";
+    }
     return accessToken;
   }
 
