@@ -2,8 +2,13 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
+/**
+ * This class represents the GameState.
+ */
 public class GameInfo { // TODO add gametype
 
 
@@ -16,10 +21,12 @@ public class GameInfo { // TODO add gametype
   private ArrayList<PlayerInGame> playersInGame;
   private TableTop tableTop;
 
-
   /**
-   * @param playerNames NOTE: In this implementation, activePlayers is an arrayList meaning you cannot get(Player)
-   *               based on giving the player name that is in the list.(can only index list)
+   * Makes a game State.
+   *
+   * @param playerNames NOTE: In this implementation, activePlayers is an arrayList
+   *                    meaning you cannot get(Player) based on giving the player
+   *                    name that is in the list.(can only index list)
    */
   public GameInfo(ArrayList<String> playerNames) throws FileNotFoundException {
     //Random random = new Random(); //create a new random object
@@ -43,8 +50,8 @@ public class GameInfo { // TODO add gametype
    */
   private ArrayList<PlayerInGame> initializePlayers(ArrayList<String> playerNames) {
     ArrayList<PlayerInGame> playerInGames = new ArrayList<>();
-    for(String name:playerNames){
-        playerInGames.add(new PlayerInGame(name));
+    for (String name : playerNames) {
+      playerInGames.add(new PlayerInGame(name));
     }
     return playerInGames;
   }
@@ -56,6 +63,7 @@ public class GameInfo { // TODO add gametype
   public void addWinner(String potentialWinner) {
     winners.add(potentialWinner);
   }
+
   protected void checkWinner() {
     //TODO: Implement this operation (will be based on TableTop implementation)
   }
@@ -65,11 +73,13 @@ public class GameInfo { // TODO add gametype
   }
 
 
-  public boolean isFinished(){
+  public boolean isFinished() {
     return winners.size() > 0;
   }
 
   /**
+   * Gets the player who's currently making a move.
+   *
    * @return Current player object (as a Player).
    */
   public PlayerInGame getCurrentPlayer() {
@@ -80,16 +90,19 @@ public class GameInfo { // TODO add gametype
         break;
       }
     }
-    if(curPlayerInGame == null) {
+    if (curPlayerInGame == null) {
       throw new IllegalStateException("Cannot find this current player in the active player list.");
     }
     return curPlayerInGame;
   }
 
-  public void setNextPlayer(){
+  /**
+   * Set the turn to next player.
+   */
+  public void setNextPlayer() {
     int index = playerNames.indexOf(currentPlayer);
     //if last player in list return to first player
-    currentPlayer= playerNames.get((index+1)%playerNames.size());
+    currentPlayer = playerNames.get((index + 1) % playerNames.size());
   }
 
   public List<String> getWinners() {
