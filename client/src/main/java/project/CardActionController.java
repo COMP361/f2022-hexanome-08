@@ -9,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import project.connection.SplendorServiceRequestSender;
-import project.view.splendor.communication.DevelopmentCard;
 
 public class CardActionController implements Initializable {
   private final String[] actionHash;

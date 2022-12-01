@@ -11,75 +11,80 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane maxHeight="830.0" maxWidth="1200.0" prefHeight="830.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.LobbyController">
-   <HBox alignment="TOP_CENTER" prefHeight="119.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
-      <BorderPane.margin>
-         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-      </BorderPane.margin>
-      <Region maxWidth="545.0" prefHeight="200.0" prefWidth="545.0" />
-      <Label prefHeight="119.0" prefWidth="110.0" text="Lobby">
-         <font>
-            <Font name="Axiforma-SemiBold" size="40.0" />
-         </font>
-      </Label>
-      <HBox prefHeight="119.0" prefWidth="545.0">
-         <children>
-            <Region prefHeight="119.0" prefWidth="263.0" />
-            <VBox prefHeight="119.0" prefWidth="100.0">
-               <children>
-                  <Region prefHeight="50.0" prefWidth="86.0" />
-                  <Button mnemonicParsing="false" text="Admin Zone" />
-               </children>
-            </VBox>
-            <VBox prefHeight="119.0" prefWidth="96.0">
-               <children>
-                  <Region prefHeight="50.0" prefWidth="86.0" />
-                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="78.0" text="Setting" />
-               </children>
-            </VBox>
-            <VBox prefHeight="119.0" prefWidth="115.0">
-               <children>
-                  <Region prefHeight="50.0" prefWidth="86.0" />
-                  <Button mnemonicParsing="false" text="Log out" />
-               </children>
-            </VBox>
-         </children>
-      </HBox>
-   </HBox>
-   <VBox layoutY="100.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" spacing="20.0" BorderPane.alignment="CENTER">
-      <HBox fx:id="createGame" prefHeight="27.0" prefWidth="1200.0">
-         <Region maxWidth="180.0" prefHeight="35.0" prefWidth="180.0" HBox.hgrow="ALWAYS" />
-         <Label prefHeight="30.0" prefWidth="255.0" text="Create New Game">
+<AnchorPane maxHeight="830.0" maxWidth="1200.0" prefHeight="830.0" prefWidth="1200.0"
+            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="project.LobbyController">
+    <HBox alignment="TOP_CENTER" prefHeight="119.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+        <BorderPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        </BorderPane.margin>
+        <Region maxWidth="545.0" prefHeight="200.0" prefWidth="545.0"/>
+        <Label prefHeight="119.0" prefWidth="110.0" text="Lobby">
             <font>
-               <Font name="Axiforma-Regular" size="24.0" />
+                <Font name="Axiforma-SemiBold" size="40.0"/>
             </font>
-         </Label>
-      </HBox>
-      <HBox fx:id="gameOptions" minHeight="-Infinity" prefHeight="60.0" prefWidth="1100.0" spacing="10.0">
-         <Region maxWidth="170.0" prefHeight="60.0" prefWidth="161.0" HBox.hgrow="ALWAYS" />
-         <ChoiceBox fx:id="gameChoices" prefHeight="40.0" prefWidth="710.0" />
-         <Button minHeight="-Infinity" mnemonicParsing="false" onAction="#onCreateSessionButtonClick" prefHeight="40.0" prefWidth="130.0" text="Create">
-            <font>
-               <Font name="Axiforma-Regular" size="12.0" />
-            </font>
-         </Button>
-      </HBox>
-      <HBox fx:id="createGame1" prefHeight="34.0" prefWidth="1100.0">
-         <Region maxWidth="180.0" prefHeight="35.0" prefWidth="270.0" HBox.hgrow="ALWAYS" />
-         <Label prefHeight="35.0" prefWidth="248.0" text="Available Games">
-            <font>
-               <Font name="Axiforma-Regular" size="24.0" />
-            </font>
-         </Label>
-         <Region prefHeight="35.0" prefWidth="417.0" />
-         <Button mnemonicParsing="false" onAction="#joinGameDev" prefHeight="26.0" prefWidth="188.0" text="TestJoinButton" />
-      </HBox>
-      <HBox maxWidth="1200.0" prefHeight="100.0" prefWidth="1200.0">
-         <Region maxWidth="180.0" prefHeight="373.0" prefWidth="180.0" HBox.hgrow="ALWAYS" />
-         <ScrollPane fx:id="allSessionScrollPane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="860.0" vbarPolicy="ALWAYS">
-            <VBox fx:id="sessionVbox" prefHeight="420.0" prefWidth="840.0" />
-         </ScrollPane>
-      </HBox>
-   </VBox>
+        </Label>
+        <HBox prefHeight="119.0" prefWidth="545.0">
+            <children>
+                <Region prefHeight="119.0" prefWidth="263.0"/>
+                <VBox prefHeight="119.0" prefWidth="100.0">
+                    <children>
+                        <Region prefHeight="50.0" prefWidth="86.0"/>
+                        <Button mnemonicParsing="false" text="Admin Zone"/>
+                    </children>
+                </VBox>
+                <VBox prefHeight="119.0" prefWidth="96.0">
+                    <children>
+                        <Region prefHeight="50.0" prefWidth="86.0"/>
+                        <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="78.0" text="Setting"/>
+                    </children>
+                </VBox>
+                <VBox prefHeight="119.0" prefWidth="115.0">
+                    <children>
+                        <Region prefHeight="50.0" prefWidth="86.0"/>
+                        <Button mnemonicParsing="false" text="Log out"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </HBox>
+    <VBox layoutY="100.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0"
+          spacing="20.0" BorderPane.alignment="CENTER">
+        <HBox fx:id="createGame" prefHeight="27.0" prefWidth="1200.0">
+            <Region maxWidth="180.0" prefHeight="35.0" prefWidth="180.0" HBox.hgrow="ALWAYS"/>
+            <Label prefHeight="30.0" prefWidth="255.0" text="Create New Game">
+                <font>
+                    <Font name="Axiforma-Regular" size="24.0"/>
+                </font>
+            </Label>
+        </HBox>
+        <HBox fx:id="gameOptions" minHeight="-Infinity" prefHeight="60.0" prefWidth="1100.0" spacing="10.0">
+            <Region maxWidth="170.0" prefHeight="60.0" prefWidth="161.0" HBox.hgrow="ALWAYS"/>
+            <ChoiceBox fx:id="gameChoices" prefHeight="40.0" prefWidth="710.0"/>
+            <Button minHeight="-Infinity" mnemonicParsing="false" onAction="#onCreateSessionButtonClick"
+                    prefHeight="40.0" prefWidth="130.0" text="Create">
+                <font>
+                    <Font name="Axiforma-Regular" size="12.0"/>
+                </font>
+            </Button>
+        </HBox>
+        <HBox fx:id="createGame1" prefHeight="34.0" prefWidth="1100.0">
+            <Region maxWidth="180.0" prefHeight="35.0" prefWidth="270.0" HBox.hgrow="ALWAYS"/>
+            <Label prefHeight="35.0" prefWidth="248.0" text="Available Games">
+                <font>
+                    <Font name="Axiforma-Regular" size="24.0"/>
+                </font>
+            </Label>
+            <Region prefHeight="35.0" prefWidth="417.0"/>
+            <Button mnemonicParsing="false" onAction="#joinGameDev" prefHeight="26.0" prefWidth="188.0"
+                    text="TestJoinButton"/>
+        </HBox>
+        <HBox maxWidth="1200.0" prefHeight="100.0" prefWidth="1200.0">
+            <Region maxWidth="180.0" prefHeight="373.0" prefWidth="180.0" HBox.hgrow="ALWAYS"/>
+            <ScrollPane fx:id="allSessionScrollPane" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                        prefHeight="425.0" prefWidth="860.0" vbarPolicy="ALWAYS">
+                <VBox fx:id="sessionVbox" prefHeight="420.0" prefWidth="840.0"/>
+            </ScrollPane>
+        </HBox>
+    </VBox>
 </AnchorPane>

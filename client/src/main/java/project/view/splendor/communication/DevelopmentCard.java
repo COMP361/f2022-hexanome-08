@@ -27,16 +27,16 @@ public class DevelopmentCard extends Card {
   private int gemNumber;
 
 
-
   public DevelopmentCard(int paramPrestigePoints,
-      EnumMap<Colour, Integer> paramPrice, String paramCardName,
-                         int level, Colour gemColour, boolean isPaired, String pairedCardId, int gemNumber) {
+                         EnumMap<Colour, Integer> paramPrice, String paramCardName,
+                         int level, Colour gemColour, boolean isPaired, String pairedCardId,
+                         int gemNumber) {
     super(paramPrestigePoints, paramPrice, paramCardName);
     this.level = level;
     this.gemColour = gemColour;
     this.isPaired = isPaired;
     this.pairedCardId = pairedCardId;
-    this.gemNumber=gemNumber;
+    this.gemNumber = gemNumber;
   }
 
   public int getLevel() {
@@ -44,12 +44,13 @@ public class DevelopmentCard extends Card {
   }
 
   /**
-   *
    * @return Optional type of Colour.
    */
   //public Optional<Colour> getGemColour() { return gemColour; }
+  public Colour getGemColour() {
+    return gemColour;
+  }
 
-  public Colour getGemColour() { return gemColour; }
   public Boolean isPaired() {
     return isPaired;
   }
@@ -58,7 +59,9 @@ public class DevelopmentCard extends Card {
     return pairedCardId;
   }
 
-  public int getGemNumber() { return gemNumber; }
+  public int getGemNumber() {
+    return gemNumber;
+  }
 
   public void setPaired(boolean paramPaired) {
     isPaired = paramPaired;

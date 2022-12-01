@@ -2,7 +2,6 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -12,12 +11,12 @@ public class GameInfo implements BroadcastContent { // TODO add gametype
 
   private String currentPlayer; //represents which player's turn it is currently
   //private Optional<String> winner; //made optional for when Winner is not defined yet;
-  private List<String> winners;
-  private ArrayList<String> playerNames;
-  private String firstPlayer; //should be Player Name of first player.
+  private final List<String> winners;
+  private final ArrayList<String> playerNames;
+  private final String firstPlayer; //should be Player Name of first player.
 
-  private ArrayList<PlayerInGame> playersInGame;
-  private TableTop tableTop;
+  private final ArrayList<PlayerInGame> playersInGame;
+  private final TableTop tableTop;
 
   /**
    * Makes a game State.

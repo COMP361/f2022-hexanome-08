@@ -26,8 +26,8 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
   /**
    * TODO.
    *
-   * @param playerPosition TODO.
-   * @param playerName Player name as a string.
+   * @param playerPosition  TODO.
+   * @param playerName      Player name as a string.
    * @param initialTokenNum TODO.
    */
   public HorizontalPlayerInfoGui(PlayerPosition playerPosition, String playerName,
@@ -139,14 +139,16 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
 
   @Override
   public void setNewPrestigePoints(int newPoints) {
-    Map<PlayerVisibleInfo, Text> visibleInfoTextMap = this.getPlayerVisibleInfoMap(this.playerPosition);
+    Map<PlayerVisibleInfo, Text> visibleInfoTextMap =
+        this.getPlayerVisibleInfoMap(this.playerPosition);
     visibleInfoTextMap.get(PlayerVisibleInfo.POINT).setText(Integer.toString(newPoints));
   }
 
   @Override
   public void setNewTokenInHand(EnumMap<Colour, Integer> newTokens) {
-    Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo = this.getPlayerColourWealthMap(this.playerPosition);
-    for (Colour colour: Colour.values()) {
+    Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo =
+        this.getPlayerColourWealthMap(this.playerPosition);
+    for (Colour colour : Colour.values()) {
       Map<PlayerWealthInfo, Text> info = wealthInfo.get(colour);
       info.get(PlayerWealthInfo.TOKEN).setText(Integer.toString(newTokens.get(colour)));
     }
@@ -163,9 +165,11 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
       int oldValue = totalGems.get(colour);
       totalGems.put(colour, oldValue + card.getGemNumber());
     }
-    Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo = this.getPlayerColourWealthMap(this.playerPosition);
-    for (Colour colour: Colour.values()) {
-      wealthInfo.get(colour).get(PlayerWealthInfo.GEM).setText(Integer.toString(totalGems.get(colour)));
+    Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo =
+        this.getPlayerColourWealthMap(this.playerPosition);
+    for (Colour colour : Colour.values()) {
+      wealthInfo.get(colour).get(PlayerWealthInfo.GEM)
+          .setText(Integer.toString(totalGems.get(colour)));
     }
   }
 
@@ -180,7 +184,6 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
       tokenText.setText(initialTokenNum + "");
     }
   }
-
 
 
   @Override

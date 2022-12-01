@@ -1,6 +1,5 @@
 package project.view.splendor;
 
-import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.image.Image;
@@ -19,9 +18,9 @@ public class NobleBoardGui extends VBox implements NumOfPlayerDependentGui {
   /**
    * Constructor for the Noble Board.
    *
-   * @param nobleImageWidth provides the width of the image.
+   * @param nobleImageWidth  provides the width of the image.
    * @param nobleImageHeight provides the height of the image.
-   * @param nobleImageSpace TODO.
+   * @param nobleImageSpace  TODO.
    */
   public NobleBoardGui(double nobleImageWidth, double nobleImageHeight, double nobleImageSpace) {
     this.nobleImageHeight = nobleImageHeight;

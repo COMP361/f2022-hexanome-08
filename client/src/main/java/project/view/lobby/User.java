@@ -14,9 +14,9 @@ public class User {
   /**
    * Constructor of a user instance.
    *
-   * @param pusername username
+   * @param pusername    username
    * @param paccessToken user access token
-   * @param pauthority user authority
+   * @param pauthority   user authority
    */
   public User(String pusername, String paccessToken, String refreshToken, String pauthority) {
     username = pusername;

@@ -1,7 +1,5 @@
 package project.view.splendor.communication;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

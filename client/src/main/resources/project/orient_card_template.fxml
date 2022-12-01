@@ -5,17 +5,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
-
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="250.0" spacing="5.0" type="HBox" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.App">
-   <children>
-      <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-      <Group>
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c3352b" height="150.0" stroke="BLACK" strokeType="INSIDE" width="40.0" />
-            <Text layoutX="12.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="20" />
-            <Text layoutX="12.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text=". . ." />
-         </children>
-      </Group>
-   </children>
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0"
+         prefWidth="250.0" spacing="5.0" type="HBox" xmlns="http://javafx.com/javafx/19"
+         xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.App">
+    <children>
+        <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
+        <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
+        <Group>
+            <children>
+                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c3352b" height="150.0" stroke="BLACK"
+                           strokeType="INSIDE" width="40.0"/>
+                <Text layoutX="12.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="20"/>
+                <Text layoutX="12.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text=". . ."/>
+            </children>
+        </Group>
+    </children>
 </fx:root>

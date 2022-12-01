@@ -4,18 +4,16 @@ package project;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import com.mashape.unirest.http.exceptions.UnirestException;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -28,24 +26,30 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.http.ResponseEntity;
 import project.connection.SplendorServiceRequestSender;
 import project.view.lobby.User;
-import project.view.splendor.*;
+import project.view.splendor.BaseCardLevelGui;
+import project.view.splendor.CardType;
+import project.view.splendor.Colour;
+import project.view.splendor.DevelopmentCardBoardGui;
+import project.view.splendor.HorizontalPlayerInfoGui;
+import project.view.splendor.NobleBoardGui;
+import project.view.splendor.PlayerInfoGui;
+import project.view.splendor.PlayerPosition;
+import project.view.splendor.TokenBankGui;
+import project.view.splendor.VerticalPlayerInfoGui;
 import project.view.splendor.communication.Action;
 import project.view.splendor.communication.Card;
 import project.view.splendor.communication.CardAction;
 import project.view.splendor.communication.DevelopmentCard;
 import project.view.splendor.communication.GameInfo;
-import project.view.splendor.communication.NobleCard;
 import project.view.splendor.communication.PlayerInGame;
 import project.view.splendor.communication.Position;
 import project.view.splendor.communication.PurchaseAction;
-import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import project.view.splendor.communication.TakeTokenAction;
 
 /**
@@ -116,7 +120,7 @@ public class GameController implements Initializable {
 
 
   private Map<Colour, List<DevelopmentCard>> reorganizeCardsInHand
-      (List<DevelopmentCard> allDevCards){
+      (List<DevelopmentCard> allDevCards) {
     Map<Colour, List<DevelopmentCard>> result = new HashMap<>();
     for (DevelopmentCard card : allDevCards) {
       if (!result.containsKey(card.getGemColour())) {
@@ -141,6 +145,7 @@ public class GameController implements Initializable {
       // TODO: Implement this later
     };
   }
+
   private EventHandler<ActionEvent> createOpenMyPurchaseCardClick(
       List<DevelopmentCard> allDevCards) {
     return event -> {
@@ -182,7 +187,6 @@ public class GameController implements Initializable {
   }
 
 
-
   private void runGameInfoUpdateThread() {
     // implicitly contains the GUI update to tableTop as well
     Thread mainThread = new Thread(() -> {
@@ -195,17 +199,17 @@ public class GameController implements Initializable {
   }
 
   // This will update the current player's Inventory in time
-  private Thread generateCurrentPlayerUpdateThread (
+  private Thread generateCurrentPlayerUpdateThread(
       SplendorServiceRequestSender gameRequestSender,
       long gameId, String playerName, String accessToken,
-      Map<String,PlayerInfoGui> stringPlayerInfoGuiMap) {
+      Map<String, PlayerInfoGui> stringPlayerInfoGuiMap) {
     // player specific updates happen here
     return new Thread(() -> {
       String hashedResponse = "";
       ResponseEntity<String> longPullResponse = null;
       // For now, even it's now the first check, we generate ALL
       // the GUI on the fly, we don't care about speed for now
-      while (true){
+      while (true) {
         int responseCode = 408;
         while (responseCode == 408) {
           longPullResponse =
@@ -341,13 +345,12 @@ public class GameController implements Initializable {
   }
 
 
-
   public static Gson getActionGson() {
     RuntimeTypeAdapterFactory<Action> actionFactory =
         RuntimeTypeAdapterFactory
-            .of(Action.class)
-            .registerSubtype(CardAction.class, "cardAction")
-            .registerSubtype(TakeTokenAction.class, "takeTokenAction");
+            .of(Action.class, "type")
+            .registerSubtype(CardAction.class, CardAction.class.getName())
+            .registerSubtype(TakeTokenAction.class, TakeTokenAction.class.getName());
 
     return new GsonBuilder()
         .registerTypeAdapterFactory(actionFactory).create();
@@ -367,7 +370,7 @@ public class GameController implements Initializable {
       ResponseEntity<String> longPullResponse = null;
       boolean isFirstCheck = true;
 
-      while (true){
+      while (true) {
         // always do one, just in case
         try {
           App.refreshUserToken(curUser);
@@ -398,7 +401,7 @@ public class GameController implements Initializable {
           GameInfo curGameInfo = new Gson().fromJson(responseInJsonString, GameInfo.class);
           int curPlayerNum = curGameInfo.getPlayerNames().size();
           // how we are going to parse from this curGameInfo depends on first check or not
-          if (isFirstCheck){
+          if (isFirstCheck) {
             //Platform.runLater(() -> {
             //  playerBoardAnchorPane.getChildren().clear();
             //});
@@ -417,22 +420,27 @@ public class GameController implements Initializable {
             // initialize token area
             TokenBankGui tokenBank = new TokenBankGui();
             Platform.runLater(() -> {
-              tokenBank.setup(curPlayerNum, config.getTokenBankLayoutX(), config.getTokenBankLayoutY());
+              tokenBank.setup(curPlayerNum, config.getTokenBankLayoutX(),
+                  config.getTokenBankLayoutY());
               playerBoardAnchorPane.getChildren().add(tokenBank);
             });
 
             // initialize the base board
-            ResponseEntity<String> actionMapResponse = gameRequestSender.sendGetPlayerActionsRequest(
-                gameId, curUser.getUsername(), curUser.getAccessToken());
-            Type empMapType = new TypeToken<Map<String,Action>>(){}.getType();
+            ResponseEntity<String> actionMapResponse =
+                gameRequestSender.sendGetPlayerActionsRequest(
+                    gameId, curUser.getUsername(), curUser.getAccessToken());
+            Type empMapType = new TypeToken<Map<String, Action>>() {
+            }.getType();
             Gson actionGson = GameController.getActionGson();
-            Map<String, Action> resultActionsMap = actionGson.fromJson(actionMapResponse.getBody(), empMapType);
+            Map<String, Action> resultActionsMap =
+                actionGson.fromJson(actionMapResponse.getBody(), empMapType);
 
             // if the action map is not empty
             if (!resultActionsMap.isEmpty()) {
               for (int i = 3; i >= 1; i--) {
                 Map<CardType, DevelopmentCardBoardGui> oneLevelCardsMap = new HashMap<>();
-                Card[] cardsInCurLevel = curGameInfo.getTableTop().getBaseBoard().getCardBoard()[3-i];
+                Card[] cardsInCurLevel =
+                    curGameInfo.getTableTop().getBaseBoard().getCardBoard()[3 - i];
                 List<DevelopmentCard> cards = new ArrayList<>();
                 for (Card c : cardsInCurLevel) {
                   cards.add((DevelopmentCard) c);
@@ -450,13 +458,13 @@ public class GameController implements Initializable {
               String[][][] actionHashesLookUp = new String[3][4][2];
               for (String actionHash : resultActionsMap.keySet()) {
                 Action curAction = resultActionsMap.get(actionHash);
-                if(curAction.checkIsCardAction()) {
+                if (curAction.checkIsCardAction()) {
                   CardAction cardAction = (CardAction) curAction;
                   Position cardPosition = cardAction.getPosition();
                   DevelopmentCard curCard = (DevelopmentCard) cardAction.getCard();
                   int level = curCard.getLevel();
                   int xIndex = cardPosition.getX();
-                  if(curAction instanceof PurchaseAction){
+                  if (curAction instanceof PurchaseAction) {
                     actionHashesLookUp[level][xIndex][0] = actionHash;
                   } else {
                     actionHashesLookUp[level][xIndex][1] = actionHash;
@@ -468,9 +476,9 @@ public class GameController implements Initializable {
 
               // Since we now have all String[2] actionHashes, we can go and
               // assign them to cards
-              for(int i = 0; i < 3; i++){
+              for (int i = 0; i < 3; i++) {
                 levelCardsMap
-                    .get(3-i)
+                    .get(3 - i)
                     .get(CardType.BASE)
                     .bindActionToCardAndDeck(actionHashesLookUp[i], gameId);
               }
@@ -490,7 +498,6 @@ public class GameController implements Initializable {
 
           // If it is not first check.....
           else {
-
 
 
           }

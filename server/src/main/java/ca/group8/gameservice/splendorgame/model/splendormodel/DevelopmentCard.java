@@ -7,14 +7,14 @@ import java.util.EnumMap;
  */
 public class DevelopmentCard extends Card {
 
-  private int level;
+  private final int level;
 
 
   // TODO: Figure it a way for the Orient card that has no colour
-  private Colour gemColour;
+  private final Colour gemColour;
   private boolean isPaired;
   private String pairedCardId;
-  private int gemNumber;
+  private final int gemNumber;
 
   /**
    * prestige points, price, name, level, colour, isPaired, pairID, gem number.

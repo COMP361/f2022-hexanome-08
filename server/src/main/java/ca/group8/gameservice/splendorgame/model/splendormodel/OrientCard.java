@@ -6,7 +6,7 @@ import java.util.EnumMap;
  * Expansion Cards, have a type.
  */
 public class OrientCard extends DevelopmentCard {
-  private OrientType type;
+  private final OrientType type;
 
   /**
    * Constructor.

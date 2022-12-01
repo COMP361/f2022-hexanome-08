@@ -12,7 +12,6 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import project.view.lobby.GameParameters;
-import project.view.lobby.Session;
 import project.view.lobby.SessionList;
 
 
@@ -20,7 +19,7 @@ import project.view.lobby.SessionList;
  * class that is responsible to send different requests to the LS.
  */
 public class LobbyServiceRequestSender {
-  private String lobbyUrl;
+  private final String lobbyUrl;
   private final Map<String, String> gameNameMapping;
 
   private final SessionList localSessionList;
@@ -266,7 +265,6 @@ public class LobbyServiceRequestSender {
     Unirest.post(lobbyUrl + "/api/sessions/" + sessionId.toString())
         .queryString("access_token", accessToken).asString();
   }
-
 
 
 }

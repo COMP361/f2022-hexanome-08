@@ -1,7 +1,5 @@
 package project.view.splendor.communication;
 
-import java.util.ArrayList;
-
 /**
  * Interface for board for the three boards
  */

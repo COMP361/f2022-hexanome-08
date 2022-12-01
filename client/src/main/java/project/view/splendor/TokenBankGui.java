@@ -244,8 +244,8 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui {
    * TODO.
    *
    * @param numOfPlayer TODO: number of players in the game.
-   * @param layoutX TODO.
-   * @param layoutY TODO.
+   * @param layoutX     TODO.
+   * @param layoutY     TODO.
    */
   public void setup(int numOfPlayer, double layoutX, double layoutY) {
     // set the layout of the GUI

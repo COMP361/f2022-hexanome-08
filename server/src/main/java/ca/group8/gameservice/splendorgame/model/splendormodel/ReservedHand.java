@@ -7,8 +7,8 @@ import java.util.List;
  * Holds all reserved cards.
  */
 public class ReservedHand {
-  private List<DevelopmentCard> developmentCards;
-  private List<NobleCard> nobleCards;
+  private final List<DevelopmentCard> developmentCards;
+  private final List<NobleCard> nobleCards;
 
   public ReservedHand() {
     this.developmentCards = new ArrayList<>();

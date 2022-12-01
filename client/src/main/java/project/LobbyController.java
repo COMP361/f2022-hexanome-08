@@ -6,27 +6,22 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.VBox;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.connection.LobbyServiceRequestSender;
 import project.view.lobby.GameParameters;
 import project.view.lobby.Session;
 import project.view.lobby.SessionGui;
-import project.view.lobby.SessionList;
 import project.view.lobby.SessionGuiManager;
+import project.view.lobby.SessionList;
 import project.view.lobby.User;
 
 /**
@@ -111,7 +106,7 @@ public class LobbyController {
     });
   }
 
-  private void createAndAddSessionGui(Session curSession, Long sessionId, User user){
+  private void createAndAddSessionGui(Session curSession, Long sessionId, User user) {
     // create the new GUI
     SessionGui curSessionGui = new SessionGui(curSession, sessionId, user);
     // set up the session gui
@@ -198,7 +193,8 @@ public class LobbyController {
         if (responseCode == 200) {
           // long pulling ends in success, we obtain the list of new sessions
           hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
-          System.out.println("One session info updated, break the long polling of main updating thread");
+          System.out.println(
+              "One session info updated, break the long polling of main updating thread");
           if (isFirstCheck) {
             // the SessionList which contains Session objects from the remote side
             localSessionList = new Gson().fromJson(longPullResponse.getBody(), SessionList.class);

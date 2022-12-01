@@ -29,7 +29,7 @@ public interface Action {
   // the reason why it returns void is that we only provide the
   // VALID ACTIONS MAP to player when generated them, so there is no need to check
   // whether the Action player chose is valid or not. They must be
-   void execute(GameInfo currentGameState, PlayerInGame playerState);
+  void execute(GameInfo currentGameState, PlayerInGame playerState);
 
   boolean checkIsCardAction();
 }

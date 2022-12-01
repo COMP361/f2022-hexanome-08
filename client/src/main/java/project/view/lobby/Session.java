@@ -11,12 +11,12 @@ public class Session {
 
   private final GameParameters gameParameters;
   private final String creator;
-  private boolean launched;
+  private final boolean launched;
   private final ArrayList<String> players;
 
   // Optional fields
   private String savegameid;
-  private Map<String, String> playerLocations;
+  private final Map<String, String> playerLocations;
 
   /**
    * Session constructor.

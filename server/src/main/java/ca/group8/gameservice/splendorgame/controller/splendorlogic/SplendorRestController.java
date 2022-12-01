@@ -42,29 +42,29 @@ import org.springframework.web.context.request.async.DeferredResult;
 public class SplendorRestController {
 
   // Game instance and game state change related fields
-  private SplendorGameManager splendorGameManager;
-  private SplendorActionInterpreter splendorActionInterpreter;
-  private SplendorActionListGenerator splendorActionListGenerator;
+  private final SplendorGameManager splendorGameManager;
+  private final SplendorActionInterpreter splendorActionInterpreter;
+  private final SplendorActionListGenerator splendorActionListGenerator;
 
 
   // Game registration related fields
-  private String gameServiceName;
-  private String lobbyServiceAddress;
-  private SplendorRegistrator splendorRegistrator;
+  private final String gameServiceName;
+  private final String lobbyServiceAddress;
+  private final SplendorRegistrator splendorRegistrator;
 
   // Long polling specific fields (Broadcast Content Managers and time out time)
-  private long longPollTimeOut;
+  private final long longPollTimeOut;
 
-  private Map<Long, BroadcastContentManager<GameInfo>> gameInfoBroadcastContentManager;
-  private Map<Long, BroadcastContentManager<TableTop>> tableTopBroadcastContentManager;
+  private final Map<Long, BroadcastContentManager<GameInfo>> gameInfoBroadcastContentManager;
+  private final Map<Long, BroadcastContentManager<TableTop>> tableTopBroadcastContentManager;
   // Long: gameId, String: playerName
-  private Map<Long, Map<String,
+  private final Map<Long, Map<String,
       BroadcastContentManager<PlayerInGame>>> playerInfoBroadcastContentManager;
 
   //private Map<Integer, BroadcastContentManager<TableTopTest>> testManager;
 
   // Debug fields
-  private Logger logger;
+  private final Logger logger;
 
   /**
    * Constructor.
@@ -125,14 +125,13 @@ public class SplendorRestController {
   //}
 
 
-
   @GetMapping(value = "/api/games/{gameId}", produces = "application/json; charset=utf-8")
   public DeferredResult<ResponseEntity<String>> getGameDetail(@PathVariable long gameId,
                                                               @RequestParam(required = false)
                                                               String hash) {
-    try{
+    try {
       // if the game does not exist in the game manager, throw an exception
-      if(!splendorGameManager.isExistentGameId(gameId)){
+      if (!splendorGameManager.isExistentGameId(gameId)) {
         throw new ModelAccessException("There is no game with game id: "
             + gameId + " launched, try again later");
       }
@@ -142,11 +141,13 @@ public class SplendorRestController {
 
       // hash is either "-" or the hashed value from previous payload, use long polling
       //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
-      if(hash.isEmpty()) {
-        ResponseGenerator.getAsyncUpdate(longPollTimeOut, gameInfoBroadcastContentManager.get(gameId));
+      if (hash.isEmpty()) {
+        ResponseGenerator.getAsyncUpdate(longPollTimeOut,
+            gameInfoBroadcastContentManager.get(gameId));
       }
-      return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, gameInfoBroadcastContentManager.get(gameId), hash);
-    }catch (ModelAccessException e) {
+      return ResponseGenerator.getHashBasedUpdate(longPollTimeOut,
+          gameInfoBroadcastContentManager.get(gameId), hash);
+    } catch (ModelAccessException e) {
       // Request does not go through, we need a deferred result
       DeferredResult<ResponseEntity<String>> deferredResult = new DeferredResult<>();
       deferredResult.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()));
