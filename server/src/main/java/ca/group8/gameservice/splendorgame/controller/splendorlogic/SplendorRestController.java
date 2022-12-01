@@ -357,14 +357,15 @@ public class SplendorRestController {
 
       // Merged several logical checks before perform any actions to the server data
       gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
-      GameInfo gameInfo = splendorGameManager.getGameById(gameId);
+      //GameInfo gameInfo = splendorGameManager.getGameById(gameId);
       // if the client accidentally sends a request to server to ask for updates on inventory,
       // it will be wrong because the player is not supposed to have updates on inventory
       // outside out their turn
-      if (!isPlayerTurn(playerName, gameInfo)) {
-        throw new ModelAccessException("It is not this player's turn, no GET request should be"
-            + "sent to this resource location yet!");
-      }
+
+      //if (!isPlayerTurn(playerName, gameInfo)) {
+      //  throw new ModelAccessException("It is not this player's turn, no GET request should be"
+      //      + "sent to this resource location yet!");
+      //}
 
       if (hash == null) {
         hash = "-";
@@ -466,7 +467,7 @@ public class SplendorRestController {
       // outside out their turn
       GameInfo gameInfo = splendorGameManager.getGameById(gameId);
       if (!isPlayerTurn(playerName, gameInfo)) {
-        throw new ModelAccessException("It is not this player's turn, no GET request should be"
+        throw new ModelAccessException("It is not this player's turn, no POST request should be"
             + "sent to this resource location yet!");
       }
 
@@ -490,10 +491,6 @@ public class SplendorRestController {
     } catch (ModelAccessException | UnirestException e) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
-  }
-
-  public ResponseEntity<String> getRanking(long gameId) {
-    return null;
   }
 
 }
