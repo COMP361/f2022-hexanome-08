@@ -2,6 +2,9 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.EnumMap;
 
+/**
+ * This class represents the SuperClass of all Development Cards.
+ */
 public class DevelopmentCard extends Card {
 
   private int level;
@@ -13,30 +16,28 @@ public class DevelopmentCard extends Card {
   private String pairedCardId;
   private int gemNumber;
 
-
-
-  public DevelopmentCard(int paramPrestigePoints,
-      EnumMap<Colour, Integer> paramPrice, String paramCardName,
-                         int level, Colour gemColour, boolean isPaired, String pairedCardId, int gemNumber) {
+  /**
+   * prestige points, price, name, level, colour, isPaired, pairID, gem number.
+   */
+  public DevelopmentCard(int paramPrestigePoints, EnumMap<Colour, Integer> paramPrice,
+                         String paramCardName, int level, Colour gemColour, boolean isPaired,
+                         String pairedCardId, int gemNumber) {
     super(paramPrestigePoints, paramPrice, paramCardName);
     this.level = level;
     this.gemColour = gemColour;
     this.isPaired = isPaired;
     this.pairedCardId = pairedCardId;
-    this.gemNumber=gemNumber;
+    this.gemNumber = gemNumber;
   }
 
   public int getLevel() {
     return level;
   }
 
-  /**
-   *
-   * @return Optional type of Colour.
-   */
-  //public Optional<Colour> getGemColour() { return gemColour; }
+  public Colour getGemColour() {
+    return gemColour;
+  }
 
-  public Colour getGemColour() { return gemColour; }
   public Boolean isPaired() {
     return isPaired;
   }
@@ -45,14 +46,16 @@ public class DevelopmentCard extends Card {
     return pairedCardId;
   }
 
-  public int getGemNumber() { return gemNumber; }
+  public void setPairedCardId(String paramPairedCardId) {
+    pairedCardId = paramPairedCardId;
+  }
+
+  public int getGemNumber() {
+    return gemNumber;
+  }
 
   public void setPaired(boolean paramPaired) {
     isPaired = paramPaired;
-  }
-
-  public void setPairedCardId(String paramPairedCardId) {
-    pairedCardId = paramPairedCardId;
   }
 
 }
