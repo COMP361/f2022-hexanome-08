@@ -20,6 +20,7 @@ public abstract class Action {
   public Action(boolean isCardAction) {
     this.isCardAction = isCardAction;
   }
+
   public boolean checkIsCardAction() {
     return isCardAction;
   }

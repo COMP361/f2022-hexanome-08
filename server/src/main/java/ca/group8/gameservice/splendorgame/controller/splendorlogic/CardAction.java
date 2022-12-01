@@ -1,14 +1,20 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 
+/**
+ * Includes purchase and reserve actions.
+ */
 public abstract class CardAction extends Action {
   private Position position;
   private Card card;
 
+  /**
+   * Constructor.
+   */
   public CardAction(boolean isCardAction, Position position, Card card) {
     super(isCardAction);
     this.position = position;
