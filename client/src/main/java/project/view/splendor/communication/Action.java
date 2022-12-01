@@ -6,22 +6,6 @@ package project.view.splendor.communication;
  * a custom ActionInterpreter.
  */
 
-public abstract class Action {
-
-  public boolean isCardAction() {
-    return isCardAction;
-  }
-
-  public void setCardAction(boolean cardAction) {
-    isCardAction = cardAction;
-  }
-
-  // Useful when the client receives the map of Actions, to identify whether action
-  // is CardAction or not
-  private boolean isCardAction;
-
-  public Action(boolean isCardAction) {
-    this.isCardAction = isCardAction;
-  }
-
+public interface Action {
+  boolean checkIsCardAction();
 }

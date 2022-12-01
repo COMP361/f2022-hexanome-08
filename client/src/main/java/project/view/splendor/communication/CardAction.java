@@ -1,6 +1,6 @@
 package project.view.splendor.communication;
 
-public abstract class CardAction extends Action {
+public class CardAction implements Action {
   public void setPosition(Position position) {
     this.position = position;
   }
@@ -12,10 +12,20 @@ public abstract class CardAction extends Action {
   private Position position;
   private Card card;
 
+  public boolean isCardAction() {
+    return isCardAction;
+  }
+
+  public void setCardAction(boolean cardAction) {
+    isCardAction = cardAction;
+  }
+
+  private boolean isCardAction;
+
   public CardAction(boolean isCardAction, Position position, Card card) {
-    super(isCardAction);
     this.position = position;
     this.card = card;
+    this.isCardAction = isCardAction;
   }
 
   public Position getPosition() {
@@ -26,4 +36,8 @@ public abstract class CardAction extends Action {
     return card;
   }
 
+  @Override
+  public boolean checkIsCardAction() {
+    return false;
+  }
 }
