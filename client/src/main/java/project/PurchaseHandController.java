@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import project.view.splendor.Colour;
+import project.view.splendor.communication.DevelopmentCard;
 
 public class PurchaseHandController implements Initializable {
 
@@ -96,27 +97,7 @@ public class PurchaseHandController implements Initializable {
       }
     }
 
-    //for (Group colourGroup : colourGroupMap.values()) {
-    //  // TODO: Replace these images later from server response
-    //  List<ImageView> allImageViews = new ArrayList<>();
-    //  for (int i = 0; i < 3; i++) {
-    //    Image img = new Image(App.getBaseCardPath("b1", 2));
-    //    ImageView imgV = new ImageView(img);
-    //    allImageViews.add(imgV);
-    //  }
-    //  List<HBox> allPairs = generateCardSatchelPair(allImageViews);
-    //  addCardSatchelPairToColourGroup(allPairs, colourGroup);
-    //}
-    //
-    //VBox orientGoldTokenCardVbox = (VBox) cardStackHbox.getChildren().get(5);
-    //// initializing the GUI of the gold token dev card in ORIENT
-    //for (int i = 0; i < 3; i++) {
-    //  Image img = new Image(App.getOrientCardPath("o1b1", 1));
-    //  ImageView imgV = new ImageView(img);
-    //  imgV.setFitHeight(150);
-    //  imgV.setFitWidth(100);
-    //  orientGoldTokenCardVbox.getChildren().add(imgV);
-    //}
+    // TODO: Needs to implement how the Orient cards are displayed in hand
 
   }
 }

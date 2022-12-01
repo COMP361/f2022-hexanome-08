@@ -5,6 +5,18 @@ import project.view.splendor.Colour;
 
 public class DevelopmentCard extends Card {
 
+  public void setLevel(int level) {
+    this.level = level;
+  }
+
+  public void setGemColour(Colour gemColour) {
+    this.gemColour = gemColour;
+  }
+
+  public void setGemNumber(int gemNumber) {
+    this.gemNumber = gemNumber;
+  }
+
   private int level;
 
 

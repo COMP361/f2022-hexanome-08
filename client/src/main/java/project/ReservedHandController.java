@@ -8,7 +8,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import project.view.splendor.gameitems.Card;
 
 public class ReservedHandController implements Initializable {
 
@@ -36,7 +35,7 @@ public class ReservedHandController implements Initializable {
       imgV.setImage(playerCards.get(0).getImage());
     }
 
-    Image img2 = new Image(String.format("project/pictures/noble/noble1.png"));
+    Image img2 = new Image("project/pictures/noble/noble1.png");
     for (int i = 0; i < 5; i++) {
       ImageView imgV = (ImageView) reservedNoblesHbox.getChildren().get(i);
       imgV.setImage(playerNobles.get(0).getImage());
