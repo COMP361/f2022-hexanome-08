@@ -327,9 +327,9 @@ public class SplendorRestController {
   private void gameIdPlayerNameValidCheck(String accessToken, String playerName, long gameId)
       throws ModelAccessException, UnirestException {
     // if the access token and player name does not match, throw an error
-    if (!isValidToken(accessToken, playerName)) {
-      throw new ModelAccessException("User token and user name does not match");
-    }
+    //if (!isValidToken(accessToken, playerName)) {
+    //  throw new ModelAccessException("User token and user name does not match");
+    //}
 
     // if the game does not exist in the game manager, throw an exception
     if (!splendorGameManager.isExistentGameId(gameId)) {
