@@ -1,0 +1,15 @@
+ca/group8/gameservice/splendorgame/model/splendormodel/CardTest.class
+ca/group8/gameservice/splendorgame/model/splendormodel/TestReservedHand.class
+ca/group8/gameservice/splendorgame/model/splendormodel/TestPosition.class
+ca/group8/gameservice/splendorgame/model/splendormodel/BoardTest.class
+ca/group8/gameservice/splendorgame/model/splendormodel/GameInfoTest.class
+ca/group8/gameservice/splendorgame/model/splendormodel/TestPurchasedHand.class
+ca/group8/gameservice/splendorgame/model/splendormodel/TestTokenHand.class
+ca/group8/gameservice/splendorgame/model/splendormodel/TestDevelopmentCard.class
+ca/group8/gameservice/splendorgame/model/splendormodel/TestOrient.class
+ca/group8/gameservice/splendorgame/model/splendormodel/PlayerTest.class
+ca/group8/gameservice/splendorgame/model/splendormodel/TestTableTop.class
+ca/group8/gameservice/splendorgame/controller/splendorlogic/TestActionGenerator.class
+ca/group8/gameservice/splendorgame/model/splendormodel/TestDeck.class
+ca/group8/gameservice/splendorgame/controller/splendorlogic/TestActionInterpreter.class
+ca/group8/gameservice/splendorgame/model/splendormodel/TestBank.class
