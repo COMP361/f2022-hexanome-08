@@ -347,10 +347,9 @@ public class GameController implements Initializable {
             .of(Action.class)
             .registerSubtype(CardAction.class, "type")
             .registerSubtype(TakeTokenAction.class, "type");
-    Gson polymophicActioJson = new GsonBuilder()
-        .registerTypeAdapterFactory(actionFactory).create();
 
-    return polymophicActioJson;
+    return new GsonBuilder()
+        .registerTypeAdapterFactory(actionFactory).create();
 
   }
 
