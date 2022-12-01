@@ -20,7 +20,7 @@ public interface PlayerInfoGui {
 
   void setNewPrestigePoints(int newPoints);
 
-  void setNewTokenInHand (EnumMap<Colour, Integer> newTokens);
+  void setNewTokenInHand(EnumMap<Colour, Integer> newTokens);
 
   void setGemsInHand(List<DevelopmentCard> allDevCardsInHand);
 }

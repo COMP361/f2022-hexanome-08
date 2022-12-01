@@ -20,7 +20,6 @@ import project.App;
 import project.CardActionController;
 import project.DeckActionController;
 import project.view.splendor.communication.DevelopmentCard;
-import project.view.splendor.communication.Position;
 
 public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 

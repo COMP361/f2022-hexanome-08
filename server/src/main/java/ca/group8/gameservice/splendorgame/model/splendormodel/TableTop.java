@@ -19,10 +19,10 @@ import org.springframework.util.ResourceUtils;
  */
 public class TableTop implements BroadcastContent {
 
-  private Map<Integer, Deck> decks;
-  private BaseBoard baseBoard;
-  private NobleBoard nobleBoard;
-  private Bank bank;
+  private final Map<Integer, Deck> decks;
+  private final BaseBoard baseBoard;
+  private final NobleBoard nobleBoard;
+  private final Bank bank;
 
 
   // TODO: implement orientBoard later WITHOUT Optional
@@ -48,8 +48,6 @@ public class TableTop implements BroadcastContent {
   public boolean isEmpty() {
 
     return false;
-
-
 
 
   }

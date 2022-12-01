@@ -12,13 +12,13 @@ public class PlayerInGame implements BroadcastContent {
 
 
   private final String name;
-  private EnumMap<Colour, Integer> wealth;
+  private final EnumMap<Colour, Integer> wealth;
   private int prestigePoints;
-  private TokenHand tokenHand;
-  private PurchasedHand purchasedHand;
+  private final TokenHand tokenHand;
+  private final PurchasedHand purchasedHand;
 
   // need get reserved card number
-  private ReservedHand reservedHand;
+  private final ReservedHand reservedHand;
 
 
   /**

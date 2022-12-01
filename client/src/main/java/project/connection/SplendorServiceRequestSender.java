@@ -1,15 +1,9 @@
 package project.connection;
 
 import com.google.gson.Gson;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import java.util.Arrays;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,13 +24,12 @@ public class SplendorServiceRequestSender {
    *
    * @param gameId
    * @return
-   *
    */
   public String[] sendGetAllPlayerNamesList(long gameId) {
     RestTemplate rest = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
     String body = "";
-    String url = String.format("%s/api/games/%s/players",gameUrl, gameId);
+    String url = String.format("%s/api/games/%s/players", gameUrl, gameId);
 
     HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
     ResponseEntity<String> responseEntity =
@@ -52,17 +45,16 @@ public class SplendorServiceRequestSender {
    * @param hashPreviousResponse put a empty string as "" to avoid stuck in the long polling loop
    * @return
    */
-  public ResponseEntity<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse){
+  public ResponseEntity<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse) {
     RestTemplate rest = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
     String body = "";
     String url = gameUrl + "/api/games/" + gameId;
     if (!hashPreviousResponse.equals("")) {
       // if we are sending something in as hash, then we need to add it to the end of url
-      url = String.format("%s/api/games/%s?hash=%s",gameUrl, gameId, hashPreviousResponse);
-    }
-    else {
-      url = String.format("%s/api/games/%s",gameUrl, gameId);
+      url = String.format("%s/api/games/%s?hash=%s", gameUrl, gameId, hashPreviousResponse);
+    } else {
+      url = String.format("%s/api/games/%s", gameUrl, gameId);
     }
     HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
     return rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
@@ -75,10 +67,10 @@ public class SplendorServiceRequestSender {
     String url;
     if (!hashPreviousResponse.equals("")) {
       // if we are sending something in as hash, then we need to add it to the end of url
-      url = String.format("%s/api/games/%s/tableTop?hash=%s",gameUrl, gameId, hashPreviousResponse);
-    }
-    else {
-      url = String.format("%s/api/games/%s/tableTop",gameUrl, gameId);
+      url =
+          String.format("%s/api/games/%s/tableTop?hash=%s", gameUrl, gameId, hashPreviousResponse);
+    } else {
+      url = String.format("%s/api/games/%s/tableTop", gameUrl, gameId);
     }
     HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
     return rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
@@ -95,11 +87,10 @@ public class SplendorServiceRequestSender {
       // if we are sending something in as hash, then we need to add it to the end of url
       url = String.
           format("%s/api/games/%s/players/%s/inventory?hash=%s&access_token=%s",
-              gameUrl, gameId, playerName ,hashPreviousResponse, accessToken);
-    }
-    else {
+              gameUrl, gameId, playerName, hashPreviousResponse, accessToken);
+    } else {
       url = String.format("%s/api/games/%s/players/%s/inventory?access_token=%s"
-          ,gameUrl, gameId, playerName,accessToken);
+          , gameUrl, gameId, playerName, accessToken);
     }
     HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
     return rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
@@ -113,33 +104,31 @@ public class SplendorServiceRequestSender {
     String body = "";
     String url = String.
         format("%s/api/games/%s/players/%s/actions?access_token=%s",
-        gameUrl, gameId, playerName, accessToken);
+            gameUrl, gameId, playerName, accessToken);
 
     HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
     return rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
   }
 
   public ResponseEntity<String> sendPlayerActionChoiceRequest(long gameId,
-                                                            String playerName,
-                                                            String accessToken,
+                                                              String playerName,
+                                                              String accessToken,
                                                               String actionId) {
     RestTemplate rest = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
     String body = "";
     String url = String.
         format("%s/api/games/%s/players/%s/actions/%s?access_token=%s",
-            gameUrl, gameId, playerName, actionId ,accessToken);
+            gameUrl, gameId, playerName, actionId, accessToken);
     HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
     return rest.exchange(url, HttpMethod.POST, requestEntity, String.class);
   }
 
 
-
   // TODO: Delete Request (later)
 
 
-
-  public String getGameUrl(){
+  public String getGameUrl() {
     return gameUrl;
   }
 }

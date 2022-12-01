@@ -6,18 +6,21 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
-<fx:root alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="140.0" prefWidth="840.0" style="-fx-border-width: 5; -fx-border-color: blue;" type="HBox" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.App">
-   <children>
-      <Label prefHeight="140.0" prefWidth="440.0">
-         <font>
-            <Font size="15.0" />
-         </font></Label>
-      <Region prefHeight="140.0" prefWidth="450.0" />
-      <VBox prefHeight="140.0" prefWidth="175.0" spacing="10.0">
-         <children>
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="177.0" text="Button" visible="false" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="215.0" text="Button" visible="false" />
-         </children></VBox>
-   </children>
+<fx:root alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+         prefHeight="140.0" prefWidth="840.0" style="-fx-border-width: 5; -fx-border-color: blue;" type="HBox"
+         xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.App">
+    <children>
+        <Label prefHeight="140.0" prefWidth="440.0">
+            <font>
+                <Font size="15.0"/>
+            </font>
+        </Label>
+        <Region prefHeight="140.0" prefWidth="450.0"/>
+        <VBox prefHeight="140.0" prefWidth="175.0" spacing="10.0">
+            <children>
+                <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="177.0" text="Button" visible="false"/>
+                <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="215.0" text="Button" visible="false"/>
+            </children>
+        </VBox>
+    </children>
 </fx:root>

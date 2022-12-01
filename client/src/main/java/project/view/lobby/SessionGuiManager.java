@@ -9,7 +9,8 @@ public class SessionGuiManager extends VBox {
   private static SessionGuiManager sessionsVbox = null;
   private static final Map<Long, SessionGui> sessionIdGuiMap = new HashMap<>();
 
-  private SessionGuiManager() {}
+  private SessionGuiManager() {
+  }
 
   public static SessionGuiManager getInstance() {
     if (sessionsVbox == null) {
@@ -25,8 +26,6 @@ public class SessionGuiManager extends VBox {
   public static void removeSessionIdGuiMap(Long sessionId) {
     sessionIdGuiMap.remove(sessionId);
   }
-
-
 
 
   public static void addSessionGui(SessionGui newSessionGui) {

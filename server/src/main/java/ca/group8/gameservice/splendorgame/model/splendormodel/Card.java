@@ -7,9 +7,9 @@ import java.util.EnumMap;
  */
 public class Card {
 
-  private int prestigePoints;
-  private EnumMap<Colour, Integer> price;
-  private String cardName;
+  private final int prestigePoints;
+  private final EnumMap<Colour, Integer> price;
+  private final String cardName;
 
   /**
    * * params include prestige points, price and name.

@@ -27,14 +27,14 @@ public class SplendorRegistrator {
   // in the constructor and then assign it to the field,
   // same thing apply to all fields that are needed to construct
   // the GameServerParameter communication bean object.
-  private String gameServiceName;
-  private String gameServiceDisplayName;
-  private String gameServiceLocation;
-  private String lobbyServiceAddress;
-  private String gameServicePort;
-  private String gameServiceUsername;
-  private String gameServicePassword;
-  private GameServerParameters registrationGameServerParams;
+  private final String gameServiceName;
+  private final String gameServiceDisplayName;
+  private final String gameServiceLocation;
+  private final String lobbyServiceAddress;
+  private final String gameServicePort;
+  private final String gameServiceUsername;
+  private final String gameServicePassword;
+  private final GameServerParameters registrationGameServerParams;
 
 
   @Autowired

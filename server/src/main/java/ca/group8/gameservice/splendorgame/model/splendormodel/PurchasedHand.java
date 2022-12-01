@@ -8,8 +8,8 @@ import java.util.List;
  */
 public class PurchasedHand {
 
-  private List<DevelopmentCard> developmentCards;
-  private List<NobleCard> nobleCards;
+  private final List<DevelopmentCard> developmentCards;
+  private final List<NobleCard> nobleCards;
 
 
   public PurchasedHand() {

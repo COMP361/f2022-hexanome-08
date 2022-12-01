@@ -7,7 +7,7 @@ import java.util.EnumMap;
  */
 public class Bank {
 
-  private EnumMap<Colour, Integer> allTokens;
+  private final EnumMap<Colour, Integer> allTokens;
   private final int initialValue; //this is the value all gems (excl. gold) are initialized too
 
   /**
@@ -17,7 +17,6 @@ public class Bank {
    * 4 players -- 7 of all gems (excl. gold)
    * 3 players -- 5 of all gems (excl. gold)
    * 2 players -- 4 of all gems (excl. gold)
-   *
    */
   //TODO: Do we want to have this param?? Or should we implement this logic in GameState
   //TODO: and pass an integer value to Bank representing the initial gem values.
@@ -47,7 +46,6 @@ public class Bank {
       allTokens.replace(colour, newVal);
     }
   }
-
 
 
   /**

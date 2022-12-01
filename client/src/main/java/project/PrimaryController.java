@@ -33,9 +33,6 @@ public class PrimaryController {
   private Pane confirmPane;
 
 
-
-
-
   @FXML
   private BorderPane lobbyPane;
 
@@ -235,7 +232,6 @@ public class PrimaryController {
   }
 
 
-
   /**
    * TODO: HARDCODED!
    * Getting rid of the confirmation pop up once "confirm" is pressed when purchasing a card.
@@ -426,14 +422,14 @@ public class PrimaryController {
     totalRed.setText(String.valueOf(num2R));
     numR = 0;
     counterRed.setText(String.valueOf(numR));
-    redHand.setText(String.valueOf(num3R) + " / 0");
+    redHand.setText(num3R + " / 0");
 
     num2W = num2W - numW;
     num3W = num3W + numW;
     totalWhite.setText(String.valueOf(num2W));
     numW = 0;
     counterWhite.setText(String.valueOf(numW));
-    whiteHand.setText(String.valueOf(num3W) + " / 0");
+    whiteHand.setText(num3W + " / 0");
 
 
     num2B = num2B - numB;
@@ -441,7 +437,7 @@ public class PrimaryController {
     totalBlack.setText(String.valueOf(num2B));
     numB = 0;
     counterBlack.setText(String.valueOf(numB));
-    blackHand.setText(String.valueOf(num3B) + " / 0");
+    blackHand.setText(num3B + " / 0");
   }
 
 }

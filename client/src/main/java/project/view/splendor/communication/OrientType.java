@@ -1,5 +1,5 @@
 package project.view.splendor.communication;
 
 public enum OrientType {
-    SATCHEL,BURN,GOLD,PAIR
+  SATCHEL, BURN, GOLD, PAIR
 }

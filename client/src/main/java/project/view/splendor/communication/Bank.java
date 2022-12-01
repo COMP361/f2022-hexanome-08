@@ -29,7 +29,6 @@ public class Bank {
   }
 
 
-
   public Bank(EnumMap<Colour, Integer> allTokens, int initialValue) {
     this.allTokens = allTokens;
     this.initialValue = initialValue;

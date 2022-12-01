@@ -3,11 +3,9 @@ package project.view.lobby;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import java.util.List;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -32,9 +30,9 @@ public class SessionGui extends HBox {
   /**
    * This constructs a new SessionGUI.
    *
-   * @param curSession provides the current Session object.
+   * @param curSession   provides the current Session object.
    * @param curSessionId provides the current Session's ID.
-   * @param curUser provides the current User object.
+   * @param curUser      provides the current User object.
    */
   public SessionGui(Session curSession, Long curSessionId, User curUser) {
     this.curSession = curSession;

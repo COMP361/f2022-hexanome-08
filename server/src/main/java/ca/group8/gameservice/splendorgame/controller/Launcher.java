@@ -4,10 +4,9 @@ import java.io.FileNotFoundException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.util.ResourceUtils;
 
 /**
- *  Launches everything.
+ * Launches everything.
  */
 @SpringBootApplication(scanBasePackages = {"ca.group8.gameservice.splendorgame"})
 public class Launcher extends SpringBootServletInitializer {

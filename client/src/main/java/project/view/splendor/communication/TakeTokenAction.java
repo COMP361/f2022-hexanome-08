@@ -3,12 +3,12 @@ package project.view.splendor.communication;
 import java.util.EnumMap;
 import project.view.splendor.Colour;
 
-public class TakeTokenAction implements Action{
+public class TakeTokenAction implements Action {
 
 
-  private EnumMap<Colour,Integer> tokens;
+  private EnumMap<Colour, Integer> tokens;
 
-  public TakeTokenAction(EnumMap<Colour,Integer> tokens) {
+  public TakeTokenAction(EnumMap<Colour, Integer> tokens) {
     this.tokens = tokens;
   }
 

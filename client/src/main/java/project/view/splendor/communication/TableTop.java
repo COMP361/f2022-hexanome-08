@@ -1,5 +1,5 @@
 package project.view.splendor.communication;
-import java.util.ArrayList;
+
 import java.util.Map;
 
 
@@ -51,7 +51,6 @@ public class TableTop {
   public void setBank(Bank bank) {
     this.bank = bank;
   }
-
 
 
 }

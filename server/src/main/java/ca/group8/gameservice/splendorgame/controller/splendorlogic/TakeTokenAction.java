@@ -10,7 +10,7 @@ import java.util.EnumMap;
  * Action available every turn, taking tokens from bank.
  */
 public class TakeTokenAction implements Action {
-  private EnumMap<Colour, Integer> tokens;
+  private final EnumMap<Colour, Integer> tokens;
 
   public TakeTokenAction(EnumMap<Colour, Integer> tokens) {
     this.tokens = tokens;

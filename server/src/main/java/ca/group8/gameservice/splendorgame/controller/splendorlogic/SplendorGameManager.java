@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SplendorGameManager {
-  private Map<Long, GameInfo> activeGames;
+  private final Map<Long, GameInfo> activeGames;
 
   public SplendorGameManager() {
     this.activeGames = new HashMap<>();

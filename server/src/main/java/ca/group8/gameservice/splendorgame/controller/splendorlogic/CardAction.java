@@ -10,10 +10,11 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
  * Includes purchase and reserve actions.
  */
 public class CardAction implements Action {
-  private Position position;
-  private Card card;
+  private final Position position;
+  private final Card card;
 
-  private boolean isCardAction;
+  private final boolean isCardAction;
+
   /**
    * Constructor.
    */
@@ -33,7 +34,8 @@ public class CardAction implements Action {
   }
 
   @Override
-  public void execute(GameInfo currentGameState, PlayerInGame playerState) {}
+  public void execute(GameInfo currentGameState, PlayerInGame playerState) {
+  }
 
   @Override
   public boolean checkIsCardAction() {

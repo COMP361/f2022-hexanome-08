@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Interface for board for the three boards.
@@ -86,9 +87,7 @@ public class Board {
   public ArrayList<Card> getCards() {
     ArrayList<Card> allCards = new ArrayList<>();
     for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < columns; j++) {
-        allCards.add(cardBoard[i][j]);
-      }
+      allCards.addAll(Arrays.asList(cardBoard[i]).subList(0, columns));
     }
     return allCards;
   }
