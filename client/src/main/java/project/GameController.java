@@ -384,9 +384,9 @@ public class GameController implements Initializable {
           int curPlayerNum = curGameInfo.getPlayerNames().size();
           // how we are going to parse from this curGameInfo depends on first check or not
           if (isFirstCheck){
-            Platform.runLater(() -> {
-              playerBoardAnchorPane.getChildren().clear();
-            });
+            //Platform.runLater(() -> {
+            //  playerBoardAnchorPane.getChildren().clear();
+            //});
             // set up all player related GUI
             setUpPlayerGui(curGameInfo, config, curUser, gameRequestSender);
 
