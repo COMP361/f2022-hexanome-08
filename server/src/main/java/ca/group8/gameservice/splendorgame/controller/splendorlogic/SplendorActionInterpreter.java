@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SplendorActionInterpreter {
 
+
   /**
    * This method will get called if POST on games/{gameId}/players/{playerName}/actions/{actionId}
    * SplendorActionListGenerator (lookUpActions) ->
@@ -32,6 +33,7 @@ public class SplendorActionInterpreter {
     currentGameState.setNextPlayer();
     //TODO: check winner
   }
+
 
   //// gameId, playerId -> Map<String, Action>
   //// gameId, playerId, actionId (MD5 String) -> get the Action out of Map

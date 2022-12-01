@@ -7,15 +7,19 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import project.App;
+import project.GameBoardLayoutConfig;
+import project.GameController;
 import project.connection.LobbyServiceRequestSender;
 
 /**
- * TODO.
+ * TODO: Assigned the functionality to the buttons (launch, delete, play, ...) in here
  */
 public class SessionGui extends HBox {
 
@@ -102,10 +106,21 @@ public class SessionGui extends HBox {
   private EventHandler<ActionEvent> createPlayGameHandler() {
     return event -> {
       try {
-        // TODO: Adjust this fxml file later when game server is done
-        App.setRoot("splendor_base_game_board");
-        // anything involving reloading this page, we need to clear the thread pool
-        //stopAndClearThreads();
+        // display the GUI with some basic information needed
+        // 0. sessionId needs to be passed to this controller, the other info
+        // I can get from based on this sessionId (gameId)
+        GameBoardLayoutConfig config = App.getGuiLayouts();
+        // TODO: Replace this hard coded gameId later to curSessionId!!!!
+        // TODO: Replace this hard coded gameId later to curSessionId!!!!
+        // TODO: Replace this hard coded gameId later to curSessionId!!!!
+        // TODO: Replace this hard coded gameId later to curSessionId!!!!
+
+        App.loadPopUpWithController("splendor_base_game_board.fxml",
+            new GameController(curSessionId), config.getAppWidth(), config.getAppHeight());
+
+        Button playButton = (Button) event.getSource();
+        Stage lobbyWindow = (Stage) playButton.getScene().getWindow();
+        lobbyWindow.close();
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -127,7 +142,7 @@ public class SessionGui extends HBox {
   }
 
   // TODO: For server side, they need to handle
-  //  this POST request and send a PUT request to GameServer
+  //  this POST request and send a PUT request to GameServer (DONE)
   private EventHandler<ActionEvent> createLaunchSessionHandler() {
     return event -> {
       try {
