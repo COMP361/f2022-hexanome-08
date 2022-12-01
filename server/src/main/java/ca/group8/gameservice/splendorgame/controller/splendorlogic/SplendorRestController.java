@@ -456,7 +456,7 @@ public class SplendorRestController {
   public static Gson getActionGson() {
     RuntimeTypeAdapterFactory<Action> actionFactory =
         RuntimeTypeAdapterFactory
-            .of(Action.class, "type")
+            .of(Action.class)
             .registerSubtype(CardAction.class, "cardAction")
             .registerSubtype(TakeTokenAction.class, "takeTokenAction");
 
