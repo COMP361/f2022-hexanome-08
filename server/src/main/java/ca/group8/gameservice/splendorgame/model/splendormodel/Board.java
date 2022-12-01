@@ -69,6 +69,10 @@ public class Board {
     return takenCard;
   }
 
+  public void remove(Position paramPosition){
+    cardBoard[paramPosition.getY()][paramPosition.getX()] = null;
+  }
+
   /**
    *
    * @return a list of all cards in the board
