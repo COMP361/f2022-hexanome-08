@@ -36,15 +36,15 @@ public class Bank {
   /**
    * Adds a map of tokens to the bank.
    */
-  public void addToken(EnumMap<Colour,Integer> paramTokens) {
+  public void addToken(EnumMap<Colour, Integer> paramTokens) {
     //verify that this number of gems can be added (meaning new sum will not exceed initial value)
-    for(Colour colour: Colour.values()){
+    for (Colour colour : Colour.values()) {
       assert (allTokens.get(colour) + paramTokens.get(colour)) <= initialValue;
     }
     //add Tokens
-    for(Colour colour: Colour.values()){
+    for (Colour colour : Colour.values()) {
       int newVal = allTokens.get(colour) + paramTokens.get(colour);
-      allTokens.replace(colour,newVal);
+      allTokens.replace(colour, newVal);
     }
   }
 
@@ -54,15 +54,15 @@ public class Bank {
    * Removes a Map of Tokens from the Bank.
    */
 
-  public void removeToken(EnumMap<Colour,Integer> paramTokens) {
+  public void removeToken(EnumMap<Colour, Integer> paramTokens) {
     //verify that this number of gems can be removed (meaning new sum will not be less than 0)
-    for(Colour colour: Colour.values()){
+    for (Colour colour : Colour.values()) {
       assert (allTokens.get(colour) - paramTokens.get(colour)) >= 0;
     }
     //remove Tokens
-    for(Colour colour: Colour.values()){
+    for (Colour colour : Colour.values()) {
       int newVal = allTokens.get(colour) - paramTokens.get(colour);
-      allTokens.replace(colour,newVal);
+      allTokens.replace(colour, newVal);
     }
   }
 
