@@ -214,7 +214,8 @@ public class GameController implements Initializable {
           responseCode = longPullResponse.getStatusCode().value();
         }
         // no point of updating if the GUI is not there yet OR nothing changed
-        if (responseCode == 200 && stringPlayerInfoGuiMap.containsKey(playerName)) {
+        if (responseCode == 200) {
+          // && stringPlayerInfoGuiMap.containsKey(playerName)
           // update the MD5 hash of previous response
           hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
           // decode this response into PlayerInGame class with Gson
@@ -344,9 +345,9 @@ public class GameController implements Initializable {
   public static Gson getActionGson() {
     RuntimeTypeAdapterFactory<Action> actionFactory =
         RuntimeTypeAdapterFactory
-            .of(Action.class)
-            .registerSubtype(CardAction.class, "type")
-            .registerSubtype(TakeTokenAction.class, "type");
+            .of(Action.class, "type")
+            .registerSubtype(CardAction.class, "cardAction")
+            .registerSubtype(TakeTokenAction.class, "takeTokenAction");
 
     return new GsonBuilder()
         .registerTypeAdapterFactory(actionFactory).create();
@@ -483,7 +484,7 @@ public class GameController implements Initializable {
             // just need to do this thread once for every client first check
             Thread playerSpecificThread = generateCurrentPlayerUpdateThread(gameRequestSender,
                 gameId, curUser.getUsername(), curUser.getAccessToken(), nameToPlayerInfoGuiMap);
-            playerSpecificThread.start();
+            //playerSpecificThread.start();
 
           }
 
