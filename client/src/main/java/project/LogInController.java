@@ -76,8 +76,8 @@ public class LogInController {
   }
 
   public void initialize() {
-    userName.setText("ruoyu");
-    userPassword.setText("Dd991218?");
+    //userName.setText("ruoyu");
+    //userPassword.setText("Dd991218?");
   }
 
 }
