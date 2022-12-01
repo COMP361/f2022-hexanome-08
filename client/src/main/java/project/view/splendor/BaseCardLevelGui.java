@@ -19,7 +19,8 @@ import javafx.scene.text.Text;
 import project.App;
 import project.CardActionController;
 import project.DeckActionController;
-import project.view.splendor.gameitems.DevelopmentCard;
+import project.view.splendor.communication.DevelopmentCard;
+import project.view.splendor.communication.Position;
 
 public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
@@ -73,11 +74,11 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
   }
 
-  private EventHandler<MouseEvent> createClickOnCardHandler(DevelopmentCard curCard) {
+  public EventHandler<MouseEvent> createClickOnCardHandler(long gameId, String[] actionHash) {
     return event -> {
       try {
         App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(curCard), 360, 170);
+            new CardActionController(gameId, actionHash), 360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -95,13 +96,13 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     };
   }
 
-  private void bindActionToCardAndDeck() {
+  @Override
+  public void bindActionToCardAndDeck(String[][] actionHashLookUp, long gameId) {
     // get all cards first
     List<ImageView> allCards = getAllCardsGui();
-
     for (int i = 0; i < allCards.size(); i++) {
-      DevelopmentCard curCard = cards.get(i);
-      allCards.get(i).setOnMouseClicked(createClickOnCardHandler(curCard));
+      String[] actionHashOptions = actionHashLookUp[i];
+      allCards.get(i).setOnMouseClicked(createClickOnCardHandler(gameId, actionHashOptions));
     }
 
     Group deck = (Group) this.getChildren().get(0);
@@ -142,7 +143,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
   public void setup() {
     setDeckLevelText();
     setUpCards(cards);
-    bindActionToCardAndDeck();
+    //bindActionToCardAndDeck();
 
   }
 }

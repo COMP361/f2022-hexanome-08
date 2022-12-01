@@ -1,7 +1,9 @@
 package project.view.splendor;
 
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -11,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import project.App;
+import project.view.splendor.communication.DevelopmentCard;
 
 /**
  * TODO.
@@ -134,6 +137,38 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     }
   }
 
+  @Override
+  public void setNewPrestigePoints(int newPoints) {
+    Map<PlayerVisibleInfo, Text> visibleInfoTextMap = this.getPlayerVisibleInfoMap(this.playerPosition);
+    visibleInfoTextMap.get(PlayerVisibleInfo.POINT).setText(Integer.toString(newPoints));
+  }
+
+  @Override
+  public void setNewTokenInHand(EnumMap<Colour, Integer> newTokens) {
+    Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo = this.getPlayerColourWealthMap(this.playerPosition);
+    for (Colour colour: Colour.values()) {
+      Map<PlayerWealthInfo, Text> info = wealthInfo.get(colour);
+      info.get(PlayerWealthInfo.TOKEN).setText(Integer.toString(newTokens.get(colour)));
+    }
+  }
+
+  @Override
+  public void setGemsInHand(List<DevelopmentCard> allDevCardsInHand) {
+    EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
+    for (Colour c : Colour.values()) {
+      totalGems.put(c, 0);
+    }
+    for (DevelopmentCard card : allDevCardsInHand) {
+      Colour colour = card.getGemColour();
+      int oldValue = totalGems.get(colour);
+      totalGems.put(colour, oldValue + card.getGemNumber());
+    }
+    Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo = this.getPlayerColourWealthMap(this.playerPosition);
+    for (Colour colour: Colour.values()) {
+      wealthInfo.get(colour).get(PlayerWealthInfo.GEM).setText(Integer.toString(totalGems.get(colour)));
+    }
+  }
+
 
   private void giveInitialStartTokens() {
     Map<Colour, Map<PlayerWealthInfo, Text>> allTokenColourMap =
@@ -145,6 +180,7 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
       tokenText.setText(initialTokenNum + "");
     }
   }
+
 
 
   @Override

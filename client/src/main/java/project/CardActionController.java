@@ -8,10 +8,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import project.view.splendor.gameitems.DevelopmentCard;
+import project.connection.SplendorServiceRequestSender;
+import project.view.splendor.communication.DevelopmentCard;
 
 public class CardActionController implements Initializable {
-  private final DevelopmentCard cardPurchased;
+  private final String[] actionHash;
+
+  private final long gameId;
 
   @FXML
   private Button purchaseButton;
@@ -22,27 +25,53 @@ public class CardActionController implements Initializable {
   @FXML
   private Button goBackButton;
 
-  public CardActionController(DevelopmentCard cardPurchased) {
-    this.cardPurchased = cardPurchased;
+  public CardActionController(long gameId, String[] actionHash) {
+    this.gameId = gameId;
+    this.actionHash = actionHash;
   }
 
   private EventHandler<ActionEvent> createOnClickPurchaseHandler() {
     // TODO: Send the request in here to the game server, for now do nothing
     return event -> {
-      System.out.println("Sent request to server to purchase " + cardPurchased.getCardName());
+      if (actionHash[0] == null) {
+        // TODO: Index 0 is the hash for purchase hash
+        // No action is assigned, this button gets greyed out
+        Button purchaseButton = (Button) event.getSource();
+        purchaseButton.setDisable(true);
+      } else {
+        // it's clickable, we can send some requests here
+        SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
+        String playerName = App.getUser().getUsername();
+        String accessToken = App.getUser().getAccessToken();
+        // sends a POST request that tells the server which action we chose
+        gameRequestSender.
+            sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[0]);
+        Stage curWindow = (Stage) goBackButton.getScene().getWindow();
+        curWindow.close();
+      }
 
-      Stage curWindow = (Stage) goBackButton.getScene().getWindow();
-      curWindow.close();
     };
   }
 
   private EventHandler<ActionEvent> createOnClickReserveHandler() {
     // TODO: Send the request in here to the game server, for now do nothing
     return event -> {
-      System.out.println("Sent request to server to purchase " + cardPurchased.getCardName());
-
-      Stage curWindow = (Stage) goBackButton.getScene().getWindow();
-      curWindow.close();
+      if (actionHash[1] == null) {
+        // TODO: Index 1 is the hash for reserve hash
+        // No action is assigned, this button gets greyed out
+        Button purchaseButton = (Button) event.getSource();
+        purchaseButton.setDisable(true);
+      } else {
+        // it's clickable, we can send some requests here
+        SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
+        String playerName = App.getUser().getUsername();
+        String accessToken = App.getUser().getAccessToken();
+        // sends a POST request that tells the server which action we chose
+        gameRequestSender.
+            sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[1]);
+        Stage curWindow = (Stage) goBackButton.getScene().getWindow();
+        curWindow.close();
+      }
     };
   }
 

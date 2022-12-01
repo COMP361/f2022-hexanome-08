@@ -1,3 +1,41 @@
+<<<<<<< HEAD:server/src/test/java/ca/group8/gameservice/splendorgame/model/splendormodel/TokenHandTest.java
+//package ca.group8.gameservice.splendorgame.model.splendormodel;
+//
+//import ch.qos.logback.core.subst.Token;
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.Test;
+//
+//import java.util.EnumMap;
+//
+//import static org.junit.Assert.assertEquals;
+//import static org.junit.Assert.assertFalse;
+//
+//public class TokenHandTest {
+//    TokenHand t1;
+//    EnumMap<Colour,Integer> price1;
+//    EnumMap<Colour,Integer> price2;
+//
+//    @BeforeEach
+//    void setup() {
+//        t1 = new TokenHand(3);
+//        price1 = new EnumMap<>(Colour.class);
+//        price2 = new EnumMap<>(Colour.class);
+//        for (Colour colour : Colour.values()) {
+//            price2.put(colour, 2);
+//            price1.put(colour, 1);
+//        }
+//    }
+//
+//    @Test
+//    void goldTokenAndAddRemoveTest() {
+//        assertEquals(t1.getGoldTokenNumber(),3);
+//        t1.removeToken(price2);
+//        assertEquals(t1.getGoldTokenNumber(),1);
+//        t1.addToken(price1);
+//        assertEquals(t1.getGoldTokenNumber(),2);
+//    }
+//}
+=======
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -56,3 +94,4 @@ public class TestTokenHand {
         assertEquals(hand.get(Colour.GOLD),(Integer) 6);
     }
 }
+>>>>>>> 16c951afa6e62f92b5103ef183ca7b0a204db2ff:server/src/test/java/ca/group8/gameservice/splendorgame/model/splendormodel/TestTokenHand.java
