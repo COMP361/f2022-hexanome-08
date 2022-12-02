@@ -95,13 +95,13 @@ public class SplendorActionListGenerator {
       //checks if you can purchase (with or without gold tokens)
       if (goldCounter <= player.getTokenHand().getGoldTokenNumber()) {
         //create new purchase action option & add it to the actionList.
-        actionOptions.add(new PurchaseAction(true, position, card, goldCounter));
+        actionOptions.add(new PurchaseAction(position, card, goldCounter));
 
       }
 
       //verify if player can reserve card
       if (canReserve) {
-        actionOptions.add(new ReserveAction(true, position, card));
+        actionOptions.add(new ReserveAction(position, card));
       }
     }
 
@@ -139,7 +139,7 @@ public class SplendorActionListGenerator {
         hashActionMap.put(actionMd5, action);
       }
       EnumMap<Colour, Integer> playerTokens = player.getTokenHand().getAllTokens();
-      TakeTokenAction takeTokenAction = new TakeTokenAction(false, playerTokens);
+      TakeTokenAction takeTokenAction = new TakeTokenAction(playerTokens);
       String takeTokenActionMd5 =
           DigestUtils.md5Hex(new Gson().toJson(takeTokenAction)).toUpperCase();
 

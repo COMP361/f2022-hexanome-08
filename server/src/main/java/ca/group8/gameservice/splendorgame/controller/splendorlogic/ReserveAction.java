@@ -11,7 +11,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.ReservedHand;
 /**
  * Action that allows a player to reserve a card.
  */
-public class ReserveAction extends Action {
+public class ReserveAction implements Action {
 
   public Position getPosition() {
     return position;
@@ -32,8 +32,7 @@ public class ReserveAction extends Action {
   private Position position;
   private Card card;
 
-  public ReserveAction(boolean isCardAction, Position position, Card card) {
-    super(isCardAction);
+  public ReserveAction(Position position, Card card) {
     this.position = position;
     this.card = card;
   }
@@ -60,5 +59,10 @@ public class ReserveAction extends Action {
       currentGameState.getTableTop().getBaseBoard().takeAndReplaceCard(newCard, curCardPosition);
     }
 
+  }
+
+  @Override
+  public boolean checkIsCardAction() {
+    return true;
   }
 }

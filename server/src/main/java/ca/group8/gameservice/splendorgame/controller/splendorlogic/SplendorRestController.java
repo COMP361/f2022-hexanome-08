@@ -444,11 +444,11 @@ public class SplendorRestController {
 
       // actionsAvailableToPlayer is either empty hash map or have something, not important,
       // just give it to client
-      //Gson actionGson = SplendorRestController.getActionGson();
+      Gson actionGson = SplendorRestController.getActionGson();
 
-      Gson actionGson = new GsonBuilder()
-              .registerTypeAdapter(Action.class, new PolymorphDeserializer<Action>())
-              .create();
+      //Gson actionGson = new GsonBuilder()
+      //        .registerTypeAdapter(Action.class, new PolymorphDeserializer<Action>())
+      //        .create();
       String actionHashedMapInStr = actionGson.toJson(actionsAvailableToPlayer);
       return ResponseEntity.status(HttpStatus.OK).body(actionHashedMapInStr);
     } catch (ModelAccessException | UnirestException e) {
@@ -458,17 +458,18 @@ public class SplendorRestController {
   }
 
 
-  //public static Gson getActionGson() {
-  //  RuntimeTypeAdapterFactory<Action> actionFactory =
-  //      RuntimeTypeAdapterFactory
-  //          .of(Action.class)
-  //          .registerSubtype(CardAction.class, "cardAction")
-  //          .registerSubtype(TakeTokenAction.class, "takeTokenAction");
-  //
-  //  return new GsonBuilder()
-  //      .registerTypeAdapterFactory(actionFactory).create();
-  //
-  //}
+  public static Gson getActionGson() {
+    RuntimeTypeAdapterFactory<Action> actionFactory =
+        RuntimeTypeAdapterFactory
+            .of(Action.class, "type")
+            .registerSubtype(ReserveAction.class)
+            .registerSubtype(PurchaseAction.class)
+            .registerSubtype(TakeTokenAction.class);
+
+    return new GsonBuilder()
+        .registerTypeAdapterFactory(actionFactory).create();
+
+  }
 
 
   /**

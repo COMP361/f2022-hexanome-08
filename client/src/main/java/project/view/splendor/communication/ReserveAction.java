@@ -1,6 +1,7 @@
 package project.view.splendor.communication;
 
-public class ReserveAction extends Action {
+
+public class ReserveAction implements Action {
 
   public Position getPosition() {
     return position;
@@ -21,9 +22,18 @@ public class ReserveAction extends Action {
   private Position position;
   private Card card;
 
-  public ReserveAction(boolean isCardAction, Position position, Card card) {
-    super(isCardAction);
+  public ReserveAction(Position position, Card card) {
     this.position = position;
     this.card = card;
+  }
+
+  @Override
+  public void execute(GameInfo currentGameState, PlayerInGame playerState) {
+
+  }
+
+  @Override
+  public boolean checkIsCardAction() {
+    return false;
   }
 }

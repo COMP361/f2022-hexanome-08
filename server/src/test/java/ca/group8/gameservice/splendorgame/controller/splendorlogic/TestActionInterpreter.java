@@ -34,13 +34,13 @@ public class TestActionInterpreter {
     curPlayer = game.getCurrentPlayer();
     Position position = new Position(2,2);
     card = (DevelopmentCard) game.getTableTop().getBaseBoard().getCard(2,2);
-    purchaseAction = new PurchaseAction(true, position, card, 0);
-    reserveAction = new ReserveAction(true, position,card);
+    purchaseAction = new PurchaseAction(position, card, 0);
+    reserveAction = new ReserveAction(position, card);
     for(Colour colour:Colour.values()){
       tokens.put(colour, 0);
     }
     tokens.put(Colour.BLUE, 2);
-    takeTokenAction = new TakeTokenAction(false, tokens);
+    takeTokenAction = new TakeTokenAction(tokens);
 
   }
 
