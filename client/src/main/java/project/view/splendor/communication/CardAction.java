@@ -1,31 +1,27 @@
 package project.view.splendor.communication;
 
-public class CardAction implements Action {
-  public void setPosition(Position position) {
-    this.position = position;
-  }
+import io.github.isharipov.gson.adapters.JsonSubtype;
+import io.github.isharipov.gson.adapters.JsonType;
 
-  public void setCard(Card card) {
-    this.card = card;
-  }
+@JsonType(
+    property = "type",
+    subtypes = {
+        @JsonSubtype(clazz = PurchaseAction.class, name = "purchaseAction"),
+        @JsonSubtype(clazz = ReserveAction.class, name = "reserveAction")
+    }
+)
+public abstract class CardAction extends Action {
 
   private Position position;
   private Card card;
 
-  public boolean isCardAction() {
-    return isCardAction;
-  }
-
-  public void setCardAction(boolean cardAction) {
-    isCardAction = cardAction;
-  }
-
-  private boolean isCardAction;
-
+  /**
+   * Constructor.
+   */
   public CardAction(boolean isCardAction, Position position, Card card) {
+    super(isCardAction);
     this.position = position;
     this.card = card;
-    this.isCardAction = isCardAction;
   }
 
   public Position getPosition() {
@@ -36,8 +32,13 @@ public class CardAction implements Action {
     return card;
   }
 
-  @Override
-  public boolean checkIsCardAction() {
-    return false;
+  public void setPosition(Position position) {
+    this.position = position;
   }
+
+  public void setCard(Card card) {
+    this.card = card;
+  }
+
+
 }

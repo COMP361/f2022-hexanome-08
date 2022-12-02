@@ -89,6 +89,11 @@
 <!--            <artifactId>junit-jupiter</artifactId>-->
 <!--        </dependency>-->
 
+        <dependency>
+            <groupId>io.github.isharipov</groupId>
+            <artifactId>gson-adapters</artifactId>
+            <version>0.1</version>
+        </dependency>
 
     </dependencies>
 
