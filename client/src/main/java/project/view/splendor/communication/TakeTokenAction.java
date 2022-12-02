@@ -3,12 +3,11 @@ package project.view.splendor.communication;
 import java.util.EnumMap;
 import project.view.splendor.Colour;
 
-public class TakeTokenAction implements Action {
-
+public class TakeTokenAction extends Action {
 
   private EnumMap<Colour, Integer> tokens;
-
-  public TakeTokenAction(EnumMap<Colour, Integer> tokens) {
+  public TakeTokenAction(boolean isCardAction, EnumMap<Colour, Integer> tokens) {
+    super(isCardAction);
     this.tokens = tokens;
   }
 
@@ -16,12 +15,13 @@ public class TakeTokenAction implements Action {
     return tokens;
   }
 
-  public void setTokens(EnumMap<Colour, Integer> tokens) {
+  public void setTokens(
+      EnumMap<Colour, Integer> tokens) {
     this.tokens = tokens;
   }
-
-  @Override
-  public boolean checkIsCardAction() {
-    return false;
-  }
+  //
+  //@Override
+  //public boolean checkIsCardAction() {
+  //  return false;
+  //}
 }

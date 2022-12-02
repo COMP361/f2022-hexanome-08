@@ -28,7 +28,7 @@ public class SplendorActionInterpreter {
   public void interpretAction(Action playerChosenAction, GameInfo currentGameState,
                               PlayerInGame playerState) {
     Logger logger = LoggerFactory.getLogger(SplendorActionInterpreter.class);
-    logger.info("Before execute the action" + playerChosenAction.checkIsCardAction());
+    logger.info("Before execute the action" + playerChosenAction.getIsCardAction());
     playerChosenAction.execute(currentGameState, playerState);
     currentGameState.setNextPlayer();
     //TODO: check winner

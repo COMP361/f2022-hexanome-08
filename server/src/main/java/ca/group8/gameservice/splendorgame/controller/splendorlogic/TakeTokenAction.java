@@ -9,15 +9,23 @@ import java.util.EnumMap;
 /**
  * Action available every turn, taking tokens from bank.
  */
-public class TakeTokenAction implements Action {
-  private final EnumMap<Colour, Integer> tokens;
+public class TakeTokenAction extends Action {
 
-  public TakeTokenAction(EnumMap<Colour, Integer> tokens) {
+
+  private EnumMap<Colour, Integer> tokens;
+
+  public TakeTokenAction(boolean isCardAction, EnumMap<Colour, Integer> tokens) {
+    super(isCardAction);
     this.tokens = tokens;
   }
 
   public EnumMap<Colour, Integer> getTokens() {
     return tokens;
+  }
+
+  public void setTokens(
+      EnumMap<Colour, Integer> tokens) {
+    this.tokens = tokens;
   }
 
   @Override
@@ -32,8 +40,8 @@ public class TakeTokenAction implements Action {
     }
   }
 
-  @Override
-  public boolean checkIsCardAction() {
-    return false;
-  }
+  //@Override
+  //public boolean checkIsCardAction() {
+  //  return false;
+  //}
 }

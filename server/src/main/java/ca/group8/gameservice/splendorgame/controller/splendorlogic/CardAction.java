@@ -4,25 +4,34 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
+import io.github.isharipov.gson.adapters.JsonSubtype;
+import io.github.isharipov.gson.adapters.JsonType;
 
 
 /**
  * Includes purchase and reserve actions.
  */
-public class CardAction implements Action {
-  private final Position position;
-  private final Card card;
 
-  private final boolean isCardAction;
+@JsonType(
+    property = "type",
+    subtypes = {
+        @JsonSubtype(clazz = PurchaseAction.class, name = "purchaseAction"),
+        @JsonSubtype(clazz = ReserveAction.class, name = "reserveAction")
+    }
+)
+public abstract class CardAction extends Action {
+
+
+  private Position position;
+  private Card card;
 
   /**
    * Constructor.
    */
   public CardAction(boolean isCardAction, Position position, Card card) {
-    //super(isCardAction);
+    super(isCardAction);
     this.position = position;
     this.card = card;
-    this.isCardAction = isCardAction;
   }
 
   public Position getPosition() {
@@ -33,14 +42,21 @@ public class CardAction implements Action {
     return card;
   }
 
-  @Override
-  public void execute(GameInfo currentGameState, PlayerInGame playerState) {
+  public void setPosition(Position position) {
+    this.position = position;
+  }
+
+  public void setCard(Card card) {
+    this.card = card;
   }
 
   @Override
-  public boolean checkIsCardAction() {
-    return true;
-  }
+  public abstract void execute(GameInfo currentGameState, PlayerInGame playerState);
+
+  //@Override
+  //public boolean checkIsCardAction() {
+  //  return true;
+  //}
   //// Overriding equals() to compare two Complex objects
   //
   //// TODO: Override the equals for Card (do we need the equal for Card?)

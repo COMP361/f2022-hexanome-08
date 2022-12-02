@@ -1,11 +1,7 @@
 package project.view.splendor.communication;
 
 public class PurchaseAction extends CardAction {
-  public void setGoldTokenRequired(int goldTokenRequired) {
-    this.goldTokenRequired = goldTokenRequired;
-  }
-
-  int goldTokenRequired;
+  private int goldTokenRequired;
 
   public PurchaseAction(boolean isCardAction,
                         Position position,
@@ -17,5 +13,10 @@ public class PurchaseAction extends CardAction {
   public int getGoldTokenRequired() {
     return goldTokenRequired;
   }
+
+  public void setGoldTokenRequired(int goldTokenRequired) {
+    this.goldTokenRequired = goldTokenRequired;
+  }
+
 
 }

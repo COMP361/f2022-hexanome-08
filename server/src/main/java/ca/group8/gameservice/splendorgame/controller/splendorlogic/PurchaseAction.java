@@ -14,7 +14,7 @@ import java.util.EnumMap;
  * Action that allows you to purchase a card.
  */
 public class PurchaseAction extends CardAction {
-  int goldTokenRequired;
+  private int goldTokenRequired;
 
   public PurchaseAction(boolean isCardAction,
                         Position position,
@@ -25,6 +25,10 @@ public class PurchaseAction extends CardAction {
 
   public int getGoldTokenRequired() {
     return goldTokenRequired;
+  }
+
+  public void setGoldTokenRequired(int goldTokenRequired) {
+    this.goldTokenRequired = goldTokenRequired;
   }
 
 

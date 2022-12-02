@@ -14,6 +14,7 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
+import io.github.isharipov.gson.adapters.PolymorphDeserializer;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -443,8 +444,11 @@ public class SplendorRestController {
 
       // actionsAvailableToPlayer is either empty hash map or have something, not important,
       // just give it to client
-      Gson actionGson = SplendorRestController.getActionGson();
+      //Gson actionGson = SplendorRestController.getActionGson();
 
+      Gson actionGson = new GsonBuilder()
+              .registerTypeAdapter(Action.class, new PolymorphDeserializer<Action>())
+              .create();
       String actionHashedMapInStr = actionGson.toJson(actionsAvailableToPlayer);
       return ResponseEntity.status(HttpStatus.OK).body(actionHashedMapInStr);
     } catch (ModelAccessException | UnirestException e) {
@@ -454,17 +458,18 @@ public class SplendorRestController {
   }
 
 
-  public static Gson getActionGson() {
-    RuntimeTypeAdapterFactory<Action> actionFactory =
-        RuntimeTypeAdapterFactory
-            .of(Action.class)
-            .registerSubtype(CardAction.class, "cardAction")
-            .registerSubtype(TakeTokenAction.class, "takeTokenAction");
+  //public static Gson getActionGson() {
+  //  RuntimeTypeAdapterFactory<Action> actionFactory =
+  //      RuntimeTypeAdapterFactory
+  //          .of(Action.class)
+  //          .registerSubtype(CardAction.class, "cardAction")
+  //          .registerSubtype(TakeTokenAction.class, "takeTokenAction");
+  //
+  //  return new GsonBuilder()
+  //      .registerTypeAdapterFactory(actionFactory).create();
+  //
+  //}
 
-    return new GsonBuilder()
-        .registerTypeAdapterFactory(actionFactory).create();
-
-  }
 
   /**
    * Select action.
