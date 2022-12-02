@@ -40,7 +40,7 @@ public class TestActionInterpreter {
       tokens.put(colour, 0);
     }
     tokens.put(Colour.BLUE, 2);
-    takeTokenAction = new TakeTokenAction(tokens);
+    takeTokenAction = new TakeTokenAction(false, tokens);
 
   }
 
