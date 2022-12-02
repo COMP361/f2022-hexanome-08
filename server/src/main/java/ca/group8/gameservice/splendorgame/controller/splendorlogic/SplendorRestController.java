@@ -9,6 +9,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -16,6 +17,7 @@ import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
 import io.github.isharipov.gson.adapters.PolymorphDeserializer;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -445,11 +447,9 @@ public class SplendorRestController {
       // actionsAvailableToPlayer is either empty hash map or have something, not important,
       // just give it to client
       Gson actionGson = SplendorRestController.getActionGson();
-
-      //Gson actionGson = new GsonBuilder()
-      //        .registerTypeAdapter(Action.class, new PolymorphDeserializer<Action>())
-      //        .create();
-      String actionHashedMapInStr = actionGson.toJson(actionsAvailableToPlayer);
+      // added this type conversion to serialization
+      Type actionMapType = new TypeToken<Map<String, Action>>() {}.getType();
+      String actionHashedMapInStr = actionGson.toJson(actionsAvailableToPlayer, actionMapType);
       return ResponseEntity.status(HttpStatus.OK).body(actionHashedMapInStr);
     } catch (ModelAccessException | UnirestException e) {
       // something went wrong, reply with a bad request
@@ -461,7 +461,7 @@ public class SplendorRestController {
   public static Gson getActionGson() {
     RuntimeTypeAdapterFactory<Action> actionFactory =
         RuntimeTypeAdapterFactory
-            .of(Action.class)
+            .of(Action.class, "type")
             .registerSubtype(ReserveAction.class)
             .registerSubtype(PurchaseAction.class)
             .registerSubtype(TakeTokenAction.class);
