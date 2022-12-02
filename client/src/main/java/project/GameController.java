@@ -458,7 +458,7 @@ public class GameController implements Initializable {
               String[][][] actionHashesLookUp = new String[3][4][2];
               for (String actionHash : resultActionsMap.keySet()) {
                 Action curAction = resultActionsMap.get(actionHash);
-                if (curAction.checkIsCardAction()) {
+                if (curAction.getIsCardAction()) {
                   CardAction cardAction = (CardAction) curAction;
                   Position cardPosition = cardAction.getPosition();
                   DevelopmentCard curCard = (DevelopmentCard) cardAction.getCard();
