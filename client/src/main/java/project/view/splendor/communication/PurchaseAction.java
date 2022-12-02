@@ -1,6 +1,8 @@
 package project.view.splendor.communication;
 
-public class PurchaseAction extends Action {
+import java.util.EnumMap;
+
+public class PurchaseAction implements Action {
   private int goldTokenRequired;
 
   public Position getPosition() {
@@ -22,10 +24,7 @@ public class PurchaseAction extends Action {
   private Position position;
   private Card card;
 
-  public PurchaseAction(boolean isCardAction,
-                        Position position,
-                        Card card, int goldTokenRequired) {
-    super(isCardAction);
+  public PurchaseAction(Position position, Card card, int goldTokenRequired) {
     this.position = position;
     this.card = card;
     this.goldTokenRequired = goldTokenRequired;
@@ -40,4 +39,13 @@ public class PurchaseAction extends Action {
   }
 
 
+  @Override
+  public void execute(GameInfo currentGameState, PlayerInGame playerState) {
+
+  }
+
+  @Override
+  public boolean checkIsCardAction() {
+    return true;
+  }
 }

@@ -13,7 +13,7 @@ import java.util.EnumMap;
 /**
  * Action that allows you to purchase a card.
  */
-public class PurchaseAction extends Action {
+public class PurchaseAction implements Action {
   private int goldTokenRequired;
 
   public Position getPosition() {
@@ -35,10 +35,7 @@ public class PurchaseAction extends Action {
   private Position position;
   private Card card;
 
-  public PurchaseAction(boolean isCardAction,
-                        Position position,
-                        Card card, int goldTokenRequired) {
-    super(isCardAction);
+  public PurchaseAction(Position position, Card card, int goldTokenRequired) {
     this.position = position;
     this.card = card;
     this.goldTokenRequired = goldTokenRequired;
@@ -86,5 +83,10 @@ public class PurchaseAction extends Action {
     // replace the card with another new card draw from deck
     Card newCard = currentGameState.getTableTop().getDecks().get(level).pop();
     currentGameState.getTableTop().getBaseBoard().takeAndReplaceCard(newCard, position);
+  }
+
+  @Override
+  public boolean checkIsCardAction() {
+    return true;
   }
 }

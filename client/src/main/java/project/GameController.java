@@ -45,12 +45,13 @@ import project.view.splendor.TokenBankGui;
 import project.view.splendor.VerticalPlayerInfoGui;
 import project.view.splendor.communication.Action;
 import project.view.splendor.communication.Card;
-import project.view.splendor.communication.CardAction;
+//import project.view.splendor.communication.CardAction;
 import project.view.splendor.communication.DevelopmentCard;
 import project.view.splendor.communication.GameInfo;
 import project.view.splendor.communication.PlayerInGame;
 import project.view.splendor.communication.Position;
 import project.view.splendor.communication.PurchaseAction;
+import project.view.splendor.communication.ReserveAction;
 import project.view.splendor.communication.TakeTokenAction;
 
 /**
@@ -346,17 +347,18 @@ public class GameController implements Initializable {
   }
 
 
-  //public static Gson getActionGson() {
-  //  RuntimeTypeAdapterFactory<Action> actionFactory =
-  //      RuntimeTypeAdapterFactory
-  //          .of(Action.class, "type")
-  //          .registerSubtype(CardAction.class, CardAction.class.getName())
-  //          .registerSubtype(TakeTokenAction.class, TakeTokenAction.class.getName());
-  //
-  //  return new GsonBuilder()
-  //      .registerTypeAdapterFactory(actionFactory).create();
-  //
-  //}
+  public static Gson getActionGson() {
+    RuntimeTypeAdapterFactory<Action> actionFactory =
+        RuntimeTypeAdapterFactory
+            .of(Action.class, "type")
+            .registerSubtype(ReserveAction.class)
+            .registerSubtype(PurchaseAction.class)
+            .registerSubtype(TakeTokenAction.class);
+
+    return new GsonBuilder()
+        .registerTypeAdapterFactory(actionFactory).create();
+
+  }
 
   @Override
   // TODO: This method contains what's gonna happen after clicking "play" on the board
@@ -432,61 +434,65 @@ public class GameController implements Initializable {
                     gameId, curUser.getUsername(), curUser.getAccessToken());
             Type empMapType = new TypeToken<Map<String, Action>>() {
             }.getType();
-            Gson actionGson = new GsonBuilder()
-                .registerTypeAdapter(Action.class, new PolymorphDeserializer<Action>())
-                .create();
+            //Gson actionGson = new GsonBuilder()
+            //    .registerTypeAdapter(Action.class, new PolymorphDeserializer<Action>())
+            //    .create();
+
+            Gson actionGson = GameController.getActionGson();
             Map<String, Action> resultActionsMap =
                 actionGson.fromJson(actionMapResponse.getBody(), empMapType);
 
-            // if the action map is not empty
-            if (!resultActionsMap.isEmpty()) {
-              for (int i = 3; i >= 1; i--) {
-                Map<CardType, DevelopmentCardBoardGui> oneLevelCardsMap = new HashMap<>();
-                Card[] cardsInCurLevel =
-                    curGameInfo.getTableTop().getBaseBoard().getCardBoard()[3 - i];
-                List<DevelopmentCard> cards = new ArrayList<>();
-                for (Card c : cardsInCurLevel) {
-                  cards.add((DevelopmentCard) c);
-                }
-                BaseCardLevelGui baseCardLevelGui = new BaseCardLevelGui(i, cards);
-                baseCardLevelGui.setup();
-                oneLevelCardsMap.put(CardType.BASE, baseCardLevelGui);
+            System.out.println(resultActionsMap);
 
-                Platform.runLater(() -> {
-                  baseCardBoard.getChildren().add(baseCardLevelGui);
-                });
-                levelCardsMap.put(i, oneLevelCardsMap);
-              }
-
-              String[][][] actionHashesLookUp = new String[3][4][2];
-              for (String actionHash : resultActionsMap.keySet()) {
-                Action curAction = resultActionsMap.get(actionHash);
-                if (curAction.getIsCardAction()) {
-                  CardAction cardAction = (CardAction) curAction;
-                  Position cardPosition = cardAction.getPosition();
-                  DevelopmentCard curCard = (DevelopmentCard) cardAction.getCard();
-                  int level = curCard.getLevel();
-                  int xIndex = cardPosition.getX();
-                  if (curAction instanceof PurchaseAction) {
-                    actionHashesLookUp[level][xIndex][0] = actionHash;
-                  } else {
-                    actionHashesLookUp[level][xIndex][1] = actionHash;
-                  }
-                } else {
-                  // TODO: LATER, TAKE TOKEN ACTION OR SOMETHING ELSE
-                }
-              }
-
-              // Since we now have all String[2] actionHashes, we can go and
-              // assign them to cards
-              for (int i = 0; i < 3; i++) {
-                levelCardsMap
-                    .get(3 - i)
-                    .get(CardType.BASE)
-                    .bindActionToCardAndDeck(actionHashesLookUp[i], gameId);
-              }
-
-            }
+            //// if the action map is not empty
+            //if (!resultActionsMap.isEmpty()) {
+            //  for (int i = 3; i >= 1; i--) {
+            //    Map<CardType, DevelopmentCardBoardGui> oneLevelCardsMap = new HashMap<>();
+            //    Card[] cardsInCurLevel =
+            //        curGameInfo.getTableTop().getBaseBoard().getCardBoard()[3 - i];
+            //    List<DevelopmentCard> cards = new ArrayList<>();
+            //    for (Card c : cardsInCurLevel) {
+            //      cards.add((DevelopmentCard) c);
+            //    }
+            //    BaseCardLevelGui baseCardLevelGui = new BaseCardLevelGui(i, cards);
+            //    baseCardLevelGui.setup();
+            //    oneLevelCardsMap.put(CardType.BASE, baseCardLevelGui);
+            //
+            //    Platform.runLater(() -> {
+            //      baseCardBoard.getChildren().add(baseCardLevelGui);
+            //    });
+            //    levelCardsMap.put(i, oneLevelCardsMap);
+            //  }
+            //
+            //  String[][][] actionHashesLookUp = new String[3][4][2];
+            //  for (String actionHash : resultActionsMap.keySet()) {
+            //    Action curAction = resultActionsMap.get(actionHash);
+            //    if (curAction.checkIsCardAction()) {
+            //      CardAction cardAction = (CardAction) curAction;
+            //      Position cardPosition = cardAction.getPosition();
+            //      DevelopmentCard curCard = (DevelopmentCard) cardAction.getCard();
+            //      int level = curCard.getLevel();
+            //      int xIndex = cardPosition.getX();
+            //      if (curAction instanceof PurchaseAction) {
+            //        actionHashesLookUp[level][xIndex][0] = actionHash;
+            //      } else {
+            //        actionHashesLookUp[level][xIndex][1] = actionHash;
+            //      }
+            //    } else {
+            //      // TODO: LATER, TAKE TOKEN ACTION OR SOMETHING ELSE
+            //    }
+            //  }
+            //
+            //  // Since we now have all String[2] actionHashes, we can go and
+            //  // assign them to cards
+            //  for (int i = 0; i < 3; i++) {
+            //    levelCardsMap
+            //        .get(3 - i)
+            //        .get(CardType.BASE)
+            //        .bindActionToCardAndDeck(actionHashesLookUp[i], gameId);
+            //  }
+            //
+            //}
 
             //isFirstCheck = false;
 
