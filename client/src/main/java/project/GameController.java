@@ -350,7 +350,7 @@ public class GameController implements Initializable {
   public static Gson getActionGson() {
     RuntimeTypeAdapterFactory<Action> actionFactory =
         RuntimeTypeAdapterFactory
-            .of(Action.class, "type")
+            .of(Action.class)
             .registerSubtype(ReserveAction.class)
             .registerSubtype(PurchaseAction.class)
             .registerSubtype(TakeTokenAction.class);
