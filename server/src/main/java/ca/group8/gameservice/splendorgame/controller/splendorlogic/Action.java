@@ -29,6 +29,16 @@ public abstract class Action {
    //is CardAction or not
   private boolean isCardAction;
 
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  private String type;
+
   public Action(boolean isCardAction) {
     this.isCardAction = isCardAction;
   }

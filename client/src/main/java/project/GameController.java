@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import io.github.isharipov.gson.adapters.PolymorphDeserializer;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -345,17 +346,17 @@ public class GameController implements Initializable {
   }
 
 
-  public static Gson getActionGson() {
-    RuntimeTypeAdapterFactory<Action> actionFactory =
-        RuntimeTypeAdapterFactory
-            .of(Action.class, "type")
-            .registerSubtype(CardAction.class, CardAction.class.getName())
-            .registerSubtype(TakeTokenAction.class, TakeTokenAction.class.getName());
-
-    return new GsonBuilder()
-        .registerTypeAdapterFactory(actionFactory).create();
-
-  }
+  //public static Gson getActionGson() {
+  //  RuntimeTypeAdapterFactory<Action> actionFactory =
+  //      RuntimeTypeAdapterFactory
+  //          .of(Action.class, "type")
+  //          .registerSubtype(CardAction.class, CardAction.class.getName())
+  //          .registerSubtype(TakeTokenAction.class, TakeTokenAction.class.getName());
+  //
+  //  return new GsonBuilder()
+  //      .registerTypeAdapterFactory(actionFactory).create();
+  //
+  //}
 
   @Override
   // TODO: This method contains what's gonna happen after clicking "play" on the board
@@ -431,7 +432,9 @@ public class GameController implements Initializable {
                     gameId, curUser.getUsername(), curUser.getAccessToken());
             Type empMapType = new TypeToken<Map<String, Action>>() {
             }.getType();
-            Gson actionGson = GameController.getActionGson();
+            Gson actionGson = new GsonBuilder()
+                .registerTypeAdapter(Action.class, new PolymorphDeserializer<Action>())
+                .create();
             Map<String, Action> resultActionsMap =
                 actionGson.fromJson(actionMapResponse.getBody(), empMapType);
 
