@@ -214,10 +214,10 @@ public class SessionGui extends HBox {
         btmButton.setVisible(true);
         btmButton.setText("Launch");
         btmButton.setOnAction(createLaunchSessionHandler());
-        // launchButton greyed out
+        // launchButton greyed out depends on if curPlayers > minPlayers or not
         int curSessionPlayersCount = curSessionPlayers.size();
         int minSessionPlayerCount = curSession.getGameParameters().getMinSessionPlayers();
-        btmButton.setDisable(curSessionPlayersCount != minSessionPlayerCount);
+        btmButton.setDisable(curSessionPlayersCount < minSessionPlayerCount);
       } else {
         String buttonContent;
         if (curSessionPlayers.contains(curUserName)) {
