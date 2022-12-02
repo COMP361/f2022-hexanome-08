@@ -108,11 +108,6 @@ public class SessionGui extends HBox {
         // 0. sessionId needs to be passed to this controller, the other info
         // I can get from based on this sessionId (gameId)
         GameBoardLayoutConfig config = App.getGuiLayouts();
-        // TODO: Replace this hard coded gameId later to curSessionId!!!!
-        // TODO: Replace this hard coded gameId later to curSessionId!!!!
-        // TODO: Replace this hard coded gameId later to curSessionId!!!!
-        // TODO: Replace this hard coded gameId later to curSessionId!!!!
-
         App.loadPopUpWithController("splendor_base_game_board.fxml",
             new GameController(curSessionId), config.getAppWidth(), config.getAppHeight());
 
@@ -276,8 +271,8 @@ public class SessionGui extends HBox {
         int curPlayersCount = curPlayers.size();
         int minPlayersCount = curSession.getGameParameters().getMinSessionPlayers();
 
-        // delete and launch (clickable or not depends on minPlayer == curPlayer or not)
-        btmButton.setDisable(minPlayersCount != curPlayersCount);
+        // delete and launch (clickable or not depends on curPlayer < minPlayer or not)
+        btmButton.setDisable(curPlayersCount < minPlayersCount);
       } else {
         topButton.setVisible(true);
         topButton.setOnAction(createJoinLeaveSessionHandler());

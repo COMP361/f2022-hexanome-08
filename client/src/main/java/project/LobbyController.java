@@ -193,8 +193,6 @@ public class LobbyController {
         if (responseCode == 200) {
           // long pulling ends in success, we obtain the list of new sessions
           hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
-          System.out.println(
-              "One session info updated, break the long polling of main updating thread");
           if (isFirstCheck) {
             // the SessionList which contains Session objects from the remote side
             localSessionList = new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
