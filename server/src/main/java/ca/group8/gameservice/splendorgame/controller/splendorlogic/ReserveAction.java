@@ -11,17 +11,38 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.ReservedHand;
 /**
  * Action that allows a player to reserve a card.
  */
-public class ReserveAction extends CardAction {
+public class ReserveAction extends Action {
+
+  public Position getPosition() {
+    return position;
+  }
+
+  public Card getCard() {
+    return card;
+  }
+
+  public void setPosition(Position position) {
+    this.position = position;
+  }
+
+  public void setCard(Card card) {
+    this.card = card;
+  }
+
+  private Position position;
+  private Card card;
 
   public ReserveAction(boolean isCardAction, Position position, Card card) {
-    super(isCardAction, position, card);
+    super(isCardAction);
+    this.position = position;
+    this.card = card;
   }
 
   @Override
   public void execute(GameInfo currentGameState, PlayerInGame player) {
 
     ReservedHand reservedHand = player.getReservedHand();
-    Card reserveCard = this.getCard();
+    Card reserveCard = this.card;
 
     //add card to reserved hand (based on whether it is a development card or noble)
     if (reserveCard instanceof NobleCard) {
@@ -35,7 +56,7 @@ public class ReserveAction extends CardAction {
       reservedHand.addDevelopmentCard(card);
       int level = card.getLevel();
       Card newCard = currentGameState.getTableTop().getDecks().get(level).pop();
-      Position curCardPosition = super.getPosition();
+      Position curCardPosition = this.position;
       currentGameState.getTableTop().getBaseBoard().takeAndReplaceCard(newCard, curCardPosition);
     }
 
