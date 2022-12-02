@@ -12,7 +12,8 @@ import io.github.isharipov.gson.adapters.JsonType;
 @JsonType(
     property = "type",
     subtypes = {
-        @JsonSubtype(clazz = CardAction.class, name = "cardAction"),
+        @JsonSubtype(clazz = PurchaseAction.class, name = "purchaseAction"),
+        @JsonSubtype(clazz = ReserveAction.class, name = "reserveAction"),
         @JsonSubtype(clazz = TakeTokenAction.class, name = "takeTokenAction")
     }
 )
@@ -21,6 +22,7 @@ public abstract class Action {
   //Useful when the client receives the map of Actions, to identify whether action
   //is CardAction or not
   private boolean isCardAction;
+  private String type;
 
   public String getType() {
     return type;
@@ -30,7 +32,7 @@ public abstract class Action {
     this.type = type;
   }
 
-  private String type;
+
 
   public Action(boolean isCardAction) {
     this.isCardAction = isCardAction;

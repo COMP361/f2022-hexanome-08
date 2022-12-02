@@ -13,13 +13,34 @@ import java.util.EnumMap;
 /**
  * Action that allows you to purchase a card.
  */
-public class PurchaseAction extends CardAction {
+public class PurchaseAction extends Action {
   private int goldTokenRequired;
+
+  public Position getPosition() {
+    return position;
+  }
+
+  public Card getCard() {
+    return card;
+  }
+
+  public void setPosition(Position position) {
+    this.position = position;
+  }
+
+  public void setCard(Card card) {
+    this.card = card;
+  }
+
+  private Position position;
+  private Card card;
 
   public PurchaseAction(boolean isCardAction,
                         Position position,
                         Card card, int goldTokenRequired) {
-    super(isCardAction, position, card);
+    super(isCardAction);
+    this.position = position;
+    this.card = card;
     this.goldTokenRequired = goldTokenRequired;
   }
 
@@ -35,7 +56,7 @@ public class PurchaseAction extends CardAction {
   @Override
   public void execute(GameInfo currentGameState, PlayerInGame playerState) {
     // TODO: For now, just do a simple downcast assuming the card is DevelopmentCard
-    DevelopmentCard card = (DevelopmentCard) super.getCard();
+    DevelopmentCard card = (DevelopmentCard) this.card;
     PurchasedHand hand = playerState.getPurchasedHand();
     TokenHand tokenHand = playerState.getTokenHand();
     EnumMap<Colour, Integer> playerGems = playerState.getTotalGems();
@@ -64,7 +85,6 @@ public class PurchaseAction extends CardAction {
 
     // replace the card with another new card draw from deck
     Card newCard = currentGameState.getTableTop().getDecks().get(level).pop();
-    Position curCardPosition = super.getPosition();
-    currentGameState.getTableTop().getBaseBoard().takeAndReplaceCard(newCard, curCardPosition);
+    currentGameState.getTableTop().getBaseBoard().takeAndReplaceCard(newCard, position);
   }
 }
