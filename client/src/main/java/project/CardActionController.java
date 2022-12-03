@@ -34,11 +34,8 @@ public class CardActionController implements Initializable {
     // TODO: Send the request in here to the game server, for now do nothing
     return event -> {
       Button purchaseButton = (Button) event.getSource();
-      if (actionHash[0] == null) {
+      if (actionHash[0] != null) {
         // TODO: Index 0 is the hash for purchase hash
-        // No action is assigned, this button gets greyed out
-        purchaseButton.setDisable(true);
-      } else {
         // it's clickable, we can send some requests here
         SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
         String playerName = App.getUser().getUsername();
@@ -60,12 +57,8 @@ public class CardActionController implements Initializable {
   private EventHandler<ActionEvent> createOnClickReserveHandler() {
     // TODO: Send the request in here to the game server, for now do nothing
     return event -> {
-      if (actionHash[1] == null) {
+      if (actionHash[1] != null) {
         // TODO: Index 1 is the hash for reserve hash
-        // No action is assigned, this button gets greyed out
-        Button purchaseButton = (Button) event.getSource();
-        purchaseButton.setDisable(true);
-      } else {
         // it's clickable, we can send some requests here
         SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
         String playerName = App.getUser().getUsername();
@@ -92,6 +85,13 @@ public class CardActionController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    // if any of those action is null, these two buttons can not be pressed
+    if (actionHash[0] == null) {
+      purchaseButton.setDisable(true);
+    }
+    if (actionHash[1] == null) {
+      reserveButton.setDisable(true);
+    }
     purchaseButton.setOnAction(createOnClickPurchaseHandler());
     reserveButton.setOnAction(createOnClickReserveHandler());
     goBackButton.setOnAction(createOnClickBackHandler());
