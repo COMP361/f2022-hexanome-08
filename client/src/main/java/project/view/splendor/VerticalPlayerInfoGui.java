@@ -110,15 +110,15 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
     if (playerPosition.equals(PlayerPosition.LEFT)) {
       Group group = (Group) allChildren.get(0);
       resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(5));
-      resultMap.put(PlayerVisibleInfo.RESERVED_CARDS, (Text) group.getChildren().get(7));
-      resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(8));
+      resultMap.put(PlayerVisibleInfo.RESERVED_CARDS, (Text) group.getChildren().get(8));
+      resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(9));
 
     } else if (playerPosition.equals(PlayerPosition.RIGHT)) {
       Group group = (Group) allChildren.get(6);
 
-      resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(6));
+      resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(7));
       resultMap.put(PlayerVisibleInfo.RESERVED_CARDS, (Text) group.getChildren().get(8));
-      resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(7));
+      resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(9));
     }
     return resultMap;
   }
@@ -143,7 +143,8 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
   @Override
   public void setGemsInHand(List<DevelopmentCard> allDevCardsInHand) {
     EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
-    for (Colour c : Colour.values()) {
+    Colour[] baseColours = App.getBaseColours();
+    for (Colour c : baseColours) {
       totalGems.put(c, 0);
     }
     for (DevelopmentCard card : allDevCardsInHand) {
@@ -153,7 +154,7 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
     }
     Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo =
         this.getPlayerColourWealthMap(this.playerPosition);
-    for (Colour colour : Colour.values()) {
+    for (Colour colour : baseColours) {
       wealthInfo.get(colour).get(PlayerWealthInfo.GEM)
           .setText(Integer.toString(totalGems.get(colour)));
     }

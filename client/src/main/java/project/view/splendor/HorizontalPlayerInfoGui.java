@@ -157,7 +157,8 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
   @Override
   public void setGemsInHand(List<DevelopmentCard> allDevCardsInHand) {
     EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
-    for (Colour c : Colour.values()) {
+    Colour[] baseColours = App.getBaseColours();
+    for (Colour c : baseColours) {
       totalGems.put(c, 0);
     }
     for (DevelopmentCard card : allDevCardsInHand) {
@@ -167,7 +168,7 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     }
     Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo =
         this.getPlayerColourWealthMap(this.playerPosition);
-    for (Colour colour : Colour.values()) {
+    for (Colour colour : baseColours) {
       wealthInfo.get(colour).get(PlayerWealthInfo.GEM)
           .setText(Integer.toString(totalGems.get(colour)));
     }
