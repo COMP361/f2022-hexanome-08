@@ -13,7 +13,7 @@
     <Group>
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="125.0" stroke="BLACK" strokeType="INSIDE" width="125.0" />
         <ImageView fitHeight="110.0" fitWidth="125.0" layoutX="10.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@pictures/ta_pictures/maximilian.png" />
+            <Image url="@pictures/ta_pictures/maex.png" />
         </ImageView>
         <Circle fill="#acdef4" layoutX="108.0" layoutY="17.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
         <Text layoutX="106.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />

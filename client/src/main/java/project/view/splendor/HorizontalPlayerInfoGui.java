@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -186,6 +188,20 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     }
   }
 
+  private void setupPlayerImage(){
+    int childrenCount = this.getChildren().size();
+    if (playerPosition.equals(PlayerPosition.TOP)) {
+      Group imageGroup = (Group) this.getChildren().get(childrenCount-1);
+      ImageView playerImageView = (ImageView) imageGroup.getChildren().get(1);
+      Image img = new Image(String.format("project/pictures/ta_pictures/%s.png", playerName));
+      playerImageView.setImage(img);
+    } else if (playerPosition.equals(PlayerPosition.BOTTOM)) {
+      Group imageGroup = (Group) this.getChildren().get(0);
+      ImageView playerImageView = (ImageView) imageGroup.getChildren().get(1);
+      Image img = new Image(String.format("project/pictures/ta_pictures/%s.png", playerName));
+      playerImageView.setImage(img);
+    }
+  }
 
   @Override
   public void setup(double layoutX, double layoutY) {
@@ -193,6 +209,6 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     setLayoutX(layoutX);
     setLayoutY(layoutY);
     giveInitialStartTokens();
-
+    setupPlayerImage();
   }
 }

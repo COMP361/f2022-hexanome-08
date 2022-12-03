@@ -9,6 +9,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -182,6 +184,20 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
   }
 
 
+  private void setupPlayerImage(){
+    int childrenCount = this.getChildren().size();
+    if (playerPosition.equals(PlayerPosition.RIGHT)) {
+      Group imageGroup = (Group) this.getChildren().get(childrenCount-1);
+      ImageView playerImageView = (ImageView) imageGroup.getChildren().get(1);
+      Image img = new Image(String.format("project/pictures/ta_pictures/%s.png", playerName));
+      playerImageView.setImage(img);
+    } else if (playerPosition.equals(PlayerPosition.LEFT)) {
+      Group imageGroup = (Group) this.getChildren().get(0);
+      ImageView playerImageView = (ImageView) imageGroup.getChildren().get(1);
+      Image img = new Image(String.format("project/pictures/ta_pictures/%s.png", playerName));
+      playerImageView.setImage(img);
+    }
+  }
   private void giveInitialStartTokens() {
     Map<Colour, Map<PlayerWealthInfo, Text>> allTokenColourMap =
         getPlayerColourWealthMap(playerPosition);
@@ -199,6 +215,7 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
     setLayoutX(layoutX);
     setLayoutY(layoutY);
     giveInitialStartTokens();
+    setupPlayerImage();
 
 
   }
