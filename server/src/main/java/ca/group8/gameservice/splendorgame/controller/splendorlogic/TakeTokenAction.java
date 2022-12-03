@@ -1,8 +1,10 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
 import java.util.EnumMap;
 
@@ -42,5 +44,15 @@ public class TakeTokenAction implements Action {
   @Override
   public boolean checkIsCardAction() {
     return false;
+  }
+
+  @Override
+  public Card getCard() {
+    return null;
+  }
+
+  @Override
+  public Position getPosition() {
+    return null;
   }
 }

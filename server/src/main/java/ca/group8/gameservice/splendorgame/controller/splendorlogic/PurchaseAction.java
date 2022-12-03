@@ -16,10 +16,12 @@ import java.util.EnumMap;
 public class PurchaseAction implements Action {
   private int goldTokenRequired;
 
+  @Override
   public Position getPosition() {
     return position;
   }
 
+  @Override
   public Card getCard() {
     return card;
   }
