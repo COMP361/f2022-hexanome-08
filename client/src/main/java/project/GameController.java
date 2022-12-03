@@ -450,14 +450,6 @@ public class GameController implements Initializable {
         }
 
         if (responseCode == 200) {
-          try {
-            // with calling this, we can make sure any requests involve
-            // using access token will not fail due to expiration
-            App.refreshUserToken(curUser);
-          } catch (UnirestException e) {
-            throw new RuntimeException(e);
-          }
-
           // update the MD5 hash of previous response
           hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
           // decode this response into PlayerInGame class with Gson
