@@ -22,7 +22,11 @@ public class Bank {
   //TODO: and pass an integer value to Bank representing the initial gem values.
   public Bank(int numPlayers) {
     this.allTokens = new EnumMap<>(Colour.class);
-    initialValue = (numPlayers * 2) - 1;
+    if (numPlayers == 2) {
+      initialValue = 4;
+    } else {
+      initialValue = (numPlayers * 2) - 1;
+    }
     for (Colour colour : Colour.values()) {
       if (colour == Colour.GOLD) {
         allTokens.put(colour, 5);
@@ -54,12 +58,11 @@ public class Bank {
 
   public void removeToken(EnumMap<Colour, Integer> paramTokens) {
     //verify that this number of gems can be removed (meaning new sum will not be less than 0)
-    for (Colour colour : Colour.values()) {
-      assert (allTokens.get(colour) - paramTokens.get(colour)) >= 0;
-    }
+
     //remove Tokens
     for (Colour colour : Colour.values()) {
       int newVal = allTokens.get(colour) - paramTokens.get(colour);
+      assert newVal >= 0;
       allTokens.replace(colour, newVal);
     }
   }

@@ -4,10 +4,9 @@ import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,9 +18,8 @@ import org.springframework.util.ResourceUtils;
  */
 public class TableTop implements BroadcastContent {
 
-  private final Map<Integer, Deck> decks;
+  private final List<NobleCard> nobles;
   private final BaseBoard baseBoard;
-  private final NobleBoard nobleBoard;
   private final Bank bank;
 
 
@@ -30,42 +28,25 @@ public class TableTop implements BroadcastContent {
   /**
    * Constructor.
    */
-  public TableTop(ArrayList<PlayerInGame> playerInGames) {
-    this.decks = new HashMap<>();
-    for (int i = 1; i < 4; i++) {
-      decks.put(i, new Deck(i));
-    }
-    initialiseBaseDecks();
-    //this.playerInGames = playerInGames;
-    this.baseBoard = new BaseBoard(3, 4);
-    this.nobleBoard = new NobleBoard(playerInGames.size() + 1, 1);
-    initialiseNobleBoard(playerInGames);
-    initialiseDevelopmentCardBoard();
-    bank = new Bank(playerInGames.size());
+  public TableTop(int numOfPlayers) {
+    this.nobles = initializeNobles(numOfPlayers);
+    this.baseBoard = new BaseBoard(generateBaseCards());
+    bank = new Bank(numOfPlayers);
   }
 
   @Override
   public boolean isEmpty() {
-
     return false;
-
-
   }
 
-  private void initialiseDevelopmentCardBoard() {
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 4; j++) {
-        baseBoard.add(i, j, decks.get(3 - i).pop());
-      }
+  private List<NobleCard> initializeNobles(int numOfPlayers) {
+    List<NobleCard> allNobles = generateNobleCards();
+    Collections.shuffle(allNobles);
+    List<NobleCard> requiredNobles = new ArrayList<>();
+    for (int i = 0; i < numOfPlayers + 1; i++) {
+      requiredNobles.add(allNobles.get(i));
     }
-  }
-
-
-  private void initialiseNobleBoard(ArrayList<PlayerInGame> playerInGames) {
-    List<NobleCard> nobles = generateNobleCards();
-    for (int i = 0; i < playerInGames.size() + 1; i++) {
-      nobleBoard.add(i, 0, nobles.get(i));
-    }
+    return requiredNobles;
   }
 
 
@@ -141,27 +122,12 @@ public class TableTop implements BroadcastContent {
     }
   }
 
-  private void initialiseBaseDecks() {
-    for (BaseCard card : generateBaseCards()) {
-      int level = card.getLevel();
-      decks.get(level).add(card);
-    }
-    for (int i = 1; i < 4; i++) {
-      decks.get(i).shuffle();
-    }
-  }
-
-
-  public Map<Integer, Deck> getDecks() {
-    return decks;
-  }
-
   public BaseBoard getBaseBoard() {
     return baseBoard;
   }
 
-  public NobleBoard getNobleBoard() {
-    return nobleBoard;
+  public List<NobleCard> getNobles() {
+    return nobles;
   }
 
   public Bank getBank() {

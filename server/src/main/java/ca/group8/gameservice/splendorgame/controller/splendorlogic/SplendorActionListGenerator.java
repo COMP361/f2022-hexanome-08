@@ -1,5 +1,7 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.BaseCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Board;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
@@ -58,50 +60,43 @@ public class SplendorActionListGenerator {
    * 4. return the map
    */
   private static List<Action> cardsToActions(GameInfo gameInfo, PlayerInGame player) {
-    ArrayList<Action> actionOptions = new ArrayList<>();
+    List<Action> actionOptions = new ArrayList<>();
     EnumMap<Colour, Integer> wealth = player.getWealth();
     boolean canReserve = !player.getReservedHand().isFull();
-    Board baseBoard = gameInfo.getTableTop().getBaseBoard();
-    List<Card> baseBoardCards = baseBoard.getCards();
+    Map<Integer, List<BaseCard>> baseBoardCards =
+        gameInfo.getTableTop().getBaseBoard().getBaseCardsOnBoard();
 
-    Logger logger = LoggerFactory.getLogger(SplendorActionListGenerator.class);
-    logger.info("Baseboad card 1: " + baseBoardCards.get(0));
-    logger.info("Size of the board cards: " + baseBoardCards.size());
-
-    for (Card card : baseBoardCards) {
-      Position position = baseBoard.getCardPosition(card);
-      //start of purchase card verification
-      //this creates a goldCounter, to see if gold tokens are needed
-      int goldCounter = 0;
-
-      logger.info("Card prices: " + card.getPrice());
-      EnumMap<Colour, Integer> cardPrice = card.getPrice();
-      for (Colour col : Colour.values()) {
-        // TODO: Gold is not part of the card price!!!!!!!!!!!!!!!!!!
-        //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if (col.equals(Colour.GOLD)) {
-          continue;
-        }
-        if (cardPrice.get(col) != 0) {
-          if (cardPrice.get(col) > wealth.get(col)) {
-            goldCounter += cardPrice.get(col) - wealth.get(col);
+    for (int level : baseBoardCards.keySet()) {
+      List<BaseCard> cardsPerLevel = baseBoardCards.get(level);
+      for (int cardIndex = 0; cardIndex < cardsPerLevel.size(); cardIndex++) {
+        Position cardPosition = new Position(level, cardIndex);
+        BaseCard curBaseCard = cardsPerLevel.get(cardIndex);
+        //start of purchase card verification
+        //this creates a goldCounter, to see if gold tokens are needed
+        int goldCounter = 0;
+        EnumMap<Colour, Integer> cardPrice = curBaseCard.getPrice();
+        for (Colour col : Colour.values()) {
+          if (col.equals(Colour.GOLD)) {
+            continue;
+          }
+          if (cardPrice.get(col) != 0) {
+            if (cardPrice.get(col) > wealth.get(col)) {
+              goldCounter += cardPrice.get(col) - wealth.get(col);
+            }
           }
         }
-      }
 
-      //checks if you can purchase (with or without gold tokens)
-      if (goldCounter <= player.getTokenHand().getGoldTokenNumber()) {
-        //create new purchase action option & add it to the actionList.
-        actionOptions.add(new PurchaseAction(position, card, goldCounter));
+        //checks if you can purchase (with or without gold tokens)
+        if (goldCounter <= player.getTokenHand().getGoldTokenNumber()) {
+          //create new purchase action option & add it to the actionList.
+          actionOptions.add(new PurchaseAction(cardPosition, curBaseCard, goldCounter));
 
-      }
+        }
+        //verify if player can reserve card
+        if (canReserve) {
+          actionOptions.add(new ReserveAction(cardPosition, curBaseCard));
+        }
 
-      //verify if player can reserve card
-      if (canReserve) {
-        actionOptions.add(new ReserveAction(position, card));
       }
     }
 
@@ -117,16 +112,7 @@ public class SplendorActionListGenerator {
 
     // TODO: Player Identity will be verified before calling generateActions with access_token
     //  no need to check it here (we can safely assume player is valid before calling this)
-
-    //if(!(gameInfo.getCurrentPlayer().getName().equals(player.getName()))){
-    //    return new HashMap<>();
-    //}
-
-    //if(!isParticipant(gameInfo,player)){
-    //    return new HashMap<>();
-    //}
-
-    String curPlayerName = gameInfo.getCurrentPlayer().getName();
+    String curPlayerName = gameInfo.getCurrentPlayer();
     String askedActionsPlayerName = player.getName();
     Map<String, Action> hashActionMap = new HashMap<>();
     if ((!gameInfo.isFinished()) && (curPlayerName.equals(askedActionsPlayerName))) {

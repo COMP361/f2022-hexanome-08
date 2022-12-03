@@ -38,9 +38,7 @@ public class PlayerInGame implements BroadcastContent {
    */
   @Override
   public boolean isEmpty() {
-    return tokenHand.getAllTokens().isEmpty()
-        && purchasedHand.getDevelopmentCards().isEmpty()
-        && reservedHand.getDevelopmentCards().isEmpty();
+    return false;
   }
 
   /**
