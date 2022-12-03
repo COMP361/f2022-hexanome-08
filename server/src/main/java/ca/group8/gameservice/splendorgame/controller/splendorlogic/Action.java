@@ -1,7 +1,9 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import io.github.isharipov.gson.adapters.JsonSubtype;
 import io.github.isharipov.gson.adapters.JsonType;
 
@@ -54,4 +56,7 @@ public interface Action {
   // whether the Action player chose is valid or not. They must be
   void execute(GameInfo currentGameState, PlayerInGame playerState);
   boolean checkIsCardAction();
+
+  Card getCard();
+  Position getPosition();
 }

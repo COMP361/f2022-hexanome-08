@@ -13,10 +13,12 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.ReservedHand;
  */
 public class ReserveAction implements Action {
 
+  @Override
   public Position getPosition() {
     return position;
   }
 
+  @Override
   public Card getCard() {
     return card;
   }
