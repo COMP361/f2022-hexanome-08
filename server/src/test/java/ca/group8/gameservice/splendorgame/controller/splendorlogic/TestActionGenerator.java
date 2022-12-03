@@ -2,6 +2,8 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,9 +17,11 @@ public class TestActionGenerator {
 
     SplendorActionListGenerator generator;
     GameInfo g1;
+    PlayerStates playersInfo;
     Long gameID = Long.valueOf(123);
     EnumMap<Colour,Integer> price1;
     EnumMap<Colour,Integer> price2;
+
 
     @BeforeEach
     void setUp() {
@@ -27,6 +31,7 @@ public class TestActionGenerator {
         names.add("Bob");
         try {
             g1 = new GameInfo(names);
+            playersInfo = new PlayerStates(names);
         } catch (Exception e) {
             System.out.println("TestActionGenerator can't make GameInfo");
         }
@@ -40,13 +45,13 @@ public class TestActionGenerator {
         }
     }
 
-    //@Test
-    //void firstTurnActions(){
-    //    g1.getCurrentPlayer().getTokenHand().removeToken(price1);
-    //    generator.generateActions(gameID,g1,g1.getCurrentPlayer());
-    //    Map<String, Action> listOfActions = generator.lookUpActions(gameID,g1.getCurrentPlayer().getName());
-    //    assertEquals(listOfActions.size(),13);
-    //}
+    @Test
+    void firstTurnActions(){
+        PlayerInGame daveInfo = playersInfo.getPlayersInfo().get("Dave");
+        generator.generateActions(gameID,g1,daveInfo);
+        Map<String, Action> listOfActions = generator.lookUpActions(gameID,"Dave");
+        assertEquals(listOfActions.size(),13);
+    }
 
 
 
