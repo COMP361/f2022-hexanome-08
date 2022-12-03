@@ -164,8 +164,7 @@ public class SplendorRestController {
 
   @PutMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> launchGame(@PathVariable long gameId,
-                                           @RequestBody LauncherInfo launcherInfo)
-      throws FileNotFoundException {
+                                           @RequestBody LauncherInfo launcherInfo) {
     // TODO: Handle the logic of how the game is managed in game manager
 
     //TODO: When the game is launched, there are several things to do
@@ -195,8 +194,8 @@ public class SplendorRestController {
       for (PlayerInfo p : launcherInfo.getPlayers()) {
         playerNames.add(p.getName());
       }
-      // Shuffle player names
-      Collections.shuffle(playerNames);
+      // TODO: Shuffle player names (muted for now)
+      //Collections.shuffle(playerNames);
       GameInfo newGameInfo = new GameInfo(playerNames);
       PlayerStates newPlayerStates = new PlayerStates(playerNames);
 
