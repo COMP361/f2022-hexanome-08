@@ -96,7 +96,6 @@ public class SplendorActionListGenerator {
         if (canReserve) {
           actionOptions.add(new ReserveAction(cardPosition, curBaseCard));
         }
-
       }
     }
 

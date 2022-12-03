@@ -146,10 +146,11 @@ public class SplendorRestController {
 
       // hash is either "-" or the hashed value from previous payload, use long polling
       //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
-      if (hash.isEmpty()) {
-        ResponseGenerator.getAsyncUpdate(longPollTimeOut,
-            gameInfoBroadcastContentManager.get(gameId));
-      }
+      //if (hash.isEmpty()) {
+      //  ResponseGenerator.getAsyncUpdate(longPollTimeOut,
+      //      gameInfoBroadcastContentManager.get(gameId));
+      //}
+
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut,
           gameInfoBroadcastContentManager.get(gameId), hash);
     } catch (ModelAccessException e) {
@@ -322,10 +323,10 @@ public class SplendorRestController {
 
       // hash is either "-" or the hashed value from previous payload, use long polling
       //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
-      if (hash.isEmpty()) {
-        ResponseGenerator.getAsyncUpdate(longPollTimeOut,
-            allPlayerInfoBroadcastContentManager.get(gameId));
-      }
+      //if (hash.isEmpty()) {
+      //  ResponseGenerator.getAsyncUpdate(longPollTimeOut,
+      //      allPlayerInfoBroadcastContentManager.get(gameId));
+      //}
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut,
           allPlayerInfoBroadcastContentManager.get(gameId), hash);
     } catch (ModelAccessException e) {
@@ -385,9 +386,9 @@ public class SplendorRestController {
       }
       BroadcastContentManager<PlayerInGame> playerInfoToBroadcast =
           specificPlayerInfoBroadcastContentManager.get(gameId).get(playerName);
-      if (hash.isEmpty()) {
-        ResponseGenerator.getAsyncUpdate(longPollTimeOut, playerInfoToBroadcast);
-      }
+      //if (hash.isEmpty()) {
+      //  ResponseGenerator.getAsyncUpdate(longPollTimeOut, playerInfoToBroadcast);
+      //}
       // hash is either "-" or the hashed value from previous payload, use long polling
       //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, playerInfoToBroadcast, hash);
