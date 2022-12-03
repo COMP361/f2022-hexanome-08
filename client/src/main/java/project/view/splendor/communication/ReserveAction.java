@@ -3,10 +3,12 @@ package project.view.splendor.communication;
 
 public class ReserveAction implements Action {
 
+  @Override
   public Position getPosition() {
     return position;
   }
 
+  @Override
   public Card getCard() {
     return card;
   }
@@ -34,6 +36,6 @@ public class ReserveAction implements Action {
 
   @Override
   public boolean checkIsCardAction() {
-    return false;
+    return true;
   }
 }

@@ -5,11 +5,13 @@ import java.util.EnumMap;
 public class PurchaseAction implements Action {
   private int goldTokenRequired;
 
+  @Override
   public Position getPosition() {
     return position;
   }
 
-  public Card getCard() {
+  @Override
+  public DevelopmentCard getCard() {
     return card;
   }
 
@@ -17,14 +19,14 @@ public class PurchaseAction implements Action {
     this.position = position;
   }
 
-  public void setCard(Card card) {
+  public void setCard(DevelopmentCard card) {
     this.card = card;
   }
 
   private Position position;
-  private Card card;
+  private DevelopmentCard card;
 
-  public PurchaseAction(Position position, Card card, int goldTokenRequired) {
+  public PurchaseAction(Position position, DevelopmentCard card, int goldTokenRequired) {
     this.position = position;
     this.card = card;
     this.goldTokenRequired = goldTokenRequired;

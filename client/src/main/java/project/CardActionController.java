@@ -1,5 +1,6 @@
 package project;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -32,10 +33,10 @@ public class CardActionController implements Initializable {
   private EventHandler<ActionEvent> createOnClickPurchaseHandler() {
     // TODO: Send the request in here to the game server, for now do nothing
     return event -> {
+      Button purchaseButton = (Button) event.getSource();
       if (actionHash[0] == null) {
         // TODO: Index 0 is the hash for purchase hash
         // No action is assigned, this button gets greyed out
-        Button purchaseButton = (Button) event.getSource();
         purchaseButton.setDisable(true);
       } else {
         // it's clickable, we can send some requests here
@@ -43,9 +44,13 @@ public class CardActionController implements Initializable {
         String playerName = App.getUser().getUsername();
         String accessToken = App.getUser().getAccessToken();
         // sends a POST request that tells the server which action we chose
-        gameRequestSender.
-            sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[0]);
-        Stage curWindow = (Stage) goBackButton.getScene().getWindow();
+        try {
+          gameRequestSender.
+              sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[0]);
+        } catch (UnirestException e) {
+          throw new RuntimeException(e);
+        }
+        Stage curWindow = (Stage) purchaseButton.getScene().getWindow();
         curWindow.close();
       }
 
@@ -66,8 +71,12 @@ public class CardActionController implements Initializable {
         String playerName = App.getUser().getUsername();
         String accessToken = App.getUser().getAccessToken();
         // sends a POST request that tells the server which action we chose
-        gameRequestSender.
-            sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[1]);
+        try {
+          gameRequestSender.
+              sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[1]);
+        } catch (UnirestException e) {
+          throw new RuntimeException(e);
+        }
         Stage curWindow = (Stage) goBackButton.getScene().getWindow();
         curWindow.close();
       }
