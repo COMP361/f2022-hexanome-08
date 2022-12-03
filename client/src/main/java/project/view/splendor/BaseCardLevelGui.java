@@ -19,16 +19,18 @@ import javafx.scene.text.Text;
 import project.App;
 import project.CardActionController;
 import project.DeckActionController;
-import project.view.splendor.communication.DevelopmentCard;
+import project.view.splendor.communication.BaseCard;
 
 public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
   private final int level;
-  private final List<DevelopmentCard> cards;
+  private List<BaseCard> cards;
+  private List<BaseCard> deck;
 
-  public BaseCardLevelGui(int level, List<DevelopmentCard> cards) {
+  public BaseCardLevelGui(int level, List<BaseCard> cards, List<BaseCard> deck) {
     this.level = level;
     this.cards = cards;
+    this.deck = deck;
     FXMLLoader fxmlLoader =
         new FXMLLoader(getClass().getResource("/project/base_card_template.fxml"));
     fxmlLoader.setRoot(this);
@@ -58,10 +60,10 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     return getAllCardsGui().get(cardIndex);
   }
 
-  private void setUpCards(List<DevelopmentCard> cards) {
+  private void setUpCards(List<BaseCard> cards) {
     assert cards.size() == 4;
     int i = 0;
-    for (DevelopmentCard card : cards) {
+    for (BaseCard card : cards) {
       String curCardName = card.getCardName();
       int curCardLevel = card.getLevel();
       String cardPath =
@@ -73,7 +75,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
   }
 
-  public EventHandler<MouseEvent> createClickOnCardHandler(long gameId, String[] actionHash) {
+  private EventHandler<MouseEvent> createClickOnCardHandler(long gameId, String[] actionHash) {
     return event -> {
       try {
         App.loadPopUpWithController("card_action.fxml",
@@ -111,38 +113,45 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
   private void setDeckLevelText() {
     Group levelCard = (Group) this.getChildren().get(0);
     Rectangle rectangle = (Rectangle) levelCard.getChildren().get(0);
-    if (this.level == 3) {
+    int newRemainingCards = deck.size();
+    if (level == 3) {
       rectangle.setFill(Color.DODGERBLUE);
       Text deck = (Text) levelCard.getChildren().get(1);
       Text levelOfCard = (Text) levelCard.getChildren().get(2);
-      deck.setText("20");
+      deck.setText(newRemainingCards+"");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(". . .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));
-    } else if (this.level == 2) {
+    } else if (level == 2) {
       rectangle.setFill(Color.YELLOW);
       Text deck = (Text) levelCard.getChildren().get(1);
       Text levelOfCard = (Text) levelCard.getChildren().get(2);
-      deck.setText("30");
+      deck.setText(newRemainingCards+"");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(" . .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));
-    } else if (this.level == 1) {
+    } else if (level == 1) {
       rectangle.setFill(Paint.valueOf("#30ff1f"));
       Text deck = (Text) levelCard.getChildren().get(1);
       Text levelOfCard = (Text) levelCard.getChildren().get(2);
-      deck.setText("40");
+      deck.setText(newRemainingCards+"");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(" .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));
     }
   }
 
+  public void setCards(List<BaseCard> cards) {
+    this.cards = cards;
+  }
+
+  public void setDeck(List<BaseCard> deck) {
+    this.deck = deck;
+  }
+
   @Override
   public void setup() {
     setDeckLevelText();
     setUpCards(cards);
-    //bindActionToCardAndDeck();
-
   }
 }

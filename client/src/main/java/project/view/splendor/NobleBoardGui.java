@@ -5,11 +5,12 @@ import java.util.List;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import project.view.splendor.communication.NobleCard;
 
 /**
  * Creates the GUI for the Noble Board.
  */
-public class NobleBoardGui extends VBox implements NumOfPlayerDependentGui {
+public class NobleBoardGui extends VBox {
 
   private final double nobleImageWidth;
   private final double nobleImageHeight;
@@ -40,26 +41,22 @@ public class NobleBoardGui extends VBox implements NumOfPlayerDependentGui {
     return nobleImageSpace;
   }
 
-  @Override
-  public void setup(int numOfPlayers, double layoutX, double layoutY) {
+  public void setup(List<NobleCard> allNobles, double layoutX, double layoutY, boolean firstSetup) {
     // set the layout of the GUI
     setLayoutX(layoutX);
     setLayoutY(layoutY);
     setSpacing(nobleImageSpace);
-
     // GUI class dependent things to setup
-    List<ImageView> testImages = new ArrayList<>();
-    for (int i = 1; i <= numOfPlayers + 1; i++) {
-      // TODO: Should be randomly selected, do it later
-      Image img = new Image(String.format("project/pictures/noble/noble%d.png", i));
+    if (!firstSetup) {
+      this.getChildren().removeAll();
+    }
+    for (NobleCard noble : allNobles) {
+      String nobleName = noble.getCardName();
+      Image img = new Image(String.format("project/pictures/noble/%s.png", nobleName));
       ImageView imgv = new ImageView(img);
       imgv.setFitWidth(nobleImageWidth);
       imgv.setFitHeight(nobleImageHeight);
-      testImages.add(imgv);
-    }
-    for (ImageView img : testImages) {
-      // no function assigned to ImageView in here!! (player can not click on Nobles)
-      getChildren().add(img);
+      this.getChildren().add(imgv);
     }
 
   }

@@ -30,5 +30,15 @@ public class TakeTokenAction implements Action {
   public boolean checkIsCardAction() {
     return false;
   }
+
+  @Override
+  public Card getCard() {
+    return null;
+  }
+
+  @Override
+  public Position getPosition() {
+    return null;
+  }
 }
 

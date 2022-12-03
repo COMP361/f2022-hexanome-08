@@ -1,2 +1,5 @@
-package project.test;public interface People {
+package project.test;
+
+public interface People {
+  String getName();
 }

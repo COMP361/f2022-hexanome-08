@@ -1,6 +1,11 @@
 package project;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.util.Arrays;
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,7 +14,13 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import project.connection.LobbyServiceRequestSender;
+import project.test.Grad;
+import project.test.People;
+import project.test.Prof;
+import project.test.Student;
+import project.test.Undergrad;
 import project.view.lobby.User;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 
 /**
  * Lobby GUI controller.
@@ -78,6 +89,42 @@ public class LogInController {
   public void initialize() {
     userName.setText("ruoyu");
     userPassword.setText("Dd991218?");
+
+
+    // Testing serialization problem
+
+    //final TypeToken<List<People>> requestListTypeToken = new TypeToken<>() {
+    //};
+    //
+    //final RuntimeTypeAdapterFactory<People> typeFactory = RuntimeTypeAdapterFactory
+    //    .of(People.class, "type")
+    //    .registerSubtype(Student.class)
+    //    .registerSubtype(Prof.class);
+    //
+    //final RuntimeTypeAdapterFactory<Student> typeStudentFactory = RuntimeTypeAdapterFactory
+    //    .of(Student.class, "type")
+    //    .registerSubtype(Undergrad.class)
+    //    .registerSubtype(Grad.class);
+    //
+    //final Gson gson = new GsonBuilder()
+    //    .registerTypeAdapterFactory(typeFactory)
+    //    .registerTypeAdapterFactory(typeStudentFactory)
+    //    .create();
+    //
+    //final List<People> requestList = Arrays.asList(
+    //    new Grad("addr1"),
+    //    new Prof("mcgill", "comp310"),
+    //    new Undergrad("addr2",3), new Undergrad("addr3", 4));
+    //
+    //final String serialized = gson.toJson(requestList,
+    //    requestListTypeToken.getType());
+    //System.out.println("Original List: " + requestList);
+    //System.out.println("Serialized JSON: " + serialized);
+    //
+    //final List<People> deserializedRequestList = gson.fromJson(serialized,
+    //    requestListTypeToken.getType());
+    //
+    //System.out.println("Deserialized list: " + deserializedRequestList);
   }
 
 }

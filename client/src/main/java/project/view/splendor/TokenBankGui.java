@@ -1,6 +1,7 @@
 package project.view.splendor;
 
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.collections.ObservableList;
@@ -19,7 +20,7 @@ import project.App;
 /**
  * Create the GUI for the bank.
  */
-public class TokenBankGui extends HBox implements NumOfPlayerDependentGui {
+public class TokenBankGui extends HBox {
 
   /**
    * Construct the Token Bank GUI.
@@ -240,37 +241,14 @@ public class TokenBankGui extends HBox implements NumOfPlayerDependentGui {
     confirmButton.setOnAction(createConfirmTakeTokenHandler());
   }
 
-  /**
-   * TODO.
-   *
-   * @param numOfPlayer TODO: number of players in the game.
-   * @param layoutX     TODO.
-   * @param layoutY     TODO.
-   */
-  public void setup(int numOfPlayer, double layoutX, double layoutY) {
-    // set the layout of the GUI
-    setLayoutX(layoutX);
-    setLayoutY(layoutY);
 
-    // GUI class dependent things to setup
-    int baseTokenCount = 0;
-    if (numOfPlayer == 4) {
-      baseTokenCount = 7;
-    } else if (numOfPlayer == 3) {
-      baseTokenCount = 5;
-    } else if (numOfPlayer == 2) {
-      baseTokenCount = 4;
-    }
-    Colour[] colours = App.getAllColours();
-    Map<Colour, Integer> bankMap = new HashMap<>();
-    for (Colour c : colours) {
-      if (c.equals(Colour.GOLD)) {
-        bankMap.put(c, 5);
-      } else {
-        bankMap.put(c, baseTokenCount);
-      }
+  public void setup(EnumMap<Colour, Integer> bankMap, double layoutX, double layoutY, boolean firstSetup) {
+    // set the layout of the GUI
+    if (firstSetup) {
+      setLayoutX(layoutX);
+      setLayoutY(layoutY);
+      bindActionToButtonAndLabel();
     }
     setColourTokenBankMap(bankMap);
-    bindActionToButtonAndLabel();
   }
 }
