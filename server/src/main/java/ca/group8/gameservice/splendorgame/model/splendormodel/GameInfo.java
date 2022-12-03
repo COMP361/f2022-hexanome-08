@@ -3,6 +3,7 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,12 +11,10 @@ public class GameInfo implements BroadcastContent { // TODO add gametype
 
 
   private String currentPlayer; //represents which player's turn it is currently
-  //private Optional<String> winner; //made optional for when Winner is not defined yet;
   private final List<String> winners;
   private final ArrayList<String> playerNames;
   private final String firstPlayer; //should be Player Name of first player.
 
-  private final ArrayList<PlayerInGame> playersInGame;
   private final TableTop tableTop;
 
   /**
@@ -26,32 +25,17 @@ public class GameInfo implements BroadcastContent { // TODO add gametype
    *                    name that is in the list.(can only index list)
    */
   public GameInfo(ArrayList<String> playerNames) {
-    //Random random = new Random(); //create a new random object
+    // Shuffle the list of playerNames before assigning it to the field
     this.playerNames = playerNames;
     this.winners = new ArrayList<>();
-
-    // TODO: 1
-    playersInGame = initializePlayers(playerNames);
-    //generates a random number between 1 and size of playerNames list
-    String randomFirstPlayer = playerNames.get(0); //TODO: Make it random first player later
+    String randomFirstPlayer = playerNames.get(0);
     firstPlayer = randomFirstPlayer;
     currentPlayer = randomFirstPlayer;
-
     // TODO: 2
-    tableTop = new TableTop(playersInGame);
+    tableTop = new TableTop(playerNames.size());
 
   }
 
-  /**
-   * This initializes Player objects.
-   */
-  private ArrayList<PlayerInGame> initializePlayers(ArrayList<String> playerNames) {
-    ArrayList<PlayerInGame> playerInGames = new ArrayList<>();
-    for (String name : playerNames) {
-      playerInGames.add(new PlayerInGame(name));
-    }
-    return playerInGames;
-  }
 
   //TODO Figure out if this should be public/private/... based on what needs to call this method
   //protected void setWinner(String player) {
@@ -61,12 +45,12 @@ public class GameInfo implements BroadcastContent { // TODO add gametype
     winners.add(potentialWinner);
   }
 
-  protected void checkWinner() {
+  public void checkWinner() {
     //TODO: Implement this operation (will be based on TableTop implementation)
   }
 
   public int getNumOfPlayers() {
-    return playersInGame.size();
+    return playerNames.size();
   }
 
 
@@ -79,18 +63,8 @@ public class GameInfo implements BroadcastContent { // TODO add gametype
    *
    * @return Current player object (as a Player).
    */
-  public PlayerInGame getCurrentPlayer() {
-    PlayerInGame curPlayerInGame = null;
-    for (PlayerInGame playerInGame : playersInGame) {
-      if (Objects.equals(playerInGame.getName(), currentPlayer)) {
-        curPlayerInGame = playerInGame;
-        break;
-      }
-    }
-    if (curPlayerInGame == null) {
-      throw new IllegalStateException("Cannot find this current player in the active player list.");
-    }
-    return curPlayerInGame;
+  public String getCurrentPlayer() {
+    return currentPlayer;
   }
 
   /**
@@ -110,9 +84,6 @@ public class GameInfo implements BroadcastContent { // TODO add gametype
     return firstPlayer;
   }
 
-  public ArrayList<PlayerInGame> getActivePlayers() {
-    return playersInGame;
-  }
 
   public ArrayList<String> getPlayerNames() {
     return playerNames;
@@ -120,10 +91,6 @@ public class GameInfo implements BroadcastContent { // TODO add gametype
 
   public TableTop getTableTop() {
     return tableTop;
-  }
-
-  public ArrayList<PlayerInGame> getPlayersInGame() {
-    return playersInGame;
   }
 
   @Override

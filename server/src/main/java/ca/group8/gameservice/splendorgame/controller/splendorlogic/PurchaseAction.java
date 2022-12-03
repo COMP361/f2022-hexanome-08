@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.model.splendormodel.BaseCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
@@ -22,7 +23,7 @@ public class PurchaseAction implements Action {
   }
 
   @Override
-  public Card getCard() {
+  public DevelopmentCard getCard() {
     return card;
   }
 
@@ -30,14 +31,14 @@ public class PurchaseAction implements Action {
     this.position = position;
   }
 
-  public void setCard(Card card) {
+  public void setCard(DevelopmentCard card) {
     this.card = card;
   }
 
   private Position position;
-  private Card card;
+  private DevelopmentCard card;
 
-  public PurchaseAction(Position position, Card card, int goldTokenRequired) {
+  public PurchaseAction(Position position, DevelopmentCard card, int goldTokenRequired) {
     this.position = position;
     this.card = card;
     this.goldTokenRequired = goldTokenRequired;
@@ -55,7 +56,7 @@ public class PurchaseAction implements Action {
   @Override
   public void execute(GameInfo currentGameState, PlayerInGame playerState) {
     // TODO: For now, just do a simple downcast assuming the card is DevelopmentCard
-    DevelopmentCard card = (DevelopmentCard) this.card;
+    DevelopmentCard card = this.card;
     PurchasedHand hand = playerState.getPurchasedHand();
     TokenHand tokenHand = playerState.getTokenHand();
     EnumMap<Colour, Integer> playerGems = playerState.getTotalGems();
@@ -81,10 +82,10 @@ public class PurchaseAction implements Action {
     }
     hand.addDevelopmentCard(card);
     int level = card.getLevel();
-
     // replace the card with another new card draw from deck
-    Card newCard = currentGameState.getTableTop().getDecks().get(level).pop();
-    currentGameState.getTableTop().getBaseBoard().takeAndReplaceCard(newCard, position);
+    DevelopmentCard newCard =
+        currentGameState.getTableTop().getBaseBoard().getBaseDecks().get(level).remove(0);
+    currentGameState.getTableTop().getBaseBoard().replaceCardOnBoard(position, newCard);
   }
 
   @Override

@@ -3,6 +3,7 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -14,13 +15,14 @@ import org.springframework.stereotype.Component;
 public class SplendorGameManager {
   private final Map<Long, GameInfo> activeGames;
 
+  private final Map<Long, PlayerStates> activePlayers;
+
   public SplendorGameManager() {
+    this.activePlayers = new HashMap<>();
     this.activeGames = new HashMap<>();
   }
 
-  /**
-   * Constructor.
-   */
+
   public GameInfo getGameById(long gameId) throws ModelAccessException {
     if (!isExistentGameId(gameId)) {
       throw new ModelAccessException("No registered game with that ID");
@@ -37,11 +39,24 @@ public class SplendorGameManager {
     activeGames.put(gameId, newGameInfo);
   }
 
+  public void addPlayersToGame(long gameId, PlayerStates newPlayerStates) {
+    activePlayers.put(gameId, newPlayerStates);
+  }
+
+  public void removePlayerStates(long gameId) {
+    assert activePlayers.containsKey(gameId);
+    activePlayers.remove(gameId);
+  }
+
   public void removeGame(long gameId) {
     activeGames.remove(gameId);
   }
 
 
+  public PlayerStates getPlayerStatesById(long gameId) {
+    assert activePlayers.containsKey(gameId);
+    return activePlayers.get(gameId);
+  }
   public Map<Long, GameInfo> getActiveGames() {
     return activeGames;
   }
@@ -50,23 +65,12 @@ public class SplendorGameManager {
    * Check whether current player is in game or not.
    */
   public boolean isPlayerInGame(long gameId, String playerName) {
-    GameInfo curGameState = activeGames.get(gameId);
-    return curGameState.getPlayerNames().contains(playerName);
+    return activePlayers.get(gameId).getPlayersInfo().containsKey(playerName);
   }
 
-  /**
-   * If the current player is not in the game, the returned value will be null.
-   */
-  public PlayerInGame getPlayerInGame(long gameId, String playerName) {
-    GameInfo curGameState = activeGames.get(gameId);
-    PlayerInGame resultPlayer = null;
-    for (PlayerInGame player : curGameState.getPlayersInGame()) {
-      if (player.getName().equals(playerName)) {
-        resultPlayer = player;
-      }
-    }
-
-    return resultPlayer;
+  public Map<Long, PlayerStates> getActivePlayers() {
+    return activePlayers;
   }
+
 
 }

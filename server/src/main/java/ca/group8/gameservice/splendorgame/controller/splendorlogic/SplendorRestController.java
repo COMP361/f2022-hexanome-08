@@ -6,7 +6,7 @@ import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
-import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -15,10 +15,10 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
-import io.github.isharipov.gson.adapters.PolymorphDeserializer;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -58,13 +58,15 @@ public class SplendorRestController {
   // Long polling specific fields (Broadcast Content Managers and time out time)
   private final long longPollTimeOut;
 
-  private final Map<Long, BroadcastContentManager<GameInfo>> gameInfoBroadcastContentManager;
-  private final Map<Long, BroadcastContentManager<TableTop>> tableTopBroadcastContentManager;
-  // Long: gameId, String: playerName
-  private final Map<Long, Map<String,
-      BroadcastContentManager<PlayerInGame>>> playerInfoBroadcastContentManager;
-
-  //private Map<Integer, BroadcastContentManager<TableTopTest>> testManager;
+  // managing game state differently from player states
+  private final Map<Long, BroadcastContentManager<GameInfo>>
+      gameInfoBroadcastContentManager;
+  // managing player sates independently from game state
+  private final Map<Long, BroadcastContentManager<PlayerStates>>
+      allPlayerInfoBroadcastContentManager;
+  // managing details about one player
+  private final Map<Long, Map<String, BroadcastContentManager<PlayerInGame>>>
+      specificPlayerInfoBroadcastContentManager;
 
   // Debug fields
   private final Logger logger;
@@ -87,8 +89,8 @@ public class SplendorRestController {
     this.lobbyServiceAddress = lobbyServiceAddress;
     this.gameServiceName = gameServiceName;
     this.longPollTimeOut = longPollTimeOut;
-    this.tableTopBroadcastContentManager = new LinkedHashMap<>();
-    this.playerInfoBroadcastContentManager = new LinkedHashMap<>();
+    this.allPlayerInfoBroadcastContentManager = new LinkedHashMap<>();
+    this.specificPlayerInfoBroadcastContentManager = new LinkedHashMap<>();
     this.gameInfoBroadcastContentManager = new LinkedHashMap<>();
     // for debug
     this.logger = LoggerFactory.getLogger(SplendorRestController.class);
@@ -193,24 +195,31 @@ public class SplendorRestController {
       for (PlayerInfo p : launcherInfo.getPlayers()) {
         playerNames.add(p.getName());
       }
+      // Shuffle player names
+      Collections.shuffle(playerNames);
       GameInfo newGameInfo = new GameInfo(playerNames);
-      // we should do long pulling from gameInfo now as well
+      PlayerStates newPlayerStates = new PlayerStates(playerNames);
+
+      // added the gameInfo and player states reference to game manager
       splendorGameManager.addGame(gameId, newGameInfo);
+      splendorGameManager.addPlayersToGame(gameId, newPlayerStates);
+      // add the game info broadcast content for long polling
       gameInfoBroadcastContentManager.put(gameId, new BroadcastContentManager<>(newGameInfo));
-      logger.info("Current game id: " + gameId);
-      tableTopBroadcastContentManager.put(gameId,
-          new BroadcastContentManager<>(newGameInfo.getTableTop()));
+      //logger.info("Current game id: " + gameId);
+      // add the player states broadcast content for long polling
+      allPlayerInfoBroadcastContentManager.put(gameId,
+          new BroadcastContentManager<>(newPlayerStates));
 
 
       // Now for each player, we need put one mapping for PlayerInGame info update
       // note that they are BroadcastContentManager<PlayerInGame> not PlayerInGame!!!
 
       Map<String, BroadcastContentManager<PlayerInGame>> playerInGameMap = new HashMap<>();
-      for (PlayerInGame curPlayerInGame : newGameInfo.getPlayersInGame()) {
-        playerInGameMap.put(curPlayerInGame.getName(),
-            new BroadcastContentManager<>(curPlayerInGame));
+      for (String playerName : playerNames) {
+        PlayerInGame playerInfo = newPlayerStates.getPlayersInfo().get(playerName);
+        playerInGameMap.put(playerName, new BroadcastContentManager<>(playerInfo));
       }
-      playerInfoBroadcastContentManager.put(gameId, playerInGameMap);
+      specificPlayerInfoBroadcastContentManager.put(gameId, playerInGameMap);
       return ResponseEntity.status(HttpStatus.OK).build();
 
     } catch (ModelAccessException e) {
@@ -291,15 +300,15 @@ public class SplendorRestController {
   }
 
   private boolean isPlayerTurn(String playerNameInRequest, GameInfo gameInfo) {
-    String curPlayerName = gameInfo.getCurrentPlayer().getName();
+    String curPlayerName = gameInfo.getCurrentPlayer();
     return curPlayerName.equals(playerNameInRequest);
   }
 
   /**
    * Long polling for the game board content, optional hash value.
    */
-  @GetMapping(value = "/api/games/{gameId}/tableTop", produces = "application/json; charset=utf-8")
-  public DeferredResult<ResponseEntity<String>> getBoard(
+  @GetMapping(value = "/api/games/{gameId}/playerStates", produces = "application/json; charset=utf-8")
+  public DeferredResult<ResponseEntity<String>> getPlayerStates(
       @PathVariable long gameId, @RequestParam(required = false) String hash) {
     try {
 
@@ -316,10 +325,10 @@ public class SplendorRestController {
       //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
       if (hash.isEmpty()) {
         ResponseGenerator.getAsyncUpdate(longPollTimeOut,
-            tableTopBroadcastContentManager.get(gameId));
+            allPlayerInfoBroadcastContentManager.get(gameId));
       }
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut,
-          tableTopBroadcastContentManager.get(gameId), hash);
+          allPlayerInfoBroadcastContentManager.get(gameId), hash);
     } catch (ModelAccessException e) {
       // Request does not go through, we need a deferred result
       DeferredResult<ResponseEntity<String>> deferredResult = new DeferredResult<>();
@@ -376,7 +385,7 @@ public class SplendorRestController {
         hash = "-";
       }
       BroadcastContentManager<PlayerInGame> playerInfoToBroadcast =
-          playerInfoBroadcastContentManager.get(gameId).get(playerName);
+          specificPlayerInfoBroadcastContentManager.get(gameId).get(playerName);
       if (hash.isEmpty()) {
         ResponseGenerator.getAsyncUpdate(longPollTimeOut, playerInfoToBroadcast);
       }
@@ -433,7 +442,10 @@ public class SplendorRestController {
 
       // looks good, we can generate the actions for this player now
       GameInfo gameInfo = splendorGameManager.getGameById(gameId);
-      PlayerInGame playerInGame = splendorGameManager.getPlayerInGame(gameId, playerName);
+      PlayerInGame playerInGame = splendorGameManager
+          .getPlayerStatesById(gameId)
+          .getPlayersInfo()
+          .get(playerName);
       // failed to generate the map
       splendorActionListGenerator.generateActions(gameId, gameInfo, playerInGame);
 
@@ -506,7 +518,10 @@ public class SplendorRestController {
       //}
       newAction = splendorActionListGenerator.lookUpActions(gameId, playerName).get(actionId);
 
-      PlayerInGame playerInGame = splendorGameManager.getPlayerInGame(gameId, playerName);
+      PlayerInGame playerInGame = splendorGameManager
+          .getPlayerStatesById(gameId)
+          .getPlayersInfo()
+          .get(playerName);
       // interpret this action regardless is modified by user or not
       splendorActionInterpreter.interpretAction(newAction, gameInfo, playerInGame);
       return ResponseEntity.status(HttpStatus.OK).body(null);

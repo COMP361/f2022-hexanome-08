@@ -42,24 +42,24 @@ public class ReserveAction implements Action {
   @Override
   public void execute(GameInfo currentGameState, PlayerInGame player) {
 
-    ReservedHand reservedHand = player.getReservedHand();
-    Card reserveCard = this.card;
-
-    //add card to reserved hand (based on whether it is a development card or noble)
-    if (reserveCard instanceof NobleCard) {
-      NobleCard card = (NobleCard) reserveCard;
-      reservedHand.addNobleCard(card);
-      Position position = currentGameState.getTableTop().getNobleBoard().getCardPosition(card);
-      currentGameState.getTableTop().getNobleBoard().remove(position);
-
-    } else {
-      DevelopmentCard card = (DevelopmentCard) reserveCard;
-      reservedHand.addDevelopmentCard(card);
-      int level = card.getLevel();
-      Card newCard = currentGameState.getTableTop().getDecks().get(level).pop();
-      Position curCardPosition = this.position;
-      currentGameState.getTableTop().getBaseBoard().takeAndReplaceCard(newCard, curCardPosition);
-    }
+    //ReservedHand reservedHand = player.getReservedHand();
+    //Card reserveCard = this.card;
+    //
+    ////add card to reserved hand (based on whether it is a development card or noble)
+    //if (reserveCard instanceof NobleCard) {
+    //  NobleCard card = (NobleCard) reserveCard;
+    //  reservedHand.addNobleCard(card);
+    //  Position position = currentGameState.getTableTop().getNobleBoard().getCardPosition(card);
+    //  currentGameState.getTableTop().getNobleBoard().remove(position);
+    //
+    //} else {
+    //  DevelopmentCard card = (DevelopmentCard) reserveCard;
+    //  reservedHand.addDevelopmentCard(card);
+    //  int level = card.getLevel();
+    //  Card newCard = currentGameState.getTableTop().getDecks().get(level).pop();
+    //  Position curCardPosition = this.position;
+    //  currentGameState.getTableTop().getBaseBoard().takeAndReplaceCard(newCard, curCardPosition);
+    //}
 
   }
 
