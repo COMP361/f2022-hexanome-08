@@ -42,13 +42,16 @@ public class NobleBoardGui extends VBox {
   }
 
   public void setup(List<NobleCard> allNobles, double layoutX, double layoutY, boolean firstSetup) {
-    // set the layout of the GUI
-    setLayoutX(layoutX);
-    setLayoutY(layoutY);
-    setSpacing(nobleImageSpace);
+
     // GUI class dependent things to setup
-    if (!firstSetup) {
-      this.getChildren().removeAll();
+    if (firstSetup) {
+      // set the layout of the GUI
+      setLayoutX(layoutX);
+      setLayoutY(layoutY);
+      setSpacing(nobleImageSpace);
+    }
+    else {
+      this.getChildren().clear();
     }
     for (NobleCard noble : allNobles) {
       String nobleName = noble.getCardName();
