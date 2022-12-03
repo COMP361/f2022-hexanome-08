@@ -404,6 +404,7 @@ public class GameController implements Initializable {
         }
       }
     }
+    System.out.println("All actions: " + resultActionsMap);
 
     // Since we now have all String[2] actionHashes, we can go and
     // assign them to cards
@@ -497,6 +498,7 @@ public class GameController implements Initializable {
               baseCardGuiMap.put(i, baseCardLevelGui);
             }
             try {
+              System.out.println("First time generate actions for player: " + curUser.getUsername());
               assignActionsToCardBoard();
             } catch (UnirestException e) {
               throw new RuntimeException(e);
@@ -547,6 +549,7 @@ public class GameController implements Initializable {
               oneLevelCardsGui.setup();
             }
             try {
+              System.out.println("Updating actions for player: " + curUser.getUsername());
               assignActionsToCardBoard();
             } catch (UnirestException e) {
               throw new RuntimeException(e);
