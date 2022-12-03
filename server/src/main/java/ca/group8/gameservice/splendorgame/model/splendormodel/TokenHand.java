@@ -8,6 +8,11 @@ import java.util.EnumMap;
 public class TokenHand {
 
   private final EnumMap<Colour, Integer> allTokens;
+
+  public int getInitialAmount() {
+    return initialAmount;
+  }
+
   private final int initialAmount;
 
   /**
