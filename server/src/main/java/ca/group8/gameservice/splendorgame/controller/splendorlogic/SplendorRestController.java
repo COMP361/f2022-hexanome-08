@@ -472,7 +472,7 @@ public class SplendorRestController {
         throw new ModelAccessException("Generation for actions failed for some reasons, debug!");
       }
 
-      logger.warn("action map generated for player: " + playerName + "are " + actionsAvailableToPlayer.keySet());
+      logger.warn("action map generated for player: " + playerName + " are " + actionsAvailableToPlayer.keySet());
 
       // actionsAvailableToPlayer is either empty hash map or have something, not important,
       // just give it to client

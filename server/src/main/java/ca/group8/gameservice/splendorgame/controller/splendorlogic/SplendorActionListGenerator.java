@@ -139,7 +139,7 @@ public class SplendorActionListGenerator {
 
     this.actionLookUpMap.put(gameId, playerSpecificActionsMap);
     logger.warn("The action maps generated for gameId " + gameId + " are" + playerSpecificActionsMap);
-    logger.warn("The action map generated for player " + curPlayerName + " in game: " +gameId + " are " + hashActionMap);
+    logger.warn("The action map generated for player " + askedActionsPlayerName + " in game: " +gameId + " are " + hashActionMap);
   }
 
   /**
