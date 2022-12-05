@@ -445,9 +445,10 @@ public class GameController implements Initializable {
         while (responseCode == 408) {
           try {
             longPullResponse = gameRequestSender.sendGetGameInfoRequest(gameId, hashedResponse);
-            responseCode = longPullResponse.getStatus();
-          } catch (UnirestException ignored) {
+          } catch (UnirestException e) {
+            throw new RuntimeException(e);
           }
+          responseCode = longPullResponse.getStatus();
         }
 
         if (responseCode == 200) {
