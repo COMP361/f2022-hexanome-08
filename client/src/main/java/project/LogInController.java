@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import io.github.isharipov.gson.adapters.PolymorphDeserializer;
 import java.util.Arrays;
 import java.util.List;
 import javafx.fxml.FXML;
@@ -92,9 +93,6 @@ public class LogInController {
 
 
     // Testing serialization problem
-
-    //final TypeToken<List<People>> requestListTypeToken = new TypeToken<>() {
-    //};
     //
     //final RuntimeTypeAdapterFactory<People> typeFactory = RuntimeTypeAdapterFactory
     //    .of(People.class, "type")
@@ -105,15 +103,20 @@ public class LogInController {
     //    .of(Student.class, "type")
     //    .registerSubtype(Undergrad.class)
     //    .registerSubtype(Grad.class);
-    //
+
     //final Gson gson = new GsonBuilder()
     //    .registerTypeAdapterFactory(typeFactory)
     //    .registerTypeAdapterFactory(typeStudentFactory)
     //    .create();
+
+    //final TypeToken<List<People>> requestListTypeToken = new TypeToken<>() {
+    //};
+    //final Gson gson = new GsonBuilder()
+    //    .registerTypeAdapter(Student.class, new PolymorphDeserializer<Student>())
+    //    .create();
     //
-    //final List<People> requestList = Arrays.asList(
+    //final List<Student> requestList = Arrays.asList(
     //    new Grad("addr1"),
-    //    new Prof("mcgill", "comp310"),
     //    new Undergrad("addr2",3), new Undergrad("addr3", 4));
     //
     //final String serialized = gson.toJson(requestList,
@@ -121,7 +124,7 @@ public class LogInController {
     //System.out.println("Original List: " + requestList);
     //System.out.println("Serialized JSON: " + serialized);
     //
-    //final List<People> deserializedRequestList = gson.fromJson(serialized,
+    //final List<Student> deserializedRequestList = gson.fromJson(serialized,
     //    requestListTypeToken.getType());
     //
     //System.out.println("Deserialized list: " + deserializedRequestList);

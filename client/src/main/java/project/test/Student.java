@@ -1,6 +1,32 @@
 package project.test;
 
-public abstract class Student implements People{
+import io.github.isharipov.gson.adapters.JsonSubtype;
+import io.github.isharipov.gson.adapters.JsonType;
+import project.view.splendor.communication.PurchaseAction;
+import project.view.splendor.communication.ReserveAction;
+import project.view.splendor.communication.TakeTokenAction;
+
+
+@JsonType(
+    property = "type",
+    subtypes = {
+        @JsonSubtype(clazz = Undergrad.class, name = "undergrad"),
+        @JsonSubtype(clazz = Grad.class, name = "grad")
+    }
+)
+public abstract class Student{
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  private String type;
+  private String address;
+
+
   public String getAddress() {
     return address;
   }
@@ -9,14 +35,10 @@ public abstract class Student implements People{
     this.address = address;
   }
 
-  private String address;
 
   public void setAddress(String address) {
     this.address = address;
   }
 
-  @Override
-  public String getName() {
-    return null;
-  }
+  public abstract String getName();
 }

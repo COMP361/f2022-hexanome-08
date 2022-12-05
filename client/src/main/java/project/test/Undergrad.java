@@ -14,4 +14,9 @@ public class Undergrad extends Student{
     super(address);
     this.year = year;
   }
+
+  @Override
+  public String getName() {
+    return null;
+  }
 }

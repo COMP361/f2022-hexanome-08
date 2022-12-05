@@ -185,8 +185,7 @@ public class GameController implements Initializable {
   }
 
 
-  private void updatePlayerInfoGui(PlayerInGame curPlayerInventory,
-                                   Map<String, PlayerInfoGui> stringPlayerInfoGuiMap) {
+  private void updatePlayerInfoGui(PlayerInGame curPlayerInventory) {
 
     String playerName = curPlayerInventory.getName();
     int newPoints = curPlayerInventory.getPrestigePoints();
@@ -194,7 +193,7 @@ public class GameController implements Initializable {
     List<DevelopmentCard> allDevCards =
         curPlayerInventory.getPurchasedHand().getDevelopmentCards();
     // Get the player gui
-    PlayerInfoGui playerInfoGui = stringPlayerInfoGuiMap.get(playerName);
+    PlayerInfoGui playerInfoGui = nameToPlayerInfoGuiMap.get(playerName);
     // updating the GUI based on the new info from server
     Platform.runLater(() -> {
       // update the public-player associated area
@@ -207,8 +206,7 @@ public class GameController implements Initializable {
 
 
   private Thread generateAllPlayerInfoUpdateThread(
-      SplendorServiceRequestSender gameRequestSender, long gameId,
-      GameInfo firstGameInfo, Map<String, PlayerInfoGui> stringPlayerInfoGuiMap){
+      SplendorServiceRequestSender gameRequestSender, GameInfo firstGameInfo){
     return new Thread(() -> {
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
@@ -233,11 +231,11 @@ public class GameController implements Initializable {
             int initTokenAmount = playerStates.getPlayersInfo().get(App.getUser().getUsername()).getTokenHand()
                 .getInitialAmount();
             try {
-              setupPlayerInfoGui(firstGameInfo,
+              setupPlayerInfoGui(playerStates,
                   initTokenAmount,
                   App.getGuiLayouts(),
                   App.getUser(),
-                  App.getGameRequestSender());
+                  firstGameInfo.getFirstPlayer());
             } catch (UnirestException e) {
               throw new RuntimeException(e);
             }
@@ -256,7 +254,7 @@ public class GameController implements Initializable {
                 myReservedCardsButton
                     .setOnAction(createOpenMyReserveCardClick(new ArrayList<>(), new ArrayList<>()));
               }
-              updatePlayerInfoGui(playerInfo, stringPlayerInfoGuiMap);
+              updatePlayerInfoGui(playerInfo);
             }
           }
         }
@@ -268,15 +266,14 @@ public class GameController implements Initializable {
 
 
 
-  private void setupPlayerInfoGui(GameInfo firstGameInfo, int initTokenAmount,
-                                  GameBoardLayoutConfig config, User curUser,
-                                  SplendorServiceRequestSender gameRequestSender)
+  private void setupPlayerInfoGui(PlayerStates playerStates, int initTokenAmount,
+                                  GameBoardLayoutConfig config, User curUser, String firstPlayer)
       throws UnirestException {
 
     // first check, then sort the player names accordingly based on different clients
+    List<String> playerNames = new ArrayList<>(playerStates.getPlayersInfo().keySet());
     if (sortedPlayerNames.isEmpty()) {
-      sortedPlayerNames = sortPlayerNames(App.getUser().getUsername(),
-          firstGameInfo.getPlayerNames());
+      sortedPlayerNames = sortPlayerNames(App.getUser().getUsername(), playerNames);
     }
     HorizontalPlayerInfoGui btmPlayerGui =
         new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM, curUser.getUsername(), initTokenAmount);
@@ -287,16 +284,14 @@ public class GameController implements Initializable {
 
     // The My PurchaseHand and My Reserve Hand buttons functionality assign
     // Do not do long pulling here (hash = "" -> instant response)
-    HttpResponse<String> inventoryResponse =
-        gameRequestSender.sendGetPlayerInventoryRequest(
-            gameId, curUser.getUsername(), curUser.getAccessToken(), "");
-    PlayerInGame curPlayerInfo =
-        new Gson().fromJson(inventoryResponse.getBody(), PlayerInGame.class);
+    //HttpResponse<String> inventoryResponse =
+    //    gameRequestSender.sendGetPlayerInventoryRequest(
+    //        gameId, curUser.getUsername(), curUser.getAccessToken(), "");
+    PlayerInGame curPlayerInfo = playerStates.getPlayersInfo().get(curUser.getUsername());
     List<DevelopmentCard> allDevCards =
         curPlayerInfo.getPurchasedHand().getDevelopmentCards();
     List<DevelopmentCard> allReserveCards =
         curPlayerInfo.getReservedHand().getDevelopmentCards();
-
     myCardButton
         .setOnAction(createOpenMyPurchaseCardClick(allDevCards));
 
@@ -351,8 +346,6 @@ public class GameController implements Initializable {
     });
     // since it's in the first check, curTurn and firstPlayer are same, highlight
     // first player
-
-    String firstPlayer = firstGameInfo.getFirstPlayer();
     prePlayerName = firstPlayer;
     // at this point, the map can not be empty, safely get the playerGui
     nameToPlayerInfoGuiMap.get(firstPlayer).setHighlight(true);
@@ -419,14 +412,12 @@ public class GameController implements Initializable {
     }
   }
 
-  @Override
-  // TODO: This method contains what's gonna happen after clicking "play" on the board
-  public void initialize(URL url, ResourceBundle resourceBundle) {
+
+  private Thread generateGameInfoUpdateThread(SplendorServiceRequestSender gameRequestSender) {
     GameBoardLayoutConfig config = App.getGuiLayouts();
-    SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
     User curUser = App.getUser(); // at this point, user will not be Null
 
-    Thread mainGameUpdateThread = new Thread(() -> {
+    return new Thread(() -> {
       // basic stuff needed for a long pull
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
@@ -454,15 +445,11 @@ public class GameController implements Initializable {
         if (responseCode == 200) {
           // update the MD5 hash of previous response
           hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
-          // decode this response into PlayerInGame class with Gson
+          // decode this response into GameInfo class with Gson
           String responseInJsonString = longPullResponse.getBody();
           GameInfo curGameInfo = new Gson().fromJson(responseInJsonString, GameInfo.class);
           // how we are going to parse from this curGameInfo depends on first check or not
           if (isFirstCheck) {
-            // set up all player related GUI (for the first time
-            generateAllPlayerInfoUpdateThread(gameRequestSender, gameId,
-                curGameInfo, nameToPlayerInfoGuiMap).start();
-
             // TODO: Potential nested clickable noble cards
             // initialize noble area
             nobleBoard = new NobleBoardGui(100, 100, 5);
@@ -472,7 +459,6 @@ public class GameController implements Initializable {
               playerBoardAnchorPane.getChildren().add(nobleBoard);
             });
 
-            // TODO: Assign the Action hashed String to the confirm button of token bank later!!!
             // initialize token area
             tokenBankGui = new TokenBankGui();
             EnumMap<Colour, Integer> bankBalance =
@@ -559,7 +545,24 @@ public class GameController implements Initializable {
         }
       }
     });
-    mainGameUpdateThread.start();
+  }
+  @Override
+  // TODO: This method contains what's gonna happen after clicking "play" on the board
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
+
+    try {
+      HttpResponse<String> firstGameInfoResponse =
+          gameRequestSender.sendGetGameInfoRequest(gameId, "");
+      GameInfo curGameInfo = new Gson().fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
+      Thread playerInfoRelatedThread = generateAllPlayerInfoUpdateThread(gameRequestSender, curGameInfo);
+      Thread mainGameUpdateThread = generateGameInfoUpdateThread(gameRequestSender);
+      // start the thread for main board and playerInfo update at the same time
+      playerInfoRelatedThread.start();
+      mainGameUpdateThread.start();
+    } catch (UnirestException e) {
+      throw new RuntimeException(e);
+    }
 
   }
 }
