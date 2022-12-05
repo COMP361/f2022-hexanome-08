@@ -135,7 +135,11 @@ public class SplendorActionListGenerator {
     // once the hash -> Action map is ready, we add it for this specific player
     Map<String, Map<String, Action>> playerSpecificActionsMap = new HashMap<>();
     playerSpecificActionsMap.put(askedActionsPlayerName, hashActionMap);
+    Logger logger = LoggerFactory.getLogger(SplendorActionListGenerator.class);
+
     this.actionLookUpMap.put(gameId, playerSpecificActionsMap);
+    logger.warn("The action maps generated for gameId " + gameId + " are" + playerSpecificActionsMap);
+    logger.warn("The action map generated for player " + curPlayerName + " in game: " +gameId + " are " + hashActionMap);
   }
 
   /**
