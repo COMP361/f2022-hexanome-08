@@ -133,13 +133,20 @@ public class SplendorActionListGenerator {
     }
 
     // once the hash -> Action map is ready, we add it for this specific player
-    Map<String, Map<String, Action>> playerSpecificActionsMap = new HashMap<>();
-    playerSpecificActionsMap.put(askedActionsPlayerName, hashActionMap);
-    Logger logger = LoggerFactory.getLogger(SplendorActionListGenerator.class);
+    if (!actionLookUpMap.containsKey(gameId)) {
+      // if the gameId is not recorded, means we have no players' actions, thus we are adding
+      // the first player
+      Map<String, Map<String, Action>> playerSpecificActionsMap = new HashMap<>();
+      playerSpecificActionsMap.put(askedActionsPlayerName, hashActionMap);
+      actionLookUpMap.put(gameId, playerSpecificActionsMap);
+    } else {
+      // otherwise, we must have at least one player name stored in the map, therefore we
+      // can for sure get the Map<String, Map<String, Action>>
+      // then either overwrites or adding new action map
+      Map<String, Map<String, Action>> playerSpecificActionsMap = actionLookUpMap.get(gameId);
+      playerSpecificActionsMap.put(askedActionsPlayerName, hashActionMap);
+    }
 
-    this.actionLookUpMap.put(gameId, playerSpecificActionsMap);
-    logger.warn("The action maps generated for gameId " + gameId + " are" + playerSpecificActionsMap);
-    logger.warn("The action map generated for player " + askedActionsPlayerName + " in game: " +gameId + " are " + hashActionMap);
   }
 
   /**
