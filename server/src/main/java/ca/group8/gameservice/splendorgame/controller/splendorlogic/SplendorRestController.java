@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,10 +147,18 @@ public class SplendorRestController {
 
       // hash is either "-" or the hashed value from previous payload, use long polling
       //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
-      //if (hash.isEmpty()) {
-      //  ResponseGenerator.getAsyncUpdate(longPollTimeOut,
-      //      gameInfoBroadcastContentManager.get(gameId));
-      //}
+
+
+
+      if (hash.isEmpty()) {
+        ResponseGenerator.getAsyncUpdate(longPollTimeOut,
+            gameInfoBroadcastContentManager.get(gameId));
+      }
+      GameInfo curGameInfo
+          = gameInfoBroadcastContentManager.get(gameId).getCurrentBroadcastContent();
+      String serverHash = DigestUtils.md5Hex(new Gson().toJson(curGameInfo));
+      logger.info("GameInfo hash from client: " + hash);
+      logger.info("GameInfo hash generated on server side: " + serverHash);
 
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut,
           gameInfoBroadcastContentManager.get(gameId), hash);
@@ -322,11 +331,16 @@ public class SplendorRestController {
       }
 
       // hash is either "-" or the hashed value from previous payload, use long polling
-      //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
-      //if (hash.isEmpty()) {
-      //  ResponseGenerator.getAsyncUpdate(longPollTimeOut,
-      //      allPlayerInfoBroadcastContentManager.get(gameId));
-      //}
+      if (hash.isEmpty()) {
+        ResponseGenerator.getAsyncUpdate(longPollTimeOut,
+            allPlayerInfoBroadcastContentManager.get(gameId));
+      }
+
+      PlayerStates curPlayerStates
+          = allPlayerInfoBroadcastContentManager.get(gameId).getCurrentBroadcastContent();
+      String serverHash = DigestUtils.md5Hex(new Gson().toJson(curPlayerStates));
+      logger.info("GameInfo hash from client: " + hash);
+      logger.info("GameInfo hash generated on server side: " + serverHash);
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut,
           allPlayerInfoBroadcastContentManager.get(gameId), hash);
     } catch (ModelAccessException e) {
