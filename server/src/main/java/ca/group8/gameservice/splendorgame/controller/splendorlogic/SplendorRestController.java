@@ -538,6 +538,10 @@ public class SplendorRestController {
           .get(playerName);
       // interpret this action regardless is modified by user or not
       splendorActionInterpreter.interpretAction(newAction, gameInfo, playerInGame);
+
+      // notify the async updates
+      allPlayerInfoBroadcastContentManager.get(gameId).touch();
+      gameInfoBroadcastContentManager.get(gameId).touch();
       return ResponseEntity.status(HttpStatus.OK).body(null);
 
     } catch (ModelAccessException | UnirestException e) {
