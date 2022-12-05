@@ -154,11 +154,11 @@ public class SplendorRestController {
         ResponseGenerator.getAsyncUpdate(longPollTimeOut,
             gameInfoBroadcastContentManager.get(gameId));
       }
-      GameInfo curGameInfo
-          = gameInfoBroadcastContentManager.get(gameId).getCurrentBroadcastContent();
-      String serverHash = DigestUtils.md5Hex(new Gson().toJson(curGameInfo));
-      logger.info("GameInfo hash from client: " + hash);
-      logger.info("GameInfo hash generated on server side: " + serverHash);
+      //GameInfo curGameInfo
+      //    = gameInfoBroadcastContentManager.get(gameId).getCurrentBroadcastContent();
+      //String serverHash = DigestUtils.md5Hex(new Gson().toJson(curGameInfo));
+      //logger.info("GameInfo hash from client: " + hash);
+      //logger.info("GameInfo hash generated on server side: " + serverHash);
 
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut,
           gameInfoBroadcastContentManager.get(gameId), hash);
@@ -336,11 +336,11 @@ public class SplendorRestController {
             allPlayerInfoBroadcastContentManager.get(gameId));
       }
 
-      PlayerStates curPlayerStates
-          = allPlayerInfoBroadcastContentManager.get(gameId).getCurrentBroadcastContent();
-      String serverHash = DigestUtils.md5Hex(new Gson().toJson(curPlayerStates));
-      logger.info("GameInfo hash from client: " + hash);
-      logger.info("GameInfo hash generated on server side: " + serverHash);
+      //PlayerStates curPlayerStates
+      //    = allPlayerInfoBroadcastContentManager.get(gameId).getCurrentBroadcastContent();
+      //String serverHash = DigestUtils.md5Hex(new Gson().toJson(curPlayerStates));
+      //logger.info("GameInfo hash from client: " + hash);
+      //logger.info("GameInfo hash generated on server side: " + serverHash);
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut,
           allPlayerInfoBroadcastContentManager.get(gameId), hash);
     } catch (ModelAccessException e) {
@@ -395,14 +395,16 @@ public class SplendorRestController {
       //      + "sent to this resource location yet!");
       //}
 
+      BroadcastContentManager<PlayerInGame> playerInfoToBroadcast =
+          specificPlayerInfoBroadcastContentManager.get(gameId).get(playerName);
+
       if (hash == null) {
         hash = "-";
       }
-      BroadcastContentManager<PlayerInGame> playerInfoToBroadcast =
-          specificPlayerInfoBroadcastContentManager.get(gameId).get(playerName);
-      //if (hash.isEmpty()) {
-      //  ResponseGenerator.getAsyncUpdate(longPollTimeOut, playerInfoToBroadcast);
-      //}
+
+      if (hash.isEmpty()) {
+        ResponseGenerator.getAsyncUpdate(longPollTimeOut, playerInfoToBroadcast);
+      }
       // hash is either "-" or the hashed value from previous payload, use long polling
       //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, playerInfoToBroadcast, hash);
@@ -469,6 +471,8 @@ public class SplendorRestController {
       if (actionsAvailableToPlayer == null) {
         throw new ModelAccessException("Generation for actions failed for some reasons, debug!");
       }
+
+      logger.warn("action map generated for player: " + playerName + "are " + actionsAvailableToPlayer.keySet());
 
       // actionsAvailableToPlayer is either empty hash map or have something, not important,
       // just give it to client
@@ -540,6 +544,9 @@ public class SplendorRestController {
       splendorActionInterpreter.interpretAction(newAction, gameInfo, playerInGame);
 
       // notify the async updates
+      // TODO: When things that might affect the long polling content we want
+      //  in this case, actions were executed, then we want to touch the managers so that
+      //  we can have our result back
       allPlayerInfoBroadcastContentManager.get(gameId).touch();
       gameInfoBroadcastContentManager.get(gameId).touch();
       return ResponseEntity.status(HttpStatus.OK).body(null);
