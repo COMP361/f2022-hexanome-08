@@ -49,6 +49,7 @@ public class BaseBoard {
     baseDecks.put(2, levelTwoDeck);
     baseDecks.put(3, levelThreeDeck);
   }
+
   private void drawCardsToBoard() {
     for (int i = 1; i <= 3; i++) {
       List<BaseCard> levelCardsOnBoard = new ArrayList<>();

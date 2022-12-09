@@ -15,14 +15,11 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
-import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,7 +127,13 @@ public class SplendorRestController {
   //  return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, testManager.get(0), hash);
   //}
 
-
+  /**
+   * handle the long polling requests for all public visible game details.
+   *
+   * @param gameId game id
+   * @param hash hashed previous response payload
+   * @return a deferred return payload JSON string response
+   */
   @GetMapping(value = "/api/games/{gameId}", produces = "application/json; charset=utf-8")
   public DeferredResult<ResponseEntity<String>> getGameDetail(@PathVariable long gameId,
                                                               @RequestParam(required = false)
@@ -147,7 +150,6 @@ public class SplendorRestController {
 
       // hash is either "-" or the hashed value from previous payload, use long polling
       //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
-
 
 
       if (hash.isEmpty()) {
@@ -172,6 +174,15 @@ public class SplendorRestController {
   }
 
 
+  /**
+   * Launch game PUT request handling endpoint. It handles the PUT request of creating
+   * game service sent from LS. LS sent this PUT request because client sends a launch request to
+   * LS first
+   *
+   * @param gameId game id
+   * @param launcherInfo JSON request body that contains the info needed to PUT a game service
+   * @return a response body of the reply of launch game request.
+   */
   @PutMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> launchGame(@PathVariable long gameId,
                                            @RequestBody LauncherInfo launcherInfo) {
@@ -316,7 +327,8 @@ public class SplendorRestController {
   /**
    * Long polling for the game board content, optional hash value.
    */
-  @GetMapping(value = "/api/games/{gameId}/playerStates", produces = "application/json; charset=utf-8")
+  @GetMapping(value = "/api/games/{gameId}/playerStates",
+      produces = "application/json; charset=utf-8")
   public DeferredResult<ResponseEntity<String>> getPlayerStates(
       @PathVariable long gameId, @RequestParam(required = false) String hash) {
     try {
@@ -472,13 +484,15 @@ public class SplendorRestController {
         throw new ModelAccessException("Generation for actions failed for some reasons, debug!");
       }
 
-      logger.warn("action map generated for player: " + playerName + " are " + actionsAvailableToPlayer.keySet());
+      logger.warn("action map generated for player: " + playerName + " are "
+          + actionsAvailableToPlayer.keySet());
 
       // actionsAvailableToPlayer is either empty hash map or have something, not important,
       // just give it to client
       Gson actionGson = SplendorRestController.getActionGson();
       // added this type conversion to serialization
-      Type actionMapType = new TypeToken<Map<String, Action>>() {}.getType();
+      Type actionMapType = new TypeToken<Map<String, Action>>() {
+      }.getType();
       String actionHashedMapInStr = actionGson.toJson(actionsAvailableToPlayer, actionMapType);
       return ResponseEntity.status(HttpStatus.OK).body(actionHashedMapInStr);
     } catch (ModelAccessException | UnirestException e) {
@@ -488,7 +502,7 @@ public class SplendorRestController {
   }
 
 
-  public static Gson getActionGson() {
+  private static Gson getActionGson() {
     RuntimeTypeAdapterFactory<Action> actionFactory =
         RuntimeTypeAdapterFactory
             .of(Action.class, "type")
