@@ -2,7 +2,6 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
-import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +22,13 @@ public class SplendorGameManager {
   }
 
 
+  /**
+   * get one instance of GameInfo object that contains the public game details on game board.
+   *
+   * @param gameId game id
+   * @return one instance of GameInfo object
+   * @throws ModelAccessException if model access went wrong
+   */
   public GameInfo getGameById(long gameId) throws ModelAccessException {
     if (!isExistentGameId(gameId)) {
       throw new ModelAccessException("No registered game with that ID");
@@ -57,6 +63,7 @@ public class SplendorGameManager {
     assert activePlayers.containsKey(gameId);
     return activePlayers.get(gameId);
   }
+
   public Map<Long, GameInfo> getActiveGames() {
     return activeGames;
   }

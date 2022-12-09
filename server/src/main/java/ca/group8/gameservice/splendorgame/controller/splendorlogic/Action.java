@@ -19,8 +19,10 @@ public interface Action {
 
 
   void execute(GameInfo currentGameState, PlayerInGame playerState);
+
   boolean checkIsCardAction();
 
   Card getCard();
+
   Position getPosition();
 }

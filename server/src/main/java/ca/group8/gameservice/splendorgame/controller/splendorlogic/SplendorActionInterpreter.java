@@ -14,10 +14,10 @@ public class SplendorActionInterpreter {
 
 
   /**
-   * This method will get called if POST on games/{gameId}/players/{playerName}/actions/{actionId}
+   * This method will get called if POST on games/{gameId}/players/{playerName}/actions/{actionId}.
    * SplendorActionListGenerator (lookUpActions) ->
-   * Map <hashedMd5, Action> - {actionId} -> Action playerChosenAction, so we can know prior to
-   * this method called, we can find the Action the player wants to execute
+   * Map from hashed string to action - {actionId} -> Action playerChosenAction,
+   * so we can know prior to this method called, we can find the Action the player wants to execute
    * TODO: Note: we only provide ValidActions to players, so execution can never failed
    *
    * @param playerChosenAction generated from

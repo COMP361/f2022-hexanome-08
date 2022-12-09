@@ -3,9 +3,7 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class GameInfo implements BroadcastContent { // TODO add gametype
 

@@ -1,0 +1,26 @@
+-classpath
+'/Users/ruoyu/.m2/repository/com/mashape/unirest/unirest-java/1.4.8/unirest-java-1.4.8.jar:/Users/ruoyu/.m2/repository/org/apache/httpcomponents/httpclient/4.3.6/httpclient-4.3.6.jar:/Users/ruoyu/.m2/repository/org/apache/httpcomponents/httpcore/4.3.3/httpcore-4.3.3.jar:/Users/ruoyu/.m2/repository/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar:/Users/ruoyu/.m2/repository/commons-codec/commons-codec/1.6/commons-codec-1.6.jar:/Users/ruoyu/.m2/repository/org/apache/httpcomponents/httpasyncclient/4.0.2/httpasyncclient-4.0.2.jar:/Users/ruoyu/.m2/repository/org/apache/httpcomponents/httpcore-nio/4.3.2/httpcore-nio-4.3.2.jar:/Users/ruoyu/.m2/repository/org/apache/httpcomponents/httpmime/4.3.6/httpmime-4.3.6.jar:/Users/ruoyu/.m2/repository/org/json/json/20140107/json-20140107.jar:/Users/ruoyu/.m2/repository/com/google/code/gson/gson/2.10/gson-2.10.jar:/Users/ruoyu/.m2/repository/org/springframework/spring-web/3.0.2.RELEASE/spring-web-3.0.2.RELEASE.jar:/Users/ruoyu/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar:/Users/ruoyu/.m2/repository/org/springframework/spring-beans/3.0.2.RELEASE/spring-beans-3.0.2.RELEASE.jar:/Users/ruoyu/.m2/repository/org/springframework/spring-context/3.0.2.RELEASE/spring-context-3.0.2.RELEASE.jar:/Users/ruoyu/.m2/repository/org/springframework/spring-aop/3.0.2.RELEASE/spring-aop-3.0.2.RELEASE.jar:/Users/ruoyu/.m2/repository/org/springframework/spring-expression/3.0.2.RELEASE/spring-expression-3.0.2.RELEASE.jar:/Users/ruoyu/.m2/repository/org/springframework/spring-asm/3.0.2.RELEASE/spring-asm-3.0.2.RELEASE.jar:/Users/ruoyu/.m2/repository/org/springframework/spring-core/3.0.2.RELEASE/spring-core-3.0.2.RELEASE.jar:/Users/ruoyu/.m2/repository/org/openjfx/javafx-controls/19/javafx-controls-19.jar:/Users/ruoyu/.m2/repository/org/openjfx/javafx-controls/19/javafx-controls-19-mac-aarch64.jar:/Users/ruoyu/.m2/repository/org/openjfx/javafx-graphics/19/javafx-graphics-19.jar:/Users/ruoyu/.m2/repository/org/openjfx/javafx-graphics/19/javafx-graphics-19-mac-aarch64.jar:/Users/ruoyu/.m2/repository/org/openjfx/javafx-base/19/javafx-base-19.jar:/Users/ruoyu/.m2/repository/org/openjfx/javafx-base/19/javafx-base-19-mac-aarch64.jar:/Users/ruoyu/.m2/repository/org/openjfx/javafx-fxml/19/javafx-fxml-19.jar:/Users/ruoyu/.m2/repository/org/openjfx/javafx-fxml/19/javafx-fxml-19-mac-aarch64.jar:/Users/ruoyu/.m2/repository/io/github/isharipov/gson-adapters/0.1/gson-adapters-0.1.jar:/Users/ruoyu/.m2/repository/org/apache/logging/log4j/log4j-api/2.11.2/log4j-api-2.11.2.jar:/Users/ruoyu/.m2/repository/org/apache/logging/log4j/log4j-core/2.11.2/log4j-core-2.11.2.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'11'
+-sourcepath
+'/Users/ruoyu/Projects/f2022-hexanome-08/client/src/main/java:/Users/ruoyu/Projects/f2022-hexanome-08/client/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2022. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/ruoyu/Projects/f2022-hexanome-08/client/docs'
+-docencoding
+'UTF-8'
+-doctitle
+'client v1.0 API'
+-linkoffline
+'https://docs.oracle.com/en/java/javase/11/docs/api' '/Users/ruoyu/Projects/f2022-hexanome-08/client/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'client v1.0 API'

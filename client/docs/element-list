@@ -1,1 +1,6 @@
 project
+project.connection
+project.test
+project.view.lobby
+project.view.splendor
+project.view.splendor.communication
