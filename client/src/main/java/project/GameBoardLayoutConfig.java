@@ -1,5 +1,8 @@
 package project;
 
+/**
+ * A configuration class that stores the layout and size information needed to set up the game app.
+ */
 public class GameBoardLayoutConfig {
   private double appWidth;
   private double appHeight;

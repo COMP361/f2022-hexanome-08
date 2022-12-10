@@ -23,10 +23,10 @@ public class SplendorServiceRequestSender {
 
 
   /**
-   * Send the request and get back a list of strings encoded in one string
+   * Send the request and get back a list of strings encoded in one string.
    *
-   * @param gameId
-   * @return
+   * @param gameId game id
+   * @return a list of player names
    */
   public String[] sendGetAllPlayerNamesList(long gameId) {
     RestTemplate rest = new RestTemplate();
@@ -41,30 +41,17 @@ public class SplendorServiceRequestSender {
     return new Gson().fromJson(responseEntity.getBody(), String[].class);
   }
 
-  ///**
-  // * GET Request to resource from /api/games/{gameId}
-  // *
-  // * @param gameId
-  // * @param hashPreviousResponse put a empty string as "" to avoid stuck in the long polling loop
-  // * @return
-  // */
-  //public ResponseEntity<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse) {
-  //  RestTemplate rest = new RestTemplate();
-  //  HttpHeaders headers = new HttpHeaders();
-  //  String body = "";
-  //  String url = gameUrl + "/api/games/" + gameId;
-  //  if (!hashPreviousResponse.equals("")) {
-  //    // if we are sending something in as hash, then we need to add it to the end of url
-  //    url = String.format("%s/api/games/%s?hash=%s", gameUrl, gameId, hashPreviousResponse);
-  //  } else {
-  //    url = String.format("%s/api/games/%s", gameUrl, gameId);
-  //  }
-  //  HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-  //  return rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
-  //}
 
+  /**
+   * Send a long polling request for GameInfo updates.
+   *
+   * @param gameId game id
+   * @param hashPreviousResponse hashed Previous Response
+   * @return A http response with JSON string as the body
+   * @throws UnirestException in case of a failed request
+   */
   public HttpResponse<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse)
-  throws UnirestException {
+      throws UnirestException {
     if (hashPreviousResponse.equals("")) {
       return Unirest.get(gameUrl + "/api/games/" + gameId).asString();
     } else {
@@ -74,35 +61,22 @@ public class SplendorServiceRequestSender {
     }
 
   }
-  ///**
-  // *
-  // * @param gameId
-  // * @param hashPreviousResponse
-  // * @return PlayerStates wrapped in Json String
-  // */
-  //public ResponseEntity<String> sendGetAllPlayerInfoRequest(long gameId, String hashPreviousResponse) {
-  //  RestTemplate rest = new RestTemplate();
-  //  HttpHeaders headers = new HttpHeaders();
-  //  String body = "";
-  //  String url;
-  //  if (!hashPreviousResponse.equals("")) {
-  //    // if we are sending something in as hash, then we need to add it to the end of url
-  //    url =
-  //        String.format("%s/api/games/%s/playerStates?hash=%s", gameUrl, gameId, hashPreviousResponse);
-  //  } else {
-  //    url = String.format("%s/api/games/%s/playerStates", gameUrl, gameId);
-  //  }
-  //  HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-  //  return rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
-  //}
 
+  /**
+   * Send a long polling request for all player info updates.
+   *
+   * @param gameId game id
+   * @param hashPreviousResponse hashed Previous Response
+   * @return A http response with JSON string as the body
+   * @throws UnirestException in case of a failed request
+   */
   public HttpResponse<String> sendGetAllPlayerInfoRequest(long gameId,
-                                                            String hashPreviousResponse)
-  throws UnirestException {
+                                                          String hashPreviousResponse)
+      throws UnirestException {
     if (hashPreviousResponse.equals("")) {
-      return Unirest.get(String.format("%s/api/games/%s/playerStates",gameUrl, gameId)).asString();
+      return Unirest.get(String.format("%s/api/games/%s/playerStates", gameUrl, gameId)).asString();
     } else {
-      return Unirest.get(String.format("%s/api/games/%s/playerStates",gameUrl, gameId))
+      return Unirest.get(String.format("%s/api/games/%s/playerStates", gameUrl, gameId))
           .queryString("hash", hashPreviousResponse)
           .asString();
 
@@ -110,78 +84,60 @@ public class SplendorServiceRequestSender {
 
   }
 
-  //public ResponseEntity<String> sendGetPlayerInventoryRequest(long gameId, String playerName,
-  //                                                            String accessToken,
-  //                                                            String hashPreviousResponse) {
-  //  RestTemplate rest = new RestTemplate();
-  //  HttpHeaders headers = new HttpHeaders();
-  //  String body = "";
-  //  String url;
-  //  if (!hashPreviousResponse.equals("")) {
-  //    // if we are sending something in as hash, then we need to add it to the end of url
-  //    url = String.
-  //        format("%s/api/games/%s/players/%s/inventory?hash=%s&access_token=%s",
-  //            gameUrl, gameId, playerName, hashPreviousResponse, accessToken);
-  //  } else {
-  //    url = String.format("%s/api/games/%s/players/%s/inventory?access_token=%s"
-  //        , gameUrl, gameId, playerName, accessToken);
-  //  }
-  //  HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-  //  return rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
-  //}
-
-  public HttpResponse<String> sendGetPlayerInventoryRequest(long gameId, String playerName,
-                                                              String accessToken,
-                                                              String hashPreviousResponse)
-  throws  UnirestException{
-
-    if (hashPreviousResponse.equals("")){
-      return Unirest
-          .get(String.format("%s/api/games/%s/players/%s/inventory",gameUrl, gameId, playerName))
-          .queryString("access_token", accessToken).asString();
-    } else {
-      return Unirest
-          .get(String.format("%s/api/games/%s/players/%s/inventory",gameUrl, gameId, playerName))
-          .queryString("access_token", accessToken)
-          .queryString("hash", hashPreviousResponse)
-          .asString();
-    }
-
-  }
-
-  //public ResponseEntity<String> sendGetPlayerActionsRequest(long gameId,
-  //                                                          String playerName,
-  //                                                          String accessToken) {
-  //  RestTemplate rest = new RestTemplate();
-  //  HttpHeaders headers = new HttpHeaders();
-  //  String body = "";
-  //  String url = String.
-  //      format("%s/api/games/%s/players/%s/actions?access_token=%s",
-  //          gameUrl, gameId, playerName, accessToken);
+  //public HttpResponse<String> sendGetPlayerInventoryRequest(long gameId, String playerName,
+  //                                                          String accessToken,
+  //                                                          String hashPreviousResponse)
+  //    throws UnirestException {
   //
-  //  HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-  //  return rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
+  //  if (hashPreviousResponse.equals("")) {
+  //    return Unirest
+  //        .get(String.format("%s/api/games/%s/players/%s/inventory", gameUrl, gameId, playerName))
+  //        .queryString("access_token", accessToken).asString();
+  //  } else {
+  //    return Unirest
+  //        .get(String.format("%s/api/games/%s/players/%s/inventory", gameUrl, gameId, playerName))
+  //        .queryString("access_token", accessToken)
+  //        .queryString("hash", hashPreviousResponse)
+  //        .asString();
+  //  }
+  //
   //}
 
+  /**
+   * Send a instant response request to get all possible action map for current player.
+   *
+   * @param gameId game id
+   * @param playerName current player name
+   * @param accessToken current player's access token
+   * @return A http response with JSON string as the body
+   * @throws UnirestException in case of a failed request
+   */
   public HttpResponse<String> sendGetPlayerActionsRequest(long gameId, String playerName,
-                                                            String accessToken)
-  throws UnirestException {
+                                                          String accessToken)
+      throws UnirestException {
 
     return Unirest
         .get(String.format("%s/api/games/%s/players/%s/actions", gameUrl, gameId, playerName))
         .queryString("access_token", accessToken).asString();
   }
 
-
+  /**
+   * Send a instant POST request to inform server which action did the user choose.
+   *
+   * @param gameId game id
+   * @param playerName player name
+   * @param accessToken access token
+   * @param actionId the MD5 hashed id of the chosen action
+   * @throws UnirestException in case of a failed request
+   */
   public void sendPlayerActionChoiceRequest(long gameId, String playerName,
                                             String accessToken, String actionId)
-  throws UnirestException {
+      throws UnirestException {
     HttpResponse<String> response =
         Unirest.post(String.format("%s/api/games/%s/players/%s/actions/%s",
-        gameUrl, gameId, playerName, actionId))
-        .queryString("access_token",accessToken).asString();
+                gameUrl, gameId, playerName, actionId))
+            .queryString("access_token", accessToken).asString();
   }
-
 
 
   // TODO: Delete Request (later)

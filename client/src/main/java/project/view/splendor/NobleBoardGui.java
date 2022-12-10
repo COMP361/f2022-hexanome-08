@@ -1,6 +1,5 @@
 package project.view.splendor;
 
-import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,6 +40,14 @@ public class NobleBoardGui extends VBox {
     return nobleImageSpace;
   }
 
+  /**
+   * Set up the NobleBoardGui with a list of NobleCard.
+   *
+   * @param allNobles a list of noble cards
+   * @param layoutX layout x
+   * @param layoutY layout y
+   * @param firstSetup whether it's first setup or not
+   */
   public void setup(List<NobleCard> allNobles, double layoutX, double layoutY, boolean firstSetup) {
 
     // GUI class dependent things to setup
@@ -49,8 +56,7 @@ public class NobleBoardGui extends VBox {
       setLayoutX(layoutX);
       setLayoutY(layoutY);
       setSpacing(nobleImageSpace);
-    }
-    else {
+    } else {
       this.getChildren().clear();
     }
     for (NobleCard noble : allNobles) {

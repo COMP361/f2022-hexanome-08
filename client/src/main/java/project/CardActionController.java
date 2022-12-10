@@ -11,6 +11,9 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import project.connection.SplendorServiceRequestSender;
 
+/**
+ * Card action controller class.
+ */
 public class CardActionController implements Initializable {
   private final String[] actionHash;
 
@@ -42,8 +45,8 @@ public class CardActionController implements Initializable {
         String accessToken = App.getUser().getAccessToken();
         // sends a POST request that tells the server which action we chose
         try {
-          gameRequestSender.
-              sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[0]);
+          gameRequestSender
+              .sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[0]);
         } catch (UnirestException e) {
           throw new RuntimeException(e);
         }
@@ -65,8 +68,8 @@ public class CardActionController implements Initializable {
         String accessToken = App.getUser().getAccessToken();
         // sends a POST request that tells the server which action we chose
         try {
-          gameRequestSender.
-              sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[1]);
+          gameRequestSender
+              .sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[1]);
         } catch (UnirestException e) {
           throw new RuntimeException(e);
         }

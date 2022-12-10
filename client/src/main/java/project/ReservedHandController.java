@@ -9,6 +9,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
+/**
+ * Reserve hand controller class.
+ */
 public class ReservedHandController implements Initializable {
 
   @FXML

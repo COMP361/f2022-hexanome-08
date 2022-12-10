@@ -9,6 +9,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+/**
+ * Deck action controller class.
+ */
 public class DeckActionController implements Initializable {
 
   @FXML

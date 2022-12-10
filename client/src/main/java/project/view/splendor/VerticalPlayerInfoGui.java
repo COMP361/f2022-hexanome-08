@@ -71,7 +71,7 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
     return initialTokenNum;
   }
 
-  public Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(
+  private Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(
       PlayerPosition playerPosition) {
     Map<Colour, Map<PlayerWealthInfo, Text>> resultMap = new HashMap<>();
     Colour[] colours = App.getBaseColours();
@@ -106,7 +106,7 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
     return resultMap;
   }
 
-  public Map<PlayerVisibleInfo, Text> getPlayerVisibleInfoMap(PlayerPosition playerPosition) {
+  private Map<PlayerVisibleInfo, Text> getPlayerVisibleInfoMap(PlayerPosition playerPosition) {
     Map<PlayerVisibleInfo, Text> resultMap = new HashMap<>();
     ObservableList<Node> allChildren = this.getChildren();
     if (playerPosition.equals(PlayerPosition.LEFT)) {
@@ -184,10 +184,10 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
   }
 
 
-  private void setupPlayerImage(){
+  private void setupPlayerImage() {
     int childrenCount = this.getChildren().size();
     if (playerPosition.equals(PlayerPosition.RIGHT)) {
-      Group imageGroup = (Group) this.getChildren().get(childrenCount-1);
+      Group imageGroup = (Group) this.getChildren().get(childrenCount - 1);
       ImageView playerImageView = (ImageView) imageGroup.getChildren().get(1);
       Image img = new Image(String.format("project/pictures/ta_pictures/%s.png", playerName));
       playerImageView.setImage(img);
@@ -198,6 +198,7 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
       playerImageView.setImage(img);
     }
   }
+
   private void giveInitialStartTokens() {
     Map<Colour, Map<PlayerWealthInfo, Text>> allTokenColourMap =
         getPlayerColourWealthMap(playerPosition);

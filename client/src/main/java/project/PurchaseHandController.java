@@ -19,6 +19,9 @@ import javafx.scene.shape.Rectangle;
 import project.view.splendor.Colour;
 import project.view.splendor.communication.DevelopmentCard;
 
+/**
+ * Purchase controller class.
+ */
 public class PurchaseHandController implements Initializable {
 
   @FXML

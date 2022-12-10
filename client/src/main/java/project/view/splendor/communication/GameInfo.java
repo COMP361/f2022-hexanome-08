@@ -64,5 +64,4 @@ public class GameInfo { // TODO add gametype
   }
 
 
-
 }

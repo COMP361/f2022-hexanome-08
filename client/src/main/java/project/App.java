@@ -205,6 +205,15 @@ public class App extends Application {
     return String.format("project/pictures/level%d/%s.png", level, cardName);
   }
 
+  /**
+   * Show a popup Stage with the corresponding fxml file, controller class, and the width/height.
+   *
+   * @param fxmlName fxml file name
+   * @param controller controller class of the popup
+   * @param popUpStageWidth window width
+   * @param popUpStageHeight window height
+   * @throws IOException in case fxml is not found
+   */
   public static void loadPopUpWithController(String fxmlName, Object controller,
                                              double popUpStageWidth, double popUpStageHeight)
       throws IOException {
@@ -217,10 +226,10 @@ public class App extends Application {
   }
 
   /**
-   * A static method to refresh the user's access token
+   * A static method to refresh the user's access token.
    *
-   * @param user
-   * @throws UnirestException
+   * @param user user
+   * @throws UnirestException in case of a failed request
    */
   public static void refreshUserToken(User user) throws UnirestException {
     String newAccessToken = lobbyRequestSender.sendRefreshTokenRequest(user.getRefreshToken());

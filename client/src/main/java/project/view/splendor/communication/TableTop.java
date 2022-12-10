@@ -1,7 +1,6 @@
 package project.view.splendor.communication;
 
 import java.util.List;
-import java.util.Map;
 
 
 public class TableTop {
@@ -25,8 +24,6 @@ public class TableTop {
   private Bank bank;
 
 
-
-
   public BaseBoard getBaseBoard() {
     return baseBoard;
   }
@@ -35,7 +32,6 @@ public class TableTop {
   public Bank getBank() {
     return bank;
   }
-
 
 
   public void setBaseBoard(BaseBoard baseBoard) {
