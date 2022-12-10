@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.gson.typeadapters;
+package project;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -55,6 +55,7 @@ import java.util.Map;
  *     Shape topShape;
  *   }
  * }</pre>
+ *
  * <p>Without additional type information, the serialized JSON is ambiguous. Is
  * the bottom shape in this drawing a rectangle or a diamond? <pre>   {@code
  *   {
@@ -113,7 +114,7 @@ import java.util.Map;
  *       .create();
  * }</pre>
  * Like {@code GsonBuilder}, this API supports chaining: <pre>   {@code
- *   RuntimeTypeAdapterFactory<Shape> shapeAdapterFactory = RuntimeTypeAdapterFactory.of(Shape.class)
+ *  RuntimeTypeAdapterFactory<Shape> shapeAdapterFactory = RuntimeTypeAdapterFactory.of(Shape.class)
  *       .registerSubtype(Rectangle.class)
  *       .registerSubtype(Circle.class)
  *       .registerSubtype(Diamond.class);
@@ -264,7 +265,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
       @Override
       public void write(JsonWriter out, R value) throws IOException {
         Class<?> srcType = value.getClass();
-        String label = subtypeToLabel.get(srcType);
+
         @SuppressWarnings("unchecked") // registration requires that subtype extends T
         TypeAdapter<R> delegate = (TypeAdapter<R>) subtypeToDelegate.get(srcType);
         if (delegate == null) {
@@ -284,6 +285,7 @@ public final class RuntimeTypeAdapterFactory<T> implements TypeAdapterFactory {
           throw new JsonParseException("cannot serialize " + srcType.getName()
               + " because it already defines a field named " + typeFieldName);
         }
+        String label = subtypeToLabel.get(srcType);
         clone.add(typeFieldName, new JsonPrimitive(label));
 
         for (Map.Entry<String, JsonElement> e : jsonObject.entrySet()) {

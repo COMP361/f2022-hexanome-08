@@ -1,7 +1,5 @@
 package project.view.splendor.communication;
 
-import java.util.EnumMap;
-
 public class PurchaseAction implements Action {
   private int goldTokenRequired;
 

@@ -1,12 +1,6 @@
 package project;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import io.github.isharipov.gson.adapters.PolymorphDeserializer;
-import java.util.Arrays;
-import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,13 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import project.connection.LobbyServiceRequestSender;
-import project.test.Grad;
-import project.test.People;
-import project.test.Prof;
-import project.test.Student;
-import project.test.Undergrad;
 import project.view.lobby.User;
-import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 
 /**
  * Lobby GUI controller.

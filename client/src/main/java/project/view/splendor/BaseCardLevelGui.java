@@ -21,12 +21,22 @@ import project.CardActionController;
 import project.DeckActionController;
 import project.view.splendor.communication.BaseCard;
 
+/**
+ * Gui class that represents a level of cards.
+ */
 public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
   private final int level;
   private List<BaseCard> cards;
   private List<BaseCard> deck;
 
+  /**
+   * Constructor of BaseCardLevelGui class.
+   *
+   * @param level level of the cards (1,2,3)
+   * @param cards a list of cards (fixed length of 4)
+   * @param deck a list of cards (change length based on level)
+   */
   public BaseCardLevelGui(int level, List<BaseCard> cards, List<BaseCard> deck) {
     this.level = level;
     this.cards = cards;
@@ -118,7 +128,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
       rectangle.setFill(Color.DODGERBLUE);
       Text deck = (Text) levelCard.getChildren().get(1);
       Text levelOfCard = (Text) levelCard.getChildren().get(2);
-      deck.setText(newRemainingCards+"");
+      deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(". . .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));
@@ -126,7 +136,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
       rectangle.setFill(Color.YELLOW);
       Text deck = (Text) levelCard.getChildren().get(1);
       Text levelOfCard = (Text) levelCard.getChildren().get(2);
-      deck.setText(newRemainingCards+"");
+      deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(" . .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));
@@ -134,7 +144,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
       rectangle.setFill(Paint.valueOf("#30ff1f"));
       Text deck = (Text) levelCard.getChildren().get(1);
       Text levelOfCard = (Text) levelCard.getChildren().get(2);
-      deck.setText(newRemainingCards+"");
+      deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(" .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));

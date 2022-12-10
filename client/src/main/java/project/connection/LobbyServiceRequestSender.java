@@ -106,11 +106,11 @@ public class LobbyServiceRequestSender {
 
 
   /**
-   * Send request to keep refreshing and get the refreshed new access_token of this user
+   * Send request to keep refreshing and get the refreshed new access_token of this user.
    *
-   * @param refreshToken
-   * @return
-   * @throws UnirestException
+   * @param refreshToken refresh access token
+   * @return A string that is the new access token
+   * @throws UnirestException in case of a failed request
    */
   public String sendRefreshTokenRequest(String refreshToken) throws UnirestException {
     JSONObject refreshResponseJson = Unirest.post(lobbyUrl + "/oauth/token")

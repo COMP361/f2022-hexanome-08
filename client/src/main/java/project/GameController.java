@@ -27,14 +27,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
 import project.connection.SplendorServiceRequestSender;
 import project.view.lobby.User;
 import project.view.splendor.BaseCardLevelGui;
-import project.view.splendor.CardType;
 import project.view.splendor.Colour;
-import project.view.splendor.DevelopmentCardBoardGui;
 import project.view.splendor.HorizontalPlayerInfoGui;
 import project.view.splendor.NobleBoardGui;
 import project.view.splendor.PlayerInfoGui;
@@ -43,7 +39,6 @@ import project.view.splendor.TokenBankGui;
 import project.view.splendor.VerticalPlayerInfoGui;
 import project.view.splendor.communication.Action;
 import project.view.splendor.communication.BaseCard;
-//import project.view.splendor.communication.CardAction;
 import project.view.splendor.communication.DevelopmentCard;
 import project.view.splendor.communication.GameInfo;
 import project.view.splendor.communication.NobleCard;
@@ -91,6 +86,7 @@ public class GameController implements Initializable {
   private final Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap = new HashMap<>();
 
   private List<String> sortedPlayerNames = new ArrayList<>();
+
   public GameController(long gameId) {
     this.gameId = gameId;
   }
@@ -105,8 +101,8 @@ public class GameController implements Initializable {
     App.setRoot("admin_lobby_page");
   }
 
-  private Map<Colour, List<DevelopmentCard>> reorganizeCardsInHand
-      (List<DevelopmentCard> allDevCards) {
+  private Map<Colour, List<DevelopmentCard>> reorganizeCardsInHand(
+      List<DevelopmentCard> allDevCards) {
     Map<Colour, List<DevelopmentCard>> result = new HashMap<>();
     for (DevelopmentCard card : allDevCards) {
       if (!result.containsKey(card.getGemColour())) {
@@ -206,7 +202,7 @@ public class GameController implements Initializable {
 
 
   private Thread generateAllPlayerInfoUpdateThread(
-      SplendorServiceRequestSender gameRequestSender, GameInfo firstGameInfo){
+      SplendorServiceRequestSender gameRequestSender, GameInfo firstGameInfo) {
     return new Thread(() -> {
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
@@ -215,21 +211,23 @@ public class GameController implements Initializable {
         int responseCode = 408;
         while (responseCode == 408) {
           try {
-            longPullResponse = gameRequestSender.sendGetAllPlayerInfoRequest(gameId, hashedResponse);
+            longPullResponse =
+                gameRequestSender.sendGetAllPlayerInfoRequest(gameId, hashedResponse);
           } catch (UnirestException e) {
             throw new RuntimeException(e);
           }
           responseCode = longPullResponse.getStatus();
         }
 
-        if (responseCode == 200){
+        if (responseCode == 200) {
           hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
           // decode this response into PlayerInGame class with Gson
           String responseInJsonString = longPullResponse.getBody();
           PlayerStates playerStates = new Gson().fromJson(responseInJsonString, PlayerStates.class);
           if (isFirstCheck) {
-            int initTokenAmount = playerStates.getPlayersInfo().get(App.getUser().getUsername()).getTokenHand()
-                .getInitialAmount();
+            int initTokenAmount =
+                playerStates.getPlayersInfo().get(App.getUser().getUsername()).getTokenHand()
+                    .getInitialAmount();
             try {
               setupPlayerInfoGui(playerStates,
                   initTokenAmount,
@@ -252,7 +250,8 @@ public class GameController implements Initializable {
                     .setOnAction(createOpenMyPurchaseCardClick(allDevCards));
 
                 myReservedCardsButton
-                    .setOnAction(createOpenMyReserveCardClick(new ArrayList<>(), new ArrayList<>()));
+                    .setOnAction(
+                        createOpenMyReserveCardClick(new ArrayList<>(), new ArrayList<>()));
               }
               updatePlayerInfoGui(playerInfo);
             }
@@ -261,9 +260,6 @@ public class GameController implements Initializable {
       }
     });
   }
-
-
-
 
 
   private void setupPlayerInfoGui(PlayerStates playerStates, int initTokenAmount,
@@ -301,8 +297,6 @@ public class GameController implements Initializable {
     // set up other player area with data from server
     String leftPlayerName = sortedPlayerNames.get(1);
     List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
-    int curPlayersCount = sortedPlayerNames.size();
-
     VerticalPlayerInfoGui leftPlayerGui =
         new VerticalPlayerInfoGui(PlayerPosition.LEFT, leftPlayerName, initTokenAmount);
     // set up
@@ -312,7 +306,7 @@ public class GameController implements Initializable {
 
     // put them into global map for !firstCheck case
     nameToPlayerInfoGuiMap.put(leftPlayerName, leftPlayerGui);
-
+    int curPlayersCount = sortedPlayerNames.size();
     if (curPlayersCount >= 3) {
       String topPlayerName = sortedPlayerNames.get(2);
       HorizontalPlayerInfoGui topPlayerGui =
@@ -352,12 +346,12 @@ public class GameController implements Initializable {
   }
 
 
-  public static Gson getActionGson() {
+  private static Gson getActionGson() {
     final RuntimeTypeAdapterFactory<Action> actionFactory = RuntimeTypeAdapterFactory
-            .of(Action.class, "type")
-            .registerSubtype(ReserveAction.class)
-            .registerSubtype(PurchaseAction.class)
-            .registerSubtype(TakeTokenAction.class);
+        .of(Action.class, "type")
+        .registerSubtype(ReserveAction.class)
+        .registerSubtype(PurchaseAction.class)
+        .registerSubtype(TakeTokenAction.class);
 
     return new GsonBuilder().registerTypeAdapterFactory(actionFactory).create();
 
@@ -368,8 +362,10 @@ public class GameController implements Initializable {
     SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
     User curUser = App.getUser();
     HttpResponse<String> actionMapResponse =
-        gameRequestSender.sendGetPlayerActionsRequest(gameId, curUser.getUsername(), curUser.getAccessToken());
-    Type actionMapType = new TypeToken<Map<String, Action>>() {}.getType();
+        gameRequestSender.sendGetPlayerActionsRequest(gameId, curUser.getUsername(),
+            curUser.getAccessToken());
+    Type actionMapType = new TypeToken<Map<String, Action>>() {
+    }.getType();
     Gson actionGson = GameController.getActionGson();
     Map<String, Action> resultActionsMap =
         actionGson.fromJson(actionMapResponse.getBody(), actionMapType);
@@ -386,9 +382,9 @@ public class GameController implements Initializable {
             int level = curPosition.getCoordinateX();
             int cardIndex = curPosition.getCoordinateY();
             if (curAction instanceof PurchaseAction) {
-              actionHashesLookUp[3-level][cardIndex][0] = actionHash;
+              actionHashesLookUp[3 - level][cardIndex][0] = actionHash;
             } else {
-              actionHashesLookUp[3-level][cardIndex][1] = actionHash;
+              actionHashesLookUp[3 - level][cardIndex][1] = actionHash;
             }
           }
 
@@ -485,16 +481,14 @@ public class GameController implements Initializable {
               baseCardGuiMap.put(i, baseCardLevelGui);
             }
             try {
-              System.out.println("First time generate actions for player: " + curUser.getUsername());
+              System.out.println(
+                  "First time generate actions for player: " + curUser.getUsername());
               assignActionsToCardBoard();
             } catch (UnirestException e) {
               throw new RuntimeException(e);
             }
             isFirstCheck = false;
-          }
-
-          // If it is not first check.....
-          else {
+          } else { // If it is not first check.....
             // need to display
             // TODO:
             //  1. NEW Cards on board (and their actions)
@@ -546,6 +540,7 @@ public class GameController implements Initializable {
       }
     });
   }
+
   @Override
   // TODO: This method contains what's gonna happen after clicking "play" on the board
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -557,7 +552,8 @@ public class GameController implements Initializable {
       HttpResponse<String> firstGameInfoResponse =
           gameRequestSender.sendGetGameInfoRequest(gameId, "");
       GameInfo curGameInfo = new Gson().fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
-      Thread playerInfoRelatedThread = generateAllPlayerInfoUpdateThread(gameRequestSender, curGameInfo);
+      Thread playerInfoRelatedThread =
+          generateAllPlayerInfoUpdateThread(gameRequestSender, curGameInfo);
       Thread mainGameUpdateThread = generateGameInfoUpdateThread(gameRequestSender);
       // start the thread for main board and playerInfo update at the same time
       playerInfoRelatedThread.start();

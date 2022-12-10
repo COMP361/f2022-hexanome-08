@@ -242,7 +242,16 @@ public class TokenBankGui extends HBox {
   }
 
 
-  public void setup(EnumMap<Colour, Integer> bankMap, double layoutX, double layoutY, boolean firstSetup) {
+  /**
+   * Set up the TokenBank GUI object.
+   *
+   * @param bankMap the enum map of price
+   * @param layoutX layout x
+   * @param layoutY layout y
+   * @param firstSetup whether it's first set up or not
+   */
+  public void setup(EnumMap<Colour, Integer> bankMap, double layoutX, double layoutY,
+                    boolean firstSetup) {
     // set the layout of the GUI
     if (firstSetup) {
       setLayoutX(layoutX);

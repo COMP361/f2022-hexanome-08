@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.layout.VBox;
 
+/**
+ * Customized GUI object that extends VBox.
+ */
 public class SessionGuiManager extends VBox {
 
   private static SessionGuiManager sessionsVbox = null;
@@ -12,6 +15,11 @@ public class SessionGuiManager extends VBox {
   private SessionGuiManager() {
   }
 
+  /**
+   * Singleton get instance method.
+   *
+   * @return a SessionGuiManager singleton object
+   */
   public static SessionGuiManager getInstance() {
     if (sessionsVbox == null) {
       sessionsVbox = new SessionGuiManager();
