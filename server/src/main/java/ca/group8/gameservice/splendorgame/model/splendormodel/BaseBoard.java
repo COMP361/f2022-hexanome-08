@@ -14,6 +14,13 @@ public class BaseBoard {
   private final Map<Integer, List<BaseCard>> baseDecks;
   private final Map<Integer, List<BaseCard>> baseCardsOnBoard;
 
+
+  /**
+   *  Constructor of BaseBoard class.
+   *
+   * @param allBaseCards a list of base card
+   *
+   */
   public BaseBoard(List<BaseCard> allBaseCards) {
     baseDecks = new HashMap<>();
     baseCardsOnBoard = new HashMap<>();
