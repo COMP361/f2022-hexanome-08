@@ -5,8 +5,6 @@ package ca.group8.gameservice.splendorgame.model;
  * requested that would lead to an inconsistent
  * state.
  *
- * @Author: Maximilian Schiedermeier
- * @Date: December 2020
  */
 public class ModelAccessException extends Exception {
   public ModelAccessException(String cause) {

@@ -36,6 +36,13 @@ public class PurchaseAction implements Action {
   private Position position;
   private DevelopmentCard card;
 
+  /**
+   * Constructor of purchase action.
+   *
+   * @param position position on board
+   * @param card card associated with action
+   * @param goldTokenRequired number of gold token required
+   */
   public PurchaseAction(Position position, DevelopmentCard card, int goldTokenRequired) {
     this.position = position;
     this.card = card;

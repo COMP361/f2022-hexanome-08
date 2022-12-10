@@ -187,7 +187,6 @@ public class SplendorRestController {
   public ResponseEntity<String> launchGame(@PathVariable long gameId,
                                            @RequestBody LauncherInfo launcherInfo) {
     // TODO: Handle the logic of how the game is managed in game manager
-
     //TODO: When the game is launched, there are several things to do
     // 1. construct the instance of GameInfo
     // 2. Add <gameId, tableTop> pair to tableTopBroadcastContentManager (gameId from pathVariable)

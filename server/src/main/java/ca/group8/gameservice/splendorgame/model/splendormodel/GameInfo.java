@@ -5,6 +5,9 @@ import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The class that contains basic game information on the board, supports long polling.
+ */
 public class GameInfo implements BroadcastContent { // TODO add gametype
 
 
