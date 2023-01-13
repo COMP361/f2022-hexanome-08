@@ -151,7 +151,8 @@ public class SplendorRestController {
    * @param hash hashed previous response payload
    * @return a deferred return payload JSON string response
    */
-  @GetMapping(value = "/api/games/{gameId}", produces = "application/json; charset=utf-8")
+  @GetMapping(value = {"/splendororient/api/games/{gameId}",
+      "/splendorbase/api/games/{gameId}"}, produces = "application/json; charset=utf-8")
   public DeferredResult<ResponseEntity<String>> getGameDetail(@PathVariable long gameId,
                                                               @RequestParam(required = false)
                                                               String hash) {
@@ -200,7 +201,8 @@ public class SplendorRestController {
    * @param launcherInfo JSON request body that contains the info needed to PUT a game service
    * @return a response body of the reply of launch game request.
    */
-  @PutMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
+  @PutMapping(value = {"/splendororient/api/games/{gameId}",
+      "/splendorbase/api/games/{gameId}"}, consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> launchGame(@PathVariable long gameId,
                                            @RequestBody LauncherInfo launcherInfo) {
     // TODO: Handle the logic of how the game is managed in game manager
@@ -275,7 +277,8 @@ public class SplendorRestController {
   /**
    * TODO: Finish this later.
    */
-  @DeleteMapping(value = "/api/games/{gameId}", consumes = "application/json; charset=utf-8")
+  @DeleteMapping(value = {"/splendororient/api/games/{gameId}",
+      "/splendorbase/api/games/{gameId}"}, consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> deleteGame(@PathVariable long gameId,
                                            @RequestParam(value = "access_token") String accessToken,
                                            @RequestParam(value = "savegameid", required = false)
@@ -350,7 +353,8 @@ public class SplendorRestController {
   /**
    * Long polling for the game board content, optional hash value.
    */
-  @GetMapping(value = "/api/games/{gameId}/playerStates",
+  @GetMapping(value = {"/splendororient/api/games/{gameId}/playerStates",
+      "/splendorbase/api/games/{gameId}/playerStates"},
       produces = "application/json; charset=utf-8")
   public DeferredResult<ResponseEntity<String>> getPlayerStates(
       @PathVariable long gameId, @RequestParam(required = false) String hash) {
@@ -409,7 +413,8 @@ public class SplendorRestController {
   /**
    * Get player inventory.
    */
-  @GetMapping(value = "/api/games/{gameId}/players/{playerName}/inventory",
+  @GetMapping(value = {"/splendororient/api/games/{gameId}/players/{playerName}/inventory",
+      "/splendorbase/api/games/{gameId}/players/{playerName}/inventory"},
       produces = "application/json; charset=utf-8")
   public DeferredResult<ResponseEntity<String>> getPlayerInventory(
       @PathVariable long gameId, @PathVariable String playerName,
@@ -455,7 +460,8 @@ public class SplendorRestController {
   /**
    * Get players.
    */
-  @GetMapping(value = "/api/games/{gameId}/players", produces = "application/json; charset=utf-8")
+  @GetMapping(value = {"/splendororient/api/games/{gameId}/players",
+      "/splendorbase/api/games/{gameId}/players"}, produces = "application/json; charset=utf-8")
   public ResponseEntity<String> getPlayers(@PathVariable long gameId) {
     try {
       // check if our game manager contains this game id, if not, we did not PUT it correctly!
@@ -480,7 +486,8 @@ public class SplendorRestController {
   /**
    * TODO: send GET request to this location TWICE per turn, one at beginning, one at the end.
    */
-  @GetMapping(value = "/api/games/{gameId}/players/{playerName}/actions",
+  @GetMapping(value = {"/splendororient/api/games/{gameId}/players/{playerName}/actions",
+      "/splendorbase/api/games/{gameId}/players/{playerName}/actions"},
       produces = "application/json; charset=utf-8")
   public ResponseEntity<String> getActions(@PathVariable long gameId,
                                            @PathVariable String playerName,
@@ -542,7 +549,9 @@ public class SplendorRestController {
   /**
    * Select action.
    */
-  @PostMapping(value = "/api/games/{gameId}/players/{playerName}/actions/{actionId}")
+  @PostMapping(value =
+      {"/splendororient/api/games/{gameId}/players/{playerName}/actions/{actionId}",
+      "/splendorbase/api/games/{gameId}/players/{playerName}/actions/{actionId}"})
   public ResponseEntity<String> selectAction(@PathVariable long gameId,
                                              @PathVariable String playerName,
                                              @PathVariable String actionId,
