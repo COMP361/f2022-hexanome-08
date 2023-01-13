@@ -6,6 +6,9 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,36 +30,32 @@ public class SplendorRegistrator {
   // in the constructor and then assign it to the field,
   // same thing apply to all fields that are needed to construct
   // the GameServerParameter communication bean object.
-  private final String gameServiceName;
-  private final String gameServiceDisplayName;
+  private final List<String> gameServiceNames;
+  private final List<String> gameServiceDisplayNames;
+  private final List<String> gameServiceUsernames;
+  private final List<String> gameServicePasswords;
+  private final String gameServicePort;
   private final String gameServiceLocation;
   private final String lobbyServiceAddress;
-  private final String gameServicePort;
-  private final String gameServiceUsername;
-  private final String gameServicePassword;
-  private final GameServerParameters registrationGameServerParams;
 
 
   @Autowired
-  SplendorRegistrator(@Value("${gameservice.name}") String gameServiceName,
-                      @Value("${gameservice.displayName}") String gameServiceDisplayName,
-                      @Value("${gameservice.location}") String gameServiceLocation,
-                      @Value("${game.password}") String gameServicePassword,
-                      @Value("${game.username}") String gameServiceUsername,
+  SplendorRegistrator(@Value("${gameservice.names}") String[] gameServiceNames,
+                      @Value("${gameservice.displayNames}") String[] gameServiceDisplayNames,
+                      @Value("${game.usernames}") String[] gameServiceUsernames,
+                      @Value("${game.passwords}") String[] gameServicePasswords,
                       @Value("${server.port}") String gameServicePort,
+                      @Value("${gameservice.location}") String gameServiceLocation,
                       @Value("${lobbyservice.location}") String lobbyServiceAddress) {
 
     // first assigning all fields first, then construct the GameServerParameter class
-    this.gameServicePassword = gameServicePassword;
-    this.gameServiceUsername = gameServiceUsername;
+    this.gameServiceNames = Arrays.asList(gameServiceNames);
+    this.gameServiceDisplayNames = Arrays.asList(gameServiceDisplayNames);
+    this.gameServiceUsernames = Arrays.asList(gameServiceUsernames);
+    this.gameServicePasswords = Arrays.asList(gameServicePasswords);
     this.gameServicePort = gameServicePort;
     this.lobbyServiceAddress = lobbyServiceAddress;
-    this.gameServiceName = gameServiceName;
-    this.gameServiceDisplayName = gameServiceDisplayName;
     this.gameServiceLocation = gameServiceLocation;
-    this.registrationGameServerParams =
-        new GameServerParameters(gameServiceName, gameServiceDisplayName, gameServiceLocation,
-            4, 2, "false");
     // for error messages
     this.logger = LoggerFactory.getLogger(SplendorRegistrator.class);
   }
@@ -69,20 +68,28 @@ public class SplendorRegistrator {
     //  to lobbyUrl + /api/gameservices/{gameservicename} to register the game
 
     String accessToken;
-    try {
-      // POST Request, log "the game service" user in
-      accessToken = getOauthToken();
-    } catch (Exception e) {
-      logger.warn("Failed to log the game service in with the game username and game password");
-      return;
-    }
-    // GET Request, check if role is "ROLE_SERVICE"
-    String roleOfGame = sendAuthorityRequest(accessToken);
-    if (roleOfGame.equals("ROLE_SERVICE")) {
-      // Send the PUT request if it is "ROLE_SERVICE"
-      registerGameAtLobby(accessToken);
-    } else {
-      logger.warn("Wrong role of the provided username and password!");
+    for (int i = 0; i < gameServiceUsernames.size(); i++) {
+      try {
+        // POST Request, log "the game service" user in
+        accessToken = getOauthToken(gameServiceUsernames.get(i), gameServicePasswords.get(i));
+      } catch (Exception e) {
+        logger.warn("Failed to log the game service in with the game username and game password");
+        return;
+      }
+      // GET Request, check if role is "ROLE_SERVICE"
+      String roleOfGame = sendAuthorityRequest(accessToken);
+      if (roleOfGame.equals("ROLE_SERVICE")) {
+        // Send the PUT request if it is "ROLE_SERVICE"
+        String curGameName = gameServiceNames.get(i);
+        String curDisplayName = gameServiceDisplayNames.get(i);
+        String curGameLocation = gameServiceLocation + curGameName;
+        GameServerParameters curGameServerParams
+            = new GameServerParameters(curGameName, curDisplayName,
+            curGameLocation, 4, 2, "false");
+        registerGameAtLobby(accessToken, curGameName, curGameServerParams);
+      } else {
+        logger.warn("Wrong role of the provided username and password!");
+      }
     }
 
   }
@@ -90,8 +97,11 @@ public class SplendorRegistrator {
   /**
    * Adds game to lobby.
    */
-  public void registerGameAtLobby(String accessToken) throws UnirestException {
-    String requestJsonString = new Gson().toJson(registrationGameServerParams);
+  public void registerGameAtLobby(String accessToken,
+                                  String gameServiceName,
+                                  GameServerParameters gameServerParameters)
+      throws UnirestException {
+    String requestJsonString = new Gson().toJson(gameServerParameters);
     String url = lobbyServiceAddress + "/api/gameservices/" + gameServiceName;
     HttpResponse<String> response = Unirest.put(url)
         .header("Authorization", "Bearer " + accessToken)
@@ -101,9 +111,9 @@ public class SplendorRegistrator {
   }
 
   /**
-   * Sends request.
+   * Sends request to check authority of the access token.
    */
-  public String sendAuthorityRequest(String accessToken) throws UnirestException {
+  private String sendAuthorityRequest(String accessToken) throws UnirestException {
     // queryString: request param
     HttpResponse<JsonNode> authorityResponse = Unirest.get(lobbyServiceAddress + "/oauth/role")
         .queryString("access_token", accessToken).asJson();
@@ -117,7 +127,8 @@ public class SplendorRegistrator {
    *
    * @return OAuth token
    */
-  private String getOauthToken() throws UnirestException {
+  private String getOauthToken(String gameServiceUsername,
+                               String gameServicePassword) throws UnirestException {
     JSONObject tokenResponse = Unirest.post(lobbyServiceAddress + "/oauth/token")
         .basicAuth("bgp-client-name", "bgp-client-pw")
         .field("grant_type", "password")
