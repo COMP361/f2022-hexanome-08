@@ -546,7 +546,7 @@ public class GameController implements Initializable {
     SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
 
     System.out.println("Current user: " + App.getUser().getUsername());
-
+    System.out.println(gameRequestSender.getGameServiceName());
     try {
       HttpResponse<String> firstGameInfoResponse =
           gameRequestSender.sendGetGameInfoRequest(gameId, "");

@@ -40,7 +40,8 @@ public class App extends Application {
   // http://127.0.0.1:4246/splendor
   // http://76.66.139.161:4246/splendor
   private static final SplendorServiceRequestSender gameRequestSender =
-      new SplendorServiceRequestSender("http://76.66.139.161:4246/splendor");
+      new SplendorServiceRequestSender(
+          "http://76.66.139.161:4246/", "splendorbase");
 
   private static final Colour[] allColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
