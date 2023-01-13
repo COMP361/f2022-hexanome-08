@@ -1,4 +1,4 @@
-package project.view.lobby;
+package project.view.lobby.communication;
 
 /**
  * GameParameters object for the reply message of /api/sessions.

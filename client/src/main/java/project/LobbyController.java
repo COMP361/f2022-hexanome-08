@@ -17,12 +17,12 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.connection.LobbyServiceRequestSender;
-import project.view.lobby.GameParameters;
-import project.view.lobby.Session;
+import project.view.lobby.communication.GameParameters;
+import project.view.lobby.communication.Session;
 import project.view.lobby.SessionGui;
 import project.view.lobby.SessionGuiManager;
-import project.view.lobby.SessionList;
-import project.view.lobby.User;
+import project.view.lobby.communication.SessionList;
+import project.view.lobby.communication.User;
 
 /**
  * login GUI controller.
@@ -158,7 +158,7 @@ public class LobbyController {
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
-
+    // map from display name to actual game name
     for (GameParameters g : gameParameters) {
       gameDisplayNames.add(g.getDisplayName());
       lobbyRequestSender.addGameNameMapping(g.getDisplayName(), g.getName());

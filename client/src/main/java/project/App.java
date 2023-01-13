@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import project.connection.LobbyServiceRequestSender;
 import project.connection.SplendorServiceRequestSender;
 import project.view.lobby.SessionGuiManager;
-import project.view.lobby.User;
+import project.view.lobby.communication.User;
 import project.view.splendor.Colour;
 
 

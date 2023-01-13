@@ -1,4 +1,4 @@
-package project.view.lobby;
+package project.view.lobby.communication;
 
 import java.util.HashMap;
 import java.util.Map;

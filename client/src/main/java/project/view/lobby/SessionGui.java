@@ -15,6 +15,8 @@ import project.App;
 import project.GameBoardLayoutConfig;
 import project.GameController;
 import project.connection.LobbyServiceRequestSender;
+import project.view.lobby.communication.Session;
+import project.view.lobby.communication.User;
 
 /**
  * TODO: Assigned the functionality to the buttons (launch, delete, play, ...) in here
