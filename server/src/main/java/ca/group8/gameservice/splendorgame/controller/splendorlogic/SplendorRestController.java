@@ -17,8 +17,10 @@ import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +51,7 @@ public class SplendorRestController {
 
 
   // Game registration related fields
-  private final String gameServiceName;
+  private final List<String> gameServiceNames;
   private final String lobbyServiceAddress;
   private final SplendorRegistrator splendorRegistrator;
 
@@ -77,7 +79,7 @@ public class SplendorRestController {
       @Autowired SplendorGameManager splendorGameManager,
       @Autowired SplendorActionListGenerator splendorActionListGenerator,
       @Autowired SplendorActionInterpreter splendorActionInterpreter,
-      @Value("${gameservice.name}") String gameServiceName,
+      @Value("${gameservice.names}") String[] gameServiceNames,
       @Value("${lobbyservice.location}") String lobbyServiceAddress,
       @Value("${long.poll.timeout}") long longPollTimeOut) {
     this.splendorRegistrator = splendorRegistrator;
@@ -85,7 +87,7 @@ public class SplendorRestController {
     this.splendorActionListGenerator = splendorActionListGenerator;
     this.splendorActionInterpreter = splendorActionInterpreter;
     this.lobbyServiceAddress = lobbyServiceAddress;
-    this.gameServiceName = gameServiceName;
+    this.gameServiceNames = Arrays.asList(gameServiceNames);
     this.longPollTimeOut = longPollTimeOut;
     this.allPlayerInfoBroadcastContentManager = new LinkedHashMap<>();
     this.specificPlayerInfoBroadcastContentManager = new LinkedHashMap<>();
@@ -97,6 +99,21 @@ public class SplendorRestController {
   @GetMapping(value = "/test")
   public String helloWorld() {
     return "Hello, World!";
+  }
+
+  //@GetMapping(value = "/splendorbase")
+  //public String gameTest() {
+  //  return "Hello, splendorbase!";
+  //}
+  //
+  //@GetMapping(value = "/splendororient")
+  //public String gameTest2() {
+  //  return "Hello, splendororient!";
+  //}
+
+  @GetMapping(value = {"/splendororient", "/splendorbase"})
+  public String gameTest3() {
+    return "Hello, splendor games!";
   }
 
 
@@ -204,7 +221,7 @@ public class SplendorRestController {
         throw new ModelAccessException("Duplicate game instance, can not launch it!");
       }
 
-      if (!launcherInfo.getGameServer().equals(gameServiceName)) {
+      if (!gameServiceNames.contains(launcherInfo.getGameServer())) {
         throw new ModelAccessException("No such game registered in LS");
       }
 
@@ -216,8 +233,15 @@ public class SplendorRestController {
       }
       // TODO: Shuffle player names (muted for now)
       //Collections.shuffle(playerNames);
-      GameInfo newGameInfo = new GameInfo(playerNames);
-      PlayerStates newPlayerStates = new PlayerStates(playerNames);
+      GameInfo newGameInfo = null;
+      PlayerStates newPlayerStates = null;
+      if (launcherInfo.getGameServer().equals("splendorbase")) {
+        newGameInfo = new GameInfo(playerNames);
+        newPlayerStates = new PlayerStates(playerNames);
+      } else if (launcherInfo.getGameServer().equals("splendororient")) {
+        // TODO: Add the logic of constructing different GameInfo and PlayerStates
+        //  according to different gameServiceNames
+      }
 
       // added the gameInfo and player states reference to game manager
       splendorGameManager.addGame(gameId, newGameInfo);
@@ -270,7 +294,7 @@ public class SplendorRestController {
         playerNames[i] = gameInfo.getPlayerNames().get(i);
       }
       // no matter what, we have a non-empty savegameid that we can send to LS
-      Savegame saveGameInfo = new Savegame(playerNames, gameServiceName, saveGameId);
+      //Savegame saveGameInfo = new Savegame(playerNames, gameServiceName, saveGameId);
       // TODO: Send the PUT request to save game under
       //  /api/gameservices/{gameservice}/savegames/{savegame} to LS
 
