@@ -16,30 +16,37 @@ import org.springframework.web.client.RestTemplate;
 public class SplendorServiceRequestSender {
 
   private final String gameUrl;
+  private String gameServiceName;
 
-  public SplendorServiceRequestSender(String gameUrl) {
+  public SplendorServiceRequestSender(String gameUrl, String gameServiceName) {
     this.gameUrl = gameUrl;
+    this.gameServiceName = gameServiceName;
+  }
+
+  public void setGameServiceName(String gameServiceName) {
+    assert gameServiceName != null && !gameServiceName.equals("");
+    this.gameServiceName = gameServiceName;
   }
 
 
-  /**
-   * Send the request and get back a list of strings encoded in one string.
-   *
-   * @param gameId game id
-   * @return a list of player names
-   */
-  public String[] sendGetAllPlayerNamesList(long gameId) {
-    RestTemplate rest = new RestTemplate();
-    HttpHeaders headers = new HttpHeaders();
-    String body = "";
-    String url = String.format("%s/api/games/%s/players", gameUrl, gameId);
-
-    HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-    ResponseEntity<String> responseEntity =
-        rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
-    // TODO: Parse this raw string using Gson to an Array
-    return new Gson().fromJson(responseEntity.getBody(), String[].class);
-  }
+  ///**
+  // * Send the request and get back a list of strings encoded in one string.
+  // *
+  // * @param gameId game id
+  // * @return a list of player names
+  // */
+  //public String[] sendGetAllPlayerNamesList(long gameId) {
+  //  RestTemplate rest = new RestTemplate();
+  //  HttpHeaders headers = new HttpHeaders();
+  //  String body = "";
+  //  String url = String.format("%s/api/games/%s/players", gameUrl, gameId);
+  //
+  //  HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
+  //  ResponseEntity<String> responseEntity =
+  //      rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
+  //  // TODO: Parse this raw string using Gson to an Array
+  //  return new Gson().fromJson(responseEntity.getBody(), String[].class);
+  //}
 
 
   /**
@@ -53,9 +60,9 @@ public class SplendorServiceRequestSender {
   public HttpResponse<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse)
       throws UnirestException {
     if (hashPreviousResponse.equals("")) {
-      return Unirest.get(gameUrl + "/api/games/" + gameId).asString();
+      return Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId).asString();
     } else {
-      return Unirest.get(gameUrl + "/api/games/" + gameId)
+      return Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId)
           .queryString("hash", hashPreviousResponse)
           .asString();
     }
@@ -74,9 +81,11 @@ public class SplendorServiceRequestSender {
                                                           String hashPreviousResponse)
       throws UnirestException {
     if (hashPreviousResponse.equals("")) {
-      return Unirest.get(String.format("%s/api/games/%s/playerStates", gameUrl, gameId)).asString();
+      return Unirest.get(String.format("%s/api/games/%s/playerStates",
+          gameUrl + gameServiceName, gameId)).asString();
     } else {
-      return Unirest.get(String.format("%s/api/games/%s/playerStates", gameUrl, gameId))
+      return Unirest.get(String.format("%s/api/games/%s/playerStates",
+              gameUrl + gameServiceName, gameId))
           .queryString("hash", hashPreviousResponse)
           .asString();
 
@@ -117,7 +126,8 @@ public class SplendorServiceRequestSender {
       throws UnirestException {
 
     return Unirest
-        .get(String.format("%s/api/games/%s/players/%s/actions", gameUrl, gameId, playerName))
+        .get(String.format("%s/api/games/%s/players/%s/actions", gameUrl + gameServiceName,
+            gameId, playerName))
         .queryString("access_token", accessToken).asString();
   }
 
@@ -135,7 +145,7 @@ public class SplendorServiceRequestSender {
       throws UnirestException {
     HttpResponse<String> response =
         Unirest.post(String.format("%s/api/games/%s/players/%s/actions/%s",
-                gameUrl, gameId, playerName, actionId))
+                gameUrl + gameServiceName, gameId, playerName, actionId))
             .queryString("access_token", accessToken).asString();
   }
 
@@ -146,4 +156,5 @@ public class SplendorServiceRequestSender {
   public String getGameUrl() {
     return gameUrl;
   }
+  public String getGameServiceName() {return gameServiceName;}
 }

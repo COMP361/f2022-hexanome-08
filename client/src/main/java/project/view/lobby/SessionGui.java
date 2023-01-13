@@ -110,6 +110,7 @@ public class SessionGui extends HBox {
         // 0. sessionId needs to be passed to this controller, the other info
         // I can get from based on this sessionId (gameId)
         GameBoardLayoutConfig config = App.getGuiLayouts();
+        App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
         App.loadPopUpWithController("splendor_base_game_board.fxml",
             new GameController(curSessionId), config.getAppWidth(), config.getAppHeight());
 
