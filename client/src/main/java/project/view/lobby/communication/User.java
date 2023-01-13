@@ -1,4 +1,4 @@
-package project.view.lobby;
+package project.view.lobby.communication;
 
 /**
  * User class used to store user info locally.

@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import project.view.lobby.GameParameters;
-import project.view.lobby.SessionList;
+import project.view.lobby.communication.GameParameters;
+import project.view.lobby.communication.SessionList;
 
 
 /**

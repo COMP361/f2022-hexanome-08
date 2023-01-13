@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import project.connection.LobbyServiceRequestSender;
-import project.view.lobby.User;
+import project.view.lobby.communication.User;
 
 /**
  * Lobby GUI controller.
@@ -76,8 +76,8 @@ public class LogInController {
   }
 
   public void initialize() {
-    //userName.setText("ruoyu");
-    //userPassword.setText("Dd991218?");
+    userName.setText("ruoyu");
+    userPassword.setText("Dd991218?");
 
 
     // Testing serialization problem

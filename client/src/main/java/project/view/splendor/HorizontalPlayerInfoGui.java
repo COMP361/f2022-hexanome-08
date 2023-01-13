@@ -64,7 +64,6 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     return playerName;
   }
 
-  @Override
   public Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(
       PlayerPosition playerPosition) {
     Map<Colour, Map<PlayerWealthInfo, Text>> result = new HashMap<>();
@@ -100,7 +99,6 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     return result;
   }
 
-  @Override
   public Map<PlayerVisibleInfo, Text> getPlayerVisibleInfoMap(PlayerPosition playerPosition) {
     Map<PlayerVisibleInfo, Text> resultMap = new HashMap<>();
     if (playerPosition.equals(PlayerPosition.TOP)) {
