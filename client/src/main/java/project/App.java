@@ -34,14 +34,20 @@ public class App extends Application {
   private static Scene lobby;
 
   // One and the only one requestSender
+  //private static final LobbyServiceRequestSender lobbyRequestSender =
+  //    new LobbyServiceRequestSender("http://76.66.139.161:4242");
   private static final LobbyServiceRequestSender lobbyRequestSender =
-      new LobbyServiceRequestSender("http://76.66.139.161:4242");
+      new LobbyServiceRequestSender("http://127.0.0.1:4242");
 
   // http://127.0.0.1:4246/splendor
   // http://76.66.139.161:4246/splendor
+  //private static final SplendorServiceRequestSender gameRequestSender =
+  //    new SplendorServiceRequestSender(
+  //        "http://76.66.139.161:4246/", "splendorbase");
   private static final SplendorServiceRequestSender gameRequestSender =
       new SplendorServiceRequestSender(
-          "http://76.66.139.161:4246/", "splendorbase");
+          "http://127.0.0.1:4246/", "splendorbase");
+
 
   private static final Colour[] allColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
