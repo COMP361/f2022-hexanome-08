@@ -67,7 +67,7 @@ public class PlayerInGame implements BroadcastContent {
     return prestigePoints;
   }
 
-  public void addPrestigePoints(int amount) { prestigePoints-=amount; }
+  public void addPrestigePoints(int amount) { prestigePoints+=amount; }
 
   public void removePrestigePoints(int amount) { prestigePoints-=amount; }
 
