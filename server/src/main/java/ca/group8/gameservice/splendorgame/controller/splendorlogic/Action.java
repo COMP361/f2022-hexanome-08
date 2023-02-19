@@ -4,6 +4,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 
 
 /**
@@ -15,14 +16,18 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
  */
 
 
-public interface Action {
+public abstract class Action {
 
 
-  void execute(GameInfo currentGameState, PlayerInGame playerState);
+  abstract void execute(TableTop curTableTop, PlayerInGame playerInGame,
+               SplendorActionListGenerator actionListGenerator,
+               SplendorActionInterpreter actionInterpreter);
 
-  boolean checkIsCardAction();
+  boolean checkIsExtraAction() {return false;};
 
-  Card getCard();
+  boolean checkIsCardAction() {return false;};
 
-  Position getPosition();
+  abstract Card getCurCard() throws NullPointerException;
+
+  abstract Position getCardPosition() throws NullPointerException;
 }
