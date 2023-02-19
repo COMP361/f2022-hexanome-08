@@ -1,51 +1,56 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
-import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
-import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
-import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
-import java.util.EnumMap;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+
 
 /**
  * Action that allows you to purchase a card.
  */
-public class PurchaseAction implements Action {
+public class PurchaseAction extends Action {
+
+  private Card curCard;
   private int goldTokenRequired;
+  private Position cardPosition;
 
   @Override
-  public Position getPosition() {
-    return position;
+  public Position getCardPosition() {
+    if (cardPosition == null) {
+      throw new NullPointerException("Card Position is empty.");
+    }
+    return cardPosition;
   }
 
   @Override
-  public DevelopmentCard getCard() {
-    return card;
+  public Card getCurCard() {
+    if (curCard == null) {
+      throw new NullPointerException("Current Card is empty.");
+    }
+    return curCard;
   }
 
-  public void setPosition(Position position) {
-    this.position = position;
+  public void setCardPosition(Position cardPosition) {
+    this.cardPosition = cardPosition;
   }
 
   public void setCard(DevelopmentCard card) {
-    this.card = card;
+    this.curCard = card;
   }
-
-  private Position position;
-  private DevelopmentCard card;
 
   /**
    * Constructor of purchase action.
    *
-   * @param position position on board
+   * @param cardPosition position on board
    * @param card card associated with action
    * @param goldTokenRequired number of gold token required
    */
-  public PurchaseAction(Position position, DevelopmentCard card, int goldTokenRequired) {
-    this.position = position;
-    this.card = card;
+  public PurchaseAction(Position cardPosition, DevelopmentCard card, int goldTokenRequired) {
+    assert cardPosition != null && card != null && goldTokenRequired >= 0;
+    this.cardPosition = cardPosition;
+    this.curCard = card;
     this.goldTokenRequired = goldTokenRequired;
   }
 
@@ -59,16 +64,25 @@ public class PurchaseAction implements Action {
 
 
   @Override
+  public void execute(TableTop curTableTop, PlayerInGame playerInGame,
+                      SplendorActionListGenerator actionListGenerator,
+                      SplendorActionInterpreter actionInterpreter) {
+
+  }
+
+  /*
   public void execute(GameInfo currentGameState, PlayerInGame playerState) {
     // TODO: For now, just do a simple downcast assuming the card is DevelopmentCard
-    DevelopmentCard card = this.card;
+    Card card = this.curCard;
     PurchasedHand hand = playerState.getPurchasedHand();
     TokenHand tokenHand = playerState.getTokenHand();
     EnumMap<Colour, Integer> playerGems = playerState.getTotalGems();
     // update player's prestige points
     int cardPoints = card.getPrestigePoints();
     int playerCurPoints = playerState.getPrestigePoints();
-    playerState.setPrestigePoints(cardPoints + playerCurPoints);
+
+    //Changed this from previous version --> now we just add points VS. using set method.
+    playerState.addPrestigePoints(cardPoints);
 
     // update player's purchase hand
     for (Colour colour : Colour.values()) {
@@ -90,8 +104,11 @@ public class PurchaseAction implements Action {
     // replace the card with another new card draw from deck
     DevelopmentCard newCard =
         currentGameState.getTableTop().getBaseBoard().getBaseDecks().get(level).remove(0);
-    currentGameState.getTableTop().getBaseBoard().replaceCardOnBoard(position, newCard);
+    currentGameState.getTableTop().getBaseBoard().replaceCardOnBoard(cardPosition, newCard);
   }
+
+   */
+
 
   @Override
   public boolean checkIsCardAction() {
