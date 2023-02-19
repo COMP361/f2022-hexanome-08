@@ -23,9 +23,13 @@ public abstract class Action {
                SplendorActionListGenerator actionListGenerator,
                SplendorActionInterpreter actionInterpreter);
 
-  boolean checkIsExtraAction() {return false;};
+  boolean checkIsExtraAction() {
+    return false;
+  }
 
-  boolean checkIsCardAction() {return false;};
+  boolean checkIsCardAction() {
+    return false;
+  }
 
   abstract Card getCurCard() throws NullPointerException;
 

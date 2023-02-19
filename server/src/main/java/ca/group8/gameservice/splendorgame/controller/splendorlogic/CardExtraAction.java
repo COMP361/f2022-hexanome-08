@@ -6,13 +6,27 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 
-public class CardExtraAction extends Action{
+/**
+ * This class represents an extra card action.
+ */
+public class CardExtraAction extends Action {
 
   private Card curCard;
+  //TODO: Check this works after code is merged
+  private final CardEffect cardEffect;
 
-  public CardExtraAction(Card card) {
+  //TODO: Check this works after code is merged
+
+  /**
+   * Constructor.
+   *
+   * @param card Card which "unlocks" this extra action
+   * @param cardEffect The type of extra action
+   */
+  public CardExtraAction(Card card, CardEffect cardEffect) {
     assert curCard != null;
     curCard = card;
+    this.cardEffect = cardEffect;
   }
 
   @Override

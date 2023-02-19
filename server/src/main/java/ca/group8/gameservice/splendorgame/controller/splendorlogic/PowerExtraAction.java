@@ -6,6 +6,9 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 
+/**
+ * This class represents the Extra Actions associated with a specific PowerEffect.
+ */
 public class PowerExtraAction extends Action {
 
   private final PowerEffect powerEffect;
@@ -18,6 +21,7 @@ public class PowerExtraAction extends Action {
   public PowerEffect getPowerEffect() {
     return powerEffect;
   }
+
   @Override
   //TODO
   void execute(TableTop curTableTop, PlayerInGame playerInGame,
