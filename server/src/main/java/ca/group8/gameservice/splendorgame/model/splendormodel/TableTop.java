@@ -1,19 +1,9 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.springframework.util.ResourceUtils;
 
 /**
  * Everything visible on the table when playing a board game.
@@ -41,16 +31,25 @@ public class TableTop implements BroadcastContent {
    * Create the board according to extension name and number of players playing.
    *
    * @param curExtension extension name
-   * @param playerNames number of players in game
+   * @param playerNames  number of players in game
    * @return a corresponding implementation of Board
    */
   private Board createBoard(Extension curExtension, List<String> playerNames) {
     Board resultBoard = null;
     switch (curExtension) {
-      case BASE -> resultBoard = new BaseBoard(playerNames);
-      case ORIENT -> resultBoard = new OrientBoard(playerNames);
-      case TRADING_POST -> resultBoard = new TraderBoard(playerNames);
-      case CITY -> resultBoard = new CityBoard(playerNames);
+      case BASE:
+        resultBoard = new BaseBoard(playerNames);
+        break;
+      case ORIENT:
+        resultBoard = new OrientBoard(playerNames);
+        break;
+      case TRADING_POST:
+        resultBoard = new TraderBoard(playerNames);
+        break;
+      case CITY:
+        resultBoard = new CityBoard(playerNames);
+        break;
+      default: break;
     }
     return resultBoard;
   }

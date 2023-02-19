@@ -16,8 +16,7 @@ public class ReservedHand {
     this.nobleCards = new ArrayList<>();
   }
 
-//TODO: Add exception checks to methods (if card == null, throw an exception, etc...)
-
+  //TODO: Add exception checks to methods (if card == null, throw an exception, etc...)
   public void addDevelopmentCard(DevelopmentCard card) {
     developmentCards.add(card);
   }
@@ -48,5 +47,7 @@ public class ReservedHand {
     return Collections.unmodifiableList(developmentCards);
   }
 
-  public List<NobleCard> getNobleCards() {return Collections.unmodifiableList(nobleCards);}
+  public List<NobleCard> getNobleCards() {
+    return Collections.unmodifiableList(nobleCards);
+  }
 }

@@ -1,7 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 /**
-This class represents the TwoPlusOnePower.
+ * This class represents the TwoPlusOnePower.
  */
 public class TwoPlusOnePower extends Power {
 

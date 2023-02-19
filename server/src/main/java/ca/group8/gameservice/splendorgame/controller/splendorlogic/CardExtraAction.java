@@ -21,7 +21,7 @@ public class CardExtraAction extends Action {
   /**
    * Constructor.
    *
-   * @param card Card which "unlocks" this extra action
+   * @param card       Card which "unlocks" this extra action
    * @param cardEffect The type of extra action
    */
   public CardExtraAction(Card card, CardEffect cardEffect) {
@@ -32,8 +32,8 @@ public class CardExtraAction extends Action {
 
   @Override
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
-                      SplendorActionListGenerator actionListGenerator,
-                      SplendorActionInterpreter actionInterpreter) {
+                      ActionGenerator actionListGenerator,
+                      ActionInterpreter actionInterpreter) {
 
   }
 
@@ -68,14 +68,14 @@ public class CardExtraAction extends Action {
   //TODO:
   public void reserveNobleActionHelper(TableTop curTableTop,
                                        PlayerInGame curPlayer,
-                                       SplendorActionListGenerator associatedActionGenerator) {
+                                       ActionGenerator associatedActionGenerator) {
 
   }
 
   //TODO
   public void satchelActionHelper(TableTop curTableTop,
                                   PlayerInGame curPlayer,
-                                  SplendorActionListGenerator associatedActionGenerator) {
+                                  ActionGenerator associatedActionGenerator) {
 
   }
 
@@ -83,14 +83,14 @@ public class CardExtraAction extends Action {
   public void freeCardActionHelper(DevelopmentCard freeCard,
                                    TableTop curTableTop,
                                    PlayerInGame curPlayer,
-                                   SplendorActionInterpreter associatedActionInterpreter) {
+                                   ActionInterpreter associatedActionInterpreter) {
 
   }
 
   //TODO
   public void burnActionHelper(TableTop curTableTop,
                                PlayerInGame curPlayer,
-                               SplendorActionListGenerator associatedActionGenerator){
+                               ActionGenerator associatedActionGenerator) {
 
   }
 }

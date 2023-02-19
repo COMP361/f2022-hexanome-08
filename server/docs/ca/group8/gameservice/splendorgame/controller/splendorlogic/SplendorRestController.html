@@ -113,8 +113,8 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(ca.group8.gameservice.splendorgame.controller.splendorlogic.SplendorRegistrator,ca.group8.gameservice.splendorgame.controller.splendorlogic.SplendorGameManager,ca.group8.gameservice.splendorgame.controller.splendorlogic.SplendorActionListGenerator,ca.group8.gameservice.splendorgame.controller.splendorlogic.SplendorActionInterpreter,java.lang.String,java.lang.String,long)" class="member-name-link">SplendorRestController</a><wbr>(<a href="SplendorRegistrator.html" title="class in ca.group8.gameservice.splendorgame.controller.splendorlogic">SplendorRegistrator</a>&nbsp;splendorRegistrator,
  <a href="SplendorGameManager.html" title="class in ca.group8.gameservice.splendorgame.controller.splendorlogic">SplendorGameManager</a>&nbsp;splendorGameManager,
- <a href="SplendorActionListGenerator.html" title="class in ca.group8.gameservice.splendorgame.controller.splendorlogic">SplendorActionListGenerator</a>&nbsp;splendorActionListGenerator,
- <a href="SplendorActionInterpreter.html" title="class in ca.group8.gameservice.splendorgame.controller.splendorlogic">SplendorActionInterpreter</a>&nbsp;splendorActionInterpreter,
+ <a href="SplendorActionListGenerator.html" title="class in ca.group8.gameservice.splendorgame.controller.splendorlogic">SplendorActionListGenerator</a>&nbsp;actionGenerator,
+ <a href="SplendorActionInterpreter.html" title="class in ca.group8.gameservice.splendorgame.controller.splendorlogic">SplendorActionInterpreter</a>&nbsp;actionInterpreter,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;gameServiceName,
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lobbyServiceAddress,
  long&nbsp;longPollTimeOut)</code></div>
@@ -216,9 +216,9 @@ loadScripts(document, 'script');</script>
  @Autowired
  <a href="SplendorGameManager.html" title="class in ca.group8.gameservice.splendorgame.controller.splendorlogic">SplendorGameManager</a>&nbsp;splendorGameManager,
  @Autowired
- <a href="SplendorActionListGenerator.html" title="class in ca.group8.gameservice.splendorgame.controller.splendorlogic">SplendorActionListGenerator</a>&nbsp;splendorActionListGenerator,
+ <a href="SplendorActionListGenerator.html" title="class in ca.group8.gameservice.splendorgame.controller.splendorlogic">SplendorActionListGenerator</a>&nbsp;actionGenerator,
  @Autowired
- <a href="SplendorActionInterpreter.html" title="class in ca.group8.gameservice.splendorgame.controller.splendorlogic">SplendorActionInterpreter</a>&nbsp;splendorActionInterpreter,
+ <a href="SplendorActionInterpreter.html" title="class in ca.group8.gameservice.splendorgame.controller.splendorlogic">SplendorActionInterpreter</a>&nbsp;actionInterpreter,
  @Value("${gameservice.name}")
  <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;gameServiceName,
  @Value("${lobbyservice.location}")

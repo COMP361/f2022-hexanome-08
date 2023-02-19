@@ -1,6 +1,5 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
 import java.util.EnumMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +7,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Players.
  */
-public class PlayerInGame implements BroadcastContent {
+public class PlayerInGame {
 
 
   private final String name;
@@ -36,8 +35,7 @@ public class PlayerInGame implements BroadcastContent {
    * required tokens from the player's tokenHand.
    *
    * @param goldTokenRequired The number of gold tokens required to complete this purchase.
-   * @param card The card the player is buying.
-   *
+   * @param card              The card the player is buying.
    * @return A list of the tokens used up to buy a card (the ones removed from tokenHand).
    */
   public EnumMap<Colour, Integer> payTokensToBuy(int goldTokenRequired, DevelopmentCard card) {
@@ -67,10 +65,26 @@ public class PlayerInGame implements BroadcastContent {
     return prestigePoints;
   }
 
-  public void addPrestigePoints(int amount) { prestigePoints+=amount; }
+  public void addPrestigePoints(int amount) {
+    prestigePoints += amount;
+  }
 
-  public void removePrestigePoints(int amount) { prestigePoints-=amount; }
+  public void removePrestigePoints(int amount) {
+    prestigePoints -= amount;
+  }
 
+  /**
+   * Check whether the player associated with this instance of player.
+   * info satisfy the condition of being a winner or not
+   *
+   * @return whether this player is winner or not
+   */
+  public boolean isWinner() {
+    // TODO: implement detail logic
+
+
+    return false;
+  }
 
   /**
    * Returns map of total gems a player has.
@@ -110,14 +124,6 @@ public class PlayerInGame implements BroadcastContent {
       wealth.put(colour, tokenHand.getAllTokens().get(colour) + gems.get(colour));
     }
     return wealth;
-  }
-
-  /**
-   * If all hands are empty.
-   */
-  @Override
-  public boolean isEmpty() {
-    return false;
   }
 
   @Override

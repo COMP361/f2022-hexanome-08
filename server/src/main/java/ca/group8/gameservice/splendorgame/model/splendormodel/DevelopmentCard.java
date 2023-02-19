@@ -1,6 +1,5 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -45,6 +44,12 @@ public class DevelopmentCard extends Card {
     return isPaired;
   }
 
+  /**
+   * Get the dev card instance that is paired to this card.
+   *
+   * @return dev card instance that is paired to this card
+   * @throws SplendorGameException exception during game running
+   */
   public DevelopmentCard getPairedCard() throws SplendorGameException {
     if (!isPaired) {
       throw new SplendorGameException("Card is not paired yet");
@@ -60,12 +65,24 @@ public class DevelopmentCard extends Card {
     isPaired = paramPaired;
   }
 
+  /**
+   * get the purchase effects of this card, if empty, then it's base card, otherwise.
+   * it's an orient card
+   *
+   * @return list of purchaseEffects, can be empty
+   */
   public List<CardEffect> getPurchaseEffects() {
     return purchaseEffects;
   }
 
+  /**
+   * pair a dev card with purchaseEffect containing SATCHEL to this card.
+   *
+   * @param pairedCard the card with purchaseEffect containing SATCHEL
+   * @throws SplendorGameException something went wrong during playing
+   */
   public void setPairedCard(DevelopmentCard pairedCard) throws SplendorGameException {
-    if(pairedCard == null) {
+    if (pairedCard == null) {
       throw new SplendorGameException("Error: pairedCard argument is null.");
     }
     this.pairedCard = pairedCard;

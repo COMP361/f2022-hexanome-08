@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class stores the cards/decks for orient extension
+ * This class stores the cards/decks for orient extension.
  */
 public class OrientBoard extends Board {
 
@@ -19,7 +19,8 @@ public class OrientBoard extends Board {
   }
 
   /**
-   * Used for reserve from the Deck
+   * Used for reserve from the Deck.
+   *
    * @param cardLevel level of the card
    * @return a card taken from cardLevel deck
    */
@@ -28,7 +29,8 @@ public class OrientBoard extends Board {
   }
 
   /**
-   * Used to get the DevCard[] for a certain level
+   * Used to get the DevCard[] for a certain level.
+   *
    * @param cardLevel level of the card
    * @return an array of dev cards on board
    */
@@ -37,7 +39,7 @@ public class OrientBoard extends Board {
   }
 
   /**
-   * Refill any null position on the board (3 of len = 4 DevelopmentCard array)
+   * Refill any null position on the board (3 of len = 4 DevelopmentCard array).
    * must make sure once the card is purchased, make the corresponding slot (index) -> null
    */
   private void refillCardBoard() {
@@ -52,7 +54,8 @@ public class OrientBoard extends Board {
   }
 
   /**
-   * Quickly set the card at that position to null, as a representation of removing it
+   * Quickly set the card at that position to null, as a representation of removing it.
+   *
    * @param cardPosition x and y: x stands for the level and y stands for the index
    */
   public DevelopmentCard removeCard(Position cardPosition) {
@@ -64,7 +67,8 @@ public class OrientBoard extends Board {
   }
 
   /**
-   * Generate decks for each level of orient card
+   * Generate decks for each level of orient card.
+   *
    * @param allBaseCards all dev cards (with no CardEffect) parsed from json
    */
   private void generateDeckPerLevel(List<DevelopmentCard> allBaseCards) {
@@ -89,7 +93,7 @@ public class OrientBoard extends Board {
   }
 
   @Override
-  public void update(Card aCard, int index) {
+  public void update(Card card, int index) {
 
   }
 

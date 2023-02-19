@@ -1,7 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
-import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
@@ -20,8 +19,8 @@ public abstract class Action {
 
 
   abstract void execute(TableTop curTableTop, PlayerInGame playerInGame,
-               SplendorActionListGenerator actionListGenerator,
-               SplendorActionInterpreter actionInterpreter);
+                        ActionGenerator actionListGenerator,
+                        ActionInterpreter actionInterpreter);
 
   boolean checkIsExtraAction() {
     return false;

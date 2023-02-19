@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 public class TestActionGenerator {
 
-    SplendorActionListGenerator generator;
+    ActionGenerator generator;
     GameInfo g1;
     PlayerStates playersInfo;
     Long gameID = Long.valueOf(123);
@@ -25,7 +25,7 @@ public class TestActionGenerator {
 
     @BeforeEach
     void setUp() {
-        generator = new SplendorActionListGenerator();
+        generator = new ActionGenerator();
         ArrayList<String> names = new ArrayList<String>();
         names.add("Dave");
         names.add("Bob");
