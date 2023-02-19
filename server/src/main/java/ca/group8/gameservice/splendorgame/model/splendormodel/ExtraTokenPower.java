@@ -5,8 +5,8 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public class ExtraTokenPower extends Power {
 
-  public ExtraTokenPower(PlayerInGame playerInfo) {
-    super(PowerEffect.EXTRA_TOKEN, playerInfo);
+  public ExtraTokenPower() {
+    super(PowerEffect.EXTRA_TOKEN);
   }
 
   @Override

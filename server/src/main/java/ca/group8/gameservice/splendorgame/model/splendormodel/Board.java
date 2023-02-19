@@ -123,6 +123,42 @@ public abstract class Board {
     }
   }
 
+  /**
+   * Parse a json string to CityCard
+   * @param card city card in json format
+   * @return NobleCard instance decrypted from json
+   */
+  private CityCard parseCityObject(JSONObject card) {
+    String cardName = (String) card.get("cardName");
+    int prestigePoints = ((Long) card.get("prestigePoints")).intValue();
+    EnumMap<Colour, Integer> price = parsePriceObject((JSONObject) card.get("price"));
+    int anyColourCount = ((Long) card.get("anyColourCount")).intValue();
+    return new CityCard(prestigePoints, price, cardName, anyColourCount);
+  }
+
+  /**
+   * Helper method for generate the CityCards from cardinfo_city.json file
+   * @return a list of all city cards
+   */
+  protected List<CityCard> generateCityCards() {
+    JSONParser jsonParser = new JSONParser();
+    List<CityCard> resultCards = new ArrayList<>();
+    // write unit tests
+    try (FileReader reader = new
+        FileReader(ResourceUtils.getFile("classpath:cardinfo_city.json"))) {
+      Object obj = jsonParser.parse(reader);
+      JSONArray cardList = (JSONArray) obj;
+      for (Object o : cardList) {
+        CityCard cityCard = parseCityObject((JSONObject) o);
+        resultCards.add(cityCard);
+      }
+      return resultCards;
+    } catch (ParseException | IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
 }
 
 

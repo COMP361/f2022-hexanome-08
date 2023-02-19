@@ -5,8 +5,8 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public class FivePointsPower extends Power {
 
-  public FivePointsPower(PlayerInGame playerInfo) {
-    super(PowerEffect.FIVE_POINTS, playerInfo);
+  public FivePointsPower() {
+    super(PowerEffect.FIVE_POINTS);
   }
 
   @Override

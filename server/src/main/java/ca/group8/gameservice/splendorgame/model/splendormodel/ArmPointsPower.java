@@ -5,8 +5,8 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public class ArmPointsPower extends Power {
 
-  public ArmPointsPower(PlayerInGame playerInfo) {
-    super(PowerEffect.ARM_POINTS, playerInfo);
+  public ArmPointsPower() {
+    super(PowerEffect.ARM_POINTS);
   }
 
   @Override
