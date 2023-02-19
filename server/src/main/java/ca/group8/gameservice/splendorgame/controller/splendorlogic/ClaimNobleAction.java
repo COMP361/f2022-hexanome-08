@@ -16,7 +16,7 @@ public class ClaimNobleAction extends Action {
   /**
    * Constructor.
    *
-   * @param card The noble card (which can be claimed).
+   * @param card     The noble card (which can be claimed).
    * @param position The position of the noble card.
    */
   public ClaimNobleAction(Card card, Position position) {
@@ -27,8 +27,8 @@ public class ClaimNobleAction extends Action {
 
   @Override
   void execute(TableTop curTableTop, PlayerInGame playerInGame,
-               SplendorActionListGenerator actionListGenerator,
-               SplendorActionInterpreter actionInterpreter) {
+               ActionGenerator actionListGenerator,
+               ActionInterpreter actionInterpreter) {
 
   }
 

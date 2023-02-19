@@ -40,7 +40,8 @@ public class Bank {
   }
 
   /**
-   * Return the tokens that was paid by player
+   * Return the tokens that was paid by player.
+   *
    * @param paramTokens token map as the price
    */
   public void returnToken(EnumMap<Colour, Integer> paramTokens) {
@@ -60,7 +61,8 @@ public class Bank {
   }
 
   /**
-   * Modify the game state to reflect that the player has taken some tokens out of bank
+   * Modify the game state to reflect that the player has taken some tokens out of bank.
+   *
    * @param paramTokens the tokens map that player wants to take
    */
   void takeToken(EnumMap<Colour, Integer> paramTokens) {

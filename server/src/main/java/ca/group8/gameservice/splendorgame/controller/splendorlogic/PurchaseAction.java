@@ -43,8 +43,8 @@ public class PurchaseAction extends Action {
   /**
    * Constructor of purchase action.
    *
-   * @param cardPosition position on board
-   * @param card card associated with action
+   * @param cardPosition      position on board
+   * @param card              card associated with action
    * @param goldTokenRequired number of gold token required
    */
   public PurchaseAction(Position cardPosition, DevelopmentCard card, int goldTokenRequired) {
@@ -65,8 +65,8 @@ public class PurchaseAction extends Action {
 
   @Override
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
-                      SplendorActionListGenerator actionListGenerator,
-                      SplendorActionInterpreter actionInterpreter) {
+                      ActionGenerator actionListGenerator,
+                      ActionInterpreter actionInterpreter) {
 
   }
 

@@ -42,8 +42,8 @@ public class ReserveAction extends Action {
   @Override
   //TODO
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
-                      SplendorActionListGenerator actionListGenerator,
-                      SplendorActionInterpreter actionInterpreter) {
+                      ActionGenerator actionListGenerator,
+                      ActionInterpreter actionInterpreter) {
 
     //ReservedHand reservedHand = player.getReservedHand();
     //Card reserveCard = this.card;

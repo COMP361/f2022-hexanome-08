@@ -52,10 +52,10 @@ public class UpdateReturnTokenAction extends Action {
   }
 
   @Override
-  //TODO
+  // TODO
   void execute(TableTop curTableTop, PlayerInGame playerInGame,
-               SplendorActionListGenerator actionListGenerator,
-               SplendorActionInterpreter actionInterpreter) {
+               ActionGenerator actionListGenerator,
+               ActionInterpreter actionInterpreter) {
 
   }
 

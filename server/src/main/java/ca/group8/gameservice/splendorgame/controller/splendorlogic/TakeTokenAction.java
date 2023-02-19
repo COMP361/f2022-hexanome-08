@@ -2,11 +2,9 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
-import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
-import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
 import java.util.EnumMap;
 
 /**
@@ -35,8 +33,8 @@ public class TakeTokenAction extends Action {
 
   @Override
   void execute(TableTop curTableTop, PlayerInGame playerInGame,
-               SplendorActionListGenerator actionListGenerator,
-               SplendorActionInterpreter actionInterpreter) {
+               ActionGenerator actionListGenerator,
+               ActionInterpreter actionInterpreter) {
 
     /* OLD TAKE TOKENS EXECUTE METHOD
     public void execute(GameInfo currentGameState, PlayerInGame playerState) {

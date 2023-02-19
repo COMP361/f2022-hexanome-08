@@ -1,91 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="9.3">
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/communicationbeans/Savegame.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/communicationbeans/Savegame.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/communicationbeans/GameServerParameters.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/communicationbeans/GameServerParameters.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/communicationbeans/PlayerInfo.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/communicationbeans/PlayerInfo.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/communicationbeans/LauncherInfo.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/communicationbeans/LauncherInfo.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/SplendorGameManager.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/SplendorRegistrator.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/SplendorRegistrator.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/ClaimNobleAction.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/TakeTokenAction.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/TakeTokenAction.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/SplendorLogicException.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/ActionGenerator.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/ReserveAction.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/CardExtraAction.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/SplendorActionInterpreter.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/SplendorLogicException.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/SplendorRestController.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/ReserveAction.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/RuntimeTypeAdapterFactory.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/GameManager.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/PurchaseAction.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/SplendorRestController.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/CardAction.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/RuntimeTypeAdapterFactory.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/Action.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/UpdateReturnTokenAction.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/SplendorActionListGenerator.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/PurchaseAction.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/Launcher.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/Action.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/OrientCard.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/PowerExtraAction.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/NobleBoard.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/splendorlogic/ActionInterpreter.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/PlayerStates.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/controller/Launcher.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/PurchasedHand.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/CityBoard.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/TokenHand.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Extension.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/PlayerInGame.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/TraderBoard.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/BaseBoard.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/OrientBoard.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/OrientType.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/PowerEffect.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Colour.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/PlayerStates.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/DevelopmentCard.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/PurchasedHand.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Card.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/FivePointsPower.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Position.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/TokenHand.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/NobleCard.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/CardEffect.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/SplendorGameException.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/PlayerInGame.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Deck.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/BaseBoard.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Board.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Colour.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Bank.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/DevelopmentCard.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/TableTop.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Card.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/GameInfo.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/ArmPointsPower.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/BaseCard.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Position.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/ReservedHand.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/CityCard.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/ModelAccessException.java">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/NobleCard.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/resources/application-dev.properties">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/SplendorGameException.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/resources/application-war.properties">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Deck.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/resources/application-uidev.properties">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Board.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/resources/application-prod.properties">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Power.java">
 </file>
-<file name="/Users/edengranovsky/Desktop/SecondSemester/COMP361/f2022-hexanome-08/server/src/main/resources/application.properties">
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/Bank.java">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/TableTop.java">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/TwoPlusOnePower.java">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/GameInfo.java">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/DoubleGoldPower.java">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/ExtraTokenPower.java">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/splendormodel/ReservedHand.java">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/java/ca/group8/gameservice/splendorgame/model/ModelAccessException.java">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/resources/application-dev.properties">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/resources/application-war.properties">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/resources/application-uidev.properties">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/resources/application-prod.properties">
+</file>
+<file name="/Users/ruoyu/Projects/f2022-hexanome-08/server/src/main/resources/application.properties">
 </file>
 </checkstyle>

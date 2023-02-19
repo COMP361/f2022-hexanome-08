@@ -11,16 +11,16 @@ import org.springframework.stereotype.Component;
  * Manages instances of Splendor games.
  */
 @Component
-public class SplendorGameManager {
+public class GameManager {
 
   private final Map<Long, PlayerStates> activePlayers;
   private final Map<Long, GameInfo> activeGames;
-  private final Map<Long, SplendorActionInterpreter> gameActionInterpreters;
+  private final Map<Long, ActionInterpreter> gameActionInterpreters;
 
   /**
    * Construct a new GameManager instance (initialize all maps to empty HashMaps).
    */
-  public SplendorGameManager() {
+  public GameManager() {
     this.activePlayers = new HashMap<>();
     this.activeGames = new HashMap<>();
     this.gameActionInterpreters = new HashMap<>();
@@ -47,7 +47,7 @@ public class SplendorGameManager {
   /**
    * Add a new game instance to the list of games.
    *
-   * @param gameId ID of the new game instance.
+   * @param gameId      ID of the new game instance.
    * @param newGameInfo Actual GameInfo instance.
    */
   public void addGame(long gameId, GameInfo newGameInfo) {
@@ -62,17 +62,17 @@ public class SplendorGameManager {
     return activePlayers.get(gameId);
   }
 
-  public void addPlayersToGame(long gameId, PlayerStates newPlayerStates) {
+  public void addGamePlayerStates(long gameId, PlayerStates newPlayerStates) {
     assert !activePlayers.containsKey(newPlayerStates);
     activePlayers.put(gameId, newPlayerStates);
   }
 
-  public SplendorActionInterpreter getGameActionInterpreter(long gameId) {
+  public ActionInterpreter getGameActionInterpreter(long gameId) {
     assert gameActionInterpreters.containsKey(gameId);
     return gameActionInterpreters.get(gameId);
   }
 
-  public void addGameActionInterpreter(long gameId, SplendorActionInterpreter actionInterpreter) {
+  public void addGameActionInterpreter(long gameId, ActionInterpreter actionInterpreter) {
     assert activeGames.containsKey(gameId) && actionInterpreter != null;
     gameActionInterpreters.put(gameId, actionInterpreter);
   }

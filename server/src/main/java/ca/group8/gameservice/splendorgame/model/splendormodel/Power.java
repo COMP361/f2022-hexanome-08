@@ -10,6 +10,7 @@ public abstract class Power {
 
   /**
    * The constructs a new power object, which is tied to a specific Player.
+   *
    * @param powerEffect An enum representing which power this object is.
    */
   public Power(PowerEffect powerEffect) {
@@ -25,11 +26,17 @@ public abstract class Power {
    */
   abstract boolean validityCheck(PlayerInGame playerInfo);
 
-  public boolean isUnlocked() {return unlocked;}
+  public boolean isUnlocked() {
+    return unlocked;
+  }
 
   //Do not make these methods [unlock() & lock()]public as they should only be called directly by
   // an inheriting power class (ex. TwoPlusOnePower).
-  void unlock() {unlocked=true;}
+  void unlock() {
+    unlocked = true;
+  }
 
-  void lock() {unlocked=false;}
+  void lock() {
+    unlocked = false;
+  }
 }

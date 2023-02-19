@@ -16,7 +16,6 @@ public class PlayerStates implements BroadcastContent {
    * Constructor of player states.
    *
    * @param playerNames a list of player names in String
-   *
    */
   public PlayerStates(List<String> playerNames) {
     this.playersInfo = new HashMap<>();

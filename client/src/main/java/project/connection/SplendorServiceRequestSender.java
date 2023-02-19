@@ -93,25 +93,6 @@ public class SplendorServiceRequestSender {
 
   }
 
-  //public HttpResponse<String> sendGetPlayerInventoryRequest(long gameId, String playerName,
-  //                                                          String accessToken,
-  //                                                          String hashPreviousResponse)
-  //    throws UnirestException {
-  //
-  //  if (hashPreviousResponse.equals("")) {
-  //    return Unirest
-  //        .get(String.format("%s/api/games/%s/players/%s/inventory", gameUrl, gameId, playerName))
-  //        .queryString("access_token", accessToken).asString();
-  //  } else {
-  //    return Unirest
-  //        .get(String.format("%s/api/games/%s/players/%s/inventory", gameUrl, gameId, playerName))
-  //        .queryString("access_token", accessToken)
-  //        .queryString("hash", hashPreviousResponse)
-  //        .asString();
-  //  }
-  //
-  //}
-
   /**
    * Send a instant response request to get all possible action map for current player.
    *

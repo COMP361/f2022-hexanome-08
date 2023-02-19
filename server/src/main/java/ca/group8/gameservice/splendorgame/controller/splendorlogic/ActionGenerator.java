@@ -1,28 +1,18 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.BaseCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
-import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
-import com.google.gson.Gson;
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.stereotype.Component;
 
 /**
  * Makes list of all possible actions for current player.
  */
-public class SplendorActionListGenerator {
+public class ActionGenerator {
 
   // This is a Singleton Component Class that's used to control all action map for all players
   // for all games. Once provided a gameId and a playerName, we can identify a unique
@@ -45,9 +35,8 @@ public class SplendorActionListGenerator {
   private final Map<String, Map<String, Action>> playerActionMaps;
   private final TableTop tableTop;
 
-  //TODO: Check this constructor (specifically, playerActionMaps to see if its initalized properly)
-  public SplendorActionListGenerator(TableTop tableTop) {
-    this.playerActionMaps = new HashMap<>();
+  public ActionGenerator(Map<String, Map<String, Action>> playerActionMaps, TableTop tableTop) {
+    this.playerActionMaps = playerActionMaps;
     this.tableTop = tableTop;
   }
 
@@ -70,7 +59,7 @@ public class SplendorActionListGenerator {
 
   //TODO
   public void updateReturnTokenActions(int extraTokenCount,
-                                       EnumMap<Colour, Integer> curPlayerTokens){
+                                       EnumMap<Colour, Integer> curPlayerTokens) {
 
   }
 

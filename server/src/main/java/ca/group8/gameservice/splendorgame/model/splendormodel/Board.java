@@ -12,19 +12,20 @@ import org.json.simple.parser.ParseException;
 import org.springframework.util.ResourceUtils;
 
 /**
- * The super abstract class that defines the behavior of all extension boards
+ * The super abstract class that defines the behavior of all extension boards.
  */
 public abstract class Board {
 
   // update the board
-  public abstract void update(Card aCard, int index);
+  public abstract void update(Card card, int index);
 
   // set up the board, should only be called once, call this method in constructor
   public abstract void setup(List<String> playerNames);
 
 
   /**
-   * Parse a json string to NobleCard
+   * Parse a json string to NobleCard.
+   *
    * @param card noble card in json format
    * @return NobleCard instance decrypted from json
    */
@@ -34,8 +35,10 @@ public abstract class Board {
     EnumMap<Colour, Integer> price = parsePriceObject((JSONObject) card.get("price"));
     return new NobleCard(prestigePoints, price, cardName);
   }
+
   /**
    * Helper method for generate the NobleCards from cardinfo_noble.json file
+   *
    * @return a list of all noble cards
    */
   protected List<NobleCard> generateNobleCards() {
@@ -57,9 +60,9 @@ public abstract class Board {
   }
 
 
-
   /**
-   * Parse a json string to Base DevelopmentCard
+   * Parse a json string to Base DevelopmentCard.
+   *
    * @param card noble card in json format
    * @return NobleCard instance decrypted from json
    */
@@ -77,14 +80,15 @@ public abstract class Board {
       purchaseEffects.add(effect);
     }
     return new DevelopmentCard(prestigePoints, price, cardName, cardLevel,
-        gemColour, gemNumber,purchaseEffects);
+        gemColour, gemNumber, purchaseEffects);
   }
 
 
   /**
-   * Helper for parse price that is part of Card
-   * @param price
-   * @return
+   * Helper for parse price that is part of Card.
+   *
+   * @param price price in json string format
+   * @return price in EnumMap format
    */
   private EnumMap<Colour, Integer> parsePriceObject(JSONObject price) {
     EnumMap<Colour, Integer> result = new EnumMap<>(Colour.class);
@@ -102,9 +106,10 @@ public abstract class Board {
   }
 
   /**
-   * Generate dev cards based on file name that stores the info
-   * @param fileName
-   * @return
+   * Generate dev cards based on file name that stores the info.
+   *
+   * @param fileName file name that we want to generate dev cards on (base or orient)
+   * @return a list of dev cards (base or orient)
    */
   protected List<DevelopmentCard> generateDevelopmentCards(String fileName) {
     JSONParser jsonParser = new JSONParser();
@@ -124,7 +129,8 @@ public abstract class Board {
   }
 
   /**
-   * Parse a json string to CityCard
+   * Parse a json string to CityCard.
+   *
    * @param card city card in json format
    * @return NobleCard instance decrypted from json
    */
@@ -138,6 +144,7 @@ public abstract class Board {
 
   /**
    * Helper method for generate the CityCards from cardinfo_city.json file
+   *
    * @return a list of all city cards
    */
   protected List<CityCard> generateCityCards() {
