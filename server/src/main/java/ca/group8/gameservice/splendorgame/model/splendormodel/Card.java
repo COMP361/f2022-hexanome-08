@@ -37,21 +37,21 @@ public class Card {
   @Override
   public boolean equals(Object o) {
     boolean name = true;
-    boolean preprestigePoint = true;
+    boolean prestigePoints = true;
     boolean price = true;
     Card card = (Card) o;
 
     if (!this.getCardName().equals(card.getCardName())) {
       name = false;
     } else if (this.getPrestigePoints() != card.getPrestigePoints()) {
-      preprestigePoint = false;
+      prestigePoints = false;
     }
     for (Colour i : Colour.values()) {
       if (this.getPrice().get(i) != card.getPrice().get(i)) {
         price = false;
       }
     }
-    return (name && preprestigePoint && price);
+    return (name && prestigePoints && price);
   }
 
 }

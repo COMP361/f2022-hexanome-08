@@ -7,17 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class stores the cards/decks with level 1->3 on base board and the nobles
+ * This class stores the cards/decks for orient extension
  */
-public class BaseBoard extends Board {
+public class OrientBoard extends Board {
 
   private final Map<Integer, List<DevelopmentCard>> decks = new HashMap<>();
   private final Map<Integer, DevelopmentCard[]> cardsOnBoard = new HashMap<>();
-  private List<NobleCard> nobles;
 
-
-  public BaseBoard(List<String> playerNames) {
-    // set up decks and cards on board
+  public OrientBoard(List<String> playerNames) {
     setup(playerNames);
   }
 
@@ -40,27 +37,18 @@ public class BaseBoard extends Board {
   }
 
   /**
-   * getter for nobles field
-   * @return the list of noble cards
+   * Refill any null position on the board (3 of len = 4 DevelopmentCard array)
+   * must make sure once the card is purchased, make the corresponding slot (index) -> null
    */
-  public List<NobleCard> getNobles() {
-    return nobles;
-  }
-
-  /**
-   * Find the noble in the list and remove it
-   * @param noble the noble that we want to remove (has been unlocked or reserved)
-   */
-  public void removeNoble(NobleCard noble){
-    nobles.remove(noble);
-  }
-
-  /**
-   * Return the noble when player does not meet the requirement to unlock one
-   * @param noble the noble to be added back
-   */
-  public void addNoble(NobleCard noble) {
-    nobles.add(noble);
+  private void refillCardBoard() {
+    for (int i = 1; i <= 3; i++) {
+      DevelopmentCard[] curLevelCardsOnBoard = getLevelCardsOnBoard(i);
+      for (int j = 0; j < 4; j++) {
+        if (curLevelCardsOnBoard[j] == null) {
+          curLevelCardsOnBoard[j] = popLevelCardFromDeck(i);
+        }
+      }
+    }
   }
 
   /**
@@ -75,24 +63,15 @@ public class BaseBoard extends Board {
     return resultCard;
   }
 
-  public Map<Integer, List<DevelopmentCard>> getBaseDecks() {
-    return decks;
-  }
-
-  public Map<Integer, DevelopmentCard[]> getBaseCardsOnBoard() {
-    return cardsOnBoard;
-  }
-
-
   /**
-   * Generate decks for each level of base dev card
-   * @param allCards all dev cards (with no CardEffect) parsed from json
+   * Generate decks for each level of orient card
+   * @param allBaseCards all dev cards (with no CardEffect) parsed from json
    */
-  private void generateDeckPerLevel(List<DevelopmentCard> allCards) {
+  private void generateDeckPerLevel(List<DevelopmentCard> allBaseCards) {
     List<DevelopmentCard> levelOneDeck = new ArrayList<>();
     List<DevelopmentCard> levelTwoDeck = new ArrayList<>();
     List<DevelopmentCard> levelThreeDeck = new ArrayList<>();
-    for (DevelopmentCard card : allCards) {
+    for (DevelopmentCard card : allBaseCards) {
       if (card.getLevel() == 1) {
         levelOneDeck.add(card);
       } else if (card.getLevel() == 2) {
@@ -109,47 +88,24 @@ public class BaseBoard extends Board {
     decks.put(3, levelThreeDeck);
   }
 
-  /**
-   * Refill any null position on the board (3 of len = 4 DevelopmentCard array)
-   * must make sure once the card is purchased, make the corresponding slot (index) -> null
-   */
-  private void refillCardBoard() {
-    for (int i = 1; i <= 3; i++) {
-      DevelopmentCard[] curLevelCardsOnBoard = getLevelCardsOnBoard(i);
-      for (int j = 0; j < 4; j++) {
-        if (curLevelCardsOnBoard[j] == null) {
-          curLevelCardsOnBoard[j] = popLevelCardFromDeck(i);
-        }
-      }
-    }
-  }
-
   @Override
   public void update(Card aCard, int index) {
-    refillCardBoard();
+
   }
 
   @Override
   public void setup(List<String> playerNames) {
-    int playerCount = playerNames.size();
-
-    // set up nobles on board
-    List<NobleCard> allNobles = super.generateNobleCards();
-    Collections.shuffle(allNobles);
-    nobles = allNobles.subList(0,playerCount+1); // noble count = player count + 1
-
     // get all cards info from json file
-    List<DevelopmentCard> baseDevCards
-        = super.generateDevelopmentCards("cardinfo_basecard");
+    // TODO: muzhi needs to provide this file in raw csv format
+    List<DevelopmentCard> orientDevCards
+        = super.generateDevelopmentCards("cardinfo_orientcard");
 
     // initialize decks and slots to put card on board
-    generateDeckPerLevel(baseDevCards);
+    generateDeckPerLevel(orientDevCards);
     for (int i = 1; i <= 3; i++) {
-      cardsOnBoard.put(i, new DevelopmentCard[4]);
+      cardsOnBoard.put(i, new DevelopmentCard[2]); // 2 cards on board
     }
-
     // fill the board
     refillCardBoard();
   }
-
 }
