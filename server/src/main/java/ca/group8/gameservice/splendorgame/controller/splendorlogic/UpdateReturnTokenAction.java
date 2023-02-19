@@ -7,6 +7,10 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import java.util.EnumMap;
 
+/**
+ * This class represents the action for returning tokens if the player exceeds the maximum
+ * tokens in hand.
+ */
 public class UpdateReturnTokenAction extends Action {
 
   private final EnumMap<Colour, Integer> tokensInHand;
@@ -18,7 +22,7 @@ public class UpdateReturnTokenAction extends Action {
   }
 
   /**
-   * This method should set the private EnumMap tokensInHand equal to the parameter Map
+   * This method should set the private EnumMap tokensInHand equal to the parameter Map.
    *
    * @param tokens is an EnumMap of tokens
    */
@@ -32,10 +36,15 @@ public class UpdateReturnTokenAction extends Action {
     return tokensInHand;
   }
 
+  /**
+   * Set the number of extra tokens (which will need to be returned).
+   *
+   * @param number of tokens to return.
+   */
   public void setExtraTokenCount(int number) {
     //TODO: Check whether number must be GREATER than 0, or >=0
-    assert number>=0;
-    extraTokenCount=number;
+    assert number >= 0;
+    extraTokenCount = number;
   }
 
   public int getExtraTokenCount() {

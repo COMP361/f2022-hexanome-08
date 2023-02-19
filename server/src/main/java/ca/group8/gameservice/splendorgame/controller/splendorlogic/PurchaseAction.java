@@ -18,13 +18,17 @@ public class PurchaseAction extends Action {
 
   @Override
   public Position getCardPosition() {
-    if (cardPosition == null) {throw new NullPointerException("Card Position is empty.");}
+    if (cardPosition == null) {
+      throw new NullPointerException("Card Position is empty.");
+    }
     return cardPosition;
   }
 
   @Override
   public Card getCurCard() {
-      if (curCard == null) {throw new NullPointerException("Current Card is empty.");}
+    if (curCard == null) {
+      throw new NullPointerException("Current Card is empty.");
+    }
     return curCard;
   }
 
@@ -44,7 +48,7 @@ public class PurchaseAction extends Action {
    * @param goldTokenRequired number of gold token required
    */
   public PurchaseAction(Position cardPosition, DevelopmentCard card, int goldTokenRequired) {
-    assert cardPosition != null && card != null && goldTokenRequired>=0;
+    assert cardPosition != null && card != null && goldTokenRequired >= 0;
     this.cardPosition = cardPosition;
     this.curCard = card;
     this.goldTokenRequired = goldTokenRequired;

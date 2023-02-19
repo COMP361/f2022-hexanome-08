@@ -17,7 +17,8 @@ public class TakeTokenAction extends Action {
   private EnumMap<Colour, Integer> tokensTaken;
 
   /**
-   * Construct a new Take Tokens Action
+   * Construct a new Take Tokens Action.
+   *
    * @param tokens an EnumMap of Colour to Integer representing the tokens selected by the user.
    */
   public TakeTokenAction(EnumMap<Colour, Integer> tokens) {
