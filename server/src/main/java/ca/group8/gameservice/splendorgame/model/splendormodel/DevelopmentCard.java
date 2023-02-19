@@ -1,6 +1,9 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.List;
 
 /**
  * This class represents the SuperClass of all Development Cards.
@@ -8,26 +11,26 @@ import java.util.EnumMap;
 public class DevelopmentCard extends Card {
 
   private final int level;
-
-
-  // TODO: Figure it a way for the Orient card that has no colour
-  private final Colour gemColour;
+  private int gemNumber;
   private boolean isPaired;
-  private String pairedCardId;
-  private final int gemNumber;
+  private final Colour gemColour;
+  private DevelopmentCard pairedCard;
+
+  private final List<CardEffect> purchaseEffects;
 
   /**
    * prestige points, price, name, level, colour, isPaired, pairID, gem number.
    */
   public DevelopmentCard(int paramPrestigePoints, EnumMap<Colour, Integer> paramPrice,
-                         String paramCardName, int level, Colour gemColour, boolean isPaired,
-                         String pairedCardId, int gemNumber) {
+                         String paramCardName, int level, Colour gemColour, int gemNumber,
+                         List<CardEffect> purchaseEffects) {
     super(paramPrestigePoints, paramPrice, paramCardName);
+    this.isPaired = false;
+    this.pairedCard = null;
     this.level = level;
     this.gemColour = gemColour;
-    this.isPaired = isPaired;
-    this.pairedCardId = pairedCardId;
     this.gemNumber = gemNumber;
+    this.purchaseEffects = Collections.unmodifiableList(purchaseEffects);
   }
 
   public int getLevel() {
@@ -42,12 +45,11 @@ public class DevelopmentCard extends Card {
     return isPaired;
   }
 
-  public String getPairedCardId() {
-    return pairedCardId;
-  }
-
-  public void setPairedCardId(String paramPairedCardId) {
-    pairedCardId = paramPairedCardId;
+  public DevelopmentCard getPairedCard() throws SplendorGameException {
+    if (!isPaired) {
+      throw new SplendorGameException("Card is not paired yet");
+    }
+    return pairedCard;
   }
 
   public int getGemNumber() {
@@ -57,5 +59,21 @@ public class DevelopmentCard extends Card {
   public void setPaired(boolean paramPaired) {
     isPaired = paramPaired;
   }
+
+  public List<CardEffect> getPurchaseEffects() {
+    return purchaseEffects;
+  }
+
+  public void setPairedCard(DevelopmentCard pairedCard) throws SplendorGameException {
+    if(pairedCard == null) {
+      throw new SplendorGameException("Error: pairedCard argument is null.");
+    }
+    this.pairedCard = pairedCard;
+  }
+
+  public void incrementGemNumber() {
+    gemNumber += 1;
+  }
+
 
 }
