@@ -580,14 +580,15 @@ public class SplendorRestController {
       //  // otherwise, we interpret based on this newly generated action userAction
       //  newAction = userAction;
       //}
-      newAction = splendorActionListGenerator.lookUpActions(gameId, playerName).get(actionId);
+      //newAction = splendorActionListGenerator.lookUpActions(gameId, playerName).get(actionId);
 
       PlayerInGame playerInGame = splendorGameManager
           .getPlayerStatesById(gameId)
           .getPlayersInfo()
           .get(playerName);
       // interpret this action regardless is modified by user or not
-      splendorActionInterpreter.interpretAction(newAction, gameInfo, playerInGame);
+
+      splendorActionInterpreter.interpretAction(actionId, playerName);
 
       // notify the async updates
       // TODO: When things that might affect the long polling content we want
