@@ -74,9 +74,14 @@ public class SplendorGameManager {
 
   public void addGameActionInterpreter(long gameId, SplendorActionInterpreter actionInterpreter) {
     assert activeGames.containsKey(gameId) && actionInterpreter != null;
-    gameActionInterpreters.put(gameId,actionInterpreter);
+    gameActionInterpreters.put(gameId, actionInterpreter);
   }
 
+  /**
+   * Remove all data related to a specific game.
+   *
+   * @param gameId game to be removed.
+   */
   public void removeGameRelatedData(long gameId) {
     assert activeGames.containsKey(gameId);
 
