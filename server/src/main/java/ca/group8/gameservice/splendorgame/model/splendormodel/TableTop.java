@@ -32,13 +32,14 @@ public class TableTop implements BroadcastContent {
     gameBoards = new HashMap<>();
     for (Extension extension : gameExtensions) {
       Board curBoard = createBoard(extension, playerNames);
-      gameBoards.put(extension,curBoard);
+      gameBoards.put(extension, curBoard);
     }
   }
 
 
   /**
-   * Create the board according to extension name and number of players playing
+   * Create the board according to extension name and number of players playing.
+   *
    * @param curExtension extension name
    * @param playerNames number of players in game
    * @return a corresponding implementation of Board
@@ -55,7 +56,8 @@ public class TableTop implements BroadcastContent {
   }
 
   /**
-   * Get the Board instance according to name of extension
+   * Get the Board instance according to name of extension.
+   *
    * @param curExtension extension as key to look up in the map
    * @return the corresponding board instance
    */
@@ -66,7 +68,8 @@ public class TableTop implements BroadcastContent {
 
 
   /**
-   * Used for long pulling library
+   * Used for long pulling library.
+   *
    * @return always false for the sake of simplicity
    */
   @Override
@@ -75,7 +78,8 @@ public class TableTop implements BroadcastContent {
   }
 
   /**
-   * Getter for bank
+   * Getter for bank.
+   *
    * @return the bank
    */
   public Bank getBank() {

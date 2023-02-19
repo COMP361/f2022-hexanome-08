@@ -1,10 +1,15 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseCard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
+import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -17,7 +22,6 @@ import org.springframework.stereotype.Component;
 /**
  * Makes list of all possible actions for current player.
  */
-@Component
 public class SplendorActionListGenerator {
 
   // This is a Singleton Component Class that's used to control all action map for all players
@@ -37,13 +41,41 @@ public class SplendorActionListGenerator {
   // In any POST request, 1,2 and 3 will be provided, we can just use this
   // nested 3 level map to find the corresponding ONE specific Action and call execute() on it.
 
-  private final Map<Long, Map<String, Map<String, Action>>> actionLookUpMap;
+  //previous name of this field/the field this is replacing: actionLookUpMap
+  private final Map<String, Map<String, Action>> playerActionMaps;
+  private final TableTop tableTop;
 
-  public SplendorActionListGenerator() {
-    this.actionLookUpMap = new HashMap<>();
+  //TODO: Check this constructor (specifically, playerActionMaps to see if its initalized properly)
+  public SplendorActionListGenerator(TableTop tableTop) {
+    this.playerActionMaps = new HashMap<>();
+    this.tableTop = tableTop;
   }
 
-  /**
+  //TODO
+  public void setInitialActions(String turnPlayerName, PlayerInGame curPlayerInfo) {
+
+  }
+
+  //TODO
+  public void updateCascadeActions(String playerName,
+                                   DevelopmentCard playerCard,
+                                   CardEffect cardEffect) {
+
+  }
+
+  //TODO
+  public void updatePowerActions(String playerName, PowerEffect powerEffect) {
+
+  }
+
+  //TODO
+  public void updateReturnTokenActions(int extraTokenCount,
+                                       EnumMap<Colour, Integer> curPlayerTokens){
+
+  }
+
+  //EVERYTHING AFTER THIS IS OLD CODE (not up to date based on M6 model)
+  /*
    * 1. create a new map -- DONE
    * - get player wealth
    * - get flag
@@ -54,10 +86,13 @@ public class SplendorActionListGenerator {
    * 3c. verify if you can reserve card
    * 4. return the map
    */
+  /*
+  //TODO
   private static List<Action> cardsToActions(GameInfo gameInfo, PlayerInGame player) {
     List<Action> actionOptions = new ArrayList<>();
     EnumMap<Colour, Integer> wealth = player.getWealth();
     boolean canReserve = !player.getReservedHand().isFull();
+   /*
     Map<Integer, List<BaseCard>> baseBoardCards =
         gameInfo.getTableTop().getBaseBoard().getBaseCardsOnBoard();
 
@@ -94,14 +129,18 @@ public class SplendorActionListGenerator {
       }
     }
 
+
+
     return actionOptions;
   }
+   */
 
-  /**
+  /*
    * Generate the hash -> Actions map provided: gameId, playerName (implicitly in PlayerInGame).
    * will be called everytime GET games/{gameId}/players/{playerName}/actions
    * will replace the previous Action Map every time
    */
+  /*
   public void generateActions(long gameId, GameInfo gameInfo, PlayerInGame player) {
 
     // TODO: Player Identity will be verified before calling generateActions with access_token
@@ -127,6 +166,7 @@ public class SplendorActionListGenerator {
       hashActionMap.put(takeTokenActionMd5, takeTokenAction);
     }
 
+    /*
     // once the hash -> Action map is ready, we add it for this specific player
     if (!actionLookUpMap.containsKey(gameId)) {
       // if the gameId is not recorded, means we have no players' actions, thus we are adding
@@ -144,17 +184,24 @@ public class SplendorActionListGenerator {
 
   }
 
-  /**
+ */
+
+
+  /*
    * Find the (potentially, might be empty map) previously generated hash -> Action map
    * when receive POST request on games/{gameId}/players/{playerName}/actions/{actionId}
    * first call this method to find the map, then with {actionId} provided, we can find the
    * right Action to execute.
    */
+  /*
   public Map<String, Action> lookUpActions(long gameId, String playerName) {
     // whether player is in the game or not will be checked in RestController class
     // if this is an empty map, then there is no need to look up actionMd5, just reply
     // with a bad_request
     return this.actionLookUpMap.get(gameId).get(playerName);
   }
+
+   */
+
 
 }
