@@ -5,8 +5,8 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public class DoubleGoldPower extends Power {
 
-  public DoubleGoldPower(PlayerInGame playerInfo) {
-    super(PowerEffect.DOUBLE_GOLD, playerInfo);
+  public DoubleGoldPower() {
+    super(PowerEffect.DOUBLE_GOLD);
   }
 
   @Override

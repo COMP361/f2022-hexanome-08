@@ -5,8 +5,8 @@ This class represents the TwoPlusOnePower.
  */
 public class TwoPlusOnePower extends Power {
 
-  public TwoPlusOnePower(PlayerInGame playerInfo) {
-    super(PowerEffect.TWO_PLUS_ONE, playerInfo);
+  public TwoPlusOnePower() {
+    super(PowerEffect.TWO_PLUS_ONE);
   }
 
   @Override
