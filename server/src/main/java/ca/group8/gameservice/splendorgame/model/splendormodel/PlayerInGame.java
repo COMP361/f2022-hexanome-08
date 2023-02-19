@@ -12,13 +12,11 @@ public class PlayerInGame implements BroadcastContent {
 
 
   private final String name;
-  private final EnumMap<Colour, Integer> wealth;
   private int prestigePoints;
+  private final EnumMap<Colour, Integer> wealth;
   private final TokenHand tokenHand;
-  private final PurchasedHand purchasedHand;
-
-  // need get reserved card number
   private final ReservedHand reservedHand;
+  private final PurchasedHand purchasedHand;
 
 
   /**
@@ -26,7 +24,7 @@ public class PlayerInGame implements BroadcastContent {
    */
   public PlayerInGame(String name) {
     this.name = name;
-    this.tokenHand = new TokenHand(3); // TODO: HARDCODED 3 FOR M5 ONLY
+    this.tokenHand = new TokenHand(0); // Initialize to 0 (empty)
     this.purchasedHand = new PurchasedHand();
     this.reservedHand = new ReservedHand();
     this.wealth = new EnumMap<>(Colour.class);
@@ -34,15 +32,48 @@ public class PlayerInGame implements BroadcastContent {
   }
 
   /**
-   * If all hands are empty.
+   * This method calculates what tokens the player must use to buy the card. It then removes the
+   * required tokens from the player's tokenHand.
+   *
+   * @param goldTokenRequired The number of gold tokens required to complete this purchase.
+   * @param card The card the player is buying.
+   *
+   * @return A list of the tokens used up to buy a card (the ones removed from tokenHand).
    */
-  @Override
-  public boolean isEmpty() {
-    return false;
+  public EnumMap<Colour, Integer> payTokensToBuy(int goldTokenRequired, DevelopmentCard card) {
+    EnumMap<Colour, Integer> tokensPaid = new EnumMap(Colour.class);
+
+    //TODO: Implement this functionality!
+    return tokensPaid;
   }
 
+  public TokenHand getTokenHand() {
+    return tokenHand;
+  }
+
+  public PurchasedHand getPurchasedHand() {
+    return purchasedHand;
+  }
+
+  public ReservedHand getReservedHand() {
+    return reservedHand;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public int getPrestigePoints() {
+    return prestigePoints;
+  }
+
+  public void addPrestigePoints(int amount) { prestigePoints-=amount; }
+
+  public void removePrestigePoints(int amount) { prestigePoints-=amount; }
+
+
   /**
-   * Returns map of total gems a layer has.
+   * Returns map of total gems a player has.
    */
   public EnumMap<Colour, Integer> getTotalGems() {
     EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
@@ -81,28 +112,12 @@ public class PlayerInGame implements BroadcastContent {
     return wealth;
   }
 
-  public TokenHand getTokenHand() {
-    return tokenHand;
-  }
-
-  public PurchasedHand getPurchasedHand() {
-    return purchasedHand;
-  }
-
-  public ReservedHand getReservedHand() {
-    return reservedHand;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public int getPrestigePoints() {
-    return prestigePoints;
-  }
-
-  public void setPrestigePoints(int newPrestigePoints) {
-    prestigePoints = newPrestigePoints;
+  /**
+   * If all hands are empty.
+   */
+  @Override
+  public boolean isEmpty() {
+    return false;
   }
 
   @Override
