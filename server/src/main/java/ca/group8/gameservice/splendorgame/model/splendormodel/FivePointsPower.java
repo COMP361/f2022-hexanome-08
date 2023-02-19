@@ -1,0 +1,16 @@
+package ca.group8.gameservice.splendorgame.model.splendormodel;
+
+/**
+ * This class represents the Five extra prestige points power.
+ */
+public class FivePointsPower extends Power {
+
+  public FivePointsPower(PlayerInGame playerInfo) {
+    super(PowerEffect.FIVE_POINTS, playerInfo);
+  }
+
+  @Override
+  boolean validityCheck(PlayerInGame playerInfo) {
+    return false;
+  }
+}
