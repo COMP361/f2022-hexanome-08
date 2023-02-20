@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * class that holds info about city board.
  */
+
 public class CityBoard extends Board {
 
   // keeps track of the ownership of any CityCard
