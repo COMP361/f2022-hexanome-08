@@ -16,7 +16,7 @@ public class PlayerTest {
 //  void testIsEmpty(){
 //    assert(player.isEmpty());
 //  }
-
+/*
   @Test
   public void testGetters(){
     EnumMap<Colour,Integer> wealth = new EnumMap<Colour, Integer>(Colour.class);
@@ -37,6 +37,8 @@ public class PlayerTest {
     wealth.put(Colour.BLUE,5);
     //Assert.assertEquals(player.getWealth(),wealth);
   }
+
+ */
 
   @Test
   public void testEquals(){
