@@ -128,12 +128,15 @@ public abstract class Board {
     }
   }
 
+  //TODO: Missing cardinfo_cities.json, so this is commented out for now.
+  /*
   /**
    * Parse a json string to CityCard.
    *
    * @param card city card in json format
    * @return NobleCard instance decrypted from json
    */
+  /*
   private CityCard parseCityObject(JSONObject card) {
     String cardName = (String) card.get("cardName");
     int prestigePoints = ((Long) card.get("prestigePoints")).intValue();
@@ -147,6 +150,7 @@ public abstract class Board {
    *
    * @return a list of all city cards
    */
+  /*
   protected List<CityCard> generateCityCards() {
     JSONParser jsonParser = new JSONParser();
     List<CityCard> resultCards = new ArrayList<>();
@@ -164,6 +168,8 @@ public abstract class Board {
       throw new RuntimeException(e);
     }
   }
+
+   */
 
 
 }
