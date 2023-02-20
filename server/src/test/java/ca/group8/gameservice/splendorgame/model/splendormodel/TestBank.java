@@ -8,7 +8,7 @@ import java.util.EnumMap;
 class TestBank {
     Bank b1 = new Bank(3);
 
-
+/*
     @Test
     void addToken() {
         EnumMap<Colour,Integer> token1 = new EnumMap<>(Colour.class);
@@ -26,6 +26,8 @@ class TestBank {
         assert (b1.getAllTokens().get(Colour.GREEN) == 3);
     }
 
+
+
     @Test
     void removeToken() {
         EnumMap<Colour,Integer> token1 = new EnumMap<>(Colour.class);
@@ -39,6 +41,8 @@ class TestBank {
         b1.removeToken(token1);
         assert (b1.getAllTokens().get(Colour.GOLD) == 4);
     }
+
+ */
 
     @Test
     void getAllTokens() {

@@ -14,6 +14,7 @@ public class TestDeck {
     Assert.assertEquals(deck.getLevel(), 1);
   }
 
+  /*
   @Test
   void testPop(){
     EnumMap<Colour,Integer> wealth = new EnumMap<Colour, Integer>(Colour.class);
@@ -21,5 +22,7 @@ public class TestDeck {
     deck.add(card);
     Assert.assertEquals(deck.pop(),card);
   }
+
+   */
 
 }

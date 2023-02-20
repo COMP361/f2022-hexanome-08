@@ -39,9 +39,50 @@ public class PlayerInGame {
    * @return A list of the tokens used up to buy a card (the ones removed from tokenHand).
    */
   public EnumMap<Colour, Integer> payTokensToBuy(int goldTokenRequired, DevelopmentCard card) {
-    EnumMap<Colour, Integer> tokensPaid = new EnumMap(Colour.class);
+    EnumMap<Colour, Integer> tokensPaid = card.getPrice();
 
-    //TODO: Implement this functionality!
+    //if gold tokens are required, add this value to tokensPaid map
+
+    //remove "discount" provided by gems from purchasedhand
+    EnumMap<Colour, Integer> totalGems = this.getTotalGems();
+    int goldTokensRemaining = goldTokenRequired;
+    for (Colour c : totalGems.keySet()) {
+      //calculate price after discount
+      int priceAfterDiscount = tokensPaid.get(c) - totalGems.get(c);
+      //if price is negative, meaning you have more gems than required, just set tokens paid to 0.
+      if (priceAfterDiscount < 0) {
+        tokensPaid.put(c, 0);
+      } else if (priceAfterDiscount >= goldTokensRemaining && goldTokensRemaining > 0) {
+        //deals with case where you use up all remaining gold tokens available
+        tokensPaid.put(c, priceAfterDiscount - goldTokensRemaining);
+        goldTokensRemaining = 0;
+      } else if (priceAfterDiscount < goldTokensRemaining && goldTokensRemaining > 0) {
+        //deals with case where you pay price and have extra gold tokens remaining
+        goldTokensRemaining -= priceAfterDiscount;
+        tokensPaid.put(c, 0);
+      } else {
+        tokensPaid.put(c, priceAfterDiscount);
+      }
+    }
+
+    //check to see if any gold tokens were used
+    //if the total Gold wealth of player == number of gold tokens in their hand,
+    //this means that the Player ONLY used gold tokens for this purchase (not gold gem cards)
+    if (this.getWealth().get(Colour.GOLD) <= tokenHand.getGoldTokenNumber()) {
+      tokensPaid.put(Colour.GOLD, goldTokenRequired);
+    }
+
+    /*TODO: Need to deal with whether gold tokens are returned to the bank or not
+    Based on this implementation, how will we know if "goldTokenRequired"
+    parameter is burning a card with goldTokens on it, or if we are using gold tokens
+    that must be returned to the bank.
+    We need to figure out how to identify if its a gold gem card being burned.
+    Once this is decided, TODO add the gold tokens returned to bank to tokenHand variable.
+    */
+
+    //remove tokens (after discount_ for this payment from playerHand
+    tokenHand.removeToken(tokensPaid);
+
     return tokensPaid;
   }
 

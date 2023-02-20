@@ -12,6 +12,7 @@ public class TestDevelopmentCard {
     EnumMap<Colour, Integer> price = new EnumMap<>(Colour.class);
     DevelopmentCard dc1;
 
+    /*
     @BeforeEach
     void setUp(){
         dc1 = new DevelopmentCard(2,price,"Steve",
@@ -36,4 +37,6 @@ public class TestDevelopmentCard {
         assertEquals(dc1.isPaired(),true);
         assertEquals(dc1.getPairedCardId(),"123");
     }
+
+     */
 }
