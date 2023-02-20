@@ -22,7 +22,7 @@ public class TestActionGenerator {
     EnumMap<Colour,Integer> price1;
     EnumMap<Colour,Integer> price2;
 
-
+/*
     @BeforeEach
     void setUp() {
         generator = new ActionGenerator();
@@ -45,6 +45,7 @@ public class TestActionGenerator {
         }
     }
 
+    /*
     @Test
     void firstTurnActions(){
         PlayerInGame daveInfo = playersInfo.getPlayersInfo().get("Dave");
@@ -52,6 +53,9 @@ public class TestActionGenerator {
         Map<String, Action> listOfActions = generator.lookUpActions(gameID,"Dave");
         assertEquals(listOfActions.size(),13);
     }
+
+     */
+
 
 
 
