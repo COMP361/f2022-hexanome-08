@@ -15,9 +15,6 @@ public class TestReservedHand {
     EnumMap<Colour,Integer> price = new EnumMap<>(Colour.class);
     List<CardEffect> purchaseEffects = new ArrayList<>();
 
-    //(int paramPrestigePoints, EnumMap<Colour, Integer> paramPrice,
-    //                         String paramCardName, int level, Colour gemColour, int gemNumber,
-    //                         List<CardEffect> purchaseEffects)
     DevelopmentCard c1 = new DevelopmentCard(1,price,"card1",1,red,1,purchaseEffects);
     DevelopmentCard c2 = new DevelopmentCard(2,price,"card1",1,red,1,purchaseEffects);
     DevelopmentCard c3 = new DevelopmentCard(3,price,"card1",1,red,1,purchaseEffects);
