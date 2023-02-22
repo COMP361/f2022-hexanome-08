@@ -13,7 +13,7 @@ public class ExtraTokenPower extends Power {
   boolean validityCheck(PlayerInGame playerInfo) {
     //Must have 3 red gem cards and 1 white gem card
     PurchasedHand purchasedHand = playerInfo.getPurchasedHand();
-    return purchasedHand.getGemCountOfColour(Colour.RED) >= 3 &&
-        purchasedHand.getGemCountOfColour(Colour.WHITE) >= 1;
+    return purchasedHand.getGemCountOfColour(Colour.RED) >= 3
+        && purchasedHand.getGemCountOfColour(Colour.WHITE) >= 1;
   }
 }
