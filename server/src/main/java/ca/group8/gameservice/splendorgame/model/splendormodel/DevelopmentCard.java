@@ -95,6 +95,15 @@ public class DevelopmentCard extends Card {
     return purchaseEffects.isEmpty();
   }
 
+  /**
+   * If a card has either Gold or Orient colour, then it's not a regular gem colour.
+   *
+   * @return whether a card has regular gem colour or not
+   */
+  public boolean hasRegularGemColour() {
+    return !(gemColour.equals(Colour.GOLD) || gemColour.equals(Colour.ORIENT));
+  }
+
 
   @Override
   public boolean equals(Object obj) {

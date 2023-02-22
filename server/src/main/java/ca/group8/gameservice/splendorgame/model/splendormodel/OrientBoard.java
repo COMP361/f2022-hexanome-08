@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class stores the cards/decks for orient extension.
@@ -25,7 +26,7 @@ public class OrientBoard extends Board {
       cardsOnBoard.put(i, new DevelopmentCard[2]); // 2 cards on board
     }
     // fill the board
-    refillCardBoard();
+    update();
   }
 
   /**
@@ -49,21 +50,6 @@ public class OrientBoard extends Board {
   }
 
   /**
-   * Refill any null position on the board (3 of len = 2 DevelopmentCard array).
-   * must make sure once the card is purchased, make the corresponding slot (index) -> null
-   */
-  private void refillCardBoard() {
-    for (int i = 1; i <= 3; i++) {
-      DevelopmentCard[] curLevelCardsOnBoard = getLevelCardsOnBoard(i);
-      for (int j = 0; j < 2; j++) {
-        if (curLevelCardsOnBoard[j] == null) {
-          curLevelCardsOnBoard[j] = popLevelCardFromDeck(i);
-        }
-      }
-    }
-  }
-
-  /**
    * Quickly set the card at that position to null, as a representation of removing it.
    *
    * @param cardPosition x and y: x stands for the level and y stands for the index
@@ -79,31 +65,43 @@ public class OrientBoard extends Board {
   /**
    * Generate decks for each level of orient card.
    *
-   * @param allBaseCards all dev cards (with no CardEffect) parsed from json
+   * @param allCards all dev cards (with CardEffect) parsed from json
    */
-  private void generateDeckPerLevel(List<DevelopmentCard> allBaseCards) {
-    List<DevelopmentCard> levelOneDeck = new ArrayList<>();
-    List<DevelopmentCard> levelTwoDeck = new ArrayList<>();
-    List<DevelopmentCard> levelThreeDeck = new ArrayList<>();
-    for (DevelopmentCard card : allBaseCards) {
-      if (card.getLevel() == 1) {
-        levelOneDeck.add(card);
-      } else if (card.getLevel() == 2) {
-        levelTwoDeck.add(card);
-      } else {
-        levelThreeDeck.add(card);
-      }
+  private void generateDeckPerLevel(List<DevelopmentCard> allCards) {
+    for (int i = 1; i <= 3; i++) {
+      int curLevel = i;
+      List<DevelopmentCard> levelDeck = allCards.stream()
+          .filter(c -> c.getLevel() == curLevel)
+          .filter(c -> !c.isBaseCard())
+          .collect(Collectors.toList());
+      // TODO: Commented out shuffle for JUnit testing
+      //Collections.shuffle(levelDeck);
+      decks.put(curLevel, levelDeck);
     }
-    Collections.shuffle(levelOneDeck);
-    Collections.shuffle(levelTwoDeck);
-    Collections.shuffle(levelThreeDeck);
-    decks.put(1, levelOneDeck);
-    decks.put(2, levelTwoDeck);
-    decks.put(3, levelThreeDeck);
   }
 
-  @Override
-  public void update(Card card, int index) {
+  public Map<Integer, List<DevelopmentCard>> getDecks() {
+    return decks;
+  }
 
+  public Map<Integer, DevelopmentCard[]> getCardsOnBoard() {
+    return cardsOnBoard;
+  }
+
+
+  /**
+   * Refill any null position on the board (3 of len = 2 DevelopmentCard array).
+   * must make sure once the card is purchased, make the corresponding slot (index) -> null
+   */
+  @Override
+  public void update() {
+      for (int i = 1; i <= 3; i++) {
+        DevelopmentCard[] curLevelCardsOnBoard = getLevelCardsOnBoard(i);
+        for (int j = 0; j < 2; j++) {
+          if (curLevelCardsOnBoard[j] == null) {
+            curLevelCardsOnBoard[j] = popLevelCardFromDeck(i);
+          }
+        }
+      }
   }
 }

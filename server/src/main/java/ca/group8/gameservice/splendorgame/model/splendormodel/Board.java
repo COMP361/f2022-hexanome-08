@@ -17,7 +17,7 @@ import org.springframework.util.ResourceUtils;
 public abstract class Board {
 
   // update the board
-  public abstract void update(Card card, int index);
+  public abstract void update();
 
   /**
    * Parse a json string to NobleCard.
@@ -25,7 +25,7 @@ public abstract class Board {
    * @param card noble card in json format
    * @return NobleCard instance decrypted from json
    */
-  private NobleCard parseNobleObject(JSONObject card) {
+  private NobleCard parseNobleCard(JSONObject card) {
     String cardName = (String) card.get("cardName");
     int prestigePoints = ((Long) card.get("prestigePoints")).intValue();
     EnumMap<Colour, Integer> price = parsePriceObject((JSONObject) card.get("price"));
@@ -46,7 +46,7 @@ public abstract class Board {
       Object obj = jsonParser.parse(reader);
       JSONArray cardList = (JSONArray) obj;
       for (Object o : cardList) {
-        NobleCard nb = parseNobleObject((JSONObject) o);
+        NobleCard nb = parseNobleCard((JSONObject) o);
         resultCards.add(nb);
       }
       return resultCards;
@@ -62,7 +62,7 @@ public abstract class Board {
    * @param card noble card in json format
    * @return NobleCard instance decrypted from json
    */
-  private DevelopmentCard parseCardObject(JSONObject card) {
+  private DevelopmentCard parseDevelopmentCard(JSONObject card) {
     String cardName = (String) card.get("cardName");
     int cardLevel = ((Long) card.get("level")).intValue();
     int prestigePoints = ((Long) card.get("prestigePoints")).intValue();
@@ -115,7 +115,7 @@ public abstract class Board {
       Object obj = jsonParser.parse(reader);
       JSONArray cardList = (JSONArray) obj;
       for (Object o : cardList) {
-        DevelopmentCard c = parseCardObject((JSONObject) o);
+        DevelopmentCard c = parseDevelopmentCard((JSONObject) o);
         resultCards.add(c);
       }
       return resultCards;
@@ -163,102 +163,4 @@ public abstract class Board {
       throw new RuntimeException(e);
     }
   }
-
-
-
-
 }
-
-
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//
-///**
-// * Interface for board for the three boards.
-// */
-//public class Board {
-//
-//  private final Card[][] cardBoard;
-//  private final int columns;
-//  private final int rows;
-//
-//  /**
-//   * TODO: initialize method.
-//   */
-//  public Board(int paramHeight, int paramWidth) {
-//    columns = paramWidth;
-//    rows = paramHeight;
-//    cardBoard = new Card[rows][columns];
-//    //initialise method needed
-//
-//  }
-//
-//  public int getColumns() {
-//    return columns;
-//  }
-//
-//  public int getRows() {
-//    return rows;
-//  }
-//
-//  public void add(int row, int column, Card card) {
-//    cardBoard[row][column] = card;
-//  }
-//
-//  public Card getCard(int row, int column) {
-//    return cardBoard[row][column];
-//  }
-//
-//  boolean hasCard(Card paramCard) {
-//    for (Card[] array : cardBoard) {
-//      for (Card card : array) {
-//        if (card.equals(paramCard)) {
-//          return true;
-//        }
-//      }
-//    }
-//    return false;
-//  }
-//
-//  /**
-//   * Get x,y position of a card on the board.
-//   */
-//  public Position getCardPosition(Card paramCard) {
-//    if (!hasCard(paramCard)) {
-//      throw new IllegalArgumentException("aaaahhhh");
-//    }
-//
-//    for (int i = 0; i < rows; i++) {
-//      for (int j = 0; j < columns; j++) {
-//        if (cardBoard[i][j].equals(paramCard)) {
-//          return new Position(j, i);
-//        }
-//      }
-//    }
-//    return null;
-//  }
-//
-//  /**
-//   * Remove card and replace with new card from deck.
-//   */
-//  public Card takeAndReplaceCard(Card paramCard, Position paramPosition) {
-//    Card takenCard = cardBoard[paramPosition.getY()][paramPosition.getX()];
-//    cardBoard[paramPosition.getY()][paramPosition.getX()] = paramCard;
-//    return takenCard;
-//  }
-//
-//  public void remove(Position paramPosition) {
-//    cardBoard[paramPosition.getY()][paramPosition.getX()] = null;
-//  }
-//
-//  /**
-//   * return a list of all cards in the board.
-//   */
-//  public ArrayList<Card> getCards() {
-//    ArrayList<Card> allCards = new ArrayList<>();
-//    for (int i = 0; i < rows; i++) {
-//      allCards.addAll(Arrays.asList(cardBoard[i]).subList(0, columns));
-//    }
-//    return allCards;
-//  }
-//}

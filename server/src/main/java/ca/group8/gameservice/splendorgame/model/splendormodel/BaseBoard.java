@@ -14,7 +14,7 @@ public class BaseBoard extends Board {
 
   private final Map<Integer, List<DevelopmentCard>> decks = new HashMap<>();
   private final Map<Integer, DevelopmentCard[]> cardsOnBoard = new HashMap<>();
-  private List<NobleCard> nobles;
+  private final List<NobleCard> nobles;
 
 
   public BaseBoard(List<String> playerNames) {
@@ -37,7 +37,7 @@ public class BaseBoard extends Board {
     }
 
     // fill the board
-    refillCardBoard();
+    update();
   }
 
   /**
@@ -120,6 +120,7 @@ public class BaseBoard extends Board {
       int curLevel = i;
       List<DevelopmentCard> levelDeck = allCards.stream()
           .filter(c -> c.getLevel() == curLevel)
+          .filter(c -> c.isBaseCard())
           .collect(Collectors.toList());
       // TODO: Commented out shuffle for JUnit testing
       //Collections.shuffle(levelDeck);
@@ -132,7 +133,8 @@ public class BaseBoard extends Board {
    * Refill any null position on the board (3 of len = 4 DevelopmentCard array).
    * must make sure once the card is purchased, make the corresponding slot (index) -> null
    */
-  private void refillCardBoard() {
+  @Override
+  public void update() {
     for (int i = 1; i <= 3; i++) {
       DevelopmentCard[] curLevelCardsOnBoard = getLevelCardsOnBoard(i);
       for (int j = 0; j < 4; j++) {
@@ -141,11 +143,6 @@ public class BaseBoard extends Board {
         }
       }
     }
-  }
-
-  @Override
-  public void update(Card card, int index) {
-    refillCardBoard();
   }
 
 }
