@@ -97,5 +97,14 @@ public class TestPowers {
     assertTrue(twoPlusOnePower.validityCheck(p1));
 
   }
+
+  @Test
+  void TestUnlock() {
+    TwoPlusOnePower power = new TwoPlusOnePower();
+    assertFalse(power.isUnlocked());
+
+    power.unlock();
+    assertTrue(power.isUnlocked());
+  }
 }
 
