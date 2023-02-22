@@ -25,18 +25,16 @@ public class TestGameManager {
     extensions.add(Extension.BASE);
   }
 
-/*
-  @Test
-  void TestGetActionInterpreter() {
-    GameInfo game = new GameInfo(extensions,names);
-    ActionInterpreter a1 = new ActionInterpreter(game, playerStates);
-    GameManager gameManager1 = new GameManager();
-    gameManager1.addGame(1234,game);
-    gameManager1.addGameActionInterpreter(1234, a1);
-    ActionInterpreter result = gameManager1.getGameActionInterpreter(1234);
-    assertEquals(a1, result);
-  }
 
+  //@Test
+  //void TestGetActionInterpreter() {
+  //  GameInfo game = new GameInfo(extensions,names);
+  //  ActionInterpreter a1 = new ActionInterpreter(game, playerStates);
+  //  GameManager gameManager1 = new GameManager();
+  //  gameManager1.addGame(1234,game);
+  //  gameManager1.addGameActionInterpreter(1234, a1);
+  //  ActionInterpreter result = gameManager1.getGameActionInterpreter(1234);
+  //  assertEquals(a1, result);
+  //}
 
- */
 }
