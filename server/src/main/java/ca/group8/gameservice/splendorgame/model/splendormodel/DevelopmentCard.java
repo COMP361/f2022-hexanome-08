@@ -130,6 +130,4 @@ public class DevelopmentCard extends Card {
     return Objects.hash(super.hashCode(), level, gemNumber, isPaired, gemColour, purchaseEffects);
   }
 
-
-
 }

@@ -1,5 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import java.util.Objects;
+
 /**
  * This class represents the Power functionality in the Trading Post Extension.
  */
@@ -43,5 +45,25 @@ public abstract class Power {
 
   public PowerEffect getPowerEffect() {
     return powerEffect;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+
+    if (!(obj instanceof Power)) {
+      return false;
+    }
+
+    Power other = (Power) obj;
+    return this.unlocked == other.unlocked &&
+        this.powerEffect.equals(other.powerEffect);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(unlocked, powerEffect);
   }
 }

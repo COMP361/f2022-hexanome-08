@@ -54,15 +54,20 @@ public class TraderBoard extends Board {
    * @param effect     the effect of the specific power
    * @return the specific power
    */
-  public Power getPlayerOnePower(String playerName, PowerEffect effect) {
-    assert allPlayerPowers.containsKey(playerName)
-        && allPlayerPowers.get(playerName).containsKey(effect);
-
+  public Power getPlayerOnePower(String playerName, PowerEffect effect)
+  throws SplendorGameException {
+    if (!allPlayerPowers.containsKey(playerName)) {
+      throw new SplendorGameException("Player not in this game!");
+    }
     return allPlayerPowers.get(playerName).get(effect);
   }
 
+  /**
+   * Nothing needs to be done. The unlock/lock states of power is associated with power.
+   * objects, not the board.
+   */
   @Override
   public void update() {
-    // TODO:
+
   }
 }
