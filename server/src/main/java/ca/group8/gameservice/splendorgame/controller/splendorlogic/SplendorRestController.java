@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -232,7 +233,8 @@ public class SplendorRestController {
       List<String> playerNames = launcherInfo
           .getPlayers()
           .stream()
-          .map(PlayerInfo::getName).toList();
+          .map(PlayerInfo::getName)
+          .collect(Collectors.toList());
 
       GameInfo newGameInfo = new GameInfo(gameExtensions, playerNames);
       PlayerStates newPlayerStates = new PlayerStates(playerNames);
