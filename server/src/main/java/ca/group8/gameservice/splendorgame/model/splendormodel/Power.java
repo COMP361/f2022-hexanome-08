@@ -5,7 +5,7 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public abstract class Power {
 
-  private boolean unlocked;
+  boolean unlocked;
   private final PowerEffect powerEffect;
 
   /**
