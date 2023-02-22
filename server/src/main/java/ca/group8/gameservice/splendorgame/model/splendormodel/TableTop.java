@@ -41,7 +41,7 @@ public class TableTop implements BroadcastContent {
         resultBoard = new BaseBoard(playerNames);
         break;
       case ORIENT:
-        resultBoard = new OrientBoard(playerNames);
+        resultBoard = new OrientBoard();
         break;
       case TRADING_POST:
         resultBoard = new TraderBoard(playerNames);
