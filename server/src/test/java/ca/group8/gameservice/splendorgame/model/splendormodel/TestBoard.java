@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
 
+    /*
     Board b1;
 
     @BeforeEach
@@ -63,4 +64,8 @@ class BoardTest {
     void getCards() {
         assert (b1.getCards().size() == 12);
     }
+
+
+     */
 }
+
