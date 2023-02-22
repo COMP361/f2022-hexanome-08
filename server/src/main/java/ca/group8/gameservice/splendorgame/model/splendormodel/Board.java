@@ -19,10 +19,6 @@ public abstract class Board {
   // update the board
   public abstract void update(Card card, int index);
 
-  // set up the board, should only be called once, call this method in constructor
-  public abstract void setup(List<String> playerNames);
-
-
   /**
    * Parse a json string to NobleCard.
    *
@@ -46,7 +42,7 @@ public abstract class Board {
     List<NobleCard> resultCards = new ArrayList<>();
     // write unit tests
     try (FileReader reader = new
-        FileReader(ResourceUtils.getFile("classpath:cardinfo_noble.json"))) {
+        FileReader(ResourceUtils.getFile("classpath:cardinfo_noblecard.json"))) {
       Object obj = jsonParser.parse(reader);
       JSONArray cardList = (JSONArray) obj;
       for (Object o : cardList) {
@@ -114,7 +110,7 @@ public abstract class Board {
   protected List<DevelopmentCard> generateDevelopmentCards(String fileName) {
     JSONParser jsonParser = new JSONParser();
     List<DevelopmentCard> resultCards = new ArrayList<>();
-    String curFileName = String.format("classpath::%s.json", fileName);
+    String curFileName = String.format("classpath:%s.json", fileName);
     try (FileReader reader = new FileReader(ResourceUtils.getFile(curFileName))) {
       Object obj = jsonParser.parse(reader);
       JSONArray cardList = (JSONArray) obj;
@@ -128,12 +124,14 @@ public abstract class Board {
     }
   }
 
+
   /**
    * Parse a json string to CityCard.
    *
    * @param card city card in json format
    * @return NobleCard instance decrypted from json
    */
+
   private CityCard parseCityObject(JSONObject card) {
     String cardName = (String) card.get("cardName");
     int prestigePoints = ((Long) card.get("prestigePoints")).intValue();
@@ -147,12 +145,13 @@ public abstract class Board {
    *
    * @return a list of all city cards
    */
+
   protected List<CityCard> generateCityCards() {
     JSONParser jsonParser = new JSONParser();
     List<CityCard> resultCards = new ArrayList<>();
     // write unit tests
     try (FileReader reader = new
-        FileReader(ResourceUtils.getFile("classpath:cardinfo_city.json"))) {
+        FileReader(ResourceUtils.getFile("classpath:cardinfo_citycard.json"))) {
       Object obj = jsonParser.parse(reader);
       JSONArray cardList = (JSONArray) obj;
       for (Object o : cardList) {
@@ -164,6 +163,8 @@ public abstract class Board {
       throw new RuntimeException(e);
     }
   }
+
+
 
 
 }

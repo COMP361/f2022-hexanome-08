@@ -14,8 +14,18 @@ public class OrientBoard extends Board {
   private final Map<Integer, List<DevelopmentCard>> decks = new HashMap<>();
   private final Map<Integer, DevelopmentCard[]> cardsOnBoard = new HashMap<>();
 
-  public OrientBoard(List<String> playerNames) {
-    setup(playerNames);
+  public OrientBoard() {
+    // get all cards info from json file
+    List<DevelopmentCard> orientDevCards
+        = super.generateDevelopmentCards("cardinfo_orientcard");
+
+    // initialize decks and slots to put card on board
+    generateDeckPerLevel(orientDevCards);
+    for (int i = 1; i <= 3; i++) {
+      cardsOnBoard.put(i, new DevelopmentCard[2]); // 2 cards on board
+    }
+    // fill the board
+    refillCardBoard();
   }
 
   /**
@@ -39,13 +49,13 @@ public class OrientBoard extends Board {
   }
 
   /**
-   * Refill any null position on the board (3 of len = 4 DevelopmentCard array).
+   * Refill any null position on the board (3 of len = 2 DevelopmentCard array).
    * must make sure once the card is purchased, make the corresponding slot (index) -> null
    */
   private void refillCardBoard() {
     for (int i = 1; i <= 3; i++) {
       DevelopmentCard[] curLevelCardsOnBoard = getLevelCardsOnBoard(i);
-      for (int j = 0; j < 4; j++) {
+      for (int j = 0; j < 2; j++) {
         if (curLevelCardsOnBoard[j] == null) {
           curLevelCardsOnBoard[j] = popLevelCardFromDeck(i);
         }
@@ -95,21 +105,5 @@ public class OrientBoard extends Board {
   @Override
   public void update(Card card, int index) {
 
-  }
-
-  @Override
-  public void setup(List<String> playerNames) {
-    // get all cards info from json file
-    // TODO: muzhi needs to provide this file in raw csv format
-    List<DevelopmentCard> orientDevCards
-        = super.generateDevelopmentCards("cardinfo_orientcard");
-
-    // initialize decks and slots to put card on board
-    generateDeckPerLevel(orientDevCards);
-    for (int i = 1; i <= 3; i++) {
-      cardsOnBoard.put(i, new DevelopmentCard[2]); // 2 cards on board
-    }
-    // fill the board
-    refillCardBoard();
   }
 }

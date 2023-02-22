@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class stores the cards/decks with level 1->3 on base board and the nobles.
@@ -18,7 +19,25 @@ public class BaseBoard extends Board {
 
   public BaseBoard(List<String> playerNames) {
     // set up decks and cards on board
-    setup(playerNames);
+    int playerCount = playerNames.size();
+
+    // set up nobles on board
+    List<NobleCard> allNobles = super.generateNobleCards();
+    Collections.shuffle(allNobles);
+    nobles = allNobles.subList(0, playerCount + 1); // noble count = player count + 1
+
+    // get all cards info from json file
+    List<DevelopmentCard> baseDevCards
+        = super.generateDevelopmentCards("cardinfo_basecard");
+
+    // initialize decks and slots to put card on board
+    generateDeckPerLevel(baseDevCards);
+    for (int i = 1; i <= 3; i++) {
+      cardsOnBoard.put(i, new DevelopmentCard[4]);
+    }
+
+    // fill the board
+    refillCardBoard();
   }
 
   /**
@@ -81,11 +100,11 @@ public class BaseBoard extends Board {
     return resultCard;
   }
 
-  public Map<Integer, List<DevelopmentCard>> getBaseDecks() {
+  public Map<Integer, List<DevelopmentCard>> getDecks() {
     return decks;
   }
 
-  public Map<Integer, DevelopmentCard[]> getBaseCardsOnBoard() {
+  public Map<Integer, DevelopmentCard[]> getCardsOnBoard() {
     return cardsOnBoard;
   }
 
@@ -96,24 +115,17 @@ public class BaseBoard extends Board {
    * @param allCards all dev cards (with no CardEffect) parsed from json
    */
   private void generateDeckPerLevel(List<DevelopmentCard> allCards) {
-    List<DevelopmentCard> levelOneDeck = new ArrayList<>();
-    List<DevelopmentCard> levelTwoDeck = new ArrayList<>();
-    List<DevelopmentCard> levelThreeDeck = new ArrayList<>();
-    for (DevelopmentCard card : allCards) {
-      if (card.getLevel() == 1) {
-        levelOneDeck.add(card);
-      } else if (card.getLevel() == 2) {
-        levelTwoDeck.add(card);
-      } else {
-        levelThreeDeck.add(card);
-      }
+
+    for (int i = 1; i <= 3; i++) {
+      int curLevel = i;
+      List<DevelopmentCard> levelDeck = allCards.stream()
+          .filter(c -> c.getLevel() == curLevel)
+          .collect(Collectors.toList());
+      // TODO: Commented out shuffle for JUnit testing
+      //Collections.shuffle(levelDeck);
+      decks.put(curLevel, levelDeck);
     }
-    Collections.shuffle(levelOneDeck);
-    Collections.shuffle(levelTwoDeck);
-    Collections.shuffle(levelThreeDeck);
-    decks.put(1, levelOneDeck);
-    decks.put(2, levelTwoDeck);
-    decks.put(3, levelThreeDeck);
+
   }
 
   /**
@@ -133,29 +145,6 @@ public class BaseBoard extends Board {
 
   @Override
   public void update(Card card, int index) {
-    refillCardBoard();
-  }
-
-  @Override
-  public void setup(List<String> playerNames) {
-    int playerCount = playerNames.size();
-
-    // set up nobles on board
-    List<NobleCard> allNobles = super.generateNobleCards();
-    Collections.shuffle(allNobles);
-    nobles = allNobles.subList(0, playerCount + 1); // noble count = player count + 1
-
-    // get all cards info from json file
-    List<DevelopmentCard> baseDevCards
-        = super.generateDevelopmentCards("cardinfo_basecard");
-
-    // initialize decks and slots to put card on board
-    generateDeckPerLevel(baseDevCards);
-    for (int i = 1; i <= 3; i++) {
-      cardsOnBoard.put(i, new DevelopmentCard[4]);
-    }
-
-    // fill the board
     refillCardBoard();
   }
 
