@@ -142,16 +142,42 @@ public class TestBaseBoard {
     assertNull(board.getCardsOnBoard().get(position.getX())[position.getY()]);
   }
 
-  // TODO: The tests for getters are missing
 
-  //@Test
-  //void testBaseCards() {
-  //  board.getNobles().forEach(nb -> System.out.println(nb.getCardName()));
-  //}
+  @Test
+  void testGetLevelCardsOnBoard()
+      throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    setUpDeckFromPool();
+    setUpCardsOnBoard();
+    for (int i = 1; i <= 3; i++) {
+      DevelopmentCard[] cardsOnBoard = testCardsOnBoard.get(i);
+      List<DevelopmentCard> deck = testLevelDecks.get(i);
+      for (int j = 0; j < cardsOnBoard.length; j++) {
+        cardsOnBoard[j] = deck.remove(0);
+      }
+      assertEquals(cardsOnBoard, board.getLevelCardsOnBoard(i));
+    }
+  }
 
-  //@Test
-  //void test
 
+  @Test
+  void testGetNobles() {
+    assertEquals(testNobles, board.getNobles());
+  }
 
+  @Test
+  void testRemoveNoble() {
+    NobleCard nobleToRemove = testNobles.get(1);
+    testNobles.remove(nobleToRemove);
+    board.removeNoble(nobleToRemove);
+    assertEquals(testNobles, board.getNobles());
+  }
+
+  @Test
+  void testAddNoble() {
+    NobleCard newNoble = new NobleCard(points, cardPrice, nobleName + "_" + "99");
+    testNobles.add(newNoble);
+    board.addNoble(newNoble);
+    assertEquals(testNobles, board.getNobles());
+  }
 
 }
