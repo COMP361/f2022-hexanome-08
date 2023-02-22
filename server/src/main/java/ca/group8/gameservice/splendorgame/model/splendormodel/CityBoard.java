@@ -18,7 +18,14 @@ public class CityBoard extends Board {
   private List<CityCard> allCityCards = new ArrayList<>();
 
   public CityBoard(List<String> playerNames) {
-    setup(playerNames);
+    // initialize city to each player as null initially
+    playerNames.stream().map(name -> playerCities.put(name, null));
+
+    List<CityCard> allCards = super.generateCityCards();
+
+    // randomly get 3 city cards on board (the rule)
+    Collections.shuffle(allCards);
+    allCityCards = allCards.subList(0, 3);
   }
 
 
@@ -52,16 +59,5 @@ public class CityBoard extends Board {
     // TODO:
   }
 
-  @Override
-  public void setup(List<String> playerNames) {
-    // initialize city to each player as null initially
-    playerNames.stream().map(name -> playerCities.put(name, null));
-
-    List<CityCard> allCards = super.generateCityCards();
-
-    // randomly get 3 city cards on board (the rule)
-    Collections.shuffle(allCards);
-    allCityCards = allCards.subList(0, 3);
-  }
 
 }

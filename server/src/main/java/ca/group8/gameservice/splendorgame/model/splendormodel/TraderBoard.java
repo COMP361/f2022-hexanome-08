@@ -12,7 +12,30 @@ public class TraderBoard extends Board {
   private final Map<String, Map<PowerEffect, Power>> allPlayerPowers = new HashMap<>();
 
   public TraderBoard(List<String> playerNames) {
-    setup(playerNames);
+    for (String playerName : playerNames) {
+      Map<PowerEffect, Power> curPlayerPowers = new HashMap<>();
+      for (PowerEffect pe : PowerEffect.values()) {
+        switch (pe) {
+          case ARM_POINTS:
+            curPlayerPowers.put(PowerEffect.ARM_POINTS, new ArmPointsPower());
+            break;
+          case DOUBLE_GOLD:
+            curPlayerPowers.put(PowerEffect.DOUBLE_GOLD, new DoubleGoldPower());
+            break;
+          case EXTRA_TOKEN:
+            curPlayerPowers.put(PowerEffect.EXTRA_TOKEN, new ExtraTokenPower());
+            break;
+          case FIVE_POINTS:
+            curPlayerPowers.put(PowerEffect.FIVE_POINTS, new FivePointsPower());
+            break;
+          case TWO_PLUS_ONE:
+            curPlayerPowers.put(PowerEffect.TWO_PLUS_ONE, new TwoPlusOnePower());
+            break;
+          default: break;
+        }
+      }
+      allPlayerPowers.put(playerName, curPlayerPowers);
+    }
   }
 
 
@@ -42,33 +65,5 @@ public class TraderBoard extends Board {
   @Override
   public void update(Card card, int index) {
     // TODO:
-  }
-
-  @Override
-  public void setup(List<String> playerNames) {
-    for (String playerName : playerNames) {
-      Map<PowerEffect, Power> curPlayerPowers = new HashMap<>();
-      for (PowerEffect pe : PowerEffect.values()) {
-        switch (pe) {
-          case ARM_POINTS:
-            curPlayerPowers.put(PowerEffect.ARM_POINTS, new ArmPointsPower());
-            break;
-          case DOUBLE_GOLD:
-            curPlayerPowers.put(PowerEffect.DOUBLE_GOLD, new DoubleGoldPower());
-            break;
-          case EXTRA_TOKEN:
-            curPlayerPowers.put(PowerEffect.EXTRA_TOKEN, new ExtraTokenPower());
-            break;
-          case FIVE_POINTS:
-            curPlayerPowers.put(PowerEffect.FIVE_POINTS, new FivePointsPower());
-            break;
-          case TWO_PLUS_ONE:
-            curPlayerPowers.put(PowerEffect.TWO_PLUS_ONE, new TwoPlusOnePower());
-            break;
-          default: break;
-        }
-      }
-      allPlayerPowers.put(playerName, curPlayerPowers);
-    }
   }
 }
