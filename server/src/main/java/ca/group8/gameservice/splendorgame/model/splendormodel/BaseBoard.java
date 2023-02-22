@@ -115,24 +115,6 @@ public class BaseBoard extends Board {
    * @param allCards all dev cards (with no CardEffect) parsed from json
    */
   private void generateDeckPerLevel(List<DevelopmentCard> allCards) {
-    //List<DevelopmentCard> levelOneDeck = new ArrayList<>();
-    //List<DevelopmentCard> levelTwoDeck = new ArrayList<>();
-    //List<DevelopmentCard> levelThreeDeck = new ArrayList<>();
-    //for (DevelopmentCard card : allCards) {
-    //  if (card.getLevel() == 1) {
-    //    levelOneDeck.add(card);
-    //  } else if (card.getLevel() == 2) {
-    //    levelTwoDeck.add(card);
-    //  } else {
-    //    levelThreeDeck.add(card);
-    //  }
-    //}
-    //Collections.shuffle(levelOneDeck);
-    //Collections.shuffle(levelTwoDeck);
-    //Collections.shuffle(levelThreeDeck);
-    //decks.put(1, levelOneDeck);
-    //decks.put(2, levelTwoDeck);
-    //decks.put(3, levelThreeDeck);
 
     for (int i = 1; i <= 3; i++) {
       int curLevel = i;
