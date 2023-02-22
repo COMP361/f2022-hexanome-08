@@ -1,6 +1,5 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +62,7 @@ public class TraderBoard extends Board {
   }
 
   @Override
-  public void update(Card card, int index) {
+  public void update() {
     // TODO:
   }
 }

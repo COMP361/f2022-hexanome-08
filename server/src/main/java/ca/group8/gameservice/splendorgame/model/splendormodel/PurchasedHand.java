@@ -49,7 +49,7 @@ public class PurchasedHand {
    * Get certain development cards of a specific colour.
    *
    * @param colour of development cards you want to retrieve.
-   * @return List of development cards of the Colour colour.
+   * @return List of development cards of the colour.
    */
   public List<DevelopmentCard> getOneColourDevelopmentCards(Colour colour) {
     List<DevelopmentCard> result = new ArrayList<>();

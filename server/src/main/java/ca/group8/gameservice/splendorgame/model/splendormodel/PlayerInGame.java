@@ -128,7 +128,8 @@ public class PlayerInGame {
   }
 
   /**
-   * Returns map of total gems a player has.
+   * Returns map of total gems (out of all dev cards) a player has.
+   * Guarantee to return a map with only RED, BLUE, WHITE, BLACK AND GREEN
    */
   public EnumMap<Colour, Integer> getTotalGems() {
     EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
@@ -138,14 +139,17 @@ public class PlayerInGame {
     }
     if (purchasedHand.getDevelopmentCards().size() > 0) {
       for (DevelopmentCard card : purchasedHand.getDevelopmentCards()) {
-        Colour colour = card.getGemColour();
-        if (!totalGems.containsKey(colour)) {
-          // if gem map does not contain the colour, put the value in map
-          totalGems.put(colour, card.getGemNumber());
-        } else {
-          // if it contains it, increment on the old value
-          int oldValue = totalGems.get(colour);
-          totalGems.put(colour, oldValue + card.getGemNumber());
+        // Only count the card with regular gem colours
+        if (card.hasRegularGemColour()) {
+          Colour colour = card.getGemColour();
+          if (!totalGems.containsKey(colour)) {
+            // if gem map does not contain the colour, put the value in map
+            totalGems.put(colour, card.getGemNumber());
+          } else {
+            // if it contains it, increment on the old value
+            int oldValue = totalGems.get(colour);
+            totalGems.put(colour, oldValue + card.getGemNumber());
+          }
         }
       }
     }

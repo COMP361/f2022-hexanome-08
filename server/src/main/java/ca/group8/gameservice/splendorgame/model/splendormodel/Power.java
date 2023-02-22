@@ -5,7 +5,8 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public abstract class Power {
 
-  boolean unlocked;
+  private boolean unlocked;
+
   private final PowerEffect powerEffect;
 
   /**
@@ -32,11 +33,15 @@ public abstract class Power {
 
   //Do not make these methods [unlock() & lock()]public as they should only be called directly by
   // an inheriting power class (ex. TwoPlusOnePower).
-  void unlock() {
+  public void unlock() {
     unlocked = true;
   }
 
-  void lock() {
+  public void lock() {
     unlocked = false;
+  }
+
+  public PowerEffect getPowerEffect() {
+    return powerEffect;
   }
 }
