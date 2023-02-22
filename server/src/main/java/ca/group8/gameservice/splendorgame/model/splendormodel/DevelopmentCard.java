@@ -3,6 +3,7 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class represents the SuperClass of all Development Cards.
@@ -51,7 +52,7 @@ public class DevelopmentCard extends Card {
    * @throws SplendorGameException exception during game running
    */
   public DevelopmentCard getPairedCard() throws SplendorGameException {
-    if (!isPaired) {
+    if (!isPaired || pairedCard == null) {
       throw new SplendorGameException("Card is not paired yet");
     }
     return pairedCard;
@@ -59,10 +60,6 @@ public class DevelopmentCard extends Card {
 
   public int getGemNumber() {
     return gemNumber;
-  }
-
-  public void setPaired(boolean paramPaired) {
-    isPaired = paramPaired;
   }
 
   /**
@@ -79,18 +76,51 @@ public class DevelopmentCard extends Card {
    * pair a dev card with purchaseEffect containing SATCHEL to this card.
    *
    * @param pairedCard the card with purchaseEffect containing SATCHEL
-   * @throws SplendorGameException something went wrong during playing
+   * @post gemNumber increment by 1, isPaired set to true, pairedCard gets assigned
    */
-  public void setPairedCard(DevelopmentCard pairedCard) throws SplendorGameException {
-    if (pairedCard == null) {
-      throw new SplendorGameException("Error: pairedCard argument is null.");
+  public void pairCard(DevelopmentCard pairedCard) {
+    if (pairedCard != null && pairedCard.purchaseEffects.contains(CardEffect.SATCHEL)) {
+      isPaired = true;
+      this.pairedCard = pairedCard;
+      gemNumber += 1;
     }
-    this.pairedCard = pairedCard;
   }
 
-  public void incrementGemNumber() {
-    gemNumber += 1;
+  /**
+   * If a development card has no purchase effect, then it's a base card, otherwise it's orient
+   *
+   * @return whether this dev card is base card or not
+   */
+  public boolean isBaseCard() {
+    return purchaseEffects.isEmpty();
   }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+
+    if(!(obj instanceof DevelopmentCard)) {
+      return false;
+    }
+
+    DevelopmentCard other = (DevelopmentCard) obj;
+
+    return super.equals(other) &&
+        this.level == other.level &&
+        this.gemNumber == other.gemNumber &&
+        this.isPaired == other.isPaired &&
+        this.gemColour.equals(other.gemColour) &&
+        this.purchaseEffects.equals(other.purchaseEffects);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), level, gemNumber, isPaired, gemColour, purchaseEffects);
+  }
+
 
 
 }

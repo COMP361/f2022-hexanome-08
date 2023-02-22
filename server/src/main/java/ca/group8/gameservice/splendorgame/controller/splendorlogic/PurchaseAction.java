@@ -1,10 +1,19 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
+import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Board;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
+import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import java.util.EnumMap;
+import java.util.List;
 
 
 /**
@@ -67,6 +76,28 @@ public class PurchaseAction extends Action {
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
                       ActionGenerator actionListGenerator,
                       ActionInterpreter actionInterpreter) {
+
+    //TODO: Double check that we want this assertion statement
+    assert curCard instanceof DevelopmentCard;
+
+    //cast card to Development Card
+    DevelopmentCard curCard = (DevelopmentCard) this.curCard;
+
+    List<CardEffect> cardEffects = curCard.getPurchaseEffects();
+    int effectNum = cardEffects. size();
+    Bank curBank = curTableTop.getBank();
+    PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
+    int points = curCard.getPrestigePoints();
+
+    if (effectNum == 0) {
+      EnumMap<Colour, Integer> tokensSpent = playerInGame.payTokensToBuy(goldTokenRequired, curCard);
+      purchasedHand.addDevelopmentCard(curCard);
+      playerInGame.addPrestigePoints(points);
+      curBank.returnToken(tokensSpent);
+
+      BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
+      baseBoard.removeCard(cardPosition);
+    }
 
   }
 
