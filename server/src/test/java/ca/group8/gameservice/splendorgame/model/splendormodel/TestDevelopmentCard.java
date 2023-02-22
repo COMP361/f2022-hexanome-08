@@ -83,6 +83,11 @@ public class TestDevelopmentCard {
     }
 
 
-
+    @Test
+    void testHasRegularGemColour() {
+        setUp();
+        assertFalse(orientCard.hasRegularGemColour());
+        assertTrue(baseCard.hasRegularGemColour());
+    }
 
 }
