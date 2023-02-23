@@ -16,6 +16,7 @@ public class OrientBoard extends Board {
   private final Map<Integer, DevelopmentCard[]> cardsOnBoard = new HashMap<>();
 
   public OrientBoard() {
+    super.type = this.getClass().getSimpleName();
     // get all cards info from json file
     List<DevelopmentCard> orientDevCards
         = super.generateDevelopmentCards("cardinfo_orientcard");

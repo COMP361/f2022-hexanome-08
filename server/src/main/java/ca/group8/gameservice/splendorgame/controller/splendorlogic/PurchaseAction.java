@@ -58,6 +58,7 @@ public class PurchaseAction extends Action {
    */
   public PurchaseAction(Position cardPosition, DevelopmentCard card, int goldTokenRequired) {
     assert cardPosition != null && card != null && goldTokenRequired >= 0;
+    super.type = this.getClass().getSimpleName();
     this.cardPosition = cardPosition;
     this.curCard = card;
     this.goldTokenRequired = goldTokenRequired;

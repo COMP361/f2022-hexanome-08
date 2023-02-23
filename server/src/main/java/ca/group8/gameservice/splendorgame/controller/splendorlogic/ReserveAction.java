@@ -35,6 +35,7 @@ public class ReserveAction extends Action {
   }
 
   public ReserveAction(Position position, Card curCard) {
+    super.type = this.getClass().getSimpleName();
     this.cardPosition = position;
     this.curCard = curCard;
   }

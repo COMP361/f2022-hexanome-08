@@ -7,6 +7,7 @@ public class ExtraTokenPower extends Power {
 
   public ExtraTokenPower() {
     super(PowerEffect.EXTRA_TOKEN);
+    super.type = this.getClass().getSimpleName();
   }
 
   @Override

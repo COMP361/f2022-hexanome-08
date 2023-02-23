@@ -21,6 +21,7 @@ public class ClaimNobleAction extends Action {
    */
   public ClaimNobleAction(Card card, Position position) {
     assert card != null && curPosition != null;
+    super.type = this.getClass().getSimpleName();
     curCard = card;
     curPosition = position;
   }

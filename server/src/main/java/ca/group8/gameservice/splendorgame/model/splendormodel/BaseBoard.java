@@ -18,6 +18,7 @@ public class BaseBoard extends Board {
 
 
   public BaseBoard(List<String> playerNames) {
+    super.type = this.getClass().getSimpleName();
     // set up decks and cards on board
     int playerCount = playerNames.size();
 

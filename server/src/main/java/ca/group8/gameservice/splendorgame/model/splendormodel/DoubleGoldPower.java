@@ -7,6 +7,7 @@ public class DoubleGoldPower extends Power {
 
   public DoubleGoldPower() {
     super(PowerEffect.DOUBLE_GOLD);
+    super.type = this.getClass().getSimpleName();
   }
 
   @Override

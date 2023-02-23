@@ -19,6 +19,7 @@ public class CityBoard extends Board {
   private final CityCard[] allCityCards = new CityCard[3];
 
   public CityBoard(List<String> playerNames) {
+    super.type = this.getClass().getSimpleName();
     // initialize city to each player as null at the beginning
     playerNames.forEach(name -> playerCities.put(name, null));
 

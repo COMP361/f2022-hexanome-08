@@ -25,6 +25,7 @@ public class DevelopmentCard extends Card {
                          String paramCardName, int level, Colour gemColour, int gemNumber,
                          List<CardEffect> purchaseEffects) {
     super(paramPrestigePoints, paramPrice, paramCardName);
+    super.type = this.getClass().getSimpleName();
     this.isPaired = false;
     this.pairedCard = null;
     this.level = level;

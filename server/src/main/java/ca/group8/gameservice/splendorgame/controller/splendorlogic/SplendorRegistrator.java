@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.GameServerParameters;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -33,7 +34,6 @@ public class SplendorRegistrator {
   private final List<String> gameServiceDisplayNames;
   private final List<String> gameServiceUsernames;
   private final List<String> gameServicePasswords;
-  private final String gameServicePort;
   private final String gameServiceLocation;
   private final String lobbyServiceAddress;
 
@@ -43,7 +43,6 @@ public class SplendorRegistrator {
                       @Value("${gameservice.displayNames}") String[] gameServiceDisplayNames,
                       @Value("${game.usernames}") String[] gameServiceUsernames,
                       @Value("${game.passwords}") String[] gameServicePasswords,
-                      @Value("${server.port}") String gameServicePort,
                       @Value("${gameservice.location}") String gameServiceLocation,
                       @Value("${lobbyservice.location}") String lobbyServiceAddress) {
 
@@ -52,7 +51,6 @@ public class SplendorRegistrator {
     this.gameServiceDisplayNames = Arrays.asList(gameServiceDisplayNames);
     this.gameServiceUsernames = Arrays.asList(gameServiceUsernames);
     this.gameServicePasswords = Arrays.asList(gameServicePasswords);
-    this.gameServicePort = gameServicePort;
     this.lobbyServiceAddress = lobbyServiceAddress;
     this.gameServiceLocation = gameServiceLocation;
     // for error messages
@@ -106,7 +104,14 @@ public class SplendorRegistrator {
         .header("Authorization", "Bearer " + accessToken)
         .header("Content-Type", "application/json")
         .body(requestJsonString).asString();
-    logger.warn("register status: " + response.getStatus());
+    if (response.getStatus() == 200) {
+      logger.info(String.format("Game: %s successfully registered as LS!",
+          gameServerParameters.getDisplayName()));
+    } else {
+      String msg = String.format("Failed to register game: %s, status: %s",
+          gameServerParameters.getDisplayName(),response.getStatus());
+      logger.warn(msg);
+    }
   }
 
   /**

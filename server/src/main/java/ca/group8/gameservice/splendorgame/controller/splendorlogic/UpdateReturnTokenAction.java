@@ -17,6 +17,7 @@ public class UpdateReturnTokenAction extends Action {
   private int extraTokenCount;
 
   public UpdateReturnTokenAction(EnumMap<Colour, Integer> tokensInHand, int extraTokens) {
+    super.type = this.getClass().getSimpleName();
     this.tokensInHand = tokensInHand;
     extraTokenCount = extraTokens;
   }

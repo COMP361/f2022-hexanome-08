@@ -9,6 +9,7 @@ public class ArmPointsPower extends Power {
 
   public ArmPointsPower() {
     super(PowerEffect.ARM_POINTS);
+    super.type = this.getClass().getSimpleName();
   }
 
   @Override

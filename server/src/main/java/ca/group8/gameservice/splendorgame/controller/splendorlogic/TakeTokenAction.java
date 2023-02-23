@@ -20,6 +20,7 @@ public class TakeTokenAction extends Action {
    * @param tokens an EnumMap of Colour to Integer representing the tokens selected by the user.
    */
   public TakeTokenAction(EnumMap<Colour, Integer> tokens) {
+    super.type = this.getClass().getSimpleName();
     this.tokensTaken = tokens;
   }
 
