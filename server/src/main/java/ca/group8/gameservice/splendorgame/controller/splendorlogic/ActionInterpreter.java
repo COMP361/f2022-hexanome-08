@@ -109,4 +109,9 @@ public class ActionInterpreter {
     burnCardCount += number;
   }
 
+  public void setBurnCardColour(
+      Colour burnCardColour) {
+    this.burnCardColour = burnCardColour;
+  }
+
 }
