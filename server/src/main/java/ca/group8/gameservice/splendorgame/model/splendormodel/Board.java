@@ -1,5 +1,14 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.CardExtraAction;
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.ClaimNobleAction;
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.PowerExtraAction;
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.PurchaseAction;
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.ReserveAction;
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.TakeTokenAction;
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.UpdateReturnTokenAction;
+import io.github.isharipov.gson.adapters.JsonSubtype;
+import io.github.isharipov.gson.adapters.JsonType;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +23,20 @@ import org.springframework.util.ResourceUtils;
 /**
  * The super abstract class that defines the behavior of all extension boards.
  */
+
+@JsonType(
+    property = "type",
+    subtypes = {
+        @JsonSubtype(clazz = BaseBoard.class, name = "BaseBoard"),
+        @JsonSubtype(clazz = CityBoard.class, name = "CityBoard"),
+        @JsonSubtype(clazz = TraderBoard.class, name = "TraderBoard"),
+        @JsonSubtype(clazz = OrientBoard.class, name = "OrientBoard")
+
+    }
+)
 public abstract class Board {
+
+  String type;
 
   // update the board
   public abstract void update();

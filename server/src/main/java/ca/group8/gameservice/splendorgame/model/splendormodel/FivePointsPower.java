@@ -7,6 +7,7 @@ public class FivePointsPower extends Power {
 
   public FivePointsPower() {
     super(PowerEffect.FIVE_POINTS);
+    super.type = this.getClass().getSimpleName();
   }
 
   @Override

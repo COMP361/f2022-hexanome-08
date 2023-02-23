@@ -104,33 +104,6 @@ public class SplendorRestController {
   }
 
 
-  //@GetMapping(value = "/test/{gameId}", produces = "application/json; charset=utf-8")
-  //public DeferredResult<ResponseEntity<String>>
-  // debugEndPoint(@RequestParam(required = false) String hash,
-  //                                                            @PathVariable long gameId)
-  //    throws ModelAccessException {
-  //
-  //  // No hash provided at all -> return a synced update. We achieve this by setting a hash that
-  //  clearly differs from any valid hash.
-  //  if (hash == null)
-  //    hash = "-";
-  //
-  //  // Hash was provided, but is empty -> return an asynchronous update,
-  //  as soon as something has changed
-  //  if (hash.isEmpty())
-  //    ResponseGenerator.getAsyncUpdate(longPollTimeOut, testManager.get(0));
-  //
-  //  GameInfo g = splendorGameManager.getGameById(gameId);
-  //  ArrayList<PlayerInGame> names = g.getPlayersInGame();
-  //  TableTopTest t = new TableTopTest(names);
-  //  BroadcastContentManager<TableTopTest> test = new BroadcastContentManager<>(t);
-  //
-  //  testManager.put(0, test);
-  //  // A hash was provided, or we want to provoke a hash mismatch because no hash
-  //  (not even an empty hash) was provided
-  //  return ResponseGenerator.getHashBasedUpdate(longPollTimeOut, testManager.get(0), hash);
-  //}
-
   /**
    * handle the long polling requests for all public visible game details.
    *

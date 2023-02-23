@@ -19,6 +19,7 @@ public class PowerExtraAction extends Action {
 
   public PowerExtraAction(Card curCard, PowerEffect powerEffect) {
     assert curCard != null && powerEffect != null;
+    super.type = this.getClass().getSimpleName();
     this.powerEffect = powerEffect;
   }
 

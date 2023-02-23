@@ -1,9 +1,13 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.controller.debug.Cat;
+import ca.group8.gameservice.splendorgame.controller.debug.Dog;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import io.github.isharipov.gson.adapters.JsonSubtype;
+import io.github.isharipov.gson.adapters.JsonType;
 
 
 /**
@@ -15,8 +19,22 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
  */
 
 
+@JsonType(
+    property = "type",
+    subtypes = {
+        @JsonSubtype(clazz = PurchaseAction.class, name = "PurchaseAction"),
+        @JsonSubtype(clazz = CardExtraAction.class, name = "CardExtraAction"),
+        @JsonSubtype(clazz = ClaimNobleAction.class, name = "ClaimNobleAction"),
+        @JsonSubtype(clazz = PowerExtraAction.class, name = "PowerExtraAction"),
+        @JsonSubtype(clazz = ReserveAction.class, name = "ReserveAction"),
+        @JsonSubtype(clazz = TakeTokenAction.class, name = "TakeTokenAction"),
+        @JsonSubtype(clazz = UpdateReturnTokenAction.class, name = "UpdateReturnTokenAction"),
+
+    }
+)
 public abstract class Action {
 
+  String type;
 
   abstract void execute(TableTop curTableTop, PlayerInGame playerInGame,
                         ActionGenerator actionListGenerator,

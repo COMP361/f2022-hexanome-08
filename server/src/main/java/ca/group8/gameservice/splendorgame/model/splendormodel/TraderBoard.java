@@ -11,6 +11,7 @@ public class TraderBoard extends Board {
   private final Map<String, Map<PowerEffect, Power>> allPlayerPowers = new HashMap<>();
 
   public TraderBoard(List<String> playerNames) {
+    super.type = this.getClass().getSimpleName();
     for (String playerName : playerNames) {
       Map<PowerEffect, Power> curPlayerPowers = new HashMap<>();
       for (PowerEffect pe : PowerEffect.values()) {
