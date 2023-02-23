@@ -22,6 +22,10 @@ import org.springframework.util.ResourceUtils;
 
 /**
  * The super abstract class that defines the behavior of all extension boards.
+ *
+ * Every abstract class was serialized/deserialized using the repository from:
+ *  * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
+ *  * Thank him so much!!!!!!!!!!!!!!!
  */
 
 @JsonType(
