@@ -1,43 +1,49 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
-import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 
 /**
  * Action that allows a player to reserve a card.
  */
-public class ReserveAction implements Action {
+public class ReserveAction extends Action {
+
+  private Card curCard;
+  private Position cardPosition;
+
 
   @Override
-  public Position getPosition() {
-    return position;
-  }
-
-  @Override
-  public Card getCard() {
-    return card;
-  }
-
-  public void setPosition(Position position) {
-    this.position = position;
-  }
-
-  public void setCard(Card card) {
-    this.card = card;
-  }
-
-  private Position position;
-  private Card card;
-
-  public ReserveAction(Position position, Card card) {
-    this.position = position;
-    this.card = card;
+  public Position getCardPosition() {
+    assert cardPosition != null;
+    return cardPosition;
   }
 
   @Override
-  public void execute(GameInfo currentGameState, PlayerInGame player) {
+  public Card getCurCard() {
+    assert curCard != null;
+    return curCard;
+  }
+
+  public void setCardPosition(Position cardPosition) {
+    this.cardPosition = cardPosition;
+  }
+
+  public void setCurCard(Card curCard) {
+    this.curCard = curCard;
+  }
+
+  public ReserveAction(Position position, Card curCard) {
+    this.cardPosition = position;
+    this.curCard = curCard;
+  }
+
+  @Override
+  //TODO
+  public void execute(TableTop curTableTop, PlayerInGame playerInGame,
+                      ActionGenerator actionListGenerator,
+                      ActionInterpreter actionInterpreter) {
 
     //ReservedHand reservedHand = player.getReservedHand();
     //Card reserveCard = this.card;

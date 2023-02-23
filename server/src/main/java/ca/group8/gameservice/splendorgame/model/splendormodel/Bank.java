@@ -8,7 +8,7 @@ import java.util.EnumMap;
 public class Bank {
 
   private final EnumMap<Colour, Integer> allTokens;
-  private final int initialValue; //this is the value all gems (excl. gold) are initialized too
+  private final int initialValue; //this is the value all gems (excl. gold) are initialized to
 
   /**
    * Relies on Game Info to know how many players are in the game
@@ -27,45 +27,56 @@ public class Bank {
     } else {
       initialValue = (numPlayers * 2) - 1;
     }
+
     for (Colour colour : Colour.values()) {
-      if (colour == Colour.GOLD) {
-        allTokens.put(colour, 5);
-      } else {
-        allTokens.put(colour, initialValue);
+      if (colour != Colour.ORIENT) {
+        if (colour == Colour.GOLD) {
+          allTokens.put(colour, 5);
+        } else {
+          allTokens.put(colour, initialValue);
+        }
       }
     }
   }
 
   /**
-   * Adds a map of tokens to the bank.
+   * Return the tokens that was paid by player.
+   *
+   * @param paramTokens token map as the price
    */
-  public void addToken(EnumMap<Colour, Integer> paramTokens) {
+  public void returnToken(EnumMap<Colour, Integer> paramTokens) {
     //verify that this number of gems can be added (meaning new sum will not exceed initial value)
     for (Colour colour : Colour.values()) {
-      assert (allTokens.get(colour) + paramTokens.get(colour)) <= initialValue;
+      if (colour != Colour.ORIENT) {
+        assert (allTokens.get(colour) + paramTokens.get(colour)) <= initialValue;
+      }
     }
     //add Tokens
     for (Colour colour : Colour.values()) {
-      int newVal = allTokens.get(colour) + paramTokens.get(colour);
-      allTokens.replace(colour, newVal);
+      if (colour != Colour.ORIENT) {
+        int newVal = allTokens.get(colour) + paramTokens.get(colour);
+        allTokens.replace(colour, newVal);
+      }
     }
   }
-
 
   /**
-   * Removes a Map of Tokens from the Bank.
+   * Modify the game state to reflect that the player has taken some tokens out of bank.
+   *
+   * @param paramTokens the tokens map that player wants to take
    */
-
-  public void removeToken(EnumMap<Colour, Integer> paramTokens) {
+  void takeToken(EnumMap<Colour, Integer> paramTokens) {
     //verify that this number of gems can be removed (meaning new sum will not be less than 0)
-
     //remove Tokens
     for (Colour colour : Colour.values()) {
-      int newVal = allTokens.get(colour) - paramTokens.get(colour);
-      assert newVal >= 0;
-      allTokens.replace(colour, newVal);
+      if (colour != Colour.ORIENT) {
+        int newVal = allTokens.get(colour) - paramTokens.get(colour);
+        assert newVal >= 0;
+        allTokens.replace(colour, newVal);
+      }
     }
   }
+
 
   public EnumMap<Colour, Integer> getAllTokens() {
     return allTokens;

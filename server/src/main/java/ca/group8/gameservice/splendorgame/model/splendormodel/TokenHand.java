@@ -7,37 +7,24 @@ import java.util.EnumMap;
  */
 public class TokenHand {
 
+  private final int initialTokenAmount;
   private final EnumMap<Colour, Integer> allTokens;
 
-  public int getInitialAmount() {
-    return initialAmount;
-  }
-
-  private final int initialAmount;
 
   /**
    * Relies on Game Info to know how many players are in the game.
    * Initialize all token values to zero.
    */
-  public TokenHand(int initialAmount) {
+  public TokenHand(int initialTokenAmount) {
     allTokens = new EnumMap<>(Colour.class);
     for (Colour colour : Colour.values()) {
-      allTokens.put(colour, initialAmount);
+      allTokens.put(colour, initialTokenAmount);
     }
-    this.initialAmount = initialAmount;
+    this.initialTokenAmount = initialTokenAmount;
   }
-
-  public EnumMap<Colour, Integer> getAllTokens() {
-    return allTokens;
-  }
-
-  public int getGoldTokenNumber() {
-    return allTokens.get(Colour.GOLD);
-  }
-
 
   /**
-   * Adds a certain amount (quantity) of a certain GemColour colour from the TokenHand.
+   * Adds a certain amount (quantity) of a certain GemColour colour to the TokenHand.
    */
   public void addToken(EnumMap<Colour, Integer> paramTokens) {
     //add Tokens
@@ -62,6 +49,20 @@ public class TokenHand {
       allTokens.replace(colour, newVal);
     }
   }
+
+  public int getGoldTokenNumber() {
+    return allTokens.get(Colour.GOLD);
+  }
+
+  public int getInitialTokenAmount() {
+    return initialTokenAmount;
+  }
+
+  public EnumMap<Colour, Integer> getAllTokens() {
+    return allTokens;
+  }
+
+
 }
 
 

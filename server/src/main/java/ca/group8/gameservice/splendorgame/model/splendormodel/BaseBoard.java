@@ -5,71 +5,144 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * This class represents the 12 face up cards in the base game.
+ * This class stores the cards/decks with level 1->3 on base board and the nobles.
  */
-public class BaseBoard {
+public class BaseBoard extends Board {
 
-  private final Map<Integer, List<BaseCard>> baseDecks;
-  private final Map<Integer, List<BaseCard>> baseCardsOnBoard;
+  private final Map<Integer, List<DevelopmentCard>> decks = new HashMap<>();
+  private final Map<Integer, DevelopmentCard[]> cardsOnBoard = new HashMap<>();
+  private final List<NobleCard> nobles;
+
+
+  public BaseBoard(List<String> playerNames) {
+    // set up decks and cards on board
+    int playerCount = playerNames.size();
+
+    // set up nobles on board
+    List<NobleCard> allNobles = super.generateNobleCards();
+    Collections.shuffle(allNobles);
+    nobles = allNobles.subList(0, playerCount + 1); // noble count = player count + 1
+
+    // get all cards info from json file
+    List<DevelopmentCard> baseDevCards
+        = super.generateDevelopmentCards("cardinfo_basecard");
+
+    // initialize decks and slots to put card on board
+    generateDeckPerLevel(baseDevCards);
+    for (int i = 1; i <= 3; i++) {
+      cardsOnBoard.put(i, new DevelopmentCard[4]);
+    }
+
+    // fill the board
+    update();
+  }
+
+  /**
+   * Used for reserve from the Deck.
+   *
+   * @param cardLevel level of the card
+   * @return a card taken from cardLevel deck
+   */
+  public DevelopmentCard popLevelCardFromDeck(int cardLevel) {
+    return decks.get(cardLevel).remove(0);
+  }
+
+  /**
+   * Used to get the DevCard[] for a certain level.
+   *
+   * @param cardLevel level of the card
+   * @return an array of dev cards on board
+   */
+  public DevelopmentCard[] getLevelCardsOnBoard(int cardLevel) {
+    return cardsOnBoard.get(cardLevel);
+  }
+
+  /**
+   * getter for nobles field.
+   *
+   * @return the list of noble cards
+   */
+  public List<NobleCard> getNobles() {
+    return nobles;
+  }
+
+  /**
+   * Find the noble in the list and remove it.
+   *
+   * @param noble the noble that we want to remove (has been unlocked or reserved)
+   */
+  public void removeNoble(NobleCard noble) {
+    nobles.remove(noble);
+  }
+
+  /**
+   * Return the noble when player does not meet the requirement to unlock one.
+   *
+   * @param noble the noble to be added back
+   */
+  public void addNoble(NobleCard noble) {
+    nobles.add(noble);
+  }
+
+  /**
+   * Quickly set the card at that position to null, as a representation of removing it.
+   *
+   * @param cardPosition x and y: x stands for the level and y stands for the index
+   */
+  public DevelopmentCard removeCard(Position cardPosition) {
+    int level = cardPosition.getX();
+    int cardIndex = cardPosition.getY();
+    DevelopmentCard resultCard = cardsOnBoard.get(level)[cardIndex];
+    cardsOnBoard.get(level)[cardIndex] = null;
+    return resultCard;
+  }
+
+  public Map<Integer, List<DevelopmentCard>> getDecks() {
+    return decks;
+  }
+
+  public Map<Integer, DevelopmentCard[]> getCardsOnBoard() {
+    return cardsOnBoard;
+  }
 
 
   /**
-   *  Constructor of BaseBoard class.
+   * Generate decks for each level of base dev card.
    *
-   * @param allBaseCards a list of base card
-   *
+   * @param allCards all dev cards (with no CardEffect) parsed from json
    */
-  public BaseBoard(List<BaseCard> allBaseCards) {
-    baseDecks = new HashMap<>();
-    baseCardsOnBoard = new HashMap<>();
-    generateDeckPerLevel(allBaseCards);
-    drawCardsToBoard();
-  }
+  private void generateDeckPerLevel(List<DevelopmentCard> allCards) {
 
-  public Map<Integer, List<BaseCard>> getBaseDecks() {
-    return baseDecks;
-  }
-
-  public Map<Integer, List<BaseCard>> getBaseCardsOnBoard() {
-    return baseCardsOnBoard;
-  }
-
-  private void generateDeckPerLevel(List<BaseCard> allBaseCards) {
-    List<BaseCard> levelOneDeck = new ArrayList<>();
-    List<BaseCard> levelTwoDeck = new ArrayList<>();
-    List<BaseCard> levelThreeDeck = new ArrayList<>();
-    for (BaseCard card : allBaseCards) {
-      if (card.getLevel() == 1) {
-        levelOneDeck.add(card);
-      } else if (card.getLevel() == 2) {
-        levelTwoDeck.add(card);
-      } else {
-        levelThreeDeck.add(card);
-      }
-    }
-    Collections.shuffle(levelOneDeck);
-    Collections.shuffle(levelTwoDeck);
-    Collections.shuffle(levelThreeDeck);
-    baseDecks.put(1, levelOneDeck);
-    baseDecks.put(2, levelTwoDeck);
-    baseDecks.put(3, levelThreeDeck);
-  }
-
-  private void drawCardsToBoard() {
     for (int i = 1; i <= 3; i++) {
-      List<BaseCard> levelCardsOnBoard = new ArrayList<>();
-      // draw out 4 cards
-      for (int j = 0; j < 4; j++) {
-        levelCardsOnBoard.add(baseDecks.get(i).remove(j));
-      }
-      baseCardsOnBoard.put(i, levelCardsOnBoard);
+      int curLevel = i;
+      List<DevelopmentCard> levelDeck = allCards.stream()
+          .filter(c -> c.getLevel() == curLevel)
+          .filter(c -> c.isBaseCard())
+          .collect(Collectors.toList());
+      // TODO: Commented out shuffle for JUnit testing
+      //Collections.shuffle(levelDeck);
+      decks.put(curLevel, levelDeck);
     }
+
   }
 
-  public void replaceCardOnBoard(Position cardPosition, DevelopmentCard newCard) {
-    baseCardsOnBoard.get(cardPosition.getX()).set(cardPosition.getY(), (BaseCard) newCard);
+  /**
+   * Refill any null position on the board (3 of len = 4 DevelopmentCard array).
+   * must make sure once the card is purchased, make the corresponding slot (index) -> null
+   */
+  @Override
+  public void update() {
+    for (int i = 1; i <= 3; i++) {
+      DevelopmentCard[] curLevelCardsOnBoard = getLevelCardsOnBoard(i);
+      for (int j = 0; j < 4; j++) {
+        if (curLevelCardsOnBoard[j] == null) {
+          curLevelCardsOnBoard[j] = popLevelCardFromDeck(i);
+        }
+      }
+    }
   }
 
 }

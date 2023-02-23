@@ -1,54 +1,64 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.Action;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The class that contains basic game information on the board, supports long polling.
  */
-public class GameInfo implements BroadcastContent { // TODO add gametype
-
+public class GameInfo implements BroadcastContent {
 
   private String currentPlayer; //represents which player's turn it is currently
   private final List<String> winners;
-  private final ArrayList<String> playerNames;
-  private final String firstPlayer; //should be Player Name of first player.
+  private final List<String> playerNames;
+  private final String firstPlayerName; //should be Player Name of first player.
 
   private final TableTop tableTop;
+  private final List<Extension> extensions;
+
+  private final Map<String, Map<String, Action>> playerActionMaps = new HashMap<>();
+
 
   /**
-   * Makes a game State.
+   * Constructor for a game state instance. Stores all info related to game except the detail.
+   * information of each player
    *
-   * @param playerNames NOTE: In this implementation, activePlayers is an arrayList
-   *                    meaning you cannot get(Player) based on giving the player
-   *                    name that is in the list.(can only index list)
+   * @param extensions extensions that are used in the game.
+   * @param playerNames players who are playing the game
    */
-  public GameInfo(ArrayList<String> playerNames) {
-    // Shuffle the list of playerNames before assigning it to the field
+  public GameInfo(List<Extension> extensions, List<String> playerNames) {
+    // TODO: OPTIONALLY Shuffle the list of playerNames before assigning it to the field
+    // Collections.shuffle(playerNames);
     this.playerNames = playerNames;
     this.winners = new ArrayList<>();
-    String randomFirstPlayer = playerNames.get(0);
-    firstPlayer = randomFirstPlayer;
-    currentPlayer = randomFirstPlayer;
-    // TODO: 2
-    tableTop = new TableTop(playerNames.size());
+    firstPlayerName = playerNames.get(0);
+    currentPlayer = playerNames.get(0);
+    this.extensions = Collections.unmodifiableList(extensions);
+    tableTop = new TableTop(playerNames, extensions);
 
   }
 
+  /**
+   * Update (overwrite) the given player's action map with a new map.
+   *
+   * @param playerName   player name that we want to modify action map on
+   * @param newActionMap the new action map
+   */
+  public void updatePlayerActionMap(String playerName, Map<String, Action> newActionMap) {
+    playerActionMaps.put(playerName, newActionMap);
+  }
 
-  //TODO Figure out if this should be public/private/... based on what needs to call this method
-  //protected void setWinner(String player) {
-  //  winner = Optional.of(player);
-  //}
+
   public void addWinner(String potentialWinner) {
     winners.add(potentialWinner);
   }
 
-  public void checkWinner() {
-    //TODO: Implement this operation (will be based on TableTop implementation)
-  }
 
   public int getNumOfPlayers() {
     return playerNames.size();
@@ -81,17 +91,25 @@ public class GameInfo implements BroadcastContent { // TODO add gametype
     return new ArrayList<>(winners);
   }
 
-  public String getFirstPlayer() {
-    return firstPlayer;
+  public String getFirstPlayerName() {
+    return firstPlayerName;
   }
 
 
-  public ArrayList<String> getPlayerNames() {
+  public List<String> getPlayerNames() {
     return playerNames;
   }
 
   public TableTop getTableTop() {
     return tableTop;
+  }
+
+  public List<Extension> getExtensions() {
+    return extensions;
+  }
+
+  public Map<String, Map<String, Action>> getPlayerActionMaps() {
+    return playerActionMaps;
   }
 
   @Override
