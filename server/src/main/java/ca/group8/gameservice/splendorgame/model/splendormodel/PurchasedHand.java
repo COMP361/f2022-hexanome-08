@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,6 +18,7 @@ public class PurchasedHand {
     this.nobleCards = new ArrayList<>();
   }
 
+  //TODO: Add exception checks (if card==null, throw an exception, etc...)
   public void addDevelopmentCard(DevelopmentCard card) {
     developmentCards.add(card);
   }
@@ -26,7 +28,13 @@ public class PurchasedHand {
   }
 
   public void removeDevelopmentCard(DevelopmentCard card) {
+    assert developmentCards.contains(card);
     developmentCards.remove(card);
+  }
+
+  public void removeNobleCard(NobleCard card) {
+    assert nobleCards.contains(card);
+    nobleCards.remove(card);
   }
 
   public int getSize() {
@@ -34,11 +42,45 @@ public class PurchasedHand {
   }
 
   public List<DevelopmentCard> getDevelopmentCards() {
-    return developmentCards;
+    return Collections.unmodifiableList(developmentCards);
+  }
+
+  /**
+   * Get certain development cards of a specific colour.
+   *
+   * @param colour of development cards you want to retrieve.
+   * @return List of development cards of the colour.
+   */
+  public List<DevelopmentCard> getOneColourDevelopmentCards(Colour colour) {
+    List<DevelopmentCard> result = new ArrayList<>();
+    for (DevelopmentCard card : developmentCards) {
+      if (card.getGemColour() == colour) {
+        result.add(card);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Count the number of Gems of a certain colour present in the PurchasedHand.
+   *
+   * @param colour The colour of gems you want to count.
+   * @return int of number of gems found of this colour
+   */
+  public int getGemCountOfColour(Colour colour) {
+    List<DevelopmentCard> cards =
+        this.getOneColourDevelopmentCards(colour);
+
+    int gemCount = 0;
+    for (DevelopmentCard card : cards) {
+      gemCount += card.getGemNumber();
+    }
+
+    return gemCount;
   }
 
   public List<NobleCard> getNobleCards() {
-    return nobleCards;
+    return Collections.unmodifiableList(nobleCards);
   }
 
 

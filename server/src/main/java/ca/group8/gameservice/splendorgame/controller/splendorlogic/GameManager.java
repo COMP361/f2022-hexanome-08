@@ -11,16 +11,20 @@ import org.springframework.stereotype.Component;
  * Manages instances of Splendor games.
  */
 @Component
-public class SplendorGameManager {
-  private final Map<Long, GameInfo> activeGames;
+public class GameManager {
 
   private final Map<Long, PlayerStates> activePlayers;
+  private final Map<Long, GameInfo> activeGames;
+  private final Map<Long, ActionInterpreter> gameActionInterpreters;
 
-  public SplendorGameManager() {
+  /**
+   * Construct a new GameManager instance (initialize all maps to empty HashMaps).
+   */
+  public GameManager() {
     this.activePlayers = new HashMap<>();
     this.activeGames = new HashMap<>();
+    this.gameActionInterpreters = new HashMap<>();
   }
-
 
   /**
    * get one instance of GameInfo object that contains the public game details on game board.
@@ -36,17 +40,55 @@ public class SplendorGameManager {
     return activeGames.get(gameId);
   }
 
-
   public boolean isExistentGameId(long gameId) {
     return activeGames.containsKey(gameId);
   }
 
-  public void addGame(long gameId, GameInfo newGameInfo) throws ModelAccessException {
+  /**
+   * Add a new game instance to the list of games.
+   *
+   * @param gameId      ID of the new game instance.
+   * @param newGameInfo Actual GameInfo instance.
+   */
+  public void addGame(long gameId, GameInfo newGameInfo) {
+    assert newGameInfo != null;
+    assert !activeGames.containsKey(gameId); //ensure gameId isn't already in list.
+
     activeGames.put(gameId, newGameInfo);
   }
 
-  public void addPlayersToGame(long gameId, PlayerStates newPlayerStates) {
+  public PlayerStates getPlayerStatesById(long gameId) {
+    assert activePlayers.containsKey(gameId);
+    return activePlayers.get(gameId);
+  }
+
+  public void addGamePlayerStates(long gameId, PlayerStates newPlayerStates) {
+    assert !activePlayers.containsKey(newPlayerStates);
     activePlayers.put(gameId, newPlayerStates);
+  }
+
+  public ActionInterpreter getGameActionInterpreter(long gameId) {
+    assert gameActionInterpreters.containsKey(gameId);
+    return gameActionInterpreters.get(gameId);
+  }
+
+  public void addGameActionInterpreter(long gameId, ActionInterpreter actionInterpreter) {
+    assert activeGames.containsKey(gameId) && actionInterpreter != null;
+    gameActionInterpreters.put(gameId, actionInterpreter);
+  }
+
+  /**
+   * Remove all data related to a specific game.
+   *
+   * @param gameId game to be removed.
+   */
+  public void removeGameRelatedData(long gameId) {
+    assert activeGames.containsKey(gameId);
+
+    removePlayerStates(gameId);
+    removeGame(gameId);
+    removeActionInterpreter(gameId);
+
   }
 
   public void removePlayerStates(long gameId) {
@@ -55,14 +97,15 @@ public class SplendorGameManager {
   }
 
   public void removeGame(long gameId) {
+    assert activeGames.containsKey(gameId);
     activeGames.remove(gameId);
   }
 
-
-  public PlayerStates getPlayerStatesById(long gameId) {
-    assert activePlayers.containsKey(gameId);
-    return activePlayers.get(gameId);
+  public void removeActionInterpreter(long gameId) {
+    assert gameActionInterpreters.containsKey(gameId);
+    gameActionInterpreters.remove(gameId);
   }
+
 
   public Map<Long, GameInfo> getActiveGames() {
     return activeGames;

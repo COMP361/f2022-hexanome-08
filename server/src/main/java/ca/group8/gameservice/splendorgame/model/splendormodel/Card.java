@@ -1,11 +1,12 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.EnumMap;
+import java.util.Objects;
 
 /**
  * This class represents the SuperClass of all Cards/nobles.
  */
-public class Card {
+public abstract class Card {
 
   private final int prestigePoints;
   private final EnumMap<Colour, Integer> price;
@@ -36,22 +37,24 @@ public class Card {
   // Overriding card equals
   @Override
   public boolean equals(Object o) {
-    boolean name = true;
-    boolean preprestigePoint = true;
-    boolean price = true;
-    Card card = (Card) o;
+    if (o == this) {
+      return true;
+    }
 
-    if (!this.getCardName().equals(card.getCardName())) {
-      name = false;
-    } else if (this.getPrestigePoints() != card.getPrestigePoints()) {
-      preprestigePoint = false;
+    if (!(o instanceof Card)) {
+      return false;
     }
-    for (Colour i : Colour.values()) {
-      if (this.getPrice().get(i) != card.getPrice().get(i)) {
-        price = false;
-      }
-    }
-    return (name && preprestigePoint && price);
+
+    Card other = (Card) o;
+
+    return this.cardName.equals(other.cardName) &&
+        this.prestigePoints == other.prestigePoints &&
+        this.price.equals(other.price);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(prestigePoints, cardName, price.hashCode());
   }
 
 }
