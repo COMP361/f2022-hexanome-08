@@ -1,74 +1,51 @@
-//
-//package ca.group8.gameservice.splendorgame.model.splendormodel;
-//
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//
-//import java.util.ArrayList;
-//import java.util.Map;
-//
-//class TestTableTop {
-//
-//    TableTop t1;
-//    ArrayList<PlayerInGame> activePlayerInGames = new ArrayList<PlayerInGame>();
-//    @BeforeEach
-//    void setup() {
-//        PlayerInGame p1 = new PlayerInGame("P1");
-//        PlayerInGame p2 = new PlayerInGame("P2");
-//        PlayerInGame p3 = new PlayerInGame("P3");
-//        activePlayerInGames.add(p1);
-//        activePlayerInGames.add(p2);
-//        activePlayerInGames.add(p3);
-//        t1 = new TableTop(activePlayerInGames);
-//    }
-//
-//    @Test
-//    void isEmpty() {
-//        //TODO need to implement the orient board
-//        //assert (t1.isEmpty());
-//    }
-//
-//    @Test
-//    void getDecks() {
-//        Map<Integer, Deck> decks = t1.getDecks();
-//        assert (decks.get(1).size() == 36);
-//        assert (decks.get(2).size() == 26);
-//        assert (decks.get(3).size() == 16);
-//    }
-//
-//
-//
-//    @Test
-//    void getBaseBoard() {
-//        BaseBoard b1 = t1.getBaseBoard();
-//        for(int i=0; i<3; i++){
-//            for(int j=0; j<4; j++){
-//                assert  (b1.getCard(i,j).getClass().equals(BaseCard.class));
-//            }
-//        }
-//    }
-//
-//    @Test
-//    void getNobleBoard() {
-//        NobleBoard n1 = t1.getNobleBoard();
-//        for (int i = 0; i < 3 + 1; i++) {
-//            assert (n1.getCard(i, 0).getClass().equals(NobleCard.class));
-//        }
-//    }
-//
-//    @Test
-//    void testIsNew(){
-//        for(int i=0; i<3; i++){
-//            for(int j=0; j<4; j++){
-//                assert(t1.getBaseBoard().getCard(i,j) instanceof DevelopmentCard);
-//            }
-//        }
-//        for(int i = 0; i < activePlayerInGames.size() +1; i++){
-//            assert(t1.getNobleBoard().getCard(i,0) instanceof NobleCard);
-//        }
-//        assert(t1.getDecks().size()==3);
-//        assert(t1.getDecks().get(1).size()==36);
-//    }
-//
-//
-//}
+package ca.group8.gameservice.splendorgame.model.splendormodel;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class TableTopTest {
+
+    TableTop t1;
+
+
+    @BeforeEach
+    void setup() {
+        List<String> playerNames = new ArrayList<String>();
+        playerNames.add("P1");
+        playerNames.add("P2");
+        playerNames.add("P3");
+        playerNames.add("P4");
+        List<Extension> DLC = new ArrayList<Extension>();
+        DLC.add(Extension.CITY);
+        DLC.add(Extension.BASE);
+        DLC.add(Extension.ORIENT);
+        DLC.add(Extension.TRADING_POST);
+        t1 = new TableTop(playerNames,DLC);
+
+
+    }
+    @Test
+    void getBoard() {
+        Board b1 = t1.getBoard(Extension.CITY);
+        assert (b1.getClass().toString().equals("class ca.group8.gameservice.splendorgame.model.splendormodel.CityBoard"));
+        Board b2 = t1.getBoard(Extension.BASE);
+        assert (b2.getClass().toString().equals("class ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard"));
+        Board b3 = t1.getBoard(Extension.ORIENT);
+        assert (b3.getClass().toString().equals("class ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard"));
+        Board b4 = t1.getBoard(Extension.TRADING_POST);
+        assert (b4.getClass().toString().equals("class ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard"));
+    }
+
+    @Test
+    void isEmpty() {
+    }
+
+    @Test
+    void getBank() {
+    }
+}
