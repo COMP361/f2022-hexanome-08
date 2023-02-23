@@ -162,8 +162,8 @@ public class PlayerInGame {
   public EnumMap<Colour, Integer> getWealth() {
     Logger logger = LoggerFactory.getLogger(PlayerInGame.class);
     EnumMap<Colour, Integer> gems = getTotalGems();
-    logger.info("All tokens in token hand: " + tokenHand.getAllTokens());
-    logger.info("All gems as a enum map: " + gems);
+    //logger.info("All tokens in token hand: " + tokenHand.getAllTokens());
+    //logger.info("All gems as a enum map: " + gems);
 
     for (Colour colour : Colour.values()) {
       wealth.put(colour, tokenHand.getAllTokens().get(colour) + gems.get(colour));
