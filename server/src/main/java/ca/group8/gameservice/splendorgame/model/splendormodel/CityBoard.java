@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -15,17 +16,20 @@ public class CityBoard extends Board {
   // keeps track of the ownership of any CityCard
   private final Map<String, CityCard> playerCities = new HashMap<>();
   // visible city cards on board
-  private List<CityCard> allCityCards = new ArrayList<>();
+  private final CityCard[] allCityCards = new CityCard[3];
 
   public CityBoard(List<String> playerNames) {
-    // initialize city to each player as null initially
-    playerNames.stream().map(name -> playerCities.put(name, null));
+    // initialize city to each player as null at the beginning
+    playerNames.forEach(name -> playerCities.put(name, null));
 
+    // can not test generateCityCards() because JSON parsing has random order issue
     List<CityCard> allCards = super.generateCityCards();
-
-    // randomly get 3 city cards on board (the rule)
+    // randomly get exactly 3 city cards on board (the rule)
     Collections.shuffle(allCards);
-    allCityCards = allCards.subList(0, 3);
+    List<CityCard> cityCardsInUse = allCards.subList(0, 3);
+    for (int i = 0; i < allCityCards.length; i++) {
+      allCityCards[i] = cityCardsInUse.get(i);
+    }
   }
 
 
@@ -35,29 +39,31 @@ public class CityBoard extends Board {
    * @param playerName player name who gets the card
    * @param card       the city card gives to the player
    */
-  public void assignCityCard(String playerName, CityCard card) {
+  public void assignCityCard(String playerName, CityCard card) throws SplendorGameException{
+    if (!playerCities.containsKey(playerName)) {
+      throw new SplendorGameException("No such player in game!");
+    }
     playerCities.put(playerName, card);
-    allCityCards.remove(card);
-  }
-
-  /**
-   * Get the city card of a player, return null if player does not have city card yet.
-   *
-   * @param playerName player name who we want to check city card on
-   * @return possibly the city card of the player, null if one doesn't have city card
-   */
-  public CityCard getPlayerCityCard(String playerName) {
-    if (playerCities.containsKey(playerName) && playerCities.get(playerName) != null) {
-      return playerCities.get(playerName);
-    } else {
-      return null;
+    for (int i = 0; i < allCityCards.length; i++) {
+      if (allCityCards[i].equals(card)) {
+        allCityCards[i] = null;
+      }
     }
   }
 
-  @Override
-  public void update(Card card, int index) {
-    // TODO:
+  public CityCard[] getAllCityCards() {
+    return allCityCards;
   }
 
+  public Map<String, CityCard> getPlayerCities() {
+    return playerCities;
+  }
 
+  /**
+   * Do nothing, as CityBoard needs no update
+   */
+  @Override
+  public void update() {
+
+  }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -83,6 +84,26 @@ public class TestDevelopmentCard {
     }
 
 
+    @Test
+    void testHasRegularGemColour() {
+        setUp();
+        assertFalse(orientCard.hasRegularGemColour());
+        assertTrue(baseCard.hasRegularGemColour());
+    }
+
+    @Test
+    void testEquals() {
+        DevelopmentCard c1 = new DevelopmentCard(5, new EnumMap<>(Colour.class),
+            "name", 1, Colour.BLACK, 1, new ArrayList<>());
+        DevelopmentCard c2 = new DevelopmentCard(5, new EnumMap<>(Colour.class),
+            "name", 1, Colour.BLACK, 1, new ArrayList<>());
+
+        DevelopmentCard c3 = new DevelopmentCard(5, new EnumMap<>(Colour.class),
+            "name", 2, Colour.BLACK, 1, new ArrayList<>());
+
+        assertEquals(c1, c2);
+        assertNotEquals(c1, c3);
+    }
 
 
 }
