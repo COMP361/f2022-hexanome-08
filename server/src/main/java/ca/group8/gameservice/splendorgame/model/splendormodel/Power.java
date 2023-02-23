@@ -6,6 +6,10 @@ import java.util.Objects;
 
 /**
  * This class represents the Power functionality in the Trading Post Extension.
+ *
+ * Every abstract class was serialized/deserialized using the repository from:
+ * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
+ * Thank him so much!!!!!!!!!!!!!!!
  */
 @JsonType(
     property = "type",
