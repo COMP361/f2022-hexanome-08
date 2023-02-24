@@ -138,4 +138,5 @@ public class SplendorServiceRequestSender {
     return gameUrl;
   }
   public String getGameServiceName() {return gameServiceName;}
+
 }

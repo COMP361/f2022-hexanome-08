@@ -158,7 +158,7 @@ public class LobbyServiceRequestSender {
     requestBody.put("game", gameName);
     requestBody.put("savegame", saveGameName);
 
-    HttpResponse<String> createSessionResponse = Unirest.post(lobbyUrl + "/api/sessions")
+    Unirest.post(lobbyUrl + "/api/sessions")
         .header("Content-Type", "application/json")
         .queryString("access_token", accessToken)
         .body(requestBody)
@@ -244,10 +244,7 @@ public class LobbyServiceRequestSender {
    */
   public void sendRemovePlayerRequest(String accessToken, Long sessionId, String playerName)
       throws UnirestException {
-    Unirest.delete(
-            String
-                .format("%s/api/sessions/%s/players/%s",
-                    lobbyUrl,
+    Unirest.delete(String.format("%s/api/sessions/%s/players/%s", lobbyUrl,
                     sessionId.toString(), playerName))
         .queryString("access_token", accessToken).asString();
 
