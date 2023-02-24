@@ -43,9 +43,13 @@ class TableTopTest {
 
     @Test
     void isEmpty() {
+        assert (t1.isEmpty() == false);
     }
+
 
     @Test
     void getBank() {
+        Bank bank1 = t1.getBank();
+        assert (bank1.getInitialValue() == 7);
     }
 }
