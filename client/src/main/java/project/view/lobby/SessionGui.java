@@ -29,6 +29,8 @@ public class SessionGui extends HBox {
 
   private final User curUser;
 
+  // TODO: Needs to add a field -> String saveGameId
+
   /**
    * This constructs a new SessionGUI.
    *
@@ -48,6 +50,11 @@ public class SessionGui extends HBox {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public void setup() {
+    setSessionButtons();
+    setSessionInfoText();
   }
 
   private String formatSessionInfo(Session session) {
@@ -288,11 +295,6 @@ public class SessionGui extends HBox {
         }
       }
     }
-  }
-
-  public void setup() {
-    setSessionButtons();
-    setSessionInfoText();
   }
 
 }
