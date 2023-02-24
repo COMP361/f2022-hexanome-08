@@ -85,4 +85,8 @@ public class TableTop implements BroadcastContent {
     return bank;
   }
 
+  public Map<Extension, Board> getGameBoards() {
+    return gameBoards;
+  }
+
 }

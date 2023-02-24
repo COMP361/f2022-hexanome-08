@@ -2,19 +2,15 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,10 +40,7 @@ public class SplendorRestController {
   // Game instance and game state change related fields
   private final GameManager gameManager;
 
-  // Game registration related fields
-  private final List<String> gameServiceNames;
-  private final String lobbyServiceAddress;
-  private final SplendorRegistrator splendorRegistrator;
+  private final GameValidator gameValidator;
 
   // Long polling specific fields (Broadcast Content Managers and time out time)
   private final long longPollTimeOut;
@@ -66,15 +59,11 @@ public class SplendorRestController {
    * Constructor.
    */
   public SplendorRestController(
-      @Autowired SplendorRegistrator splendorRegistrator,
       @Autowired GameManager gameManager,
-      @Value("${gameservice.names}") String[] gameServiceNames,
-      @Value("${lobbyservice.location}") String lobbyServiceAddress,
+      @Autowired GameValidator gameValidator,
       @Value("${long.poll.timeout}") long longPollTimeOut) {
-    this.splendorRegistrator = splendorRegistrator;
     this.gameManager = gameManager;
-    this.lobbyServiceAddress = lobbyServiceAddress;
-    this.gameServiceNames = Arrays.asList(gameServiceNames);
+    this.gameValidator = gameValidator;
     this.longPollTimeOut = longPollTimeOut;
     this.allPlayerInfoBroadcastContentManager = new LinkedHashMap<>();
     this.gameInfoBroadcastContentManager = new LinkedHashMap<>();
@@ -86,16 +75,6 @@ public class SplendorRestController {
   public String helloWorld() {
     return "Hello, World!";
   }
-
-  //@GetMapping(value = "/splendorbase")
-  //public String gameTest() {
-  //  return "Hello, splendorbase!";
-  //}
-  //
-  //@GetMapping(value = "/splendortrade")
-  //public String gameTest2() {
-  //  return "Hello, splendortrade!";
-  //}
 
   @GetMapping(value = {"/splendortrade", "/splendorbase", "/splendorcity"})
   public String gameTest3() {
@@ -118,7 +97,7 @@ public class SplendorRestController {
                                                               String hash) {
     try {
       // if the game does not exist in the game manager, throw an exception
-      if (!gameManager.isExistentGameId(gameId)) {
+      if (!gameManager.containsGameId(gameId)) {
         throw new ModelAccessException("There is no game with game id: "
             + gameId + " launched, try again later");
       }
@@ -152,27 +131,35 @@ public class SplendorRestController {
   }
 
 
-  /**
-   * Throws exception if we can not launch the game.
-   *
-   * @param gameId       game id
-   * @param launcherInfo launcher info that contains info about the session to start
-   */
-  private void validLauncherInfo(long gameId, LauncherInfo launcherInfo)
-      throws ModelAccessException {
-    if (launcherInfo == null || launcherInfo.getGameServer() == null) {
-      throw new ModelAccessException("Invalid launcher info provided");
+  @PutMapping(value = {
+      "/splendorbase/api/games/{gameId}/savegame",
+      "/splendortrade/api/games/{gameId}/savegame",
+      "/splendorcity/api/games/{gameId}/savegame"},
+  consumes = "application/json; charset=utf-8")
+  public ResponseEntity<String> saveGame(@PathVariable long gameId,
+                                         @RequestBody Savegame saveGameInfo,
+                                         @RequestParam(value = "access_token") String accessToken) {
+    try {
+      // ModelAccessException can happen if gameId is not found
+      String creatorName = gameManager.getGameById(gameId).getCreator();
+
+      // check if the request is sent by the creator or not
+      // if not, do not allow to save it
+      gameValidator.gameIdPlayerNameValidCheck(accessToken, creatorName, gameId);
+
+      // save the game detailed info to our game server as json file
+      // and the metadata Savegame to LS
+      gameManager.saveGame(saveGameInfo, gameId);
+      return ResponseEntity.status(HttpStatus.OK).body("");
+    } catch (ModelAccessException e) {
+      logger.warn(e.getMessage());
+      // regardless any of the above exception happens, bad request
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
-    // this one should avoid duplicates, thus it throws error when it is TRUE!!!
-    if (gameManager.isExistentGameId(gameId)) {
-      throw new ModelAccessException("Duplicate game instance, can not launch it!");
-    }
 
-    if (!gameServiceNames.contains(launcherInfo.getGameServer())) {
-      throw new ModelAccessException("No such game registered in LS");
-    }
   }
+
 
   /**
    * Launch game PUT request handling endpoint. It handles the PUT request of creating
@@ -190,20 +177,19 @@ public class SplendorRestController {
                                            @RequestBody LauncherInfo launcherInfo) {
     try {
       // check validity of this launcherInfo
-      validLauncherInfo(gameId, launcherInfo);
+      gameValidator.validLauncherInfo(gameId, launcherInfo);
 
       String gameServerName = launcherInfo.getGameServer();
       List<Extension> gameExtensions = new ArrayList<>();
       gameExtensions.add(Extension.BASE);
       gameExtensions.add(Extension.ORIENT);
-      if (gameServerName.equals("splendorCity")) {
+      if (gameServerName.equals("splendorcity")) {
         gameExtensions.add(Extension.CITY);
       }
 
-      if (gameServerName.equals("splendorTrade")) {
+      if (gameServerName.equals("splendortrade")) {
         gameExtensions.add(Extension.TRADING_POST);
       }
-
       // get all player names
       List<String> playerNames = launcherInfo
           .getPlayers()
@@ -211,7 +197,7 @@ public class SplendorRestController {
           .map(PlayerInfo::getName)
           .collect(Collectors.toList());
 
-      GameInfo newGameInfo = new GameInfo(gameExtensions, playerNames);
+      GameInfo newGameInfo = new GameInfo(gameExtensions, playerNames, launcherInfo.getCreator());
       PlayerStates newPlayerStates = new PlayerStates(playerNames);
       ActionInterpreter newActionInterpreter = new ActionInterpreter(newGameInfo, newPlayerStates);
 
@@ -301,17 +287,17 @@ public class SplendorRestController {
   // 4. curPlayer.equals(playerNameToCheck) or not....
 
 
-  private boolean isValidToken(String accessToken, String playerName) throws UnirestException {
-    HttpResponse<String> nameResponse =
-        Unirest.get(lobbyServiceAddress + "/oauth/username")
-            .header("Authorization", "Bearer " + accessToken).asString();
-
-    String responseUserName = nameResponse.getBody();
-    logger.info("access token represents: " + responseUserName);
-    logger.info("current player is: " + playerName);
-    return responseUserName.equals(playerName);
-
-  }
+  //private boolean isValidToken(String accessToken, String playerName) throws UnirestException {
+  //  HttpResponse<String> nameResponse =
+  //      Unirest.get(lobbyServiceAddress + "/oauth/username")
+  //          .header("Authorization", "Bearer " + accessToken).asString();
+  //
+  //  String responseUserName = nameResponse.getBody();
+  //  logger.info("access token represents: " + responseUserName);
+  //  logger.info("current player is: " + playerName);
+  //  return responseUserName.equals(playerName);
+  //
+  //}
 
   private boolean isPlayerTurn(String playerNameInRequest, GameInfo gameInfo) {
     String curPlayerName = gameInfo.getCurrentPlayer();
@@ -332,7 +318,7 @@ public class SplendorRestController {
     try {
 
       // if the game does not exist in the game manager, throw an exception
-      if (!gameManager.isExistentGameId(gameId)) {
+      if (!gameManager.containsGameId(gameId)) {
         throw new ModelAccessException("There is no game with game id: "
             + gameId + " launched, try again later");
       }
@@ -361,26 +347,6 @@ public class SplendorRestController {
     }
   }
 
-  private void gameIdPlayerNameValidCheck(String accessToken, String playerName, long gameId)
-      throws ModelAccessException, UnirestException {
-    // if the access token and player name does not match, throw an error
-    if (!isValidToken(accessToken, playerName)) {
-      throw new ModelAccessException("User token and user name does not match");
-    }
-
-    // if the game does not exist in the game manager, throw an exception
-    if (!gameManager.isExistentGameId(gameId)) {
-      throw new ModelAccessException("There is no game with game id: "
-          + gameId + " launched, try again later");
-    }
-
-    // if the current player is not in the game, there is no need to update anything
-    if (!gameManager.isPlayerInGame(gameId, playerName)) {
-      throw new ModelAccessException("Player:" + playerName + " is not in game: " + gameId);
-    }
-
-  }
-
   /**
    * Get players.
    */
@@ -393,8 +359,8 @@ public class SplendorRestController {
       logger.info("Current gameId:" + gameId);
       logger.info("Stored key set of game ids: " + gameManager.getActiveGames().keySet());
       logger.info("boolean result of splendorGameManager.isExistentGameId(gameId): "
-          + gameManager.isExistentGameId(gameId));
-      if (!gameManager.isExistentGameId(gameId)) {
+          + gameManager.containsGameId(gameId));
+      if (!gameManager.containsGameId(gameId)) {
         throw new ModelAccessException("Can not get players for game " + gameId
             + ". The game has not been launched or does not exist!");
       }

@@ -1,4 +1,4 @@
-package ca.group8.gameservice.splendorgame.controller.communicationbeans;
+package ca.group8.gameservice.splendorgame.controller;
 
 import ca.group8.gameservice.splendorgame.controller.splendorlogic.Action;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Board;

@@ -14,6 +14,7 @@ import java.util.Map;
  */
 public class GameInfo implements BroadcastContent {
 
+  private String creator;
   private String currentPlayer; //represents which player's turn it is currently
   private final List<String> winners;
   private final List<String> playerNames;
@@ -32,7 +33,7 @@ public class GameInfo implements BroadcastContent {
    * @param extensions extensions that are used in the game.
    * @param playerNames players who are playing the game
    */
-  public GameInfo(List<Extension> extensions, List<String> playerNames) {
+  public GameInfo(List<Extension> extensions, List<String> playerNames, String creator) {
     // TODO: OPTIONALLY Shuffle the list of playerNames before assigning it to the field
     // Collections.shuffle(playerNames);
     this.playerNames = playerNames;
@@ -41,6 +42,7 @@ public class GameInfo implements BroadcastContent {
     currentPlayer = playerNames.get(0);
     this.extensions = Collections.unmodifiableList(extensions);
     tableTop = new TableTop(playerNames, extensions);
+    this.creator = creator;
 
   }
 
@@ -110,6 +112,9 @@ public class GameInfo implements BroadcastContent {
 
   public Map<String, Map<String, Action>> getPlayerActionMaps() {
     return playerActionMaps;
+  }
+  public String getCreator() {
+    return creator;
   }
 
   @Override
