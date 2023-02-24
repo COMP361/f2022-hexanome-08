@@ -3,26 +3,19 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
 import java.util.LinkedList;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.context.request.async.DeferredResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TestController {
+public class TestSplendorRestController {
   @Autowired
   private TestRestTemplate restTemplate;
 
@@ -57,6 +50,7 @@ public class TestController {
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(expectedResponse, response.getBody());
   }
+
 
   @Test
   public void testGameEndPoint() {
