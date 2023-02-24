@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TableTopTest {
+public class TableTopTest {
 
     TableTop t1;
 
