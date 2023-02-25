@@ -346,10 +346,19 @@ public class GameManager {
                                        SavedGameState savedGameState, boolean addToFile) {
     try {
       Map<String,SavedGameState> allSaveGames = readSavedGameDataFromFile();
-      if (addToFile) {
+      if (allSaveGames == null) {
+        // in case the file is empty, just add the data
+        allSaveGames = new HashMap<>();
         allSaveGames.put(saveGameId,savedGameState);
-      } else {
-        allSaveGames.remove(saveGameId);
+      } else { // if the file is not empty, check if we have duplicate id when putting
+        if (addToFile) {
+          if(allSaveGames.containsKey(saveGameId)) {
+            return; // duplicate id, do not write anything
+          }
+          allSaveGames.put(saveGameId,savedGameState);
+        } else {
+          allSaveGames.remove(saveGameId);
+        }
       }
       FileWriter dataWriter = new FileWriter(saveGameInfoFileName, StandardCharsets.UTF_8);
       Type mapOfSaveGameStates = new TypeToken<Map<String,SavedGameState>>() {}.getType();
@@ -393,10 +402,20 @@ public class GameManager {
   private void writeSavedGameMetaDataToFile(Savegame savegame, boolean addToFile) {
     try {
       List<Savegame> allSaveGamesMeta = readSavedGameMetaDataFromFile();
-      if(addToFile) {
+      if (allSaveGamesMeta == null) {
+        allSaveGamesMeta = new ArrayList<>();
         allSaveGamesMeta.add(savegame);
       } else {
-        allSaveGamesMeta.remove(savegame);
+        if(addToFile) {
+          boolean hasDuplicateId = allSaveGamesMeta.stream()
+              .anyMatch(game -> game.getSavegameid().equals(savegame.getSavegameid()));
+          if (hasDuplicateId) {
+            return; // duplicated game id, do not add to json.
+          }
+          allSaveGamesMeta.add(savegame);
+        } else {
+          allSaveGamesMeta.remove(savegame);
+        }
       }
       FileWriter metaDataWriter = new FileWriter(saveGameMetaFileName, StandardCharsets.UTF_8);
       Type listOfSavegame = new TypeToken<List<Savegame>>(){}.getType();
