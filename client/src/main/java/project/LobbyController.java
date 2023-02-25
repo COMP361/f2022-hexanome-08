@@ -46,6 +46,10 @@ public class LobbyController {
     String gameName = gameNameMapping.get(displayGameName);
     String accessToken = curUser.getAccessToken();
     String creator = curUser.getUsername();
+    // TODO: Change the saveGameName to a input of this method, or somehow get the value
+    //  as long as it's not "" (maybe should read it from a drop down select menu)
+    //  the session will have this savegameid associated with it, and then we can launch it
+    //  to make sure we are indeed launching a saved game before
     lobbyRequestSender.sendCreateSessionRequest(creator, accessToken, gameName, "");
   }
 
