@@ -73,7 +73,7 @@ public class TestLobbyCommunicator {
   }
 
   @Test
-  public void testIsValidToken() throws UnirestException {
+  public void testIsValidToken() {
     assertTrue(lobbyCommunicator.isValidToken(accessToken, userNameStr));
   }
 
