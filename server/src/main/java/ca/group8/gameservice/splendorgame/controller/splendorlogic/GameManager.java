@@ -1,12 +1,14 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGameState;
 import ca.group8.gameservice.splendorgame.controller.SplendorJsonHelper;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
-import ca.group8.gameservice.splendorgame.model.splendormodel.SplendorGameException;
 import com.google.gson.reflect.TypeToken;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -15,8 +17,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +36,8 @@ import org.springframework.stereotype.Component;
 public class GameManager {
 
   private final String saveGameInfoFileName = "saved_games_data.json";
+  private final String saveGameMetaFileName = "saved_games_meta.json";
+  private List<String> savedGameIds;
   private final Map<Long, PlayerStates> activePlayers;
   private final Map<Long, GameInfo> activeGames;
   private final Map<Long, ActionInterpreter> gameActionInterpreters;
@@ -46,6 +54,57 @@ public class GameManager {
     this.activeGames = new HashMap<>();
     this.gameActionInterpreters = new HashMap<>();
     this.logger = LoggerFactory.getLogger(GameManager.class);
+  }
+
+
+  /**
+   * Sync the game service saved game with LS.
+   * It makes more sense to have LS to align with game service becasuse game
+   * service contains the actual data (not just the metadata as LS does)
+   */
+  @PostConstruct
+  public void syncSavedGames() throws ModelAccessException {
+
+    try {
+      // skip all steps if we do not have info in file
+      if(readSavedGameDataFromFile() == null) {
+        return;
+      }
+      List<String> gameIdsFromData = new ArrayList<>(readSavedGameDataFromFile().keySet());
+      List<Savegame> savedMetaData = readSavedGameMetaDataFromFile();
+      List<String> gameIdsFromMetaData = savedMetaData.stream().map(Savegame::getSavegameid)
+          .collect(Collectors.toList());
+      if (gameIdsFromData.size() != gameIdsFromMetaData.size()) {
+        String error = "Inconsistency between meta/actual game data!";
+        logger.warn(error);
+        throw new ModelAccessException(error);
+      }
+      List<String> gameIdsFromLobby = lobbyCommunicator.getAllSaveGameIds();
+      // first, delete the game ids in lobby that are not in server
+      List<String> idsInLobbyNotInServer = gameIdsFromLobby.stream()
+          .filter(gameIdsFromData::contains)
+          .collect(Collectors.toList());
+      // iterate through the ids that shouldn't be in lobby and delete them
+      for (Savegame game : savedMetaData) {
+        if (idsInLobbyNotInServer.contains(game.getSavegameid())) {
+          lobbyCommunicator.deleteSavedGame(game.getGamename(), game.getSavegameid());
+        }
+      }
+      // obtain an updated lobby ids (now server might have ids that lobby doesn't have)
+      gameIdsFromLobby = lobbyCommunicator.getAllSaveGameIds();
+      List<String> idsInServerNotInLobby = gameIdsFromData.stream()
+          .filter(gameIdsFromLobby::contains)
+          .collect(Collectors.toList());
+      // iterate through again to put the ids into lobby (PUT request)
+      for (Savegame game : savedMetaData) {
+        if (idsInServerNotInLobby.contains(game.getSavegameid())) {
+          lobbyCommunicator.putSaveGame(game);
+        }
+      }
+      savedGameIds = new ArrayList<>(gameIdsFromData);
+    } catch (IOException | UnirestException e) {
+      logger.warn(e.getMessage());
+    }
   }
 
   /**
@@ -143,40 +202,89 @@ public class GameManager {
     return activePlayers;
   }
 
+
   /**
-   * Internally, read all saved game instances & all needed metadata from json file.
+   * Launch a game based on game id and the launcher info given.
+   * internally handle the fact that we might launch a game from saved file.
    *
-   * @param gameServiceName the game service that client wants info from.
-   * @param accessToken the token of the client who requires displaying all saved games.
-   * @param saveGameId the save game id (a string) which uniquely identify one game instance.
-   * @param gameId the gameId/sessionId that we want to load the concrete data and store for.
-   * @throws IOException in case the file is not there (accidentally deleted)
-   */
-  private void loadSavedGameToManager(String gameServiceName,
-                                      String accessToken, String saveGameId, long gameId)
-      throws IOException, SplendorGameException {
-    try {
-      // TODO: 1. send a quest to LS to get all available save game ids
-      Savegame[] allSavedGames = lobbyCommunicator.getAllSavedGames(accessToken,gameServiceName);
-      Map<String, SavedGameState> allSaveGames = readSaveGamesFromFile();
-      if (!allSaveGames.containsKey(gameServiceName)) {
-        // no such save game id existing in the file for some reasons
-        String error = "SaveGameId: " + saveGameId + " not found in json file!";
-        throw new SplendorGameException(error);
+   * @param gameId game id (long) of the game we want to launch
+   * @param launcherInfo detailed info we need to launch the game
+   * @return an object contains game info, player states and action interpreter
+   * @throws ModelAccessException can not launch the game because an IO issue
+   //*/
+  public SavedGameState launchGame(long gameId, LauncherInfo launcherInfo)
+      throws ModelAccessException{
+    // if we have a non-empty savegame id, then we load
+    // the game content rather than creating new objects.
+    if (!launcherInfo.getSavegame().isEmpty()) {
+      String saveGameId = launcherInfo.getSavegame();
+      try {
+        List<String> curPlayerNames = launcherInfo.getPlayers().stream()
+            .map(PlayerInfo::getName)
+            .collect(Collectors.toList());
+        String creator = launcherInfo.getCreator();
+        Map<String, SavedGameState> savedGames = readSavedGameDataFromFile();
+        SavedGameState savedGame = savedGames.get(saveGameId);
+        // rename the player names in this savedGameState
+        savedGame.renamePlayers(curPlayerNames, creator);
+
+        // put the renamed objects to manager
+        activeGames.put(gameId, savedGame.getGameInfo());
+        activePlayers.put(gameId, savedGame.getPlayerStates());
+        gameActionInterpreters.put(gameId, savedGame.getActionInterpreter());
+        return savedGame;
+      } catch (IOException e) {
+        logger.warn(e.getMessage());
+        throw new ModelAccessException(e.getMessage());
+      }
+    } else { // the case where we are not launching a saved game, create gameinfo, etc from scratch
+      String gameServerName = launcherInfo.getGameServer();
+      List<Extension> gameExtensions = new ArrayList<>();
+      gameExtensions.add(Extension.BASE);
+      gameExtensions.add(Extension.ORIENT);
+      if (gameServerName.equals("splendorcity")) {
+        gameExtensions.add(Extension.CITY);
       }
 
-      // TODO: 2. load the actual data into the file
-      SavedGameState savedGame = allSaveGames.get(saveGameId);
-      GameInfo gameInfo = savedGame.getGameInfo();
-      PlayerStates playerStates = savedGame.getPlayerStates();
-      ActionInterpreter actionInterpreter = savedGame.getActionInterpreter();
-      activeGames.put(gameId, gameInfo);
-      activePlayers.put(gameId, playerStates);
-      gameActionInterpreters.put(gameId, actionInterpreter);
+      if (gameServerName.equals("splendortrade")) {
+        gameExtensions.add(Extension.TRADING_POST);
+      }
+      // get all player names
+      List<String> playerNames = launcherInfo
+          .getPlayers()
+          .stream()
+          .map(PlayerInfo::getName)
+          .collect(Collectors.toList());
 
-    } catch (IOException e) {
-      throw new IOException("file: server/saved_games_data.json not found, please create one!");
+      GameInfo newGameInfo = new GameInfo(gameExtensions, playerNames, launcherInfo.getCreator());
+      PlayerStates newPlayerStates = new PlayerStates(playerNames);
+      ActionInterpreter newActionInterpreter = new ActionInterpreter(newGameInfo, newPlayerStates);
+      // added game info, player states and action interpreter for this specific gameId
+      activeGames.put(gameId, newGameInfo);
+      activePlayers.put(gameId, newPlayerStates);
+      gameActionInterpreters.put(gameId, newActionInterpreter);
+      return new SavedGameState(newGameInfo, newPlayerStates, newActionInterpreter);
     }
+  }
+
+
+  /**
+   * Internally, verify the content of game ids to be synced and updated with LS.
+   *
+   * @return an updated game ids
+   */
+  public List<String> getSavedGameIds() {
+    try {
+      syncSavedGames();
+    } catch (ModelAccessException e) {
+      logger.warn(e.getMessage());
+    }
+    return savedGameIds;
+  }
+
+
+  public void deleteGame(long gameId) {
+
   }
 
   /**
@@ -194,35 +302,29 @@ public class GameManager {
     try {
       lobbyCommunicator.putSaveGame(savegame);
     } catch (UnirestException e){
-
+      logger.warn(e.getMessage());
     }
 
-
-    // TODO: 2. store the actual data into the file
-    GameInfo gameInfo = activeGames.get(gameId);
-    PlayerStates playerStates = activePlayers.get(gameId);
-    ActionInterpreter actionInterpreter = gameActionInterpreters.get(gameId);
-    SavedGameState newSaveGame = new SavedGameState(gameInfo, playerStates, actionInterpreter);
-
-    try {
-      Map<String,SavedGameState> allSaveGames = readSaveGamesFromFile();
-      String saveGameId = savegame.getSavegameid();
-      allSaveGames.put(saveGameId,newSaveGame);
-      FileWriter fileWriter = new FileWriter(saveGameInfoFileName, StandardCharsets.UTF_8);
-      Type mapOfSaveGameStates = new TypeToken<Map<String,SavedGameState>>() {}.getType();
-      String newSaveGamesJson = SplendorJsonHelper.getInstance().getGson()
-          .toJson(allSaveGames, mapOfSaveGameStates);
-      fileWriter.write(newSaveGamesJson);
-      fileWriter.close();
-    } catch (IOException e) {
-      logger.warn("Failed to read/write data to store the game detail information!");
-    }
+    // TODO: 2. store the actual data and metadata into the file
+    SavedGameState newSaveGame =
+        new SavedGameState(
+            activeGames.get(gameId),
+            activePlayers.get(gameId),
+            gameActionInterpreters.get(gameId));
+    writeSavedGameDataToFile(savegame.getSavegameid(), newSaveGame, true);
+    writeSavedGameMetaDataToFile(savegame, true);
   }
 
+
+
   /**
-   * Read a map from savegameId -> SavedGameState (which stores gameInfo, playerStates, interpreter)
+   * Read a map of String -> SavedGameState (which stores gameInfo, playerStates, interpreter).
+   * out of the json file.
+   *
+   * @return a map of String -> SavedGameState, if file is empty, return null
+   * @throws IOException in case the json file is missing.
    */
-  private Map<String, SavedGameState> readSaveGamesFromFile() throws IOException {
+  public Map<String, SavedGameState> readSavedGameDataFromFile() throws IOException {
     try {
       FileReader fileReader = new FileReader(saveGameInfoFileName, StandardCharsets.UTF_8);
       Type mapOfSaveGameStates = new TypeToken<Map<String,SavedGameState>>() {}.getType();
@@ -231,4 +333,82 @@ public class GameManager {
       throw new IOException("file: server/saved_games_data.json not found, please create one!");
     }
   }
+
+  /**
+   * Write to actual data file.
+   * Depending on addToFile being true/false, we decide whether to add/remove the content
+   *
+   * @param saveGameId the id of the content
+   * @param savedGameState the content ready to be written
+   * @param addToFile the flag indicating delete or not
+   */
+  private void writeSavedGameDataToFile(String saveGameId,
+                                       SavedGameState savedGameState, boolean addToFile) {
+    try {
+      Map<String,SavedGameState> allSaveGames = readSavedGameDataFromFile();
+      if (addToFile) {
+        allSaveGames.put(saveGameId,savedGameState);
+      } else {
+        allSaveGames.remove(saveGameId);
+      }
+      FileWriter dataWriter = new FileWriter(saveGameInfoFileName, StandardCharsets.UTF_8);
+      Type mapOfSaveGameStates = new TypeToken<Map<String,SavedGameState>>() {}.getType();
+      String newSaveGamesJson = SplendorJsonHelper.getInstance().getGson()
+          .toJson(allSaveGames, mapOfSaveGameStates);
+      dataWriter.write(newSaveGamesJson);
+      dataWriter.close();
+
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
+  }
+
+
+
+  /**
+   *  Read a List of Savegame from file.
+   *
+   * @return a List of Savegame from file. if file is empty, return null
+   * @throws IOException in case of a file missing
+   */
+  public List<Savegame> readSavedGameMetaDataFromFile() throws IOException {
+    try {
+      FileReader fileReader = new FileReader(saveGameMetaFileName, StandardCharsets.UTF_8);
+      Type listOfSavegame = new TypeToken<List<Savegame>>() {}.getType();
+      return SplendorJsonHelper.getInstance().getGson().fromJson(fileReader, listOfSavegame);
+    } catch (IOException e) {
+      throw new IOException("file: server/saved_games_meta.json not found, please create one!");
+    }
+  }
+
+
+
+  /**
+   * Write to metadata file.
+   * Depending on addToFile being true/false, we decide whether to add/remove the content
+   *
+   * @param savegame the content ready to be written
+   * @param addToFile the flag indicating delete or not
+   */
+  private void writeSavedGameMetaDataToFile(Savegame savegame, boolean addToFile) {
+    try {
+      List<Savegame> allSaveGamesMeta = readSavedGameMetaDataFromFile();
+      if(addToFile) {
+        allSaveGamesMeta.add(savegame);
+      } else {
+        allSaveGamesMeta.remove(savegame);
+      }
+      FileWriter metaDataWriter = new FileWriter(saveGameMetaFileName, StandardCharsets.UTF_8);
+      Type listOfSavegame = new TypeToken<List<Savegame>>(){}.getType();
+      String newSaveGamesMetaJson = SplendorJsonHelper
+          .getInstance().getGson()
+          .toJson(allSaveGamesMeta, listOfSavegame);
+
+      metaDataWriter.write(newSaveGamesMetaJson);
+      metaDataWriter.close();
+    } catch (IOException e) {
+      logger.warn(e.getMessage());
+    }
+  }
+
 }

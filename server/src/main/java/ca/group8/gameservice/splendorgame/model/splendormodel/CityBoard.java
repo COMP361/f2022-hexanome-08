@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.Action;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class CityBoard extends Board {
 
   // keeps track of the ownership of any CityCard
-  private final Map<String, CityCard> playerCities = new HashMap<>();
+  private Map<String, CityCard> playerCities = new HashMap<>();
   // visible city cards on board
   private final CityCard[] allCityCards = new CityCard[3];
 
@@ -66,5 +67,29 @@ public class CityBoard extends Board {
   @Override
   public void update() {
 
+  }
+
+  /**
+   * Call this method to rename the player names if the ones who want to play now does not.
+   * match with the ones who saved this game before.
+   *
+   * @param playerNames the current player names who want to play this game
+   */
+  @Override
+  public void renamePlayers(List<String> playerNames) {
+    List<String> curNames = new ArrayList<>(playerCities.keySet());
+    // only update if names are different
+    if(!playerNames.equals(curNames)) {
+      int nameIndex = 0;
+      Map<String, CityCard> newCityMap = new HashMap<>();
+      for (String curName : playerCities.keySet()) {
+        CityCard curCard = playerCities.get(curName);
+        String newName = playerNames.get(nameIndex);
+        nameIndex += 1;
+        newCityMap.put(newName, curCard);
+      }
+      playerCities = newCityMap;
+
+    }
   }
 }

@@ -6,6 +6,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,9 @@ public class ActionInterpreter {
   private int burnCardCount;
   private Colour burnCardColour;
   private DevelopmentCard stashedCard;
-  private final PlayerStates playerStates;
-  private final GameInfo gameInfo;
-  private final ActionGenerator actionGenerator;
+  private PlayerStates playerStates;
+  private GameInfo gameInfo;
+  private ActionGenerator actionGenerator;
 
   /**
    * Constructor.
@@ -30,6 +31,21 @@ public class ActionInterpreter {
    * @param gameInfo     the relevant game info for this interpreter instance
    */
   public ActionInterpreter(GameInfo gameInfo, PlayerStates playerStates) {
+    this.playerStates = playerStates;
+    this.gameInfo = gameInfo;
+    Map<String, Map<String, Action>> playerActionMaps = gameInfo.getPlayerActionMaps();
+    TableTop tableTop = gameInfo.getTableTop();
+    this.actionGenerator = new ActionGenerator(playerActionMaps, tableTop);
+  }
+
+  /**
+   * After parsing the object from json, we need to relink the references.
+   * between this action interpreter and the other game states information.
+   *
+   * @param gameInfo a game info instance
+   * @param playerStates player states instance
+   */
+  public void relinkReferences(GameInfo gameInfo, PlayerStates playerStates) {
     this.playerStates = playerStates;
     this.gameInfo = gameInfo;
     Map<String, Map<String, Action>> playerActionMaps = gameInfo.getPlayerActionMaps();

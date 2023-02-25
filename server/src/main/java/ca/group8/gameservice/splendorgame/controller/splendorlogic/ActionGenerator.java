@@ -7,6 +7,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,6 +62,14 @@ public class ActionGenerator {
   public void updateReturnTokenActions(int extraTokenCount,
                                        EnumMap<Colour, Integer> curPlayerTokens) {
 
+  }
+
+  public Map<String, Map<String, Action>> getPlayerActionMaps() {
+    return playerActionMaps;
+  }
+
+  public TableTop getTableTop() {
+    return tableTop;
   }
 
   //EVERYTHING AFTER THIS IS OLD CODE (not up to date based on M6 model)

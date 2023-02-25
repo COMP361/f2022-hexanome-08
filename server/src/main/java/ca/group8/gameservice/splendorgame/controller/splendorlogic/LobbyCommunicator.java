@@ -8,8 +8,10 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -98,6 +100,51 @@ public class LobbyCommunicator {
   }
 
   /**
+   * Send a delete request to LS to indicate that we want to delete.
+   * the game: gameName, with saveGameId.
+   *
+   * @param gameName name of the game service. (fixed, such splendorbase)
+   * @param saveGameId id of the saved game. (a saved customized name)
+   */
+  public void deleteSavedGame(String gameName, String saveGameId) throws UnirestException {
+    String url = String.format("%s/api/gameservices/%s/savegames/%s", lobbyServiceAddress,
+        gameName, saveGameId);
+    try{
+      String accessToken = getGameOauthToken(gameName, gameServicePasswords.get(0));
+      HttpResponse<String> response = Unirest.delete(url)
+          .queryString("access_token",accessToken).asString();
+      if(response.getStatus() != 200) {
+        throw new UnirestException("Failed to delete the game with id: " + saveGameId);
+      }
+    } catch (UnirestException e) {
+      logger.warn(e.getMessage());
+    }
+  }
+  /**
+   * Get all saved game ids of all game servers registered at LS.
+   *
+   * @return a list of string of such saved game ids
+   */
+  public List<String> getAllSaveGameIds() {
+    List<String> allIds = new ArrayList<>();
+    for (String serviceName : gameServiceNames) {
+      String accessToken;
+      try {
+        accessToken = getGameOauthToken(serviceName, gameServicePasswords.get(0));
+        Savegame[] allSaveGames = getAllSavedGames(accessToken, serviceName);
+        // add all saved game ids of this game server
+        allIds.addAll(Arrays.stream(allSaveGames)
+          .map(Savegame::getSavegameid)
+          .collect(Collectors.toList()));
+      } catch (UnirestException e) {
+        logger.warn(e.getMessage());
+        break;
+      }
+    }
+    return allIds;
+  }
+
+  /**
    * Return an array of Savegame to one specific game service (base, city or trade).
    * to the player with accessToken.
    *
@@ -105,21 +152,27 @@ public class LobbyCommunicator {
    * @param gameServiceName splendorbase, splendorcity, ... (game service names)
    * @return an array of Savegame to one specific game service, can be empty
    */
-  public Savegame[] getAllSavedGames(String accessToken, String gameServiceName) {
+  public Savegame[] getAllSavedGames(String accessToken, String gameServiceName)
+  throws UnirestException{
     String url = String.format("%s/api/gameservices/%s/savegames",
         lobbyServiceAddress, gameServiceName);
+    Savegame[] result = new Savegame[0];
     try {
       HttpResponse<String> response = Unirest.get(url)
           .queryString("access_token", accessToken)
           .asString();
       String jsonString = response.getBody();
-      Savegame[] result = new Gson().fromJson(jsonString, Savegame[].class);
+      result = new Gson().fromJson(jsonString, Savegame[].class);
       logger.info(Arrays.toString(result));
-      return result;
+      if (response.getStatus() != 200) {
+        String msg = "Unable to perform GET all sessions request to LS";
+        logger.warn(msg);
+        throw new UnirestException(msg);
+      }
     } catch (UnirestException e) {
-      logger.warn("Unable to perform GET all sessions request to LS");
-      return new Savegame[0];
+      logger.warn(e.getMessage());
     }
+    return result;
   }
 
   /**
