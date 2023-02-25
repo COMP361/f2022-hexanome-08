@@ -2,10 +2,15 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGameState;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,14 +54,42 @@ public class GameValidator {
       throw new ModelAccessException("Invalid launcher info provided");
     }
 
+    if (!gameServiceNames.contains(launcherInfo.getGameServer())) {
+      throw new ModelAccessException("No such game registered in LS");
+    }
+
     // this one should avoid duplicates, thus it throws error when it is TRUE!!!
     if (gameManager.containsGameId(gameId)) {
       throw new ModelAccessException("Duplicate game instance, can not launch it!");
     }
 
-    if (!gameServiceNames.contains(launcherInfo.getGameServer())) {
-      throw new ModelAccessException("No such game registered in LS");
+    // the sessions we are about to launch has a save game id, verify if it exits before
+    // pass this condition check if savegame = ""
+    if (!launcherInfo.getSavegame().isEmpty()) {
+      String curSaveGameId = launcherInfo.getSavegame();
+      if(!gameManager.getSavedGameIds().contains(curSaveGameId)) {
+        throw new ModelAccessException("The game id requested is not previously saved!");
+      }
+      // In the case of we have more players play this loaded game than
+      // the amount of players who saved this game, throw exception as well
+      List<String> curPlayerNames = launcherInfo.getPlayers().stream()
+          .map(PlayerInfo::getName)
+          .collect(Collectors.toList());
+      int curPlayersCount = curPlayerNames.size();
+      try {
+        String saveGameId = launcherInfo.getSavegame();
+        Map<String, SavedGameState> savedGames = gameManager.readSavedGameDataFromFile();
+        SavedGameState savedGame = savedGames.get(saveGameId);
+        PlayerStates playerStates = savedGame.getPlayerStates();
+        int prePlayersCount = playerStates.getPlayersInfo().size();
+        if (curPlayersCount > prePlayersCount) {
+          throw new ModelAccessException("Can not have more players than the saved game!");
+        }
+      } catch (IOException e) {
+        throw new ModelAccessException(e.getMessage());
+      }
     }
+
   }
 
 

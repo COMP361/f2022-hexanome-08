@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Map;
  * Class that holds info about TraderBoard.
  */
 public class TraderBoard extends Board {
-  private final Map<String, Map<PowerEffect, Power>> allPlayerPowers = new HashMap<>();
+  private Map<String, Map<PowerEffect, Power>> allPlayerPowers = new HashMap<>();
 
   public TraderBoard(List<String> playerNames) {
     super.type = this.getClass().getSimpleName();
@@ -70,5 +71,28 @@ public class TraderBoard extends Board {
   @Override
   public void update() {
 
+  }
+
+  /**
+   * Call this method to rename the player names if the ones who want to play now does not.
+   * match with the ones who saved this game before.
+   *
+   * @param playerNames the current player names who want to play this game
+   */
+  @Override
+  public void renamePlayers(List<String> playerNames) {
+    List<String> curNames = new ArrayList<>(allPlayerPowers.keySet());
+    // only update if names are different
+    if(!playerNames.equals(curNames)) {
+      int nameIndex = 0;
+      Map<String, Map<PowerEffect, Power>> newPowerMap = new HashMap<>();
+      for (String curName : allPlayerPowers.keySet()) {
+        Map<PowerEffect,Power> curPowerMap = allPlayerPowers.get(curName);
+        String newName = playerNames.get(nameIndex);
+        nameIndex += 1;
+        newPowerMap.put(newName, curPowerMap);
+      }
+      allPlayerPowers = newPowerMap;
+    }
   }
 }

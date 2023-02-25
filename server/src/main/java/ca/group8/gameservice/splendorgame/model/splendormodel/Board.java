@@ -189,4 +189,14 @@ public abstract class Board {
       throw new RuntimeException(e);
     }
   }
+
+  /**
+   * Call this method to rename the player names if the ones who want to play now does not.
+   * match with the ones who saved this game before.
+   *
+   * @param playerNames the current player names who want to play this game
+   */
+  public void renamePlayers(List<String> playerNames) {
+    // do nothing for base and orient board
+  }
 }

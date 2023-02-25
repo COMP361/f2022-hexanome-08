@@ -2,6 +2,7 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGameState;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
@@ -134,8 +135,7 @@ public class SplendorRestController {
   @PutMapping(value = {
       "/splendorbase/api/games/{gameId}/savegame",
       "/splendortrade/api/games/{gameId}/savegame",
-      "/splendorcity/api/games/{gameId}/savegame"},
-  consumes = "application/json; charset=utf-8")
+      "/splendorcity/api/games/{gameId}/savegame"}, consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> saveGame(@PathVariable long gameId,
                                          @RequestBody Savegame saveGameInfo,
                                          @RequestParam(value = "access_token") String accessToken) {
@@ -156,15 +156,13 @@ public class SplendorRestController {
       // regardless any of the above exception happens, bad request
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
-
-
   }
 
 
   /**
    * Launch game PUT request handling endpoint. It handles the PUT request of creating
    * game service sent from LS. LS sent this PUT request because client sends a launch request to
-   * LS first
+   * LS
    *
    * @param gameId       game id
    * @param launcherInfo JSON request body that contains the info needed to PUT a game service
@@ -179,40 +177,18 @@ public class SplendorRestController {
       // check validity of this launcherInfo
       gameValidator.validLauncherInfo(gameId, launcherInfo);
 
-      String gameServerName = launcherInfo.getGameServer();
-      List<Extension> gameExtensions = new ArrayList<>();
-      gameExtensions.add(Extension.BASE);
-      gameExtensions.add(Extension.ORIENT);
-      if (gameServerName.equals("splendorcity")) {
-        gameExtensions.add(Extension.CITY);
-      }
-
-      if (gameServerName.equals("splendortrade")) {
-        gameExtensions.add(Extension.TRADING_POST);
-      }
-      // get all player names
-      List<String> playerNames = launcherInfo
-          .getPlayers()
-          .stream()
-          .map(PlayerInfo::getName)
-          .collect(Collectors.toList());
-
-      GameInfo newGameInfo = new GameInfo(gameExtensions, playerNames, launcherInfo.getCreator());
-      PlayerStates newPlayerStates = new PlayerStates(playerNames);
-      ActionInterpreter newActionInterpreter = new ActionInterpreter(newGameInfo, newPlayerStates);
-
-      // added game info, player states and action interpreter for this specific gameId
-      gameManager.addGame(gameId, newGameInfo);
-      gameManager.addGamePlayerStates(gameId, newPlayerStates);
-      gameManager.addGameActionInterpreter(gameId, newActionInterpreter);
+      // added the game related to this launcher info to manager
+      // it's safe to just call launchGame in here because launcherInfo has been
+      // verified by the validator
+      SavedGameState savedGameState = gameManager.launchGame(gameId, launcherInfo);
 
       // add the game info broadcast content for long polling
       gameInfoBroadcastContentManager
-          .put(gameId, new BroadcastContentManager<>(newGameInfo));
+          .put(gameId, new BroadcastContentManager<>(savedGameState.getGameInfo()));
 
       // add the player states broadcast content for long polling
       allPlayerInfoBroadcastContentManager
-          .put(gameId, new BroadcastContentManager<>(newPlayerStates));
+          .put(gameId, new BroadcastContentManager<>(savedGameState.getPlayerStates()));
 
       // telling a good news
       logger.info(String.format("Successfully added game: %s", gameId));
@@ -220,84 +196,12 @@ public class SplendorRestController {
       return ResponseEntity.status(HttpStatus.OK).build();
 
     } catch (ModelAccessException e) {
+      logger.warn(e.getMessage());
       // something did not go well, reply with a bad request message
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
   }
 
-
-  /**
-   * TODO: Finish this later for M8.
-   */
-  @DeleteMapping(value = {
-          "/splendorbase/api/games/{gameId}",
-          "/splendortrade/api/games/{gameId}",
-          "/splendorcity/api/games/{gameId}"}, consumes = "application/json; charset=utf-8")
-  public ResponseEntity<String> deleteGame(@PathVariable long gameId,
-                                           @RequestParam(value = "access_token") String accessToken,
-                                           @RequestParam(value = "savegameid", required = false)
-                                           String saveGameId)
-      throws ModelAccessException {
-    if (saveGameId == null) {
-      saveGameId = "";
-    }
-    // if it's empty, then player does not want to save it (saveGameId) can be randomly generated
-    // from client side
-    GameInfo gameInfo = gameManager.getGameById(gameId);
-    if (!saveGameId.equals("")) { // not empty, then we need to send a saveGameRequest to LS
-      // prepare player names as array to construct Savegame object
-      String[] playerNames = new String[gameInfo.getNumOfPlayers()];
-      for (int i = 0; i < gameInfo.getNumOfPlayers(); i++) {
-        playerNames[i] = gameInfo.getPlayerNames().get(i);
-      }
-      // no matter what, we have a non-empty savegameid that we can send to LS
-      //Savegame saveGameInfo = new Savegame(playerNames, gameServiceName, saveGameId);
-      // TODO: Send the PUT request to save game under
-      //  /api/gameservices/{gameservice}/savegames/{savegame} to LS
-
-      // Unirest.put().......
-
-    }
-    // no matter we sent the request to save it or not, we delete the running instance of
-    // game in game service
-
-    // TODO: Delete the game from gameManager and the 2 broadcast managers
-
-    return null;
-  }
-
-
-  // TODO: Write a method, providing playerName and gameId, find the
-  //  corresponding GameInfo and PlayerInGame
-
-
-  // TODO: Write a general method to check if the access_token -> playerName refers to
-  //  a valid request (Action request or Other request)
-  //  Ex 1) Click on MyPurchase Cards do not need to be current player
-  //  Ex 2) Purchase or Reserve or TakeToken can only happens when access_token_player == curPLayer
-
-
-  // logic to heck whether if it's this player's turn
-  // We need to check all these:
-  // 1. isValidToken()
-  // 2. gameExists() (running and managed by gameManager)
-  //      -> MUST have a gameInfo
-  //      -> Can have a String curPlayer
-  // 3. playerInGame()
-  // 4. curPlayer.equals(playerNameToCheck) or not....
-
-
-  //private boolean isValidToken(String accessToken, String playerName) throws UnirestException {
-  //  HttpResponse<String> nameResponse =
-  //      Unirest.get(lobbyServiceAddress + "/oauth/username")
-  //          .header("Authorization", "Bearer " + accessToken).asString();
-  //
-  //  String responseUserName = nameResponse.getBody();
-  //  logger.info("access token represents: " + responseUserName);
-  //  logger.info("current player is: " + playerName);
-  //  return responseUserName.equals(playerName);
-  //
-  //}
 
   private boolean isPlayerTurn(String playerNameInRequest, GameInfo gameInfo) {
     String curPlayerName = gameInfo.getCurrentPlayer();
