@@ -39,8 +39,8 @@ public class TestGameManager {
       .range(0, players.length)
       .mapToObj(i -> new PlayerInfo(players[i], colours[i]))
       .collect(Collectors.toList());
-  String gamename = "splendorbase";
-  String savegameid = "gameId1";
+  String gamename = "splendorcity";
+  String savegameid = "gameId2";
   Savegame savegame = new Savegame(players, gamename, savegameid);
   long gameId = 123123151235L;
   LauncherInfo launcherInfo = new LauncherInfo(gamename,
