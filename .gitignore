@@ -4,7 +4,9 @@
 ### Java ###
 # .mvn and .idea in subdirectories
 client/.idea
+server/.idea
 client/target/
+server/target/
 client/src/main/resources/project/pictures
 .*
 !/.gitignore
