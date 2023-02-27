@@ -7,6 +7,7 @@ import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,22 +41,48 @@ public class TestGameManager {
       .range(0, players.length)
       .mapToObj(i -> new PlayerInfo(players[i], colours[i]))
       .collect(Collectors.toList());
-  String gamename = "splendorcity";
-  String savegameid = "gameId2";
-  Savegame savegame = new Savegame(players, gamename, savegameid);
-  long gameId = 123123151235L;
-  LauncherInfo launcherInfo = new LauncherInfo(gamename,
-      new LinkedList<>(playerInfos),
-      players[0]);
-  @Test
-  public void testLaunchGame() throws ModelAccessException {
-    gameManager.launchGame(gameId, launcherInfo);
-    assertEquals(0,0);
+  String gamename = "splendortrade";
+  String[] savegameids = new String[]{"gameId1","gameId2","gameId3"};
+  Savegame[] savegames = new Savegame[]{
+      new Savegame(players,gamename,savegameids[0]),
+      new Savegame(players,gamename,savegameids[1]),
+      new Savegame(players,gamename,savegameids[2])};
+
+  long[] gameIds = new long[] {5151551235L, 8723123151231L, 1231231512123L};
+
+  private void launchAndSaveThreeGames() throws ModelAccessException {
+    for (int i = 0; i < savegameids.length; i++) {
+      LauncherInfo launcherInfo = new LauncherInfo(gamename,
+          new LinkedList<>(playerInfos),
+          players[0]);
+      gameManager.launchGame(gameIds[i], launcherInfo);
+      gameManager.saveGame(savegames[i],gameIds[i]);
+    }
   }
   @Test
-  public void testWriteSavedGameMetaDataToFile() {
-    gameManager.saveGame(savegame,gameId);
+  public void testLaunchFromExistingAndNon_Existing() throws ModelAccessException {
+    launchAndSaveThreeGames();
+
+
+    LauncherInfo launcherInfo = new LauncherInfo(gamename,
+        new LinkedList<>(playerInfos),
+        players[0]);
+    launcherInfo.setSavegame(savegameids[0]);
+    gameManager.launchGame(12451517195L, launcherInfo);
   }
+
+  @Test
+  public void testGetAllGameIds() {
+    List<String> testIds = Arrays.asList(savegameids);
+    assertEquals(testIds,gameManager.getSavedGameIds());
+
+  }
+
+  @Test
+  public void testDeleteSavedGames() {
+    gameManager.deleteAllSavedGame();
+  }
+
 
 
 }
