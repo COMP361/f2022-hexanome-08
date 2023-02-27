@@ -29,8 +29,9 @@ public class SessionGui extends HBox {
 
   private final User curUser;
 
-  // TODO: Needs to add a field -> String saveGameId
 
+  // TODO: Needs to add a field -> String saveGameId, constructed in constructor
+  //private final String saveGameId;
   /**
    * This constructs a new SessionGUI.
    *
