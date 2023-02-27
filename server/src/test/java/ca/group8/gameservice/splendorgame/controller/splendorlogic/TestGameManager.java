@@ -62,13 +62,18 @@ public class TestGameManager {
   @Test
   public void testLaunchFromExistingAndNon_Existing() throws ModelAccessException {
     launchAndSaveThreeGames();
-
-
+    String[] newPlayers = new String[] {"penn", "muzhi"};
+    List<PlayerInfo> playerInfos = IntStream
+        .range(0, newPlayers.length)
+        .mapToObj(i -> new PlayerInfo(newPlayers[i], colours[i]))
+        .collect(Collectors.toList());
     LauncherInfo launcherInfo = new LauncherInfo(gamename,
         new LinkedList<>(playerInfos),
         players[0]);
     launcherInfo.setSavegame(savegameids[0]);
-    gameManager.launchGame(12451517195L, launcherInfo);
+    long newGameId = 12451517195L;
+    gameManager.launchGame(newGameId, launcherInfo);
+    assertEquals(Arrays.asList(newPlayers), gameManager.getGameById(newGameId).getPlayerNames());
   }
 
   @Test
