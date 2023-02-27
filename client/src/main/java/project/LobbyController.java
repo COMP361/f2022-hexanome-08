@@ -32,6 +32,10 @@ public class LobbyController {
   @FXML
   private ChoiceBox<String> gameChoices;
 
+  // TODO: Add the GUI to display the saved games for player to create load session from
+  @FXML
+  private ChoiceBox<String> savedGames;
+
   @FXML
   private ScrollPane allSessionScrollPane;
 
