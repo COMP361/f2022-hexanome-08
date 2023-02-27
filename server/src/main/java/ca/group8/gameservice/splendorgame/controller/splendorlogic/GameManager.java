@@ -67,7 +67,7 @@ public class GameManager {
 
     try {
       // skip all steps if we do not have info in file
-      if(readSavedGameDataFromFile() == null) {
+      if(readSavedGameDataFromFile() == null || readSavedGameDataFromFile().isEmpty()) {
         return;
       }
       List<String> gameIdsFromData = new ArrayList<>(readSavedGameDataFromFile().keySet());
@@ -123,67 +123,14 @@ public class GameManager {
   public boolean containsGameId(long gameId) {
     return activeGames.containsKey(gameId);
   }
-
-  /**
-   * Add a new game instance to the list of games.
-   *
-   * @param gameId      ID of the new game instance.
-   * @param newGameInfo Actual GameInfo instance.
-   */
-  public void addGame(long gameId, GameInfo newGameInfo) {
-    assert newGameInfo != null;
-    assert !activeGames.containsKey(gameId); //ensure gameId isn't already in list.
-
-    activeGames.put(gameId, newGameInfo);
-  }
-
   public PlayerStates getPlayerStatesById(long gameId) {
     assert activePlayers.containsKey(gameId);
     return activePlayers.get(gameId);
   }
 
-  public void addGamePlayerStates(long gameId, PlayerStates newPlayerStates) {
-    assert !activePlayers.containsKey(newPlayerStates);
-    activePlayers.put(gameId, newPlayerStates);
-  }
-
   public ActionInterpreter getGameActionInterpreter(long gameId) {
     assert gameActionInterpreters.containsKey(gameId);
     return gameActionInterpreters.get(gameId);
-  }
-
-  public void addGameActionInterpreter(long gameId, ActionInterpreter actionInterpreter) {
-    assert activeGames.containsKey(gameId) && actionInterpreter != null;
-    gameActionInterpreters.put(gameId, actionInterpreter);
-  }
-
-  /**
-   * Remove all data related to a specific game.
-   *
-   * @param gameId game to be removed.
-   */
-  public void removeGameRelatedData(long gameId) {
-    assert activeGames.containsKey(gameId);
-
-    removePlayerStates(gameId);
-    removeGame(gameId);
-    removeActionInterpreter(gameId);
-
-  }
-
-  public void removePlayerStates(long gameId) {
-    assert activePlayers.containsKey(gameId);
-    activePlayers.remove(gameId);
-  }
-
-  public void removeGame(long gameId) {
-    assert activeGames.containsKey(gameId);
-    activeGames.remove(gameId);
-  }
-
-  public void removeActionInterpreter(long gameId) {
-    assert gameActionInterpreters.containsKey(gameId);
-    gameActionInterpreters.remove(gameId);
   }
 
 
@@ -283,8 +230,43 @@ public class GameManager {
   }
 
 
+  /**
+   * TODO: To be implemented for M8, handle the deleting
+   * everything related to one game id, including the file
+   * and the DELETE Request to LS
+   *
+   * @param gameId
+   */
   public void deleteGame(long gameId) {
 
+  }
+
+  /**
+   * Helper method to delete all saved game data and metadata in json.
+   *
+   */
+  public void deleteAllSavedGame() {
+    List<String> savedGameIds = getSavedGameIds();
+    if (savedGameIds != null && savedGameIds.size() > 0) {
+      Map<String, SavedGameState> dataMap = new HashMap<>();
+      List<Savegame> metaDataList = new ArrayList<>();
+      try {
+        dataMap = readSavedGameDataFromFile();
+        metaDataList = readSavedGameMetaDataFromFile();
+      } catch (IOException e) {
+        logger.error(e.getMessage());
+      }
+      for (String gameId : savedGameIds) {
+        Savegame saveMeta = metaDataList.stream()
+            .filter(g->g.getSavegameid().equals(gameId))
+            .findFirst()
+            .get();
+        SavedGameState savedGameState = dataMap.get(gameId);
+        writeSavedGameMetaDataToFile(saveMeta, false);
+        writeSavedGameDataToFile(gameId, savedGameState, false);
+      }
+
+    }
   }
 
   /**
@@ -346,7 +328,7 @@ public class GameManager {
                                        SavedGameState savedGameState, boolean addToFile) {
     try {
       Map<String,SavedGameState> allSaveGames = readSavedGameDataFromFile();
-      if (allSaveGames == null) {
+      if (allSaveGames == null || (allSaveGames.isEmpty() && addToFile)) {
         // in case the file is empty, just add the data
         allSaveGames = new HashMap<>();
         allSaveGames.put(saveGameId,savedGameState);
@@ -402,7 +384,7 @@ public class GameManager {
   private void writeSavedGameMetaDataToFile(Savegame savegame, boolean addToFile) {
     try {
       List<Savegame> allSaveGamesMeta = readSavedGameMetaDataFromFile();
-      if (allSaveGamesMeta == null) {
+      if (allSaveGamesMeta == null || (allSaveGamesMeta.isEmpty() && addToFile)) {
         allSaveGamesMeta = new ArrayList<>();
         allSaveGamesMeta.add(savegame);
       } else {
@@ -414,7 +396,7 @@ public class GameManager {
           }
           allSaveGamesMeta.add(savegame);
         } else {
-          allSaveGamesMeta.remove(savegame);
+          allSaveGamesMeta.removeIf(game -> game.getSavegameid().equals(savegame.getSavegameid()));
         }
       }
       FileWriter metaDataWriter = new FileWriter(saveGameMetaFileName, StandardCharsets.UTF_8);
