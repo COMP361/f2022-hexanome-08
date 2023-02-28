@@ -115,15 +115,12 @@ public class GameManager {
    * @return one instance of GameInfo object
    */
   public GameInfo getGameById(long gameId) throws ModelAccessException {
-    if (!containsGameId(gameId)) {
+    if (!getActiveGames().containsKey(gameId)) {
       throw new ModelAccessException("No registered game with that ID");
     }
     return activeGames.get(gameId);
   }
 
-  public boolean containsGameId(long gameId) {
-    return activeGames.containsKey(gameId);
-  }
   public PlayerStates getPlayerStatesById(long gameId) {
     assert activePlayers.containsKey(gameId);
     return activePlayers.get(gameId);

@@ -103,27 +103,14 @@ public class SplendorRestController {
                                                               String hash) {
     try {
       // if the game does not exist in the game manager, throw an exception
-      if (!gameManager.containsGameId(gameId)) {
-        throw new ModelAccessException("There is no game with game id: "
-            + gameId + " launched, try again later");
-      }
+      gameManager.getGameById(gameId);
       if (hash == null) {
         hash = "-";
       }
-
-      // hash is either "-" or the hashed value from previous payload, use long polling
-      //long longPollingTimeOut = Long.parseLong(longPollTimeOut);
-
-
       if (hash.isEmpty()) {
         ResponseGenerator.getAsyncUpdate(longPollTimeOut,
             gameInfoBroadcastContentManager.get(gameId));
       }
-      //GameInfo curGameInfo
-      //    = gameInfoBroadcastContentManager.get(gameId).getCurrentBroadcastContent();
-      //String serverHash = DigestUtils.md5Hex(new Gson().toJson(curGameInfo));
-      //logger.info("GameInfo hash from client: " + hash);
-      //logger.info("GameInfo hash generated on server side: " + serverHash);
 
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut,
           gameInfoBroadcastContentManager.get(gameId), hash);
@@ -207,12 +194,6 @@ public class SplendorRestController {
     }
   }
 
-
-  private boolean isPlayerTurn(String playerNameInRequest, GameInfo gameInfo) {
-    String curPlayerName = gameInfo.getCurrentPlayer();
-    return curPlayerName.equals(playerNameInRequest);
-  }
-
   /**
    * Long polling for the game board content, optional hash value.
    */
@@ -227,25 +208,15 @@ public class SplendorRestController {
     try {
 
       // if the game does not exist in the game manager, throw an exception
-      if (!gameManager.containsGameId(gameId)) {
-        throw new ModelAccessException("There is no game with game id: "
-            + gameId + " launched, try again later");
-      }
+      gameManager.getGameById(gameId);
       if (hash == null) {
         hash = "-";
       }
-
       // hash is either "-" or the hashed value from previous payload, use long polling
       if (hash.isEmpty()) {
         ResponseGenerator.getAsyncUpdate(longPollTimeOut,
             allPlayerInfoBroadcastContentManager.get(gameId));
       }
-
-      //PlayerStates curPlayerStates
-      //    = allPlayerInfoBroadcastContentManager.get(gameId).getCurrentBroadcastContent();
-      //String serverHash = DigestUtils.md5Hex(new Gson().toJson(curPlayerStates));
-      //logger.info("GameInfo hash from client: " + hash);
-      //logger.info("GameInfo hash generated on server side: " + serverHash);
       return ResponseGenerator.getHashBasedUpdate(longPollTimeOut,
           allPlayerInfoBroadcastContentManager.get(gameId), hash);
     } catch (ModelAccessException e) {
@@ -265,14 +236,15 @@ public class SplendorRestController {
   public ResponseEntity<String> getPlayers(@PathVariable long gameId) {
     try {
       // check if our game manager contains this game id, if not, we did not PUT it correctly!
-      logger.info("Current gameId:" + gameId);
-      logger.info("Stored key set of game ids: " + gameManager.getActiveGames().keySet());
-      logger.info("boolean result of splendorGameManager.isExistentGameId(gameId): "
-          + gameManager.containsGameId(gameId));
-      if (!gameManager.containsGameId(gameId)) {
-        throw new ModelAccessException("Can not get players for game " + gameId
-            + ". The game has not been launched or does not exist!");
-      }
+      //logger.info("Current gameId:" + gameId);
+      //logger.info("Stored key set of game ids: " + gameManager.getActiveGames().keySet());
+      //logger.info("boolean result of splendorGameManager.isExistentGameId(gameId): "
+      //    + gameManager.containsGameId(gameId));
+      //if (!gameManager.containsGameId(gameId)) {
+      //  throw new ModelAccessException("Can not get players for game " + gameId
+      //      + ". The game has not been launched or does not exist!");
+      //}
+      gameManager.getGameById(gameId);
       // if we can find the game, print the list of player names
       String allPlayersInGame =
           new Gson().toJson(gameManager.getGameById(gameId).getPlayerNames());
@@ -335,45 +307,6 @@ public class SplendorRestController {
       // something went wrong, reply with a bad request
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
-
-
-
-    //try {
-    //  // Merged several logical checks before perform any actions to the server data
-    //  // equivalent to the condition check of
-    //  gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
-    //
-    //  // looks good, we can generate the actions for this player now
-    //  GameInfo gameInfo = splendorGameManager.getGameById(gameId);
-    //  PlayerInGame playerInGame = splendorGameManager
-    //      .getPlayerStatesById(gameId)
-    //      .getPlayersInfo()
-    //      .get(playerName);
-    //  // failed to generate the map
-    //  actionGenerator.generateActions(gameId, gameInfo, playerInGame);
-    //
-    //  // check if the generation went well and generate a mapping even it's empty it's fine
-    //  Map<String, Action> actionsAvailableToPlayer =
-    //      actionGenerator.lookUpActions(gameId, playerName);
-    //  if (actionsAvailableToPlayer == null) {
-    //    throw new ModelAccessException("Generation for actions failed for some reasons, debug!");
-    //  }
-    //
-    //  logger.warn("action map generated for player: " + playerName + " are "
-    //      + actionsAvailableToPlayer.keySet());
-    //
-    //  // actionsAvailableToPlayer is either empty hash map or have something, not important,
-    //  // just give it to client
-    //  Gson actionGson = SplendorRestController.getActionGson();
-    //  // added this type conversion to serialization
-    //  Type actionMapType = new TypeToken<Map<String, Action>>() {
-    //  }.getType();
-    //  String actionHashedMapInStr = actionGson.toJson(actionsAvailableToPlayer, actionMapType);
-    //  return ResponseEntity.status(HttpStatus.OK).body(actionHashedMapInStr);
-    //} catch (ModelAccessException | UnirestException e) {
-    //  // something went wrong, reply with a bad request
-    //  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    //}
   }
 
 
