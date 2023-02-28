@@ -70,6 +70,7 @@ public class TestLobbyCommunicator {
     }
     // only one such save game with game id can exist
     assertEquals(1, count);
+    lobbyCommunicator.deleteSaveGame(testSaveGame);
   }
 
   @Test

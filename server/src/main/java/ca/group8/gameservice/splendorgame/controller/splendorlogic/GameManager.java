@@ -68,6 +68,7 @@ public class GameManager {
     try {
       // skip all steps if we do not have info in file
       if(readSavedGameDataFromFile() == null || readSavedGameDataFromFile().isEmpty()) {
+        savedGameIds = new ArrayList<>();
         return;
       }
       List<String> gameIdsFromData = new ArrayList<>(readSavedGameDataFromFile().keySet());
@@ -220,13 +221,14 @@ public class GameManager {
 
   /**
    * TODO: To be implemented for M8, handle the deleting
-   * everything related to one game id, including the file
-   * and the DELETE Request to LS
+   * everything related to one game id. Note this is about
+   * delete a game once it has some winners, not the delete
+   * for saved games
    *
    * @param gameId
    */
   public void deleteGame(long gameId) {
-
+    // if this game
   }
 
   /**
@@ -249,6 +251,8 @@ public class GameManager {
             .filter(g->g.getSavegameid().equals(gameId))
             .findFirst()
             .get();
+        // tell lobby to delete the save game
+        lobbyCommunicator.deleteSaveGame(saveMeta);
         SavedGameState savedGameState = dataMap.get(gameId);
         writeSavedGameMetaDataToFile(saveMeta, false);
         writeSavedGameDataToFile(gameId, savedGameState, false);
@@ -263,6 +267,7 @@ public class GameManager {
    * NOTE: saveGameId and gameId are different, saveGameId is a Unique String name used to
    * identify the exact game instances data, gameId is a long which refers to session id
    * from LS.
+   *
    * @param savegame a class that stores metadata to save a game
    * @param gameId the game id used to retrieve info needed to store the game
    */

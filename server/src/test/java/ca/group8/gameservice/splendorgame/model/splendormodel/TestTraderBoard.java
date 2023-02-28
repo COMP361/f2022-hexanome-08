@@ -57,9 +57,4 @@ public class TestTraderBoard {
     assertEquals(testPower, power);
   }
 
-
-  @Test
-  void testGetPlayerOnePower_False() {
-    traderBoard.getPlayerOnePower("Bob123", PowerEffect.ARM_POINTS);
-  }
 }

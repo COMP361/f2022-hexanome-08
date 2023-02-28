@@ -186,7 +186,7 @@ public class LobbyCommunicator {
     String body = SplendorJsonHelper.getInstance().getGson().toJson(savegame, Savegame.class);
     String url = String.format("%s/api/gameservices/%s/savegames/%s", lobbyServiceAddress,
         serviceName, saveGameId);
-    String accessToken = "";
+    String accessToken;
     try {
       accessToken = getGameOauthToken(serviceName,gameServicePasswords.get(0));
       logger.info("Token:" + accessToken);
@@ -203,6 +203,32 @@ public class LobbyCommunicator {
       logger.warn(e.getMessage());
     }
 
+  }
+
+  /**
+   * Send a DELETE request to lobby service and delete the save game.
+   *
+   * @param savegame save game instance
+   */
+  public void deleteSaveGame(Savegame savegame) {
+    String serviceName = savegame.getGamename();
+    String saveGameId = savegame.getSavegameid();
+    String url = String.format("%s/api/gameservices/%s/savegames/%s",
+        lobbyServiceAddress, serviceName, saveGameId);
+    String accessToken;
+    try {
+      accessToken = getGameOauthToken(serviceName,gameServicePasswords.get(0));
+      logger.info("Token:" + accessToken);
+      HttpResponse<String> response = Unirest.delete(url)
+          .queryString("access_token", accessToken).asString();
+
+      if (response.getStatus() != 200) {
+        throw new UnirestException(response.getBody());
+      }
+
+    } catch (UnirestException e) {
+      logger.warn(e.getMessage());
+    }
   }
 
 
