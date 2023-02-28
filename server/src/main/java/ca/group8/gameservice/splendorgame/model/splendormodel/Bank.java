@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * This class represents the bank.
@@ -80,6 +81,19 @@ public class Bank {
 
   public EnumMap<Colour, Integer> getAllTokens() {
     return allTokens;
+  }
+
+  /**
+   * @return a number indicating how many non-gold tokens are left
+   */
+  public int getRegularTokenCount() {
+
+    return allTokens.entrySet()
+        .stream()
+        .filter(entry -> !entry.getKey().equals(Colour.GOLD) &&
+            !entry.getKey().equals(Colour.ORIENT))
+        .mapToInt(Map.Entry::getValue)
+        .sum();
   }
 
   public int getInitialValue() {
