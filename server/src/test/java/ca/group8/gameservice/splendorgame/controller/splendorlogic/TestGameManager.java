@@ -4,6 +4,7 @@ import ca.group8.gameservice.splendorgame.controller.communicationbeans.Launcher
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -37,7 +38,7 @@ public class TestGameManager {
   @Autowired
   GameManager gameManager;
 
-  String[] players = new String[]{"ruoyu", "penn"};
+  String[] players = new String[]{"ruoyu", "pengyu"};
   String[] colours = new String[]{"red", "blue"};
 
   List<PlayerInfo> playerInfos = IntStream
@@ -53,8 +54,11 @@ public class TestGameManager {
 
   long[] gameIds = new long[] {5151551235L, 8723123151231L, 1231231512123L};
 
+  @Test
+  public void testLaunchSaveAndDelete() throws ModelAccessException {
+    // clean up, make sure all saved game before has been deleted
+    gameManager.deleteAllSavedGame();
 
-  private void launchAndSaveThreeGames() throws ModelAccessException {
     for (int i = 0; i < savegameids.length; i++) {
       LauncherInfo launcherInfo = new LauncherInfo(gamename,
           new LinkedList<>(playerInfos),
@@ -62,12 +66,7 @@ public class TestGameManager {
       gameManager.launchGame(gameIds[i], launcherInfo);
       gameManager.saveGame(savegames[i],gameIds[i]);
     }
-  }
-
-  @Test
-  public void testLaunchFromExistingAndNon_Existing() throws ModelAccessException {
-    launchAndSaveThreeGames();
-
+    // there should be 3 saved game ids
     List<String> testIds = Arrays.asList(savegameids);
     assertEquals(testIds,gameManager.getSavedGameIds());
 
@@ -82,15 +81,14 @@ public class TestGameManager {
     launcherInfo.setSavegame(savegameids[0]);
     long newGameId = 12451517195L;
     gameManager.launchGame(newGameId, launcherInfo);
+    // there should be two new players whose game was loaded based on one previously saved game
     assertEquals(new HashSet<>(Arrays.asList(newPlayers)),
         new HashSet<>(gameManager.getGameById(newGameId).getPlayerNames()));
 
-
-  }
-
-  @Test
-  public void testDeleteSavedGames() {
     gameManager.deleteAllSavedGame();
+    // after all saved game being deleted, all saved game ids remain empty
+    assertEquals(new ArrayList<>(), gameManager.getSavedGameIds());
   }
+
 
 }
