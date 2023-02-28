@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorJsonHelper;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGameState;
@@ -7,11 +8,15 @@ import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -280,6 +285,13 @@ public class SplendorRestController {
 
   /**
    * TODO: send GET request to this location TWICE per turn, one at beginning, one at the end.
+   * because we need to make sure everything on the board is not available for user to click
+   * if it's not their turn
+   *
+   * This end point is only used to get the initial actionMap (Purchase, Reserve, TakeToken)
+   * The cascade case will update the Map< String, Map< String, Action > > in GameInfo, which is
+   * under long-polling control. Therefore user can get updated action map to handle cascade action
+   * without calling to this end point again.
    */
   @GetMapping(value = {"/splendortrade/api/games/{gameId}/players/{playerName}/actions",
       "/splendorbase/api/games/{gameId}/players/{playerName}/actions",
@@ -289,9 +301,41 @@ public class SplendorRestController {
                                            @PathVariable String playerName,
                                            @RequestParam(value = "access_token")
                                            String accessToken) {
-    // TODO: Redo based on sequence diagram
+    try {
+      // check if anything is valid about this game id and the player with the access token
+      gameValidator.gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
 
-    return null;
+      // no exception happened, safely find the playerInGame and action generator for this player
+      ActionGenerator actionGenerator = gameManager
+          .getGameActionInterpreter(gameId)
+          .getActionGenerator();
+      PlayerInGame playerInGame = gameManager
+          .getPlayerStatesById(gameId)
+          .getOnePlayerInGame(playerName);
+      GameInfo gameInfo = gameManager.getGameById(gameId);
+      String curTurnPlayer = gameInfo.getCurrentPlayer();
+      Map<String, Action> actionMap = new HashMap<>();
+
+      // only update the action map differently if the player who asks for the action map
+      // is indeed the current turn player, otherwise just return empty map
+      if (playerName.equals(curTurnPlayer)) {
+        // use these action generator and player in game to set up initial actions for this player
+        actionGenerator.setInitialActions(playerInGame);
+
+        // serialize the action map and send it back to client
+        actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
+      }
+
+      Type actionMapType = new TypeToken<Map<String ,Action>>(){}.getType();
+      Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
+      String actionMapJson = gsonParser.toJson(actionMap, actionMapType);
+      return ResponseEntity.status(HttpStatus.OK).body(actionMapJson);
+    } catch (ModelAccessException | SplendorLogicException e) {
+      logger.error(e.getMessage());
+      // something went wrong, reply with a bad request
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
 
 
     //try {

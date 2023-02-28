@@ -43,7 +43,7 @@ public abstract class Power {
    * @param playerInfo the Player whose qualifications we are checking.
    * @return a boolean value of whether the Player can unlock this power.
    */
-  abstract boolean validityCheck(PlayerInGame playerInfo);
+  public abstract boolean validityCheck(PlayerInGame playerInfo);
 
   public boolean isUnlocked() {
     return unlocked;

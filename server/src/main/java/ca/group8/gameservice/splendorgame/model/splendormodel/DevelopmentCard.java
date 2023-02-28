@@ -1,9 +1,12 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * This class represents the SuperClass of all Development Cards.
@@ -103,6 +106,75 @@ public class DevelopmentCard extends Card {
    */
   public boolean hasRegularGemColour() {
     return !(gemColour.equals(Colour.GOLD) || gemColour.equals(Colour.ORIENT));
+  }
+
+
+  /**
+   *
+   *
+   * @param hasDoubleGoldPower
+   * @param wealth
+   * @return -1 if can not afford, 0 or >0 as a number of gold token needed
+   */
+  public int canBeBought(boolean hasDoubleGoldPower, EnumMap<Colour, Integer> wealth) {
+    EnumMap<Colour, Integer> cardPrice = super.getPrice();
+
+    // such Colour -> Integer map only contain the difference between regular token
+    // colours, not the gold colour
+    // diffPrices -> {BLUE:0, RED:-1, ..} is the result of wealth - price, we do not
+    // consider gold in here
+    Map<Colour, Integer> diffPrice = wealth.keySet().stream()
+        .filter(colour -> !colour.equals(Colour.GOLD) && !colour.equals(Colour.ORIENT))
+        .collect(Collectors.toMap(
+            key -> key,
+            key -> wealth.get(key) - cardPrice.get(key)
+        ));
+
+
+    int goldTokenCount = wealth.get(Colour.GOLD);
+    boolean hasGoldToken = goldTokenCount > 0;
+    int goldTokenNeeded = 0;
+    // do something to diff price map in here
+    if (hasGoldToken) {
+      // only consider count the gold token differently if the player has the power and one has
+      // some gold tokens, otherwise there is no point considering it
+      int[] goldTokenArr = new int[goldTokenCount];
+      if (hasDoubleGoldPower) {
+        // this len = goldTokenCount array [2,2,2,2..] is used to consider the double gold
+        // whenever in the diff price map we need a gold token to make up the price diff,
+        // we take an entry out of the array, make it to zero and add it to the diff price map
+        Arrays.fill(goldTokenArr, 2);
+      } else {
+        Arrays.fill(goldTokenArr, 1);
+      }
+      // either we have a
+      int i = 0;
+      while (i < goldTokenArr.length) {
+        for (Colour colour : diffPrice.keySet()) {
+          if (diffPrice.get(colour) < 0) {
+            int curLeftOver = diffPrice.get(colour);
+            diffPrice.put(colour,curLeftOver + goldTokenArr[i]);
+            // increment the gold token amt needed, move to next gold token spot
+            goldTokenArr[i] = 0;
+            i += 1;
+            goldTokenNeeded += 1;
+            if(i == goldTokenArr.length) {
+              break;
+            }
+
+          }
+        }
+      }
+    }
+
+    // has no gold token, return the result regularly. if the diff map stays all non-negative,
+    // then the player can afford this without using any gold token
+    if(diffPrice.values().stream().allMatch(count -> count >= 0)) {
+      return goldTokenNeeded;
+    } else {
+      // otherwise, no gold token and can not afford, return -1
+      return -1;
+    }
   }
 
 

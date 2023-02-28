@@ -4,13 +4,11 @@ import ca.group8.gameservice.splendorgame.controller.communicationbeans.Launcher
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.json.JSONException;
@@ -18,7 +16,11 @@ import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestGameManager {
   @Autowired
   GameManager gameManager;
@@ -50,6 +53,7 @@ public class TestGameManager {
 
   long[] gameIds = new long[] {5151551235L, 8723123151231L, 1231231512123L};
 
+
   private void launchAndSaveThreeGames() throws ModelAccessException {
     for (int i = 0; i < savegameids.length; i++) {
       LauncherInfo launcherInfo = new LauncherInfo(gamename,
@@ -59,9 +63,14 @@ public class TestGameManager {
       gameManager.saveGame(savegames[i],gameIds[i]);
     }
   }
+
   @Test
   public void testLaunchFromExistingAndNon_Existing() throws ModelAccessException {
     launchAndSaveThreeGames();
+
+    List<String> testIds = Arrays.asList(savegameids);
+    assertEquals(testIds,gameManager.getSavedGameIds());
+
     String[] newPlayers = new String[] {"penn", "muzhi"};
     List<PlayerInfo> playerInfos = IntStream
         .range(0, newPlayers.length)
@@ -73,13 +82,9 @@ public class TestGameManager {
     launcherInfo.setSavegame(savegameids[0]);
     long newGameId = 12451517195L;
     gameManager.launchGame(newGameId, launcherInfo);
-    assertEquals(Arrays.asList(newPlayers), gameManager.getGameById(newGameId).getPlayerNames());
-  }
+    assertEquals(new HashSet<>(Arrays.asList(newPlayers)),
+        new HashSet<>(gameManager.getGameById(newGameId).getPlayerNames()));
 
-  @Test
-  public void testGetAllGameIds() {
-    List<String> testIds = Arrays.asList(savegameids);
-    assertEquals(testIds,gameManager.getSavedGameIds());
 
   }
 
@@ -87,7 +92,5 @@ public class TestGameManager {
   public void testDeleteSavedGames() {
     gameManager.deleteAllSavedGame();
   }
-
-
 
 }

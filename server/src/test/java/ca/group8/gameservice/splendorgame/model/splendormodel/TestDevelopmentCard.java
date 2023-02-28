@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -105,5 +106,105 @@ public class TestDevelopmentCard {
         assertNotEquals(c1, c3);
     }
 
+    @Test
+    void testCanBeBought_True1() {
+        EnumMap<Colour, Integer> price = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 3);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 2);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+        }};
+
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 3);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+            put(Colour.GOLD, 1);
+        }};
+
+        DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
+            1, Colour.BLUE, 1, new ArrayList<>());
+
+        assertEquals(1, baseCard.canBeBought(true, playerWealth));
+    }
+
+
+    @Test
+    void testCanBeBought_True2() {
+        EnumMap<Colour, Integer> price = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 4);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 1);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+        }};
+
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 3);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+            put(Colour.GOLD, 2);
+        }};
+
+        DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
+            1, Colour.BLUE, 1, new ArrayList<>());
+
+        assertEquals(2, baseCard.canBeBought(false, playerWealth));
+    }
+
+    @Test
+    void testCanBeBought_False1() {
+        EnumMap<Colour, Integer> price = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 3);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 2);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 1);
+        }};
+
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 3);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+            put(Colour.GOLD, 1);
+        }};
+
+        DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
+            1, Colour.BLUE, 1, new ArrayList<>());
+
+        assertEquals(-1, baseCard.canBeBought(true, playerWealth));
+    }
+
+    @Test
+    void testCanBeBought_False2() {
+        EnumMap<Colour, Integer> price = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 3);
+            put(Colour.RED, 1);
+            put(Colour.BLACK, 1);
+            put(Colour.GREEN, 1);
+            put(Colour.WHITE, 1);
+        }};
+
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 3);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+            put(Colour.GOLD, 2);
+        }};
+
+        DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
+            1, Colour.BLUE, 1, new ArrayList<>());
+
+        assertEquals(-1, baseCard.canBeBought(true, playerWealth));
+    }
 
 }
