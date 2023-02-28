@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.controller.SplendorJsonHelper;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
@@ -9,19 +10,20 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
 import ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
+import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.codec.digest.DigestUtils;
+
 
 /**
  * Makes list of all possible actions for current player.
@@ -81,28 +83,20 @@ public class ActionGenerator {
     return result;
   }
 
-
-  private boolean hasDoubleGoldPowerUnlocked(PlayerInGame curPlayerInfo) {
-    String playerName = curPlayerInfo.getName();
-    boolean hasTraderExtension = tableTop.getGameBoards().containsKey(Extension.TRADING_POST);
-    boolean hasDoubleGoldPower = false;
-    if (hasTraderExtension) {
-      TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
-      Map<PowerEffect,Power> powerMap = traderBoard.getAllPlayerPowers().get(playerName);
-      // this boolean becomes true if the player does have the DOUBLE_GOLD power on
-      hasDoubleGoldPower = powerMap.entrySet().stream().anyMatch(entry ->
-              entry.getKey().equals(PowerEffect.DOUBLE_GOLD) && entry.getValue().isUnlocked());
-    }
-    return hasDoubleGoldPower;
-  }
-
   // Translate all dev cards on base/orient board to purchase actions
   private List<Action> cardsToPurchaseAction(BaseBoard baseBoard,
                                              OrientBoard orientBoard,
                                              PlayerInGame curPlayerInfo) {
 
     EnumMap<Colour, Integer> wealth = curPlayerInfo.getWealth();
-    boolean hasDoubleGoldPower = hasDoubleGoldPowerUnlocked(curPlayerInfo);
+    boolean hasDoubleGoldPower = false;
+    String playerName = curPlayerInfo.getName();
+    if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
+      TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
+      hasDoubleGoldPower = traderBoard.
+          getPlayerOnePower(playerName, PowerEffect.DOUBLE_GOLD).isUnlocked();
+    }
+
     // now when we decide whether a card is affordable or not, we need to consider the effect of
     // the double gold power is on
     List<Action> result = new ArrayList<>();
@@ -132,6 +126,74 @@ public class ActionGenerator {
     return result;
   }
 
+
+  // generate all possible combinations of tokens a player can take
+  private List<Action> generateTakeTokenActions(Bank bank, PlayerInGame curPlayerInfo) {
+    List<Action> result = new ArrayList<>();
+    boolean hasTwoPlusOnePower = false;
+    String playerName = curPlayerInfo.getName();
+    if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
+      TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
+      hasTwoPlusOnePower = traderBoard.
+          getPlayerOnePower(playerName, PowerEffect.TWO_PLUS_ONE).isUnlocked();
+    }
+    // if bank has only 2 token or less left to be taken
+    int regularTokenCount = bank.getRegularTokenCount();
+    if (regularTokenCount <= 2 && regularTokenCount >= 0) {
+      // if so, no take token action should be provided
+      return result;
+    }
+
+    EnumMap<Colour, Integer> rawMap = new EnumMap<>(Colour.class){{
+      put(Colour.BLUE, 0);
+      put(Colour.RED, 0);
+      put(Colour.BLACK, 0);
+      put(Colour.GREEN, 0);
+      put(Colour.WHITE, 0);
+    }};
+
+    EnumMap<Colour, Integer> tokenLeft = bank.getAllTokens();
+    tokenLeft.remove(Colour.GOLD); // exclude the gold token
+    // generate actions for the colour with remaining >= 4
+    for (Colour colour : tokenLeft.keySet()) {
+      EnumMap<Colour, Integer> twoSameColourTokens = new EnumMap<>(rawMap);
+      if (tokenLeft.get(colour) >= 4) {
+        twoSameColourTokens.put(colour, 2);
+      }
+      result.add(new TakeTokenAction(twoSameColourTokens));
+
+      // generate more cases if the player has the 2+1 power on
+      if (hasTwoPlusOnePower) {
+        List<Colour> otherColours = tokenLeft.keySet()
+            .stream()
+            .filter(c -> !c.equals(colour))
+            .collect(Collectors.toList());
+        for (Colour colour2 : otherColours) {
+          EnumMap<Colour, Integer> twoPlusOneTokens = new EnumMap<>(twoSameColourTokens);
+          if (tokenLeft.get(colour2) >= 1) {
+            twoPlusOneTokens.put(colour2, 1);
+            result.add(new TakeTokenAction(twoPlusOneTokens));
+          }
+        }
+      }
+    }
+
+    // all possible combination of 5 choose 3 colours set
+    Set<Set<Colour>> colours = Sets.combinations(tokenLeft.keySet(),3);
+    for (Set<Colour> colourSubset : colours) {
+      EnumMap<Colour, Integer> threeDiffColourTokens = new EnumMap<>(rawMap);
+      List<Colour> colourList = new ArrayList<>(colourSubset);
+      if(colourList.stream().allMatch(c -> tokenLeft.get(c) >= 1)) {
+        threeDiffColourTokens.put(colourList.get(0), 1);
+        threeDiffColourTokens.put(colourList.get(1), 1);
+        threeDiffColourTokens.put(colourList.get(2), 1);
+      }
+      result.add(new TakeTokenAction(threeDiffColourTokens));
+    }
+
+    return result;
+  }
+
   /**
    * Set up the initial actions for curPlayerInfo.
    * PurchaseActions, ReserveAction and TakeTokenAction
@@ -143,10 +205,13 @@ public class ActionGenerator {
     // we know by default, orient and base are always on the table
     BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
     OrientBoard orientBoard = (OrientBoard) tableTop.getBoard(Extension.ORIENT);
+    Bank bank = tableTop.getBank();
+    // generate the initial purchase, reserve and take token actions
+    // with all combinations and considered power cases
     List<Action> allActions =
         new ArrayList<>(cardsToReserveAction(baseBoard, orientBoard, curPlayerInfo));
     allActions.addAll(cardsToPurchaseAction(baseBoard, orientBoard, curPlayerInfo));
-
+    allActions.addAll(generateTakeTokenActions(bank, curPlayerInfo));
     Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
     Map<String, Action> curActionMap = new HashMap<>();
     for (Action action : allActions) {

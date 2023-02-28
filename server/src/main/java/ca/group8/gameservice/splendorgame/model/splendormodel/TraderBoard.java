@@ -56,11 +56,11 @@ public class TraderBoard extends Board {
    * @param effect     the effect of the specific power
    * @return the specific power
    */
-  public Power getPlayerOnePower(String playerName, PowerEffect effect)
-  throws SplendorGameException {
-    if (!allPlayerPowers.containsKey(playerName)) {
-      throw new SplendorGameException("Player not in this game!");
-    }
+  public Power getPlayerOnePower(String playerName, PowerEffect effect) {
+    //if (!allPlayerPowers.containsKey(playerName)) {
+    //  throw new SplendorGameException("Player not in this game!");
+    //}
+    // whether player is in game or not will be verified in controller
     return allPlayerPowers.get(playerName).get(effect);
   }
 
