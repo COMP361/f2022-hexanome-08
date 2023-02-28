@@ -302,7 +302,7 @@ public class SplendorRestController {
       Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
       String actionMapJson = gsonParser.toJson(actionMap, actionMapType);
       return ResponseEntity.status(HttpStatus.OK).body(actionMapJson);
-    } catch (ModelAccessException | SplendorLogicException e) {
+    } catch (ModelAccessException e) {
       logger.error(e.getMessage());
       // something went wrong, reply with a bad request
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -326,7 +326,19 @@ public class SplendorRestController {
 
     // TODO: Redo based on sequence diagram
 
-    return null;
+    try {
+      gameValidator.gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
+      ActionInterpreter actionInterpreter = gameManager.getGameActionInterpreter(gameId);
+      actionInterpreter.interpretAction(actionId, playerName);
+
+      // end of turn check
+
+
+      return ResponseEntity.status(HttpStatus.OK).body(null);
+    } catch (ModelAccessException e) {
+      logger.warn(e.getMessage());
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 
     //try {
     //  gameIdPlayerNameValidCheck(accessToken, playerName, gameId);

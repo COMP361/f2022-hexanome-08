@@ -29,7 +29,6 @@ class TestBank {
             }
         }
     }
-
     @Test
     void TestInitialization_3Players() {
         Bank b2 = new Bank(3);

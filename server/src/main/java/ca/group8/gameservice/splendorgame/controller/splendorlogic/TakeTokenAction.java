@@ -1,10 +1,12 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
 import java.util.EnumMap;
 
 /**
@@ -34,8 +36,22 @@ public class TakeTokenAction extends Action {
 
   @Override
   void execute(TableTop curTableTop, PlayerInGame playerInGame,
-               ActionGenerator actionListGenerator,
+               ActionGenerator actionGenerator,
                ActionInterpreter actionInterpreter) {
+    Bank bank = curTableTop.getBank();
+    TokenHand tokenHand = playerInGame.getTokenHand();
+    // remove the tokens from bank
+    bank.takeToken(tokensTaken);
+    // add the tokens to the player
+    tokenHand.addToken(tokensTaken);
+
+    // if the number exceeds 10, we update the player's action to cantain only several
+    // ReturnTokenAction
+    int tokenLeft = tokenHand.getTokenTotalCount();
+    if(tokenLeft > 10) {
+      int tokensNeedToReturn = tokenLeft - 10;
+      actionGenerator.updateReturnTokenActions(tokensNeedToReturn, playerInGame);
+    }
 
     /* OLD TAKE TOKENS EXECUTE METHOD
     public void execute(GameInfo currentGameState, PlayerInGame playerState) {

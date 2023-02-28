@@ -57,7 +57,7 @@ public class TestGameManager {
   @Test
   public void testLaunchSaveAndDelete() throws ModelAccessException {
     // clean up, make sure all saved game before has been deleted
-    gameManager.deleteAllSavedGame();
+    //gameManager.deleteAllSavedGame();
 
     for (int i = 0; i < savegameids.length; i++) {
       LauncherInfo launcherInfo = new LauncherInfo(gamename,
@@ -85,7 +85,7 @@ public class TestGameManager {
     assertEquals(new HashSet<>(Arrays.asList(newPlayers)),
         new HashSet<>(gameManager.getGameById(newGameId).getPlayerNames()));
 
-    gameManager.deleteAllSavedGame();
+    //gameManager.deleteAllSavedGame();
     // after all saved game being deleted, all saved game ids remain empty
     assertEquals(new ArrayList<>(), gameManager.getSavedGameIds());
   }

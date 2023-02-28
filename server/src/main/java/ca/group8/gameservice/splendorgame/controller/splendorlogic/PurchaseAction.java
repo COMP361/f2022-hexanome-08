@@ -3,7 +3,7 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Board;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
+import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
@@ -17,26 +17,26 @@ import java.util.List;
 
 
 /**
- * Action that allows you to purchase a card.
+ * Action that allows you to purchase a DevelopmentCard.
  */
 public class PurchaseAction extends Action {
 
-  private Card curCard;
+  private DevelopmentCard curCard;
   private int goldTokenRequired;
   private Position cardPosition;
 
   @Override
   public Position getCardPosition() {
     if (cardPosition == null) {
-      throw new NullPointerException("Card Position is empty.");
+      throw new NullPointerException("DevelopmentCard Position is empty.");
     }
     return cardPosition;
   }
 
   @Override
-  public Card getCurCard() {
+  public DevelopmentCard getCurCard() {
     if (curCard == null) {
-      throw new NullPointerException("Current Card is empty.");
+      throw new NullPointerException("Current DevelopmentCard is empty.");
     }
     return curCard;
   }
@@ -45,22 +45,22 @@ public class PurchaseAction extends Action {
     this.cardPosition = cardPosition;
   }
 
-  public void setCard(DevelopmentCard card) {
-    this.curCard = card;
+  public void setCard(DevelopmentCard DevelopmentCard) {
+    this.curCard = DevelopmentCard;
   }
 
   /**
    * Constructor of purchase action.
    *
    * @param cardPosition      position on board
-   * @param card              card associated with action
+   * @param DevelopmentCard              DevelopmentCard associated with action
    * @param goldTokenRequired number of gold token required
    */
-  public PurchaseAction(Position cardPosition, DevelopmentCard card, int goldTokenRequired) {
-    assert cardPosition != null && card != null && goldTokenRequired >= 0;
+  public PurchaseAction(Position cardPosition, DevelopmentCard DevelopmentCard, int goldTokenRequired) {
+    assert cardPosition != null && DevelopmentCard != null && goldTokenRequired >= 0;
     super.type = this.getClass().getSimpleName();
     this.cardPosition = cardPosition;
-    this.curCard = card;
+    this.curCard = DevelopmentCard;
     this.goldTokenRequired = goldTokenRequired;
   }
 
@@ -81,7 +81,7 @@ public class PurchaseAction extends Action {
     //TODO: Double check that we want this assertion statement
     assert curCard instanceof DevelopmentCard;
 
-    //cast card to Development Card
+    //cast DevelopmentCard to Development DevelopmentCard
     DevelopmentCard curCard = (DevelopmentCard) this.curCard;
 
     List<CardEffect> cardEffects = curCard.getPurchaseEffects();
@@ -104,13 +104,13 @@ public class PurchaseAction extends Action {
 
   /*
   public void execute(GameInfo currentGameState, PlayerInGame playerState) {
-    // TODO: For now, just do a simple downcast assuming the card is DevelopmentCard
-    Card card = this.curCard;
+    // TODO: For now, just do a simple downcast assuming the DevelopmentCard is DevelopmentCard
+    DevelopmentCard DevelopmentCard = this.curCard;
     PurchasedHand hand = playerState.getPurchasedHand();
     TokenHand tokenHand = playerState.getTokenHand();
     EnumMap<Colour, Integer> playerGems = playerState.getTotalGems();
     // update player's prestige points
-    int cardPoints = card.getPrestigePoints();
+    int cardPoints = DevelopmentCard.getPrestigePoints();
     int playerCurPoints = playerState.getPrestigePoints();
 
     //Changed this from previous version --> now we just add points VS. using set method.
@@ -125,15 +125,15 @@ public class PurchaseAction extends Action {
         }
         continue;
       }
-      int discountedPrice = card.getPrice().get(colour) - playerGems.get(colour);
+      int discountedPrice = DevelopmentCard.getPrice().get(colour) - playerGems.get(colour);
       if (discountedPrice > 0) {
         int remainingTokens = tokenHand.getAllTokens().get(colour) - discountedPrice;
         tokenHand.getAllTokens().put(colour, Math.max(remainingTokens, 0));
       }
     }
-    hand.addDevelopmentCard(card);
-    int level = card.getLevel();
-    // replace the card with another new card draw from deck
+    hand.addDevelopmentCard(DevelopmentCard);
+    int level = DevelopmentCard.getLevel();
+    // replace the DevelopmentCard with another new DevelopmentCard draw from deck
     DevelopmentCard newCard =
         currentGameState.getTableTop().getBaseBoard().getBaseDecks().get(level).remove(0);
     currentGameState.getTableTop().getBaseBoard().replaceCardOnBoard(cardPosition, newCard);
