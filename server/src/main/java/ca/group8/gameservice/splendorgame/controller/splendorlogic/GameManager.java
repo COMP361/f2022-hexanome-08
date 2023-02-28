@@ -37,7 +37,7 @@ public class GameManager {
 
   private final String saveGameInfoFileName = "saved_games_data.json";
   private final String saveGameMetaFileName = "saved_games_meta.json";
-  private List<String> savedGameIds;
+  private List<String> savedGameIds = new ArrayList<>();
   private final Map<Long, PlayerStates> activePlayers;
   private final Map<Long, GameInfo> activeGames;
   private final Map<Long, ActionInterpreter> gameActionInterpreters;
@@ -215,19 +215,7 @@ public class GameManager {
   }
 
 
-  /**
-   * Internally, verify the content of game ids to be synced and updated with LS.
-   *
-   * @return an updated game ids
-   */
-  public List<String> getSavedGameIds() {
-    try {
-      syncSavedGames();
-    } catch (ModelAccessException e) {
-      logger.warn(e.getMessage());
-    }
-    return savedGameIds;
-  }
+
 
 
   /**
@@ -410,6 +398,20 @@ public class GameManager {
     } catch (IOException e) {
       logger.warn(e.getMessage());
     }
+  }
+
+  /**
+   * Internally, verify the content of game ids to be synced and updated with LS.
+   *
+   * @return an updated game ids
+   */
+  public List<String> getSavedGameIds() {
+    try {
+      syncSavedGames();
+    } catch (ModelAccessException e) {
+      logger.warn(e.getMessage());
+    }
+    return savedGameIds;
   }
 
 }

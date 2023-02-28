@@ -1,14 +1,27 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorJsonHelper;
+import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
+import ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
+import com.google.gson.Gson;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * Makes list of all possible actions for current player.
@@ -41,8 +54,108 @@ public class ActionGenerator {
     this.tableTop = tableTop;
   }
 
-  //TODO
-  public void setInitialActions(String turnPlayerName, PlayerInGame curPlayerInfo) {
+
+  // Translate all dev cards on base/orient board to reserve actions
+  private List<Action> cardsToReserveAction(BaseBoard baseBoard,
+                                            OrientBoard orientBoard,
+                                            PlayerInGame curPlayerInfo) {
+    List<Action> result = new ArrayList<>();
+    boolean canReserve = !curPlayerInfo.getReservedHand().isFull();
+    if (canReserve) {
+      for (int level = 1; level <= 3; level++) {
+        DevelopmentCard[] baseLevelCards = baseBoard.getLevelCardsOnBoard(level);
+        DevelopmentCard[] orientLevelCards = orientBoard.getLevelCardsOnBoard(level);
+        for (int cardIndex = 0; cardIndex < baseLevelCards.length; cardIndex++) {
+          Position cardPosition = new Position(level, cardIndex);
+          DevelopmentCard card = baseLevelCards[cardIndex];
+          // always generate reserve actions for base cards for index 0,1,2,3
+          result.add(new ReserveAction(cardPosition, card));
+          if (cardIndex < 2) {
+            // if index = 0 or 1, generate reserve action for orient cards
+            DevelopmentCard orientCard = orientLevelCards[cardIndex];
+            result.add(new ReserveAction(cardPosition, orientCard));
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+
+  private boolean hasDoubleGoldPowerUnlocked(PlayerInGame curPlayerInfo) {
+    String playerName = curPlayerInfo.getName();
+    boolean hasTraderExtension = tableTop.getGameBoards().containsKey(Extension.TRADING_POST);
+    boolean hasDoubleGoldPower = false;
+    if (hasTraderExtension) {
+      TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
+      Map<PowerEffect,Power> powerMap = traderBoard.getAllPlayerPowers().get(playerName);
+      // this boolean becomes true if the player does have the DOUBLE_GOLD power on
+      hasDoubleGoldPower = powerMap.entrySet().stream().anyMatch(entry ->
+              entry.getKey().equals(PowerEffect.DOUBLE_GOLD) && entry.getValue().isUnlocked());
+    }
+    return hasDoubleGoldPower;
+  }
+
+  // Translate all dev cards on base/orient board to purchase actions
+  private List<Action> cardsToPurchaseAction(BaseBoard baseBoard,
+                                             OrientBoard orientBoard,
+                                             PlayerInGame curPlayerInfo) {
+
+    EnumMap<Colour, Integer> wealth = curPlayerInfo.getWealth();
+    boolean hasDoubleGoldPower = hasDoubleGoldPowerUnlocked(curPlayerInfo);
+    // now when we decide whether a card is affordable or not, we need to consider the effect of
+    // the double gold power is on
+    List<Action> result = new ArrayList<>();
+    int goldTokenCount;
+    for (int level = 1; level <= 3; level++) {
+      DevelopmentCard[] baseLevelCards = baseBoard.getLevelCardsOnBoard(level);
+      DevelopmentCard[] orientLevelCards = orientBoard.getLevelCardsOnBoard(level);
+      for (int cardIndex = 0; cardIndex < baseLevelCards.length; cardIndex++) {
+        Position cardPosition = new Position(level, cardIndex);
+        DevelopmentCard card = baseLevelCards[cardIndex];
+        // always generate reserve actions for base cards for index 0,1,2,3
+        goldTokenCount = card.canBeBought(hasDoubleGoldPower, wealth);
+        if (goldTokenCount > 0) {
+          result.add(new PurchaseAction(cardPosition,card,goldTokenCount));
+        }
+        if (cardIndex < 2) {
+          // if index = 0 or 1, generate reserve action for orient cards
+          DevelopmentCard orientCard = orientLevelCards[cardIndex];
+          goldTokenCount = orientCard.canBeBought(hasDoubleGoldPower, wealth);
+          if(goldTokenCount > 0) {
+            result.add(new PurchaseAction(cardPosition, orientCard, goldTokenCount));
+          }
+        }
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Set up the initial actions for curPlayerInfo.
+   * PurchaseActions, ReserveAction and TakeTokenAction
+   *
+   * @param curPlayerInfo current player's associated player info
+   */
+  public void setInitialActions(PlayerInGame curPlayerInfo) {
+
+    // we know by default, orient and base are always on the table
+    BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
+    OrientBoard orientBoard = (OrientBoard) tableTop.getBoard(Extension.ORIENT);
+    List<Action> allActions =
+        new ArrayList<>(cardsToReserveAction(baseBoard, orientBoard, curPlayerInfo));
+    allActions.addAll(cardsToPurchaseAction(baseBoard, orientBoard, curPlayerInfo));
+
+    Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
+    Map<String, Action> curActionMap = new HashMap<>();
+    for (Action action : allActions) {
+      String actionJson = gsonParser.toJson(action).toUpperCase();
+      String actionId = DigestUtils.md5Hex(actionJson);
+      curActionMap.put(actionId, action);
+    }
+    String playerName = curPlayerInfo.getName();
+    playerActionMaps.put(playerName, curActionMap);
 
   }
 

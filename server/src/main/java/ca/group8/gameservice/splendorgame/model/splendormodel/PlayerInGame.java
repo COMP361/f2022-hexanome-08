@@ -171,10 +171,5 @@ public class PlayerInGame {
     return wealth;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    PlayerInGame player = (PlayerInGame) o;
-    return (this.getName().equals((player).getName()));
-  }
 
 }

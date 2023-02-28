@@ -11,7 +11,7 @@ public class TwoPlusOnePower extends Power {
   }
 
   @Override
-  boolean validityCheck(PlayerInGame playerInfo) {
+  public boolean validityCheck(PlayerInGame playerInfo) {
     //Must have 2 white gem cards
     return playerInfo.getPurchasedHand().getGemCountOfColour(Colour.WHITE) >= 2;
   }
