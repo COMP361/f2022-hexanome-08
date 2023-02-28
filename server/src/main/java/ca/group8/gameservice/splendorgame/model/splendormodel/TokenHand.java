@@ -62,7 +62,15 @@ public class TokenHand {
     return allTokens;
   }
 
-
+  public int getTokenTotalCount() {
+    int sum = 0;
+    for (Colour c: allTokens.keySet()) {
+      if (!c.equals(Colour.ORIENT)) {
+        sum += allTokens.get(c);
+      }
+    }
+    return sum;
+  }
 }
 
 

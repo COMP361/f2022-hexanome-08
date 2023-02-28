@@ -66,7 +66,7 @@ public class Bank {
    *
    * @param paramTokens the tokens map that player wants to take
    */
-  void takeToken(EnumMap<Colour, Integer> paramTokens) {
+  public void takeToken(EnumMap<Colour, Integer> paramTokens) {
     //verify that this number of gems can be removed (meaning new sum will not be less than 0)
     //remove Tokens
     for (Colour colour : Colour.values()) {

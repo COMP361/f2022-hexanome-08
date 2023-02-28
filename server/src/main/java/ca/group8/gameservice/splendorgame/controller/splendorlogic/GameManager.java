@@ -231,9 +231,9 @@ public class GameManager {
   /**
    * Helper method to delete all saved game data and metadata in json.
    *
+   * @param savedGameIds the game ids that exist in data
    */
-  public void deleteAllSavedGame() {
-    List<String> savedGameIds = getSavedGameIds();
+  public void deleteAllSavedGame(List<String> savedGameIds) {
     if (savedGameIds != null && savedGameIds.size() > 0) {
       Map<String, SavedGameState> dataMap = new HashMap<>();
       List<Savegame> metaDataList = new ArrayList<>();

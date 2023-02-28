@@ -30,7 +30,7 @@ import io.github.isharipov.gson.adapters.JsonType;
         @JsonSubtype(clazz = PowerExtraAction.class, name = "PowerExtraAction"),
         @JsonSubtype(clazz = ReserveAction.class, name = "ReserveAction"),
         @JsonSubtype(clazz = TakeTokenAction.class, name = "TakeTokenAction"),
-        @JsonSubtype(clazz = UpdateReturnTokenAction.class, name = "UpdateReturnTokenAction"),
+        @JsonSubtype(clazz = ReturnTokenAction.class, name = "ReturnTokenAction"),
 
     }
 )

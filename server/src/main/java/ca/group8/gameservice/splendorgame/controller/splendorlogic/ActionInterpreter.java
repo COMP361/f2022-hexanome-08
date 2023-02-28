@@ -2,7 +2,9 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import java.util.EnumMap;
@@ -67,9 +69,34 @@ public class ActionInterpreter {
   public void interpretAction(String actionId, String playerName) {
     Logger logger = LoggerFactory.getLogger(ActionInterpreter.class);
     //logger.info("Before execute the action" + playerChosenAction.checkIsCardAction());
+    Map<String, Action> actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
+    Action actionChosen = actionMap.get(actionId);
+    // current tabletop and the player in game information
+    TableTop tableTop = gameInfo.getTableTop();
+    PlayerInGame playerInGame = playerStates.getOnePlayerInGame(playerName);
+    actionChosen.execute(tableTop, playerInGame, actionGenerator, this);
+    // the action executed can depend on the type of it
 
-    //TODO: Fix the execute method below based on new Action execute() paramaters
-    //playerChosenAction.execute(currentGameState, playerState);
+    // TODO: is responsible to check whether we need to generate more cascading actions or not
+
+    // extra need to check whether we need to update player's action map
+    // according to their power or not
+    if(tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
+
+    }
+
+    // extra need to check the winning condition of the player
+    if(tableTop.getGameBoards().containsKey(Extension.CITY)) {
+
+    }
+
+    // extra need to check the orient part of extra actions need to be generated
+
+
+    // TODO: Cascade action check
+    if (burnCardCount != 0) {
+
+    }
 
     //TODO: Set to the next players turn? check winner?
   }

@@ -1,6 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
+import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
@@ -8,11 +8,11 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 
 /**
- * This class represents an extra card action.
+ * This class represents an extra DevelopmentCard action.
  */
 public class CardExtraAction extends Action {
 
-  private Card curCard;
+  private DevelopmentCard curCard;
   //TODO: Check this works after code is merged
   private final CardEffect cardEffect;
 
@@ -21,13 +21,13 @@ public class CardExtraAction extends Action {
   /**
    * Constructor.
    *
-   * @param card       Card which "unlocks" this extra action
+   * @param DevelopmentCard       DevelopmentCard which "unlocks" this extra action
    * @param cardEffect The type of extra action
    */
-  public CardExtraAction(Card card, CardEffect cardEffect) {
+  public CardExtraAction(DevelopmentCard DevelopmentCard, CardEffect cardEffect) {
     assert curCard != null;
     super.type = this.getClass().getSimpleName();
-    curCard = card;
+    curCard = DevelopmentCard;
     this.cardEffect = cardEffect;
   }
 
@@ -49,7 +49,7 @@ public class CardExtraAction extends Action {
   }
 
   @Override
-  public Card getCurCard() {
+  public DevelopmentCard getCurCard() {
     return curCard;
   }
 

@@ -11,14 +11,14 @@ import java.util.EnumMap;
  * This class represents the action for returning tokens if the player exceeds the maximum
  * tokens in hand.
  */
-public class UpdateReturnTokenAction extends Action {
+public class ReturnTokenAction extends Action {
 
-  private final EnumMap<Colour, Integer> tokensInHand;
+  private final EnumMap<Colour, Integer> tokensToReturn;
   private int extraTokenCount;
 
-  public UpdateReturnTokenAction(EnumMap<Colour, Integer> tokensInHand, int extraTokens) {
+  public ReturnTokenAction(EnumMap<Colour, Integer> tokensToReturn, int extraTokens) {
     super.type = this.getClass().getSimpleName();
-    this.tokensInHand = tokensInHand;
+    this.tokensToReturn = tokensToReturn;
     extraTokenCount = extraTokens;
   }
 
@@ -29,12 +29,12 @@ public class UpdateReturnTokenAction extends Action {
    */
   public void setTokens(EnumMap<Colour, Integer> tokens) {
     for (Colour colour : Colour.values()) {
-      tokensInHand.put(colour, tokens.get(colour));
+      tokensToReturn.put(colour, tokens.get(colour));
     }
   }
 
   public EnumMap<Colour, Integer> getTokens() {
-    return tokensInHand;
+    return tokensToReturn;
   }
 
   /**

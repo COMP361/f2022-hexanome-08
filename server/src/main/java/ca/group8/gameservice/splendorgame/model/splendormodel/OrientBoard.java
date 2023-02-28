@@ -58,8 +58,14 @@ public class OrientBoard extends Board {
   public DevelopmentCard removeCard(Position cardPosition) {
     int level = cardPosition.getX();
     int cardIndex = cardPosition.getY();
-    DevelopmentCard resultCard = cardsOnBoard.get(level)[cardIndex];
-    cardsOnBoard.get(level)[cardIndex] = null;
+    DevelopmentCard resultCard;
+    if (cardIndex == -1) {
+      // when the player reserve from the deck
+      resultCard = decks.get(level).remove(0);
+    } else {
+      resultCard = cardsOnBoard.get(level)[cardIndex];
+      cardsOnBoard.get(level)[cardIndex] = null;
+    }
     return resultCard;
   }
 
