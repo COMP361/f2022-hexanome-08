@@ -59,7 +59,7 @@ public class GameValidator {
     }
 
     // this one should avoid duplicates, thus it throws error when it is TRUE!!!
-    if (gameManager.containsGameId(gameId)) {
+    if (gameManager.getActiveGames().containsKey(gameId)) {
       throw new ModelAccessException("Duplicate game instance, can not launch it!");
     }
 
@@ -111,7 +111,7 @@ public class GameValidator {
     }
 
     // if the game does not exist in the game manager, throw an exception
-    if (!gameManager.containsGameId(gameId)) {
+    if (!gameManager.getActiveGames().containsKey(gameId)) {
       throw new ModelAccessException("There is no game with game id: "
           + gameId + " launched, try again later");
     }
