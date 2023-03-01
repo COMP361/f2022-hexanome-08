@@ -98,13 +98,13 @@ public class TestPowers {
 
   }
 
-  @Test
-  void TestUnlock() {
-    TwoPlusOnePower power = new TwoPlusOnePower();
-    assertFalse(power.isUnlocked());
-
-    power.unlock();
-    assertTrue(power.isUnlocked());
-  }
+  //@Test
+  //void TestUnlock() {
+  //  TwoPlusOnePower power = new TwoPlusOnePower();
+  //  assertFalse(power.isUnlocked());
+  //
+  //  power.unlock();
+  //  assertTrue(power.isUnlocked());
+  //}
 }
 

@@ -15,7 +15,7 @@ import java.util.EnumMap;
 
 
 public class TestDevelopmentCard {
-    EnumMap<Colour, Integer> price = SplendorDevHelper.getInstance().getRawGemColoursMap();
+    EnumMap<Colour, Integer> price = SplendorDevHelper.getInstance().getRawTokenColoursMap();
     DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
         1, Colour.BLUE, 1, new ArrayList<>());
     List<CardEffect> orientEffects = new ArrayList<>();
@@ -208,4 +208,8 @@ public class TestDevelopmentCard {
         assertEquals(-1, baseCard.canBeBought(true, playerWealth));
     }
 
+    @Test
+    void test() {
+        System.out.println(Math.round((double) 3/2));
+    }
 }
