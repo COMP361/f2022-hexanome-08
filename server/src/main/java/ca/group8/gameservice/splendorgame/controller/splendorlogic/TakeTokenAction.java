@@ -49,7 +49,7 @@ public class TakeTokenAction extends Action {
     // if the number exceeds 10, we update the player's action to cantain only several
     // ReturnTokenAction
     int tokenLeft = tokenHand.getTokenTotalCount();
-    if(tokenLeft > 10) {
+    if (tokenLeft > 10) {
       int tokensNeedToReturn = tokenLeft - 10;
       actionGenerator.updateReturnTokenActions(tokensNeedToReturn, playerInGame);
     } else {

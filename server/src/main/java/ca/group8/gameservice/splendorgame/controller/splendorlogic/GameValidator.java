@@ -67,7 +67,7 @@ public class GameValidator {
     // pass this condition check if savegame = ""
     if (!launcherInfo.getSavegame().isEmpty()) {
       String curSaveGameId = launcherInfo.getSavegame();
-      if(!gameManager.getSavedGameIds().contains(curSaveGameId)) {
+      if (!gameManager.getSavedGameIds().contains(curSaveGameId)) {
         throw new ModelAccessException("The game id requested is not previously saved!");
       }
       // In the case of we have more players play this loaded game than
@@ -98,9 +98,10 @@ public class GameValidator {
    * 1. Whether the token matches player's name.
    * 2. Whether the game with the gameid exists
    * 3. Whether the player exists in the game with the game id
+   *
    * @param accessToken access token of the player
-   * @param playerName player's name
-   * @param gameId game id of the player
+   * @param playerName  player's name
+   * @param gameId      game id of the player
    * @throws ModelAccessException anything goes wrong of above 3 conditions check, throw it.
    */
   public void gameIdPlayerNameValidCheck(String accessToken, String playerName, long gameId)

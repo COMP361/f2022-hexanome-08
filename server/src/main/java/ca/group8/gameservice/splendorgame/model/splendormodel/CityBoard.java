@@ -1,8 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.Action;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +39,7 @@ public class CityBoard extends Board {
    * @param playerName player name who gets the card
    * @param card       the city card gives to the player
    */
-  public void assignCityCard(String playerName, CityCard card) throws SplendorGameException{
+  public void assignCityCard(String playerName, CityCard card) throws SplendorGameException {
     if (!playerCities.containsKey(playerName)) {
       throw new SplendorGameException("No such player in game!");
     }
@@ -79,7 +77,7 @@ public class CityBoard extends Board {
   public void renamePlayers(List<String> playerNames) {
     List<String> curNames = new ArrayList<>(playerCities.keySet());
     // only update if names are different
-    if(!playerNames.equals(curNames)) {
+    if (!playerNames.equals(curNames)) {
       int nameIndex = 0;
       Map<String, CityCard> newCityMap = new HashMap<>();
       for (String curName : playerCities.keySet()) {

@@ -64,7 +64,7 @@ public class TokenHand {
 
   public int getTokenTotalCount() {
     int sum = 0;
-    for (Colour c: allTokens.keySet()) {
+    for (Colour c : allTokens.keySet()) {
       if (!c.equals(Colour.ORIENT)) {
         sum += allTokens.get(c);
       }

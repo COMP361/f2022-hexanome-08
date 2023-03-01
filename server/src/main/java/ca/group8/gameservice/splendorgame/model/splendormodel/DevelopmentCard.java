@@ -110,8 +110,6 @@ public class DevelopmentCard extends Card {
 
 
   /**
-   *
-   *
    * @param hasDoubleGoldPower
    * @param wealth
    * @return -1 if can not afford, 0 or >0 as a number of gold token needed
@@ -153,12 +151,12 @@ public class DevelopmentCard extends Card {
         for (Colour colour : diffPrice.keySet()) {
           if (diffPrice.get(colour) < 0) {
             int curLeftOver = diffPrice.get(colour);
-            diffPrice.put(colour,curLeftOver + goldTokenArr[i]);
+            diffPrice.put(colour, curLeftOver + goldTokenArr[i]);
             // increment the gold token amt needed, move to next gold token spot
             goldTokenArr[i] = 0;
             i += 1;
             goldTokenNeeded += 1;
-            if(i == goldTokenArr.length) {
+            if (i == goldTokenArr.length) {
               break;
             }
 
@@ -169,7 +167,7 @@ public class DevelopmentCard extends Card {
 
     // has no gold token, return the result regularly. if the diff map stays all non-negative,
     // then the player can afford this without using any gold token
-    if(diffPrice.values().stream().allMatch(count -> count >= 0)) {
+    if (diffPrice.values().stream().allMatch(count -> count >= 0)) {
       return goldTokenNeeded;
     } else {
       // otherwise, no gold token and can not afford, return -1
@@ -184,7 +182,7 @@ public class DevelopmentCard extends Card {
       return true;
     }
 
-    if(!(obj instanceof DevelopmentCard)) {
+    if (!(obj instanceof DevelopmentCard)) {
       return false;
     }
 

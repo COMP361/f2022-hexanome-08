@@ -88,7 +88,7 @@ public class LobbyCommunicator {
           registerGameAtLobby(accessToken, curGameName, curGameServerParams);
         } else {
           String msg = String.format("Wrong role of user with username: %s and password: %s",
-                  userName, passWord);
+              userName, passWord);
           logger.warn(msg);
         }
       } catch (UnirestException e) {
@@ -103,23 +103,24 @@ public class LobbyCommunicator {
    * Send a delete request to LS to indicate that we want to delete.
    * the game: gameName, with saveGameId.
    *
-   * @param gameName name of the game service. (fixed, such splendorbase)
+   * @param gameName   name of the game service. (fixed, such splendorbase)
    * @param saveGameId id of the saved game. (a saved customized name)
    */
   public void deleteSavedGame(String gameName, String saveGameId) throws UnirestException {
     String url = String.format("%s/api/gameservices/%s/savegames/%s", lobbyServiceAddress,
         gameName, saveGameId);
-    try{
+    try {
       String accessToken = getGameOauthToken(gameName, gameServicePasswords.get(0));
       HttpResponse<String> response = Unirest.delete(url)
-          .queryString("access_token",accessToken).asString();
-      if(response.getStatus() != 200) {
+          .queryString("access_token", accessToken).asString();
+      if (response.getStatus() != 200) {
         throw new UnirestException("Failed to delete the game with id: " + saveGameId);
       }
     } catch (UnirestException e) {
       logger.warn(e.getMessage());
     }
   }
+
   /**
    * Get all saved game ids of all game servers registered at LS.
    *
@@ -134,8 +135,8 @@ public class LobbyCommunicator {
         Savegame[] allSaveGames = getAllSavedGames(accessToken, serviceName);
         // add all saved game ids of this game server
         allIds.addAll(Arrays.stream(allSaveGames)
-          .map(Savegame::getSavegameid)
-          .collect(Collectors.toList()));
+            .map(Savegame::getSavegameid)
+            .collect(Collectors.toList()));
       } catch (UnirestException e) {
         logger.warn(e.getMessage());
         break;
@@ -148,12 +149,12 @@ public class LobbyCommunicator {
    * Return an array of Savegame to one specific game service (base, city or trade).
    * to the player with accessToken.
    *
-   * @param accessToken access token of the player
+   * @param accessToken     access token of the player
    * @param gameServiceName splendorbase, splendorcity, ... (game service names)
    * @return an array of Savegame to one specific game service, can be empty
    */
   public Savegame[] getAllSavedGames(String accessToken, String gameServiceName)
-  throws UnirestException{
+      throws UnirestException {
     String url = String.format("%s/api/gameservices/%s/savegames",
         lobbyServiceAddress, gameServiceName);
     Savegame[] result = new Savegame[0];
@@ -188,7 +189,7 @@ public class LobbyCommunicator {
         serviceName, saveGameId);
     String accessToken;
     try {
-      accessToken = getGameOauthToken(serviceName,gameServicePasswords.get(0));
+      accessToken = getGameOauthToken(serviceName, gameServicePasswords.get(0));
       logger.info("Token:" + accessToken);
       HttpResponse<String> response = Unirest.put(url)
           .header("Content-Type", "application/json")
@@ -217,7 +218,7 @@ public class LobbyCommunicator {
         lobbyServiceAddress, serviceName, saveGameId);
     String accessToken;
     try {
-      accessToken = getGameOauthToken(serviceName,gameServicePasswords.get(0));
+      accessToken = getGameOauthToken(serviceName, gameServicePasswords.get(0));
       logger.info("Token:" + accessToken);
       HttpResponse<String> response = Unirest.delete(url)
           .queryString("access_token", accessToken).asString();
@@ -236,8 +237,8 @@ public class LobbyCommunicator {
    * register a game to lobby.
    */
   private void registerGameAtLobby(String accessToken,
-                                  String gameServiceName,
-                                  GameServerParameters gameServerParameters)
+                                   String gameServiceName,
+                                   GameServerParameters gameServerParameters)
       throws UnirestException {
     String requestJsonString = new Gson().toJson(gameServerParameters);
     String url = lobbyServiceAddress + "/api/gameservices/" + gameServiceName;
@@ -250,7 +251,7 @@ public class LobbyCommunicator {
           gameServerParameters.getDisplayName()));
     } else {
       String msg = String.format("Failed to register game (they might exist): %s, status: %s",
-          gameServerParameters.getDisplayName(),response.getStatus());
+          gameServerParameters.getDisplayName(), response.getStatus());
       logger.warn(msg);
     }
   }
@@ -259,10 +260,10 @@ public class LobbyCommunicator {
    * Check whether the token provided matches the player name in LS.
    *
    * @param accessToken access token of log-in user
-   * @param playerName player name in record in LS
+   * @param playerName  player name in record in LS
    * @return whether the names match or not
    */
-  public boolean isValidToken (String accessToken, String playerName) {
+  public boolean isValidToken(String accessToken, String playerName) {
     try {
       HttpResponse<String> nameResponse = Unirest.get(lobbyServiceAddress + "/oauth/username")
           .header("Authorization", "Bearer " + accessToken)
@@ -285,7 +286,7 @@ public class LobbyCommunicator {
     HttpResponse<JsonNode> authorityResponse = Unirest.get(lobbyServiceAddress + "/oauth/role")
         .queryString("access_token", accessToken).asJson();
     JSONArray jsonarray = new JSONArray(authorityResponse.getBody().toString());
-    if(authorityResponse.getStatus() != 200) {
+    if (authorityResponse.getStatus() != 200) {
       throw new UnirestException("Failed to get the role of game");
     }
     return jsonarray.getJSONObject(0).getString("authority");
@@ -309,7 +310,7 @@ public class LobbyCommunicator {
           .field("password", gameServicePassword)
           .asJson();
       if (response.getStatus() != 200) {
-        throw new UnirestException("Wrong Token received: " +response.getBody());
+        throw new UnirestException("Wrong Token received: " + response.getBody());
       }
       tokenResponse = response.getBody().getObject();
       accessToken = tokenResponse.getString("access_token");

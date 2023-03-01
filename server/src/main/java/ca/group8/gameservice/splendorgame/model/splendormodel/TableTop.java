@@ -49,7 +49,8 @@ public class TableTop implements BroadcastContent {
       case CITY:
         resultBoard = new CityBoard(playerNames);
         break;
-      default: break;
+      default:
+        break;
     }
     return resultBoard;
   }

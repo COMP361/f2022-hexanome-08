@@ -31,7 +31,7 @@ public class GameInfo implements BroadcastContent {
    * Constructor for a game state instance. Stores all info related to game except the detail.
    * information of each player
    *
-   * @param extensions extensions that are used in the game.
+   * @param extensions  extensions that are used in the game.
    * @param playerNames players who are playing the game
    */
   public GameInfo(List<Extension> extensions, List<String> playerNames, String creator) {
@@ -97,6 +97,7 @@ public class GameInfo implements BroadcastContent {
   public Map<String, Map<String, Action>> getPlayerActionMaps() {
     return playerActionMaps;
   }
+
   public String getCreator() {
     return creator;
   }
@@ -112,7 +113,7 @@ public class GameInfo implements BroadcastContent {
    * @param playerNames the current player names who want to play this game
    */
   public void renamePlayers(List<String> playerNames, String creator) {
-    if(!playerNames.equals(this.playerNames)){
+    if (!playerNames.equals(this.playerNames)) {
       Collections.shuffle(playerNames);
       this.playerNames = playerNames;
       this.creator = creator;
@@ -133,6 +134,7 @@ public class GameInfo implements BroadcastContent {
       playerActionMaps = newActionMap;
     }
   }
+
   @Override
   public boolean isEmpty() {
     return false;

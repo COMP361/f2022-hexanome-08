@@ -11,10 +11,10 @@ import io.github.isharipov.gson.adapters.PolymorphDeserializer;
 /**
  * A helper singleton class that helps to resolve all abstract.
  * serializing & deserializing json problems for splendor game.
- *
+ * <p>
  * Every abstract class was serialized/deserialized using the repository from:
- *  * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
- *  * Thank him so much!!!!!!!!!!!!!!!
+ * * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
+ * * Thank him so much!!!!!!!!!!!!!!!
  */
 public class SplendorJsonHelper {
   private static SplendorJsonHelper instance = null;
@@ -31,7 +31,7 @@ public class SplendorJsonHelper {
   }
 
   public static SplendorJsonHelper getInstance() {
-    if (instance  == null) {
+    if (instance == null) {
       instance = new SplendorJsonHelper();
     }
     return instance;

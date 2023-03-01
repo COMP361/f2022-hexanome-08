@@ -2,7 +2,6 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
@@ -65,7 +64,7 @@ public class ReserveAction extends Action {
     // curCard is the card that we want to reserve
     List<CardEffect> cardEffects = curCard.getPurchaseEffects();
     // then it's an orient card
-    if(cardEffects.size() > 0) {
+    if (cardEffects.size() > 0) {
       OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
       orientBoard.removeCard(cardPosition);
     } else {
@@ -81,10 +80,10 @@ public class ReserveAction extends Action {
     Bank bank = curTableTop.getBank();
     int goldTokenLeft = bank.getAllTokens().get(Colour.GOLD);
     int tokensInHand = playerInGame.getTokenHand().getTokenTotalCount();
-    if(goldTokenLeft > 0 && tokensInHand < 10) {
-      bank.getAllTokens().put(Colour.GOLD, goldTokenLeft-1);
+    if (goldTokenLeft > 0 && tokensInHand < 10) {
+      bank.getAllTokens().put(Colour.GOLD, goldTokenLeft - 1);
       int goldTokenInHand = playerInGame.getTokenHand().getAllTokens().get(Colour.GOLD);
-      playerInGame.getTokenHand().getAllTokens().put(Colour.GOLD,goldTokenInHand+1);
+      playerInGame.getTokenHand().getAllTokens().put(Colour.GOLD, goldTokenInHand + 1);
     }
 
     // since we do not possibly generate more actions, we now know it's end of the turn

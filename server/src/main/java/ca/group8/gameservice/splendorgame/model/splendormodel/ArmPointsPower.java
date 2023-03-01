@@ -1,7 +1,5 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import java.util.List;
-
 /**
  * This class represents the Arm Points Power.
  */
