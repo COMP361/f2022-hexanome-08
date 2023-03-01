@@ -7,10 +7,12 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
+import ca.group8.gameservice.splendorgame.model.splendormodel.NobleCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
 import com.google.common.collect.Sets;
@@ -18,12 +20,14 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.apache.commons.codec.digest.DigestUtils;
 
 
@@ -248,15 +252,128 @@ public class ActionGenerator {
   }
 
   //TODO
-  public void updateCascadeActions(String playerName,
-                                   DevelopmentCard playerCard,
+  public void updateCascadeActions(PlayerInGame playerInGame, DevelopmentCard purchasedCard,
                                    CardEffect cardEffect) {
+    List<Action> cascadeActions = new ArrayList<>();
+    // update player's cascade actions according to the card effect of the card they purchased
+    if (cardEffect.equals(CardEffect.RESERVE_NOBLE)) {
+      List<NobleCard> nobleCards = ((BaseBoard) tableTop.getBoard(Extension.BASE)).getNobles();
+      for (int i = 0; i < nobleCards.size(); i++) {
+        Position position = new Position(0, i);
+        NobleCard nobleCard = nobleCards.get(i);
+        cascadeActions.add(new CardExtraAction(nobleCard, cardEffect, position));
+      }
+    }
 
+    if (cardEffect.equals(CardEffect.FREE_CARD)) {
+      int freeLevel = purchasedCard.getLevel()-1;
+      BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
+      OrientBoard orientBoard = (OrientBoard) tableTop.getBoard(Extension.ORIENT);
+      DevelopmentCard[] baseCardsToFree = baseBoard.getLevelCardsOnBoard(freeLevel);
+      for (int i = 0; i < baseCardsToFree.length; i++) {
+        Position position = new Position(freeLevel, i);
+        DevelopmentCard curCard = baseCardsToFree[i];
+        cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+      }
+
+      DevelopmentCard[] orientCardsToFree = orientBoard.getLevelCardsOnBoard(freeLevel);
+      for (int i = 0; i < orientCardsToFree.length; i++) {
+        Position position = new Position(freeLevel, i);
+        DevelopmentCard curCard = orientCardsToFree[i];
+        cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+      }
+    }
+
+    if (cardEffect.equals(CardEffect.BURN_CARD)) {
+      List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
+      Colour burnColourPrice = null;
+      EnumMap<Colour,Integer> cardPrice = purchasedCard.getPrice();
+      for (Colour colour : cardPrice.keySet()) {
+        if (cardPrice.get(colour) > 0) {
+          burnColourPrice = colour;
+          break;
+        }
+      }
+      // iterate to find the card in player's hand to find which card colour to burn
+      Colour finalBurnColourPrice = burnColourPrice;
+      List<Integer> pairedCardIndices = IntStream.range(0, cardsInHand.size())
+          .filter(i -> cardsInHand.get(i).isPaired())
+          .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
+          .boxed()
+          .collect(Collectors.toList());
+
+      // if there is no paired card to use
+      if (pairedCardIndices.size() == 0){
+        List<Integer> sameColourCardsIndices = IntStream.range(0, cardsInHand.size())
+            .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
+            .boxed()
+            .collect(Collectors.toList());
+
+        for (int i : sameColourCardsIndices) {
+          Position position = new Position(0, i);
+          DevelopmentCard card = cardsInHand.get(i);
+          cascadeActions.add(new CardExtraAction(card, cardEffect, position));
+        }
+      }
+      // if there is 1 or more than 1 paired card to use
+      if (pairedCardIndices.size() >= 1){
+        for (int i : pairedCardIndices) {
+          Position position = new Position(0, i);
+          DevelopmentCard card = cardsInHand.get(i);
+          cascadeActions.add(new CardExtraAction(card, cardEffect, position));
+        }
+      }
+    }
+
+    if (cardEffect.equals(CardEffect.SATCHEL)) {
+      List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
+      List<Integer> unpairedCardsIndices = IntStream.range(0, cardsInHand.size())
+          .filter(i -> !cardsInHand.get(i).isPaired())
+          .boxed()
+          .collect(Collectors.toList());
+      for (int i : unpairedCardsIndices) {
+        Position position = new Position(0, i);
+        DevelopmentCard card = cardsInHand.get(i);
+        cascadeActions.add(new CardExtraAction(card, cardEffect, position));
+      }
+
+    }
+
+    Map<String,Action> actionMap = new HashMap<>();
+    Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
+    for (Action action : cascadeActions) {
+      String actionJson = gsonParser.toJson(action, CardExtraAction.class);
+      String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();
+      actionMap.put(actionId, action);
+    }
+
+    String playerName = playerInGame.getName();
+    playerActionMaps.put(playerName, actionMap);
   }
 
   //TODO
   public void updatePowerActions(String playerName, PowerEffect powerEffect) {
 
+  }
+
+  public void updateClaimNobleActions(List<Integer> nobleIndices, PlayerInGame playerInGame) {
+    BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
+    List<Action> result = new ArrayList<>();
+    for(int i : nobleIndices) {
+      NobleCard nobleCard = baseBoard.getNobles().get(i);
+      Position noblePosition = new Position(0, i);
+      result.add(new ClaimNobleAction(nobleCard, noblePosition));
+    }
+
+    Map<String,Action> actionMap = new HashMap<>();
+    Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
+    for (Action action : result) {
+      String actionJson = gsonParser.toJson(action, ClaimNobleAction.class);
+      String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();
+      actionMap.put(actionId, action);
+    }
+    String playerName = playerInGame.getName();
+    playerActionMaps.put(playerName, actionMap);
   }
 
   /**

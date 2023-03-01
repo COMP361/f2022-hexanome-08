@@ -1,6 +1,9 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.EnumMap;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

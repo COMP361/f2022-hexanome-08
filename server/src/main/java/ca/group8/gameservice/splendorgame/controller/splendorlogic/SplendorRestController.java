@@ -331,8 +331,14 @@ public class SplendorRestController {
       ActionInterpreter actionInterpreter = gameManager.getGameActionInterpreter(gameId);
       actionInterpreter.interpretAction(actionId, playerName);
 
-      // end of turn check
 
+      // TODO: Start from here tmr
+      // end of turn check
+      GameInfo curGame = gameManager.getGameById(gameId);
+      if (curGame.isFinished()) {
+        //
+        gameManager.deleteGame(gameId);
+      }
 
       return ResponseEntity.status(HttpStatus.OK).body(null);
     } catch (ModelAccessException e) {

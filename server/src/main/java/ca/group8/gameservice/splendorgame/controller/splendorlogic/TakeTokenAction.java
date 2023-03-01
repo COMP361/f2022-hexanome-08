@@ -8,6 +8,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
 import java.util.EnumMap;
+import java.util.HashMap;
 
 /**
  * Action available every turn, taking tokens from bank.
@@ -51,21 +52,11 @@ public class TakeTokenAction extends Action {
     if(tokenLeft > 10) {
       int tokensNeedToReturn = tokenLeft - 10;
       actionGenerator.updateReturnTokenActions(tokensNeedToReturn, playerInGame);
+    } else {
+      // since we do not possibly generate more actions, we now know it's end of the turn
+      // set action map to {}
+      actionGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
     }
-
-    /* OLD TAKE TOKENS EXECUTE METHOD
-    public void execute(GameInfo currentGameState, PlayerInGame playerState) {
-    TokenHand tokenHand = playerState.getTokenHand();
-    tokenHand.addToken(this.tokensTaken);
-
-    for (Colour colour : Colour.values()) {
-      int oldValue = currentGameState.getTableTop().getBank().getAllTokens().get(colour);
-      currentGameState.getTableTop().getBank().getAllTokens().put(colour,
-          oldValue - tokensTaken.get(colour));
-    }
-  }
-     */
-
   }
 
   @Override
