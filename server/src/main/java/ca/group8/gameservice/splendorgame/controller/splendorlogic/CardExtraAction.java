@@ -1,11 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
-import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
-import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
-import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
-import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import ca.group8.gameservice.splendorgame.model.splendormodel.*;
 
 /**
  * This class represents an extra DevelopmentCard action.
@@ -35,11 +30,21 @@ public class CardExtraAction extends Action {
     this.position = position;
   }
 
+
   @Override
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
-                      ActionGenerator actionListGenerator,
-                      ActionInterpreter actionInterpreter) {
-
+                      ActionGenerator actionListGenerator, ActionInterpreter actionInterpreter) {
+    //based on the cardEffect, execute the associated helper
+    if(this.cardEffect == cardEffect.BURN_CARD){
+      burnActionHelper(curTableTop, playerInGame, actionListGenerator);
+    }else if(this.cardEffect == cardEffect.SATCHEL){
+      satchelActionHelper(curTableTop, playerInGame, actionListGenerator, actionInterpreter);
+    }else if(this.cardEffect == cardEffect.RESERVE_NOBLE){
+      reserveNobleActionHelper(curTableTop, playerInGame, actionListGenerator);
+    }else if(this.cardEffect == cardEffect.FREE_CARD){
+      //Don't know which card is the freeCard
+      freeCardActionHelper(curTableTop, playerInGame, actionInterpreter);
+    }
   }
 
   @Override
@@ -83,18 +88,58 @@ public class CardExtraAction extends Action {
                                        PlayerInGame curPlayer,
                                        ActionGenerator associatedActionGenerator) {
 
+    // Make sure curCard is right type
+    if (!(this.curCard instanceof NobleCard)) {
+      //throw new SplendorGameException("Error: Reserve Card is not a NobleCard");
+      System.out.println("ReserveNoble: Not a noble");
+      return;
+    }
+    NobleCard noble = (NobleCard) this.curCard;
+    //remove noble from base board
+    ((BaseBoard) curTableTop.getBoard(Extension.BASE)).removeNoble(noble);
+    //add it to player's reserve hand
+    curPlayer.getReservedHand().addNobleCard(noble);
   }
 
   //TODO
   public void satchelActionHelper(TableTop curTableTop,
                                   PlayerInGame curPlayer,
-                                  ActionGenerator associatedActionGenerator) {
+                                  ActionGenerator associatedActionGenerator,
+                                  ActionInterpreter associatedActionInterpreter) {
 
+    if (!(this.curCard instanceof DevelopmentCard)) {
+      //throw new SplendorGameException("Error: Reserve Card is not a NobleCard");
+      System.out.println("Satchel: Not a DevelopmentCard");
+      return;
+    }
+    //owned card = card you are pairing to. satchel is card you just bought.
+    DevelopmentCard ownedCard = (DevelopmentCard) this.curCard;
+    DevelopmentCard satchel = (DevelopmentCard) associatedActionInterpreter.getStashedCard();
+
+    //pair the card
+    ownedCard.setIsPaired(true);
+    ownedCard.setPairedCard(satchel);
+
+    //add card to hand, add prestige points
+    int prestigeAmount = satchel.getPrestigePoints();
+    curPlayer.getPurchasedHand().addDevelopmentCard(satchel);
+    curPlayer.addPrestigePoints(prestigeAmount);
+
+    //reset stashedCard to null
+    associatedActionInterpreter.setStashedCard(null);
+
+    //which row and column
+    int index = position.getY();
+    int level = satchel.getLevel();
+
+    //update the board with new card
+    OrientBoard board = ((OrientBoard) curTableTop.getBoard(Extension.ORIENT));
+    Card replacement = board.popLevelCardFromDeck(level);
+    board.getLevelCardsOnBoard(level)[index] = (DevelopmentCard) replacement;
   }
 
   //TODO
-  public void freeCardActionHelper(DevelopmentCard freeCard,
-                                   TableTop curTableTop,
+  public void freeCardActionHelper(TableTop curTableTop,
                                    PlayerInGame curPlayer,
                                    ActionInterpreter associatedActionInterpreter) {
 

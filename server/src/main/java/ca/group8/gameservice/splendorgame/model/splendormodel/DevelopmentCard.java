@@ -71,6 +71,10 @@ public class DevelopmentCard extends Card {
     return gemNumber;
   }
 
+  public void setIsPaired(boolean value) { isPaired = value; }
+
+  public void setPairedCard(DevelopmentCard card) { pairedCard = card; }
+
   /**
    * get the purchase effects of this card, if empty, then it's base card, otherwise.
    * it's an orient card
