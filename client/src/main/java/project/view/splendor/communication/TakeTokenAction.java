@@ -1,44 +1,19 @@
 package project.view.splendor.communication;
 
 import java.util.EnumMap;
-import project.view.splendor.Colour;
 
+public class TakeTokenAction extends Action {
+  private EnumMap<Colour, Integer> tokensTaken;
 
-public class TakeTokenAction implements Action {
-
-
-  private EnumMap<Colour, Integer> tokens;
-
-  public TakeTokenAction(EnumMap<Colour, Integer> tokens) {
-    this.tokens = tokens;
+  public TakeTokenAction(String type, EnumMap<Colour, Integer> tokensTaken) {
+    this.tokensTaken = tokensTaken;
   }
 
-  public EnumMap<Colour, Integer> getTokens() {
-    return tokens;
+  public EnumMap<Colour, Integer> getTokensTaken() {
+    return tokensTaken;
   }
 
-  public void setTokens(
-      EnumMap<Colour, Integer> tokens) {
-    this.tokens = tokens;
-  }
-
-  @Override
-  public void execute(GameInfo currentGameState, PlayerInGame playerState) {
-  }
-
-  @Override
-  public boolean checkIsCardAction() {
-    return false;
-  }
-
-  @Override
-  public Card getCard() {
-    return null;
-  }
-
-  @Override
-  public Position getPosition() {
-    return null;
+  public void setTokensTaken(EnumMap<Colour, Integer> tokensTaken) {
+    this.tokensTaken = tokensTaken;
   }
 }
-

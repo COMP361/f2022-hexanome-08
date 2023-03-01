@@ -7,27 +7,9 @@ public class PurchasedHand {
 
   private final List<DevelopmentCard> developmentCards;
   private final List<NobleCard> nobleCards;
-
-
-  public PurchasedHand() {
-    this.developmentCards = new ArrayList<>();
-    this.nobleCards = new ArrayList<>();
-  }
-
-  public void addDevelopmentCard(DevelopmentCard card) {
-    developmentCards.add(card);
-  }
-
-  public void addNobleCard(NobleCard card) {
-    nobleCards.add(card);
-  }
-
-  public void removeDevelopmentCard(DevelopmentCard card) {
-    developmentCards.remove(card);
-  }
-
-  public int getSize() {
-    return developmentCards.size();
+  public PurchasedHand(List<DevelopmentCard> developmentCards, List<NobleCard> nobleCards) {
+    this.developmentCards = developmentCards;
+    this.nobleCards = nobleCards;
   }
 
   public List<DevelopmentCard> getDevelopmentCards() {
@@ -37,6 +19,4 @@ public class PurchasedHand {
   public List<NobleCard> getNobleCards() {
     return nobleCards;
   }
-
-
 }
