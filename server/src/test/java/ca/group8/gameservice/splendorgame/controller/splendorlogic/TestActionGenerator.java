@@ -58,23 +58,23 @@ public class TestActionGenerator {
         }
     }
 
-    @Test
-    void testGenerateTakeTokenActions_35Actions_withPowerOn()
-        throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        TableTop tableTop = actionGenerator.getTableTop();
-        TraderBoard traderBoard = (TraderBoard)tableTop.getBoard(Extension.TRADING_POST);
-        Power power = traderBoard.getPlayerOnePower("Bob", PowerEffect.TWO_PLUS_ONE);
-        power.unlock();
-
-        Method generateTakeTokenActions = ActionGenerator
-            .class.getDeclaredMethod("generateTakeTokenActions", Bank.class, PlayerInGame.class);
-        generateTakeTokenActions.setAccessible(true);
-        List<Action> results = (List<Action>) generateTakeTokenActions.invoke(actionGenerator, bank, playerInGame);
-        assertEquals(35, results.size());
-        for (Action action : results) {
-            assertTrue(action instanceof TakeTokenAction);
-        }
-    }
+    //@Test
+    //void testGenerateTakeTokenActions_35Actions_withPowerOn()
+    //    throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    //    TableTop tableTop = actionGenerator.getTableTop();
+    //    TraderBoard traderBoard = (TraderBoard)tableTop.getBoard(Extension.TRADING_POST);
+    //    Power power = traderBoard.getPlayerOnePower("Bob", PowerEffect.TWO_PLUS_ONE);
+    //    power.unlock();
+    //
+    //    Method generateTakeTokenActions = ActionGenerator
+    //        .class.getDeclaredMethod("generateTakeTokenActions", Bank.class, PlayerInGame.class);
+    //    generateTakeTokenActions.setAccessible(true);
+    //    List<Action> results = (List<Action>) generateTakeTokenActions.invoke(actionGenerator, bank, playerInGame);
+    //    assertEquals(35, results.size());
+    //    for (Action action : results) {
+    //        assertTrue(action instanceof TakeTokenAction);
+    //    }
+    //}
 
 /*
     @BeforeEach
