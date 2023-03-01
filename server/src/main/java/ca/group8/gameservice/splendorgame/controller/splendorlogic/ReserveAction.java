@@ -12,6 +12,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.ReservedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -54,12 +55,12 @@ public class ReserveAction extends Action {
    *
    * @param curTableTop
    * @param playerInGame
-   * @param actionListGenerator
+   * @param actionGenerator
    * @param actionInterpreter
    */
   @Override
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
-                      ActionGenerator actionListGenerator,
+                      ActionGenerator actionGenerator,
                       ActionInterpreter actionInterpreter) {
     // curCard is the card that we want to reserve
     List<CardEffect> cardEffects = curCard.getPurchaseEffects();
@@ -85,6 +86,10 @@ public class ReserveAction extends Action {
       int goldTokenInHand = playerInGame.getTokenHand().getAllTokens().get(Colour.GOLD);
       playerInGame.getTokenHand().getAllTokens().put(Colour.GOLD,goldTokenInHand+1);
     }
+
+    // since we do not possibly generate more actions, we now know it's end of the turn
+    // set action map to {}
+    actionGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
   }
 
   @Override

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -200,7 +201,8 @@ public class GameManager {
           .stream()
           .map(PlayerInfo::getName)
           .collect(Collectors.toList());
-
+      // randomly shuffle the playerNames
+      Collections.shuffle(playerNames);
       GameInfo newGameInfo = new GameInfo(gameExtensions, playerNames, launcherInfo.getCreator());
       PlayerStates newPlayerStates = new PlayerStates(playerNames);
       ActionInterpreter newActionInterpreter = new ActionInterpreter(newGameInfo, newPlayerStates);

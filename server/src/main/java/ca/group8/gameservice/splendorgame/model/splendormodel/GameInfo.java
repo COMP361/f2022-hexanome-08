@@ -16,13 +16,14 @@ public class GameInfo implements BroadcastContent {
 
   private String creator;
   private String currentPlayer; //represents which player's turn it is currently
-  private final List<String> winners;
+  private List<String> winners;
   private List<String> playerNames;
   private String firstPlayerName; //should be Player Name of first player.
 
   private final TableTop tableTop;
   private final List<Extension> extensions;
 
+  private boolean isFinished;
   private Map<String, Map<String, Action>> playerActionMaps = new HashMap<>();
 
 
@@ -34,8 +35,6 @@ public class GameInfo implements BroadcastContent {
    * @param playerNames players who are playing the game
    */
   public GameInfo(List<Extension> extensions, List<String> playerNames, String creator) {
-    // TODO: OPTIONALLY Shuffle the list of playerNames before assigning it to the field
-    //Collections.shuffle(playerNames);
     this.playerNames = playerNames;
     this.winners = new ArrayList<>();
     firstPlayerName = playerNames.get(0);
@@ -43,33 +42,10 @@ public class GameInfo implements BroadcastContent {
     this.extensions = Collections.unmodifiableList(extensions);
     tableTop = new TableTop(playerNames, extensions);
     this.creator = creator;
+    this.isFinished = false;
 
   }
 
-  /**
-   * Update (overwrite) the given player's action map with a new map.
-   *
-   * @param playerName   player name that we want to modify action map on
-   * @param newActionMap the new action map
-   */
-  public void updatePlayerActionMap(String playerName, Map<String, Action> newActionMap) {
-    playerActionMaps.put(playerName, newActionMap);
-  }
-
-
-  public void addWinner(String potentialWinner) {
-    winners.add(potentialWinner);
-  }
-
-
-  public int getNumOfPlayers() {
-    return playerNames.size();
-  }
-
-
-  public boolean isFinished() {
-    return winners.size() > 0;
-  }
 
   /**
    * Gets the player who's currently making a move.
@@ -78,6 +54,14 @@ public class GameInfo implements BroadcastContent {
    */
   public String getCurrentPlayer() {
     return currentPlayer;
+  }
+
+  public boolean isFinished() {
+    return isFinished;
+  }
+
+  public void setFinished() {
+    isFinished = true;
   }
 
   /**
@@ -115,6 +99,10 @@ public class GameInfo implements BroadcastContent {
   }
   public String getCreator() {
     return creator;
+  }
+
+  public void setWinners(List<String> winners) {
+    this.winners = winners;
   }
 
   /**

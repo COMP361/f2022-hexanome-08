@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
@@ -12,23 +13,27 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
  */
 public class CardExtraAction extends Action {
 
-  private DevelopmentCard curCard;
+  private Card curCard;
   //TODO: Check this works after code is merged
   private final CardEffect cardEffect;
+
+  private final Position position;
 
   //TODO: Check this works after code is merged
 
   /**
    * Constructor.
    *
-   * @param DevelopmentCard       DevelopmentCard which "unlocks" this extra action
+   * @param curCard       DevelopmentCard which "unlocks" this extra action
    * @param cardEffect The type of extra action
    */
-  public CardExtraAction(DevelopmentCard DevelopmentCard, CardEffect cardEffect) {
+  public CardExtraAction(Card curCard, CardEffect cardEffect,
+                         Position position) {
     assert curCard != null;
     super.type = this.getClass().getSimpleName();
-    curCard = DevelopmentCard;
+    curCard = curCard;
     this.cardEffect = cardEffect;
+    this.position = position;
   }
 
   @Override
@@ -49,7 +54,7 @@ public class CardExtraAction extends Action {
   }
 
   @Override
-  public DevelopmentCard getCurCard() {
+  public Card getCurCard() {
     return curCard;
   }
 
@@ -57,6 +62,14 @@ public class CardExtraAction extends Action {
   //TODO: Do we have an associated position? If not, have it throw a null pointer exception.
   public Position getCardPosition() {
     return null;
+  }
+
+  public CardEffect getCardEffect() {
+    return cardEffect;
+  }
+
+  public Position getPosition() {
+    return position;
   }
 
   /*
