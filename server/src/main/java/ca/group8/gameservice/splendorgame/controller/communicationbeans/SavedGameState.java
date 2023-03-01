@@ -19,6 +19,7 @@ public class SavedGameState {
     this.playerStates = playerStates;
     this.actionInterpreter = actionInterpreter;
   }
+
   public GameInfo getGameInfo() {
     return gameInfo;
   }

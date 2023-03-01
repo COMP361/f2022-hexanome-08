@@ -2,8 +2,6 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Board;
-import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
@@ -53,10 +51,11 @@ public class PurchaseAction extends Action {
    * Constructor of purchase action.
    *
    * @param cardPosition      position on board
-   * @param DevelopmentCard              DevelopmentCard associated with action
+   * @param DevelopmentCard   DevelopmentCard associated with action
    * @param goldTokenRequired number of gold token required
    */
-  public PurchaseAction(Position cardPosition, DevelopmentCard DevelopmentCard, int goldTokenRequired) {
+  public PurchaseAction(Position cardPosition, DevelopmentCard DevelopmentCard,
+                        int goldTokenRequired) {
     assert cardPosition != null && DevelopmentCard != null && goldTokenRequired >= 0;
     super.type = this.getClass().getSimpleName();
     this.cardPosition = cardPosition;
@@ -85,13 +84,14 @@ public class PurchaseAction extends Action {
     DevelopmentCard curCard = (DevelopmentCard) this.curCard;
 
     List<CardEffect> cardEffects = curCard.getPurchaseEffects();
-    int effectNum = cardEffects. size();
+    int effectNum = cardEffects.size();
     Bank curBank = curTableTop.getBank();
     PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
     int points = curCard.getPrestigePoints();
 
     if (effectNum == 0) {
-      EnumMap<Colour, Integer> tokensSpent = playerInGame.payTokensToBuy(goldTokenRequired, curCard);
+      EnumMap<Colour, Integer> tokensSpent =
+          playerInGame.payTokensToBuy(goldTokenRequired, curCard);
       purchasedHand.addDevelopmentCard(curCard);
       playerInGame.addPrestigePoints(points);
       curBank.returnToken(tokensSpent);

@@ -52,7 +52,7 @@ public class PlayerStates implements BroadcastContent {
   public void renamePlayers(List<String> playerNames) {
     List<String> curNames = new ArrayList<>(playersInfo.keySet());
     // only update if names are different
-    if(!playerNames.equals(curNames)) {
+    if (!playerNames.equals(curNames)) {
       int nameIndex = 0;
       Map<String, PlayerInGame> newPlayerMap = new HashMap<>();
       for (String curName : playersInfo.keySet()) {
@@ -64,6 +64,7 @@ public class PlayerStates implements BroadcastContent {
       playersInfo = newPlayerMap;
     }
   }
+
   @Override
   public boolean isEmpty() {
     return false;

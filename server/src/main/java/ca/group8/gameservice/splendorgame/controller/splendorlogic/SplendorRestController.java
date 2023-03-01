@@ -2,11 +2,9 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.controller.SplendorJsonHelper;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
-import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGameState;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
@@ -15,19 +13,15 @@ import com.google.gson.reflect.TypeToken;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -96,8 +90,8 @@ public class SplendorRestController {
    * @return a deferred return payload JSON string response
    */
   @GetMapping(value = {"/splendorbase/api/games/{gameId}",
-          "/splendortrade/api/games/{gameId}",
-          "/splendorcity/api/games/{gameId}"}, produces = "application/json; charset=utf-8")
+      "/splendortrade/api/games/{gameId}",
+      "/splendorcity/api/games/{gameId}"}, produces = "application/json; charset=utf-8")
   public DeferredResult<ResponseEntity<String>> getGameDetail(@PathVariable long gameId,
                                                               @RequestParam(required = false)
                                                               String hash) {
@@ -161,8 +155,8 @@ public class SplendorRestController {
    * @return a response body of the reply of launch game request.
    */
   @PutMapping(value = {"/splendorbase/api/games/{gameId}",
-          "/splendortrade/api/games/{gameId}",
-          "/splendorcity/api/games/{gameId}"}, consumes = "application/json; charset=utf-8")
+      "/splendortrade/api/games/{gameId}",
+      "/splendorcity/api/games/{gameId}"}, consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> launchGame(@PathVariable long gameId,
                                            @RequestBody LauncherInfo launcherInfo) {
     try {
@@ -259,7 +253,7 @@ public class SplendorRestController {
    * TODO: send GET request to this location TWICE per turn, one at beginning, one at the end.
    * because we need to make sure everything on the board is not available for user to click
    * if it's not their turn
-   *
+   * <p>
    * This end point is only used to get the initial actionMap (Purchase, Reserve, TakeToken)
    * The cascade case will update the Map< String, Map< String, Action > > in GameInfo, which is
    * under long-polling control. Therefore user can get updated action map to handle cascade action
@@ -298,7 +292,8 @@ public class SplendorRestController {
         actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
       }
 
-      Type actionMapType = new TypeToken<Map<String ,Action>>(){}.getType();
+      Type actionMapType = new TypeToken<Map<String, Action>>() {
+      }.getType();
       Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
       String actionMapJson = gsonParser.toJson(actionMap, actionMapType);
       return ResponseEntity.status(HttpStatus.OK).body(actionMapJson);
@@ -336,8 +331,12 @@ public class SplendorRestController {
       // end of turn check
       GameInfo curGame = gameManager.getGameById(gameId);
       if (curGame.isFinished()) {
-        //
+        // remove anything related to this game from game manager
         gameManager.deleteGame(gameId);
+        // remove the broadcast content manager which controls the
+        // long polling updates
+        gameInfoBroadcastContentManager.remove(gameId);
+        allPlayerInfoBroadcastContentManager.remove(gameId);
       }
 
       return ResponseEntity.status(HttpStatus.OK).body(null);

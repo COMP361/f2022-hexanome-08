@@ -32,7 +32,8 @@ public class TraderBoard extends Board {
           case TWO_PLUS_ONE:
             curPlayerPowers.put(PowerEffect.TWO_PLUS_ONE, new TwoPlusOnePower());
             break;
-          default: break;
+          default:
+            break;
         }
       }
       allPlayerPowers.put(playerName, curPlayerPowers);
@@ -83,11 +84,11 @@ public class TraderBoard extends Board {
   public void renamePlayers(List<String> playerNames) {
     List<String> curNames = new ArrayList<>(allPlayerPowers.keySet());
     // only update if names are different
-    if(!playerNames.equals(curNames)) {
+    if (!playerNames.equals(curNames)) {
       int nameIndex = 0;
       Map<String, Map<PowerEffect, Power>> newPowerMap = new HashMap<>();
       for (String curName : allPlayerPowers.keySet()) {
-        Map<PowerEffect,Power> curPowerMap = allPlayerPowers.get(curName);
+        Map<PowerEffect, Power> curPowerMap = allPlayerPowers.get(curName);
         String newName = playerNames.get(nameIndex);
         nameIndex += 1;
         newPowerMap.put(newName, curPowerMap);

@@ -1,7 +1,5 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,13 +100,13 @@ public class OrientBoard extends Board {
    */
   @Override
   public void update() {
-      for (int i = 1; i <= 3; i++) {
-        DevelopmentCard[] curLevelCardsOnBoard = getLevelCardsOnBoard(i);
-        for (int j = 0; j < 2; j++) {
-          if (curLevelCardsOnBoard[j] == null) {
-            curLevelCardsOnBoard[j] = popLevelCardFromDeck(i);
-          }
+    for (int i = 1; i <= 3; i++) {
+      DevelopmentCard[] curLevelCardsOnBoard = getLevelCardsOnBoard(i);
+      for (int j = 0; j < 2; j++) {
+        if (curLevelCardsOnBoard[j] == null) {
+          curLevelCardsOnBoard[j] = popLevelCardFromDeck(i);
         }
       }
+    }
   }
 }

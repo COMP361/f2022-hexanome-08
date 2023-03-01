@@ -53,7 +53,7 @@ public class ActionInterpreter {
    * After parsing the object from json, we need to relink the references.
    * between this action interpreter and the other game states information.
    *
-   * @param gameInfo a game info instance
+   * @param gameInfo     a game info instance
    * @param playerStates player states instance
    */
   public void relinkReferences(GameInfo gameInfo, PlayerStates playerStates) {
@@ -91,19 +91,19 @@ public class ActionInterpreter {
       // and then set to next player's turn
 
       // nobles check (all nobles the player can unlock)
-      BaseBoard baseBoard =  (BaseBoard) tableTop.getBoard(Extension.BASE);
+      BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
 
       List<Integer> nobleIndices = new ArrayList<>();
       List<NobleCard> allNobles = baseBoard.getNobles();
       for (int i = 0; i < allNobles.size(); i++) {
         NobleCard nobleCard = allNobles.get(i);
-        if(nobleCard.canVisit(playerInGame)) {
+        if (nobleCard.canVisit(playerInGame)) {
           nobleIndices.add(i);
         }
       }
 
       PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
-      if(!nobleVisited) {
+      if (!nobleVisited) {
         // if the player unlocked one noble, added it to player hand,
         // remove it from baseboard
         if (nobleIndices.size() == 1) {
@@ -154,7 +154,7 @@ public class ActionInterpreter {
           List<String> winners = gameInfo.getWinners();
           List<String> allPlayers = gameInfo.getPlayerNames();
           // if the current player is the last player, this game is over
-          if (playerName.equals(allPlayers.get(allPlayers.size()-1))) {
+          if (playerName.equals(allPlayers.get(allPlayers.size() - 1))) {
             if (winners.isEmpty()) { // this is the first and last winner
               winners.add(playerName);
               // game is over!
@@ -200,7 +200,6 @@ public class ActionInterpreter {
 
 
     // extra need to check the orient part of extra actions need to be generated
-
 
 
     //TODO: Set to the next players turn? check winner?

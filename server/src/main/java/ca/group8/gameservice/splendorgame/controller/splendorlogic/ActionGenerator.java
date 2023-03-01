@@ -12,15 +12,11 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
-import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
 import com.google.common.collect.Sets;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -124,13 +120,13 @@ public class ActionGenerator {
         // always generate reserve actions for base cards for index 0,1,2,3
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
         if (goldTokenNeeded >= 0) {
-          result.add(new PurchaseAction(cardPosition,card,goldTokenNeeded));
+          result.add(new PurchaseAction(cardPosition, card, goldTokenNeeded));
         }
         if (cardIndex < 2) {
           // if index = 0 or 1, generate reserve action for orient cards
           DevelopmentCard orientCard = orientLevelCards[cardIndex];
           goldTokenNeeded = orientCard.canBeBought(hasDoubleGoldPower, wealth);
-          if(goldTokenNeeded >= 0) {
+          if (goldTokenNeeded >= 0) {
             result.add(new PurchaseAction(cardPosition, orientCard, goldTokenNeeded));
           }
         }
@@ -170,7 +166,7 @@ public class ActionGenerator {
       return result;
     }
 
-    EnumMap<Colour, Integer> rawMap = new EnumMap<>(Colour.class){{
+    EnumMap<Colour, Integer> rawMap = new EnumMap<>(Colour.class) {{
       put(Colour.BLUE, 0);
       put(Colour.RED, 0);
       put(Colour.BLACK, 0);
@@ -206,11 +202,11 @@ public class ActionGenerator {
     }
 
     // all possible combination of 5 choose 3 colours set
-    Set<Set<Colour>> colours = Sets.combinations(tokenLeft.keySet(),3);
+    Set<Set<Colour>> colours = Sets.combinations(tokenLeft.keySet(), 3);
     for (Set<Colour> colourSubset : colours) {
       EnumMap<Colour, Integer> threeDiffColourTokens = new EnumMap<>(rawMap);
       List<Colour> colourList = new ArrayList<>(colourSubset);
-      if(colourList.stream().allMatch(c -> tokenLeft.get(c) >= 1)) {
+      if (colourList.stream().allMatch(c -> tokenLeft.get(c) >= 1)) {
         threeDiffColourTokens.put(colourList.get(0), 1);
         threeDiffColourTokens.put(colourList.get(1), 1);
         threeDiffColourTokens.put(colourList.get(2), 1);
@@ -266,7 +262,7 @@ public class ActionGenerator {
     }
 
     if (cardEffect.equals(CardEffect.FREE_CARD)) {
-      int freeLevel = purchasedCard.getLevel()-1;
+      int freeLevel = purchasedCard.getLevel() - 1;
       BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
       OrientBoard orientBoard = (OrientBoard) tableTop.getBoard(Extension.ORIENT);
       DevelopmentCard[] baseCardsToFree = baseBoard.getLevelCardsOnBoard(freeLevel);
@@ -287,7 +283,7 @@ public class ActionGenerator {
     if (cardEffect.equals(CardEffect.BURN_CARD)) {
       List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
       Colour burnColourPrice = null;
-      EnumMap<Colour,Integer> cardPrice = purchasedCard.getPrice();
+      EnumMap<Colour, Integer> cardPrice = purchasedCard.getPrice();
       for (Colour colour : cardPrice.keySet()) {
         if (cardPrice.get(colour) > 0) {
           burnColourPrice = colour;
@@ -303,7 +299,7 @@ public class ActionGenerator {
           .collect(Collectors.toList());
 
       // if there is no paired card to use
-      if (pairedCardIndices.size() == 0){
+      if (pairedCardIndices.size() == 0) {
         List<Integer> sameColourCardsIndices = IntStream.range(0, cardsInHand.size())
             .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
             .boxed()
@@ -316,7 +312,7 @@ public class ActionGenerator {
         }
       }
       // if there is 1 or more than 1 paired card to use
-      if (pairedCardIndices.size() >= 1){
+      if (pairedCardIndices.size() >= 1) {
         for (int i : pairedCardIndices) {
           Position position = new Position(0, i);
           DevelopmentCard card = cardsInHand.get(i);
@@ -339,7 +335,7 @@ public class ActionGenerator {
 
     }
 
-    Map<String,Action> actionMap = new HashMap<>();
+    Map<String, Action> actionMap = new HashMap<>();
     Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
     for (Action action : cascadeActions) {
       String actionJson = gsonParser.toJson(action, CardExtraAction.class);
@@ -359,13 +355,13 @@ public class ActionGenerator {
   public void updateClaimNobleActions(List<Integer> nobleIndices, PlayerInGame playerInGame) {
     BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
     List<Action> result = new ArrayList<>();
-    for(int i : nobleIndices) {
+    for (int i : nobleIndices) {
       NobleCard nobleCard = baseBoard.getNobles().get(i);
       Position noblePosition = new Position(0, i);
       result.add(new ClaimNobleAction(nobleCard, noblePosition));
     }
 
-    Map<String,Action> actionMap = new HashMap<>();
+    Map<String, Action> actionMap = new HashMap<>();
     Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
     for (Action action : result) {
       String actionJson = gsonParser.toJson(action, ClaimNobleAction.class);
@@ -382,9 +378,9 @@ public class ActionGenerator {
    * @param extraTokenCount
    * @param playerInGame
    */
-  public void updateReturnTokenActions(int extraTokenCount,PlayerInGame playerInGame) {
+  public void updateReturnTokenActions(int extraTokenCount, PlayerInGame playerInGame) {
     List<EnumMap<Colour, Integer>> allCombos = new ArrayList<>();
-    EnumMap<Colour, Integer> rawMap = new EnumMap<>(Colour.class){{
+    EnumMap<Colour, Integer> rawMap = new EnumMap<>(Colour.class) {{
       put(Colour.BLUE, 0);
       put(Colour.RED, 0);
       put(Colour.BLACK, 0);
@@ -394,21 +390,21 @@ public class ActionGenerator {
 
     // generate all combinations based extra token count
     if (extraTokenCount == 1) {
-        for(Colour c : rawMap.keySet())  {
-          EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
-          curMap.put(c, 1);
-          allCombos.add(curMap);
-        }
+      for (Colour c : rawMap.keySet()) {
+        EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
+        curMap.put(c, 1);
+        allCombos.add(curMap);
+      }
     }
 
     if (extraTokenCount == 2) {
-      for(Colour c : rawMap.keySet())  {
+      for (Colour c : rawMap.keySet()) {
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         curMap.put(c, 2);
         allCombos.add(curMap);
       }
 
-      Set<Set<Colour>> colours = Sets.combinations(rawMap.keySet(),2);
+      Set<Set<Colour>> colours = Sets.combinations(rawMap.keySet(), 2);
       for (Set<Colour> otherColours : colours) {
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         for (Colour c : otherColours) {
@@ -419,13 +415,13 @@ public class ActionGenerator {
     }
 
     if (extraTokenCount == 3) {
-      for(Colour c : rawMap.keySet())  {
+      for (Colour c : rawMap.keySet()) {
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         curMap.put(c, 3);
         allCombos.add(curMap);
       }
 
-      Set<Set<Colour>> colours = Sets.combinations(rawMap.keySet(),3);
+      Set<Set<Colour>> colours = Sets.combinations(rawMap.keySet(), 3);
       for (Set<Colour> otherColours : colours) {
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         for (Colour c : otherColours) {
@@ -434,7 +430,7 @@ public class ActionGenerator {
         allCombos.add(curMap);
       }
 
-      for(Colour c : rawMap.keySet())  {
+      for (Colour c : rawMap.keySet()) {
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         curMap.put(c, 2);
         allCombos.add(curMap);
@@ -460,11 +456,11 @@ public class ActionGenerator {
         }
       }
       if (isValid) {
-        returnTokenActions.add(new ReturnTokenAction(combo,extraTokenCount));
+        returnTokenActions.add(new ReturnTokenAction(combo, extraTokenCount));
       }
     }
 
-    Map<String,Action> actionMap = new HashMap<>();
+    Map<String, Action> actionMap = new HashMap<>();
     Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
     for (Action action : returnTokenActions) {
       String actionJson = gsonParser.toJson(action, ReturnTokenAction.class);

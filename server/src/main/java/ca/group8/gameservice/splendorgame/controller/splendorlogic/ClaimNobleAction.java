@@ -1,6 +1,5 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.NobleCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
@@ -17,8 +16,8 @@ public class ClaimNobleAction extends Action {
   /**
    * Constructor.
    *
-   * @param nobleCard     The noble DevelopmentCard (which can be claimed).
-   * @param position The position of the noble DevelopmentCard.
+   * @param nobleCard The noble DevelopmentCard (which can be claimed).
+   * @param position  The position of the noble DevelopmentCard.
    */
   public ClaimNobleAction(NobleCard nobleCard, Position position) {
     assert nobleCard != null && curPosition != null;

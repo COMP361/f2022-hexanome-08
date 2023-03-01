@@ -1,7 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
-import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
@@ -24,7 +23,7 @@ public class CardExtraAction extends Action {
   /**
    * Constructor.
    *
-   * @param curCard       DevelopmentCard which "unlocks" this extra action
+   * @param curCard    DevelopmentCard which "unlocks" this extra action
    * @param cardEffect The type of extra action
    */
   public CardExtraAction(Card curCard, CardEffect cardEffect,
