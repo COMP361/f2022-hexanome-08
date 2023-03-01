@@ -13,11 +13,11 @@ import java.util.Map;
 /**
  * This class represents the Extra Actions associated with a specific PowerEffect.
  */
-public class PowerExtraAction extends Action {
+public class BonusTokenPowerAction extends Action {
 
   private final PowerEffect powerEffect;
 
-  public PowerExtraAction(Card curCard, PowerEffect powerEffect) {
+  public BonusTokenPowerAction(Card curCard, PowerEffect powerEffect) {
     assert curCard != null && powerEffect != null;
     super.type = this.getClass().getSimpleName();
     this.powerEffect = powerEffect;
@@ -37,7 +37,7 @@ public class PowerExtraAction extends Action {
       //TODO: no default case... added for checkstyle purposes
       default:
       case FIVE_POINTS:
-        playerInGame.addPrestigePoints(5);
+        playerInGame.changePrestigePoints(5);
         break;
       case ARM_POINTS:
         int pointsToAdd = 0;
@@ -50,7 +50,7 @@ public class PowerExtraAction extends Action {
             pointsToAdd += 1;
           }
         }
-        playerInGame.addPrestigePoints(pointsToAdd);
+        playerInGame.changePrestigePoints(pointsToAdd);
         //TODO: Add cases for creating cascading actions for other 3 powers.
     }
 

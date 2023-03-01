@@ -11,8 +11,11 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.NobleCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -143,6 +146,49 @@ public class ActionInterpreter {
       // extra end turn check for extensions
       // TODO: Later
       if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
+        // possible to generate power actions
+        TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
+        Map<PowerEffect, Power> playerPowers = traderBoard.getAllPlayerPowers().get(playerName);
+        int powerCount = traderBoard.getUnlockedPowerCount(playerName);
+        //boolean
+        boolean firstTimeUnLockArmPower = false;
+        for (PowerEffect powerEffect : playerPowers.keySet()) {
+          // the player should have this power unlocked if
+          // it's locked before, and it's now valid to unlock
+          Power power = playerPowers.get(powerEffect);
+          boolean validPowerCheck = power.validityCheck(playerInGame);
+          boolean unlockPowerCheck = power.isUnlocked();
+          if (validPowerCheck && !unlockPowerCheck) {
+            power.unlock();
+            if (powerEffect.equals(PowerEffect.FIVE_POINTS)) {
+              playerInGame.changePrestigePoints(5);
+            }
+            if (powerEffect.equals(PowerEffect.ARM_POINTS)) {
+              firstTimeUnLockArmPower = true;
+            }
+          }
+
+          if (!validPowerCheck && unlockPowerCheck) {
+            power.lock();
+            if (powerEffect.equals(PowerEffect.FIVE_POINTS)) {
+              playerInGame.changePrestigePoints(-5);
+            }
+            if (powerEffect.equals(PowerEffect.ARM_POINTS)) {
+              playerInGame.changePrestigePoints(-powerCount);
+            }
+          }
+        }
+        Power armPointsPower = traderBoard.getPlayerOnePower(playerName, PowerEffect.ARM_POINTS);
+        int curPowerCount = traderBoard.getUnlockedPowerCount(playerName);
+        if (armPointsPower.isUnlocked()) {
+          if (firstTimeUnLockArmPower) {
+            playerInGame.changePrestigePoints(curPowerCount);
+          } else {
+            // the difference b/w beginning and updated one, can be negative
+            int diffAmount = curPowerCount - powerCount;
+            playerInGame.changePrestigePoints(diffAmount);
+          }
+        }
 
       }
 
@@ -197,33 +243,13 @@ public class ActionInterpreter {
       // set next turn
       // TODO: before changing to next player, reset everything
       // the flags to default values
-      //  private boolean nobleVisited = false;
-      //  private int freeCardLevel = 0;
-      //  private int burnCardCount = 0;
-      //  private Colour burnCardColour = null;
-      //  private DevelopmentCard stashedCard = null;
+        nobleVisited = false;
 
       // if the game is not finished, set next player
       if (!gameInfo.isFinished()) {
         gameInfo.setNextPlayer();
       }
-
     }
-
-
-    // TODO: is responsible to check whether we need to generate more cascading actions or not
-
-    // extra need to check whether we need to update player's action map
-    // according to their power or not
-
-
-    // extra need to check the winning condition of the player
-
-
-    // extra need to check the orient part of extra actions need to be generated
-
-
-    //TODO: Set to the next players turn? check winner? (DONE ABOVE)
   }
 
 
@@ -280,6 +306,13 @@ public class ActionInterpreter {
   //todo
   public void setBurnCardInfo(EnumMap<Colour, Integer> cardPrice) {
     //set colour and cards to burn
+    burnCardCount = 2;
+    for (Colour colour : cardPrice.keySet()) {
+      if (cardPrice.get(colour) > 0) {
+        burnCardColour = colour;
+        break;
+      }
+    }
   }
 
   public Colour getBurnCardColour() {
@@ -297,7 +330,7 @@ public class ActionInterpreter {
   }
 
   public void setFreeCardLevel(int newLevel) {
-    assert newLevel < 3; //Cannot have a free card that is level 3 or above.
+    assert newLevel < 3 && newLevel > 0; //Cannot have a free card that is level 3 or above.
     freeCardLevel = newLevel;
   }
 
