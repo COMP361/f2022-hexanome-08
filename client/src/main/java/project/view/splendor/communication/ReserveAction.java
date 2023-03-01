@@ -1,41 +1,32 @@
 package project.view.splendor.communication;
 
+/**
+ * Action that allows a player to reserve a card.
+ */
+public class ReserveAction extends Action {
 
-public class ReserveAction implements Action {
+  private DevelopmentCard curCard;
+  private Position cardPosition;
 
-  @Override
-  public Position getPosition() {
-    return position;
+  public ReserveAction(Position position, DevelopmentCard curCard) {
+    super.type = this.getClass().getSimpleName();
+    this.cardPosition = position;
+    this.curCard = curCard;
   }
 
-  @Override
-  public Card getCard() {
-    return card;
+  public DevelopmentCard getCurCard() {
+    return curCard;
   }
 
-  public void setPosition(Position position) {
-    this.position = position;
+  public void setCurCard(DevelopmentCard curCard) {
+    this.curCard = curCard;
   }
 
-  public void setCard(Card card) {
-    this.card = card;
+  public Position getCardPosition() {
+    return cardPosition;
   }
 
-  private Position position;
-  private Card card;
-
-  public ReserveAction(Position position, Card card) {
-    this.position = position;
-    this.card = card;
-  }
-
-  @Override
-  public void execute(GameInfo currentGameState, PlayerInGame playerState) {
-
-  }
-
-  @Override
-  public boolean checkIsCardAction() {
-    return true;
+  public void setCardPosition(Position cardPosition) {
+    this.cardPosition = cardPosition;
   }
 }
