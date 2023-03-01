@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +9,10 @@ import java.util.Map;
  * Class that holds info about TraderBoard.
  */
 public class TraderBoard extends Board {
-  private final Map<String, Map<PowerEffect, Power>> allPlayerPowers = new HashMap<>();
+  private Map<String, Map<PowerEffect, Power>> allPlayerPowers = new HashMap<>();
 
   public TraderBoard(List<String> playerNames) {
+    super.type = this.getClass().getSimpleName();
     for (String playerName : playerNames) {
       Map<PowerEffect, Power> curPlayerPowers = new HashMap<>();
       for (PowerEffect pe : PowerEffect.values()) {
@@ -30,7 +32,8 @@ public class TraderBoard extends Board {
           case TWO_PLUS_ONE:
             curPlayerPowers.put(PowerEffect.TWO_PLUS_ONE, new TwoPlusOnePower());
             break;
-          default: break;
+          default:
+            break;
         }
       }
       allPlayerPowers.put(playerName, curPlayerPowers);
@@ -54,11 +57,11 @@ public class TraderBoard extends Board {
    * @param effect     the effect of the specific power
    * @return the specific power
    */
-  public Power getPlayerOnePower(String playerName, PowerEffect effect)
-  throws SplendorGameException {
-    if (!allPlayerPowers.containsKey(playerName)) {
-      throw new SplendorGameException("Player not in this game!");
-    }
+  public Power getPlayerOnePower(String playerName, PowerEffect effect) {
+    //if (!allPlayerPowers.containsKey(playerName)) {
+    //  throw new SplendorGameException("Player not in this game!");
+    //}
+    // whether player is in game or not will be verified in controller
     return allPlayerPowers.get(playerName).get(effect);
   }
 
@@ -69,5 +72,28 @@ public class TraderBoard extends Board {
   @Override
   public void update() {
 
+  }
+
+  /**
+   * Call this method to rename the player names if the ones who want to play now does not.
+   * match with the ones who saved this game before.
+   *
+   * @param playerNames the current player names who want to play this game
+   */
+  @Override
+  public void renamePlayers(List<String> playerNames) {
+    List<String> curNames = new ArrayList<>(allPlayerPowers.keySet());
+    // only update if names are different
+    if (!playerNames.equals(curNames)) {
+      int nameIndex = 0;
+      Map<String, Map<PowerEffect, Power>> newPowerMap = new HashMap<>();
+      for (String curName : allPlayerPowers.keySet()) {
+        Map<PowerEffect, Power> curPowerMap = allPlayerPowers.get(curName);
+        String newName = playerNames.get(nameIndex);
+        nameIndex += 1;
+        newPowerMap.put(newName, curPowerMap);
+      }
+      allPlayerPowers = newPowerMap;
+    }
   }
 }

@@ -1,7 +1,5 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +14,7 @@ public class OrientBoard extends Board {
   private final Map<Integer, DevelopmentCard[]> cardsOnBoard = new HashMap<>();
 
   public OrientBoard() {
+    super.type = this.getClass().getSimpleName();
     // get all cards info from json file
     List<DevelopmentCard> orientDevCards
         = super.generateDevelopmentCards("cardinfo_orientcard");
@@ -57,8 +56,14 @@ public class OrientBoard extends Board {
   public DevelopmentCard removeCard(Position cardPosition) {
     int level = cardPosition.getX();
     int cardIndex = cardPosition.getY();
-    DevelopmentCard resultCard = cardsOnBoard.get(level)[cardIndex];
-    cardsOnBoard.get(level)[cardIndex] = null;
+    DevelopmentCard resultCard;
+    if (cardIndex == -1) {
+      // when the player reserve from the deck
+      resultCard = decks.get(level).remove(0);
+    } else {
+      resultCard = cardsOnBoard.get(level)[cardIndex];
+      cardsOnBoard.get(level)[cardIndex] = null;
+    }
     return resultCard;
   }
 
@@ -95,13 +100,13 @@ public class OrientBoard extends Board {
    */
   @Override
   public void update() {
-      for (int i = 1; i <= 3; i++) {
-        DevelopmentCard[] curLevelCardsOnBoard = getLevelCardsOnBoard(i);
-        for (int j = 0; j < 2; j++) {
-          if (curLevelCardsOnBoard[j] == null) {
-            curLevelCardsOnBoard[j] = popLevelCardFromDeck(i);
-          }
+    for (int i = 1; i <= 3; i++) {
+      DevelopmentCard[] curLevelCardsOnBoard = getLevelCardsOnBoard(i);
+      for (int j = 0; j < 2; j++) {
+        if (curLevelCardsOnBoard[j] == null) {
+          curLevelCardsOnBoard[j] = popLevelCardFromDeck(i);
         }
       }
+    }
   }
 }

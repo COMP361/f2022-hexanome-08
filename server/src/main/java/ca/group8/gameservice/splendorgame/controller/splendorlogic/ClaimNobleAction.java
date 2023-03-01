@@ -1,6 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
+import ca.group8.gameservice.splendorgame.model.splendormodel.NobleCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
@@ -10,18 +10,19 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
  */
 public class ClaimNobleAction extends Action {
 
-  private Card curCard;
+  private NobleCard curCard;
   private Position curPosition;
 
   /**
    * Constructor.
    *
-   * @param card     The noble card (which can be claimed).
-   * @param position The position of the noble card.
+   * @param nobleCard The noble DevelopmentCard (which can be claimed).
+   * @param position  The position of the noble DevelopmentCard.
    */
-  public ClaimNobleAction(Card card, Position position) {
-    assert card != null && curPosition != null;
-    curCard = card;
+  public ClaimNobleAction(NobleCard nobleCard, Position position) {
+    assert nobleCard != null && curPosition != null;
+    super.type = this.getClass().getSimpleName();
+    curCard = nobleCard;
     curPosition = position;
   }
 
@@ -33,13 +34,13 @@ public class ClaimNobleAction extends Action {
   }
 
   @Override
-  Card getCurCard() {
+  public NobleCard getCurCard() {
     assert curCard != null;
     return curCard;
   }
 
   @Override
-  Position getCardPosition() {
+  public Position getCardPosition() {
     assert curPosition != null;
     return curPosition;
   }

@@ -36,17 +36,7 @@ import project.view.splendor.PlayerInfoGui;
 import project.view.splendor.PlayerPosition;
 import project.view.splendor.TokenBankGui;
 import project.view.splendor.VerticalPlayerInfoGui;
-import project.view.splendor.communication.Action;
-import project.view.splendor.communication.BaseCard;
-import project.view.splendor.communication.DevelopmentCard;
-import project.view.splendor.communication.GameInfo;
-import project.view.splendor.communication.NobleCard;
-import project.view.splendor.communication.PlayerInGame;
-import project.view.splendor.communication.PlayerStates;
-import project.view.splendor.communication.Position;
-import project.view.splendor.communication.PurchaseAction;
-import project.view.splendor.communication.ReserveAction;
-import project.view.splendor.communication.TakeTokenAction;
+import project.view.splendor.communication.*;
 
 /**
  * Game controller for game GUI.

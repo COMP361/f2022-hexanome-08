@@ -36,6 +36,8 @@ public class App extends Application {
   // One and the only one requestSender
   //private static final LobbyServiceRequestSender lobbyRequestSender =
   //    new LobbyServiceRequestSender("http://76.66.139.161:4242");
+
+  // TODO: Change this to singleton later LobbyServiceRequestSender
   private static final LobbyServiceRequestSender lobbyRequestSender =
       new LobbyServiceRequestSender("http://127.0.0.1:4242");
 
@@ -44,6 +46,7 @@ public class App extends Application {
   //private static final SplendorServiceRequestSender gameRequestSender =
   //    new SplendorServiceRequestSender(
   //        "http://76.66.139.161:4246/", "splendorbase");
+  // TODO: This should not be a global variable in App!!!
   private static final SplendorServiceRequestSender gameRequestSender =
       new SplendorServiceRequestSender(
           "http://127.0.0.1:4246/", "splendorbase");

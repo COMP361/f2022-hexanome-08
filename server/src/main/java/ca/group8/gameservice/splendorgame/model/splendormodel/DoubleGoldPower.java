@@ -7,10 +7,11 @@ public class DoubleGoldPower extends Power {
 
   public DoubleGoldPower() {
     super(PowerEffect.DOUBLE_GOLD);
+    super.type = this.getClass().getSimpleName();
   }
 
   @Override
-  boolean validityCheck(PlayerInGame playerInfo) {
+  public boolean validityCheck(PlayerInGame playerInfo) {
     //Must have 3 blue gem cards, and 1 black gem card
     PurchasedHand playerHand = playerInfo.getPurchasedHand();
     return playerHand.getGemCountOfColour(Colour.BLUE) >= 3

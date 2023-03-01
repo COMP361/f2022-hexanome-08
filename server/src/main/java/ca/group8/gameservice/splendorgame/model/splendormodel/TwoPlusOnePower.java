@@ -7,10 +7,11 @@ public class TwoPlusOnePower extends Power {
 
   public TwoPlusOnePower() {
     super(PowerEffect.TWO_PLUS_ONE);
+    super.type = this.getClass().getSimpleName();
   }
 
   @Override
-  boolean validityCheck(PlayerInGame playerInfo) {
+  public boolean validityCheck(PlayerInGame playerInfo) {
     //Must have 2 white gem cards
     return playerInfo.getPurchasedHand().getGemCountOfColour(Colour.WHITE) >= 2;
   }

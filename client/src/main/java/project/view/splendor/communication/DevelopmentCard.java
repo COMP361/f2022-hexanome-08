@@ -1,74 +1,68 @@
 package project.view.splendor.communication;
 
+import project.view.splendor.communication.CardEffect;
+import project.view.splendor.communication.Colour;
+
+import java.util.Collections;
 import java.util.EnumMap;
-import project.view.splendor.Colour;
+import java.util.List;
 
 public class DevelopmentCard extends Card {
-
-  public void setLevel(int level) {
-    this.level = level;
-  }
-
-  public void setGemColour(Colour gemColour) {
-    this.gemColour = gemColour;
-  }
-
-  public void setGemNumber(int gemNumber) {
-    this.gemNumber = gemNumber;
-  }
-
-  private int level;
-
-
-  // TODO: Figure it a way for the Orient card that has no colour
-  private Colour gemColour;
-  private boolean isPaired;
-  private String pairedCardId;
+  private final int level;
   private int gemNumber;
+  private boolean isPaired;
+  private final Colour gemColour;
+  private DevelopmentCard pairedCard;
 
+  private final List<CardEffect> purchaseEffects;
 
-  public DevelopmentCard(int paramPrestigePoints,
-                         EnumMap<Colour, Integer> paramPrice, String paramCardName,
-                         int level, Colour gemColour, boolean isPaired, String pairedCardId,
-                         int gemNumber) {
+  public DevelopmentCard(int paramPrestigePoints, EnumMap<Colour, Integer> paramPrice,
+                         String paramCardName, int level, Colour gemColour, int gemNumber,
+                         List<CardEffect> purchaseEffects) {
     super(paramPrestigePoints, paramPrice, paramCardName);
+    super.type = this.getClass().getSimpleName();
+    this.isPaired = false;
+    this.pairedCard = null;
     this.level = level;
     this.gemColour = gemColour;
-    this.isPaired = isPaired;
-    this.pairedCardId = pairedCardId;
     this.gemNumber = gemNumber;
+    this.purchaseEffects = Collections.unmodifiableList(purchaseEffects);
   }
 
   public int getLevel() {
     return level;
   }
 
-  /**
-   * @return Optional type of Colour.
-   */
-  //public Optional<Colour> getGemColour() { return gemColour; }
-  public Colour getGemColour() {
-    return gemColour;
-  }
-
-  public Boolean isPaired() {
-    return isPaired;
-  }
-
-  public String getPairedCardId() {
-    return pairedCardId;
-  }
-
   public int getGemNumber() {
     return gemNumber;
   }
 
-  public void setPaired(boolean paramPaired) {
-    isPaired = paramPaired;
+  public void setGemNumber(int gemNumber) {
+    this.gemNumber = gemNumber;
   }
 
-  public void setPairedCardId(String paramPairedCardId) {
-    pairedCardId = paramPairedCardId;
+  public boolean isPaired() {
+    return isPaired;
+  }
+
+  public void setPaired(boolean paired) {
+    isPaired = paired;
+  }
+
+  public Colour getGemColour() {
+    return gemColour;
+  }
+
+  public DevelopmentCard getPairedCard() {
+    return pairedCard;
+  }
+
+  public void setPairedCard(DevelopmentCard pairedCard) {
+    this.pairedCard = pairedCard;
+  }
+
+  public List<CardEffect> getPurchaseEffects() {
+    return purchaseEffects;
   }
 
 }
