@@ -25,7 +25,6 @@ public class SplendorDevHelper {
 
   private static Gson gson;
 
-  private static EnumMap<Colour, Integer> rawGemColoursMap;
   private static EnumMap<Colour, Integer> rawTokenColoursMap;
 
   private SplendorDevHelper() {
@@ -35,13 +34,6 @@ public class SplendorDevHelper {
         .registerTypeAdapter(Power.class, new PolymorphDeserializer<Power>())
         .registerTypeAdapter(Card.class, new PolymorphDeserializer<Card>())
         .create();
-    rawGemColoursMap = new EnumMap<>(Colour.class) {{
-      put(Colour.BLUE, 0);
-      put(Colour.RED, 0);
-      put(Colour.BLACK, 0);
-      put(Colour.GREEN, 0);
-      put(Colour.WHITE, 0);
-    }};
     rawTokenColoursMap = new EnumMap<>(Colour.class) {{
       put(Colour.BLUE, 0);
       put(Colour.RED, 0);
@@ -68,15 +60,6 @@ public class SplendorDevHelper {
     return gson;
   }
 
-
-  /**
-   * A raw map of gem colours (Red, blue, black, white, green), value = 0.
-   *
-   * @return a list of gem colours
-   */
-  public EnumMap<Colour, Integer> getRawGemColoursMap() {
-    return new EnumMap<>(rawGemColoursMap);
-  }
 
   /**
    * A raw map of token colours (red, blue, black, white, green, gold), value = 0.

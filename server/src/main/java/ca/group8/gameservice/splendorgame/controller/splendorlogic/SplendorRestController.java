@@ -325,8 +325,6 @@ public class SplendorRestController {
       gameValidator.gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
       ActionInterpreter actionInterpreter = gameManager.getGameActionInterpreter(gameId);
       actionInterpreter.interpretAction(actionId, playerName);
-
-
       // TODO: Start from here tmr
       // end of turn check
       GameInfo curGame = gameManager.getGameById(gameId);

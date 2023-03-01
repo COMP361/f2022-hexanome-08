@@ -40,7 +40,7 @@ public class TestCityCard {
     purchasedHand.setAccessible(true);
     PurchasedHand testPurchaseHand = new PurchasedHand();
     developmentCards.set(testPurchaseHand, allCardsInHand);
-    player.addPrestigePoints(15);
+    player.changePrestigePoints(15);
     purchasedHand.set(player, testPurchaseHand);
 
   }
@@ -63,7 +63,7 @@ public class TestCityCard {
     purchasedHand.setAccessible(true);
     PurchasedHand testPurchaseHand = new PurchasedHand();
     developmentCards.set(testPurchaseHand, allCardsInHand);
-    player.addPrestigePoints(10);
+    player.changePrestigePoints(10);
     purchasedHand.set(player, testPurchaseHand);
   }
 
@@ -83,7 +83,7 @@ public class TestCityCard {
     purchasedHand.setAccessible(true);
     PurchasedHand testPurchaseHand = new PurchasedHand();
     developmentCards.set(testPurchaseHand, allCardsInHand);
-    player.addPrestigePoints(15);
+    player.changePrestigePoints(15);
     purchasedHand.set(player, testPurchaseHand);
   }
 

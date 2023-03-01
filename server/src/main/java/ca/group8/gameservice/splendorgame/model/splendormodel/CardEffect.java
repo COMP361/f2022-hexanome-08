@@ -8,6 +8,7 @@ public enum CardEffect {
   BURN_CARD,
   SATCHEL,
   FREE_CARD,
-  RESERVE_NOBLE
+  RESERVE_NOBLE,
+  DOUBLE_GOLD
 
 }

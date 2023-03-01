@@ -50,6 +50,17 @@ public class TraderBoard extends Board {
     return allPlayerPowers;
   }
 
+
+  public int getUnlockedPowerCount(String playerName) {
+    Map<PowerEffect , Power> playerPowers = allPlayerPowers.get(playerName);
+    int count = 0;
+    for (Power power : playerPowers.values()) {
+      if (power.isUnlocked()) {
+        count += 1;
+      }
+    }
+    return count;
+  }
   /**
    * Get one specific power instance of a given player.
    *

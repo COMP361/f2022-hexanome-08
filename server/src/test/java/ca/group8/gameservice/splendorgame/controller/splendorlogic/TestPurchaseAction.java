@@ -18,7 +18,7 @@ public class TestPurchaseAction {
   DevelopmentCard card = new DevelopmentCard(3, price, "c1",
       1, Colour.BLUE, 1, new ArrayList<>());
   PurchaseAction action = new PurchaseAction(new Position(1, 1),
-      card, 0);
+      card, 0, price);
 
   @Test
   void testIsCardAction() {
