@@ -6,6 +6,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
+import ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
@@ -20,8 +21,10 @@ import java.util.List;
 public class PurchaseAction extends Action {
 
   private DevelopmentCard curCard;
-  private int goldTokenRequired;
+  private int goldCardsRequired;
   private Position cardPosition;
+
+  private final EnumMap<Colour, Integer> tokensToBePaid;
 
   @Override
   public Position getCardPosition() {
@@ -52,36 +55,28 @@ public class PurchaseAction extends Action {
    *
    * @param cardPosition      position on board
    * @param DevelopmentCard   DevelopmentCard associated with action
-   * @param goldTokenRequired number of gold token required
+   * @param goldCardsRequired number of gold card required
+   * @param tokensToBePaid a enum map of tokens to be paid
    */
   public PurchaseAction(Position cardPosition, DevelopmentCard DevelopmentCard,
-                        int goldTokenRequired) {
-    assert cardPosition != null && DevelopmentCard != null && goldTokenRequired >= 0;
+                        int goldCardsRequired, EnumMap<Colour, Integer> tokensToBePaid) {
+    assert cardPosition != null && DevelopmentCard != null && goldCardsRequired >= 0;
     super.type = this.getClass().getSimpleName();
     this.cardPosition = cardPosition;
     this.curCard = DevelopmentCard;
-    this.goldTokenRequired = goldTokenRequired;
+    this.goldCardsRequired = goldCardsRequired;
+    this.tokensToBePaid = tokensToBePaid;
   }
 
-  public int getGoldTokenRequired() {
-    return goldTokenRequired;
-  }
-
-  public void setGoldTokenRequired(int goldTokenRequired) {
-    this.goldTokenRequired = goldTokenRequired;
+  public int getGoldCardsRequired() {
+    return goldCardsRequired;
   }
 
 
   @Override
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
-                      ActionGenerator actionListGenerator,
+                      ActionGenerator actionGenerator,
                       ActionInterpreter actionInterpreter) {
-
-    //TODO: Double check that we want this assertion statement
-    assert curCard instanceof DevelopmentCard;
-
-    //cast DevelopmentCard to Development DevelopmentCard
-    DevelopmentCard curCard = (DevelopmentCard) this.curCard;
 
     List<CardEffect> cardEffects = curCard.getPurchaseEffects();
     int effectNum = cardEffects.size();
@@ -90,16 +85,77 @@ public class PurchaseAction extends Action {
     int points = curCard.getPrestigePoints();
 
     if (effectNum == 0) {
-      EnumMap<Colour, Integer> tokensSpent =
-          playerInGame.payTokensToBuy(goldTokenRequired, curCard);
+      // tokens off from hands
+      playerInGame.payTokensToBuy(goldCardsRequired, tokensToBePaid);
+      // card goes to hand
       purchasedHand.addDevelopmentCard(curCard);
-      playerInGame.addPrestigePoints(points);
-      curBank.returnToken(tokensSpent);
-
+      // points added
+      playerInGame.changePrestigePoints(points);
+      // tokens go back to bank
+      curBank.returnToken(tokensToBePaid);
+      // remove card from board
       BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
       baseBoard.removeCard(cardPosition);
+      // fill up the board
+      baseBoard.update();
     }
 
+    if (effectNum == 1) {
+      CardEffect curEffect = cardEffects.get(0);
+      //String playerName = playerInGame.getName();
+      if (curEffect.equals(CardEffect.BURN_CARD)) {
+        actionInterpreter.setStashedCard(curCard);
+        EnumMap<Colour,Integer> priceOfBurnCard = curCard.getPrice();
+        actionInterpreter.setBurnCardInfo(priceOfBurnCard);
+        actionGenerator.updateCascadeActions(playerInGame, curCard, curEffect);
+      } else {
+        // FREE, SATCHEL, RESERVE_NOBLE, DOUBLE_GOLD in here
+        playerInGame.payTokensToBuy(goldCardsRequired, tokensToBePaid);
+        // tokens go back to bank
+        curBank.returnToken(tokensToBePaid);
+        // remove card from board
+        OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
+        orientBoard.removeCard(cardPosition);
+        // fill up the board
+        orientBoard.update();
+
+        if (curEffect.equals(CardEffect.SATCHEL)) {
+          actionInterpreter.setStashedCard(curCard);
+        } else {
+          // FREE, RESERVE_NOBLE, DOUBLE_GOLD in here
+          // card goes to hand
+          purchasedHand.addDevelopmentCard(curCard);
+          // points added
+          playerInGame.changePrestigePoints(points);
+        }
+        // only update action map if it's not double gold
+        if (!curEffect.equals(CardEffect.DOUBLE_GOLD)) {
+          actionGenerator.updateCascadeActions(playerInGame, curCard, curEffect);
+        }
+      }
+
+    }
+
+    // ONLY FOR SATCHEL + FREE
+    if (effectNum == 2) {
+      actionInterpreter.setStashedCard(curCard);
+      int cardLevel = curCard.getLevel();
+      actionInterpreter.setFreeCardLevel(cardLevel - 1);
+      playerInGame.payTokensToBuy(goldCardsRequired, tokensToBePaid);
+      // tokens go back to bank
+      curBank.returnToken(tokensToBePaid);
+      // remove card from board
+      OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
+      orientBoard.removeCard(cardPosition);
+      // fill up the board
+      orientBoard.update();
+      actionGenerator.updateCascadeActions(playerInGame, curCard, CardEffect.SATCHEL);
+    }
+
+  }
+
+  public EnumMap<Colour, Integer> getTokensToBePaid() {
+    return tokensToBePaid;
   }
 
   /*
