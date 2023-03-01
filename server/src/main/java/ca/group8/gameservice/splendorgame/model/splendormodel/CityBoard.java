@@ -39,10 +39,7 @@ public class CityBoard extends Board {
    * @param playerName player name who gets the card
    * @param card       the city card gives to the player
    */
-  public void assignCityCard(String playerName, CityCard card) throws SplendorGameException {
-    if (!playerCities.containsKey(playerName)) {
-      throw new SplendorGameException("No such player in game!");
-    }
+  public void assignCityCard(String playerName, CityCard card) {
     playerCities.put(playerName, card);
     for (int i = 0; i < allCityCards.length; i++) {
       if (allCityCards[i].equals(card)) {
