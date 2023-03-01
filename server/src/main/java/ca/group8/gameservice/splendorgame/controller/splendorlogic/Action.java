@@ -27,11 +27,10 @@ import io.github.isharipov.gson.adapters.JsonType;
         @JsonSubtype(clazz = PurchaseAction.class, name = "PurchaseAction"),
         @JsonSubtype(clazz = CardExtraAction.class, name = "CardExtraAction"),
         @JsonSubtype(clazz = ClaimNobleAction.class, name = "ClaimNobleAction"),
-        @JsonSubtype(clazz = PowerExtraAction.class, name = "PowerExtraAction"),
+        @JsonSubtype(clazz = BonusTokenPowerAction.class, name = "PowerExtraAction"),
         @JsonSubtype(clazz = ReserveAction.class, name = "ReserveAction"),
         @JsonSubtype(clazz = TakeTokenAction.class, name = "TakeTokenAction"),
-        @JsonSubtype(clazz = ReturnTokenAction.class, name = "ReturnTokenAction"),
-
+        @JsonSubtype(clazz = ReturnTokenAction.class, name = "ReturnTokenAction")
     }
 )
 public abstract class Action {

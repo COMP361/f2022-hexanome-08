@@ -62,6 +62,11 @@ public class DevelopmentCard extends Card {
     return pairedCard;
   }
 
+  /**
+   * Return the gem number of this dev card.
+   *
+   * @return if it's paired, return 2, otherwise 1
+   */
   public int getGemNumber() {
     return gemNumber;
   }
