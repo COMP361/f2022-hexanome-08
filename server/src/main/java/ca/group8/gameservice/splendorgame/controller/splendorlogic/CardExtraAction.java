@@ -35,11 +35,21 @@ public class CardExtraAction extends Action {
     this.position = position;
   }
 
+
   @Override
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
-                      ActionGenerator actionListGenerator,
-                      ActionInterpreter actionInterpreter) {
-
+                      ActionGenerator actionListGenerator, ActionInterpreter actionInterpreter) {
+    //based on the cardEffect, execute the associated helper
+    if(this.cardEffect == BURN_CARD){
+      burnActionHelper(curTableTop, playerInGame, actionListGenerator);
+    }else if(this.cardEffect == SATCHEL){
+      satchelActionHelper(curTableTop, playerInGame, actionListGenerator);
+    }else if(this.cardEffect == RESERVE_NOBLE){
+      reserveNobleActionHelper(curTableTop, playerInGame, actionListGenerator);
+    }else if(this.cardEffect == FREE_CARD){
+      //Don't know which card is the freeCard
+      freeCardActionHelper(curTableTop, playerInGame, actionInterpreter);
+    }
   }
 
   @Override
@@ -82,7 +92,17 @@ public class CardExtraAction extends Action {
   public void reserveNobleActionHelper(TableTop curTableTop,
                                        PlayerInGame curPlayer,
                                        ActionGenerator associatedActionGenerator) {
+    noble = this.curCard;
+    // Make sure curCard is right type
+    if (noble.class() != NobleCard) {
+      throw new SplendorGameException("Error: Reserve Card is not a NobleCard");
+    }
 
+
+    //remove noble from base board
+    curTableTop.getBoard(BASE).removeNoble(noble);
+    //add it to player's reserve hand
+    curPlayer.getReservedHand().addNobleCard(noble);
   }
 
   //TODO
@@ -90,11 +110,11 @@ public class CardExtraAction extends Action {
                                   PlayerInGame curPlayer,
                                   ActionGenerator associatedActionGenerator) {
 
+
   }
 
   //TODO
-  public void freeCardActionHelper(DevelopmentCard freeCard,
-                                   TableTop curTableTop,
+  public void freeCardActionHelper(TableTop curTableTop,
                                    PlayerInGame curPlayer,
                                    ActionInterpreter associatedActionInterpreter) {
 
