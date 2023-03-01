@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * This class represents the bank.
@@ -65,11 +66,11 @@ public class Bank {
    *
    * @param paramTokens the tokens map that player wants to take
    */
-  void takeToken(EnumMap<Colour, Integer> paramTokens) {
+  public void takeToken(EnumMap<Colour, Integer> paramTokens) {
     //verify that this number of gems can be removed (meaning new sum will not be less than 0)
     //remove Tokens
     for (Colour colour : Colour.values()) {
-      if (colour != Colour.ORIENT) {
+      if (colour != Colour.ORIENT && !colour.equals(Colour.GOLD)) {
         int newVal = allTokens.get(colour) - paramTokens.get(colour);
         assert newVal >= 0;
         allTokens.replace(colour, newVal);
@@ -80,6 +81,19 @@ public class Bank {
 
   public EnumMap<Colour, Integer> getAllTokens() {
     return allTokens;
+  }
+
+  /**
+   * @return a number indicating how many non-gold tokens are left
+   */
+  public int getRegularTokenCount() {
+
+    return allTokens.entrySet()
+        .stream()
+        .filter(entry -> !entry.getKey().equals(Colour.GOLD) &&
+            !entry.getKey().equals(Colour.ORIENT))
+        .mapToInt(Map.Entry::getValue)
+        .sum();
   }
 
   public int getInitialValue() {

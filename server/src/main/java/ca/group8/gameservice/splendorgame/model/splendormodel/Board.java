@@ -1,5 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import io.github.isharipov.gson.adapters.JsonSubtype;
+import io.github.isharipov.gson.adapters.JsonType;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,8 +15,25 @@ import org.springframework.util.ResourceUtils;
 
 /**
  * The super abstract class that defines the behavior of all extension boards.
+ * <p>
+ * Every abstract class was serialized/deserialized using the repository from:
+ * * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
+ * * Thank him so much!!!!!!!!!!!!!!!
  */
+
+@JsonType(
+    property = "type",
+    subtypes = {
+        @JsonSubtype(clazz = BaseBoard.class, name = "BaseBoard"),
+        @JsonSubtype(clazz = CityBoard.class, name = "CityBoard"),
+        @JsonSubtype(clazz = TraderBoard.class, name = "TraderBoard"),
+        @JsonSubtype(clazz = OrientBoard.class, name = "OrientBoard")
+
+    }
+)
 public abstract class Board {
+
+  String type;
 
   // update the board
   public abstract void update();
@@ -162,5 +181,15 @@ public abstract class Board {
     } catch (ParseException | IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  /**
+   * Call this method to rename the player names if the ones who want to play now does not.
+   * match with the ones who saved this game before.
+   *
+   * @param playerNames the current player names who want to play this game
+   */
+  public void renamePlayers(List<String> playerNames) {
+    // do nothing for base and orient board
   }
 }

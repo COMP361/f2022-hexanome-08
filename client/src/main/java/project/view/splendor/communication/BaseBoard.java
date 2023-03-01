@@ -1,34 +1,26 @@
 package project.view.splendor.communication;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BaseBoard {
-
-  public Map<Integer, List<BaseCard>> getBaseDecks() {
-    return baseDecks;
+  private final Map<Integer, List<DevelopmentCard>> decks = new HashMap<>();
+  private final Map<Integer, DevelopmentCard[]> cardsOnBoard = new HashMap<>();
+  private final List<NobleCard> nobles;
+  public BaseBoard(List<NobleCard> nobles) {
+    this.nobles = nobles;
   }
 
-  public Map<Integer, List<BaseCard>> getBaseCardsOnBoard() {
-    return baseCardsOnBoard;
+  public Map<Integer, List<DevelopmentCard>> getDecks() {
+    return decks;
   }
 
-  public void setBaseDecks(
-      Map<Integer, List<BaseCard>> baseDecks) {
-    this.baseDecks = baseDecks;
+  public Map<Integer, DevelopmentCard[]> getCardsOnBoard() {
+    return cardsOnBoard;
   }
 
-  public void setBaseCardsOnBoard(
-      Map<Integer, List<BaseCard>> baseCardsOnBoard) {
-    this.baseCardsOnBoard = baseCardsOnBoard;
-  }
-
-  private Map<Integer, List<BaseCard>> baseDecks;
-  private Map<Integer, List<BaseCard>> baseCardsOnBoard;
-
-  public BaseBoard(Map<Integer, List<BaseCard>> baseDecks,
-                   Map<Integer, List<BaseCard>> baseCardsOnBoard) {
-    this.baseDecks = baseDecks;
-    this.baseCardsOnBoard = baseCardsOnBoard;
+  public List<NobleCard> getNobles() {
+    return nobles;
   }
 }

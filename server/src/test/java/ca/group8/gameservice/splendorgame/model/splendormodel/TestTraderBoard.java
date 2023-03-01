@@ -52,23 +52,9 @@ public class TestTraderBoard {
     allPlayerPowers.setAccessible(true);
     Map<String,Map<PowerEffect, Power>> testPowers
         = (Map<String,Map<PowerEffect, Power>> ) allPlayerPowers.get(traderBoard);
-
-    try {
-      Power power = traderBoard.getPlayerOnePower("Bob", PowerEffect.ARM_POINTS);
-      Power testPower = testPowers.get("Bob").get(PowerEffect.ARM_POINTS);
-      assertEquals(testPower, power);
-    } catch (SplendorGameException e) {
-      // nothing should happen
-    }
+    Power power = traderBoard.getPlayerOnePower("Bob", PowerEffect.ARM_POINTS);
+    Power testPower = testPowers.get("Bob").get(PowerEffect.ARM_POINTS);
+    assertEquals(testPower, power);
   }
 
-
-  @Test
-  void testGetPlayerOnePower_False() {
-    try {
-      traderBoard.getPlayerOnePower("Bob123", PowerEffect.ARM_POINTS);
-    } catch (SplendorGameException e) {
-      assertEquals("Player not in this game!", e.getMessage());
-    }
-  }
 }

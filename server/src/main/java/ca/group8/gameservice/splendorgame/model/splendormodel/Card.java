@@ -1,13 +1,29 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import io.github.isharipov.gson.adapters.JsonSubtype;
+import io.github.isharipov.gson.adapters.JsonType;
 import java.util.EnumMap;
 import java.util.Objects;
 
 /**
  * This class represents the SuperClass of all Cards/nobles.
+ * <p>
+ * Every abstract class was serialized/deserialized using the repository from:
+ * * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
+ * * Thank him so much!!!!!!!!!!!!!!!
  */
+
+@JsonType(
+    property = "type",
+    subtypes = {
+        @JsonSubtype(clazz = CityCard.class, name = "CityCard"),
+        @JsonSubtype(clazz = DevelopmentCard.class, name = "DevelopmentCard"),
+        @JsonSubtype(clazz = NobleCard.class, name = "NobleCard")
+    }
+)
 public abstract class Card {
 
+  String type;
   private final int prestigePoints;
   private final EnumMap<Colour, Integer> price;
   private final String cardName;

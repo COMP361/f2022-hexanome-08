@@ -1,33 +1,22 @@
 package project.view.splendor.communication;
 
-public class PurchaseAction implements Action {
+public class PurchaseAction extends Action {
+  private DevelopmentCard curCard;
   private int goldTokenRequired;
+  private Position cardPosition;
 
-  @Override
-  public Position getPosition() {
-    return position;
-  }
-
-  @Override
-  public DevelopmentCard getCard() {
-    return card;
-  }
-
-  public void setPosition(Position position) {
-    this.position = position;
-  }
-
-  public void setCard(DevelopmentCard card) {
-    this.card = card;
-  }
-
-  private Position position;
-  private DevelopmentCard card;
-
-  public PurchaseAction(Position position, DevelopmentCard card, int goldTokenRequired) {
-    this.position = position;
-    this.card = card;
+  public PurchaseAction(String type, DevelopmentCard curCard, int goldTokenRequired, Position cardPosition) {
+    this.curCard = curCard;
     this.goldTokenRequired = goldTokenRequired;
+    this.cardPosition = cardPosition;
+  }
+
+  public DevelopmentCard getCurCard() {
+    return curCard;
+  }
+
+  public void setCurCard(DevelopmentCard curCard) {
+    this.curCard = curCard;
   }
 
   public int getGoldTokenRequired() {
@@ -38,14 +27,12 @@ public class PurchaseAction implements Action {
     this.goldTokenRequired = goldTokenRequired;
   }
 
-
-  @Override
-  public void execute(GameInfo currentGameState, PlayerInGame playerState) {
-
+  public Position getCardPosition() {
+    return cardPosition;
   }
 
-  @Override
-  public boolean checkIsCardAction() {
-    return true;
+  public void setCardPosition(Position cardPosition) {
+    this.cardPosition = cardPosition;
   }
+
 }

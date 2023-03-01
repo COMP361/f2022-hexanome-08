@@ -1,6 +1,9 @@
 
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import com.google.common.collect.Sets;
+import java.util.EnumMap;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.*;
@@ -43,5 +46,21 @@ public class TestPosition {
         assert (p1.getX() == 2);
     }
 
+
+    @Test
+    void test() {
+        EnumMap<Colour, Integer> rawMap = new EnumMap<>(Colour.class){{
+            put(Colour.BLUE, 0);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+        }};
+        Set<Set<Colour>> colours = Sets.combinations(rawMap.keySet(),2);
+        for (Set<Colour> c : colours) {
+            System.out.println(c);
+        }
+
+    }
 }
 

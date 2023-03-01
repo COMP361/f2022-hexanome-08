@@ -19,6 +19,7 @@ public class PowerExtraAction extends Action {
 
   public PowerExtraAction(Card curCard, PowerEffect powerEffect) {
     assert curCard != null && powerEffect != null;
+    super.type = this.getClass().getSimpleName();
     this.powerEffect = powerEffect;
   }
 
@@ -27,8 +28,8 @@ public class PowerExtraAction extends Action {
   }
 
   @Override
-  // TODO
-  void execute(TableTop curTableTop, PlayerInGame playerInGame,
+    // TODO
+  public void execute(TableTop curTableTop, PlayerInGame playerInGame,
                ActionGenerator actionListGenerator,
                ActionInterpreter actionInterpreter) {
 
@@ -61,7 +62,7 @@ public class PowerExtraAction extends Action {
   }
 
   @Override
-  //TODO: Should this have a curCard position associated with it??
+    //TODO: Should this have a curCard position associated with it??
   Position getCardPosition() throws NullPointerException {
     throw new NullPointerException("There is no card position associated with this action.");
   }

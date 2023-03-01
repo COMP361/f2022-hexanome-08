@@ -8,7 +8,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 
 /**
- * This class represents an extra card action.
+ * This class represents an extra DevelopmentCard action.
  */
 public class CardExtraAction extends Action {
 
@@ -16,18 +16,23 @@ public class CardExtraAction extends Action {
   //TODO: Check this works after code is merged
   private final CardEffect cardEffect;
 
+  private final Position position;
+
   //TODO: Check this works after code is merged
 
   /**
    * Constructor.
    *
-   * @param card       Card which "unlocks" this extra action
+   * @param curCard    DevelopmentCard which "unlocks" this extra action
    * @param cardEffect The type of extra action
    */
-  public CardExtraAction(Card card, CardEffect cardEffect) {
+  public CardExtraAction(Card curCard, CardEffect cardEffect,
+                         Position position) {
     assert curCard != null;
-    curCard = card;
+    super.type = this.getClass().getSimpleName();
+    curCard = curCard;
     this.cardEffect = cardEffect;
+    this.position = position;
   }
 
   @Override
@@ -56,6 +61,14 @@ public class CardExtraAction extends Action {
   //TODO: Do we have an associated position? If not, have it throw a null pointer exception.
   public Position getCardPosition() {
     return null;
+  }
+
+  public CardEffect getCardEffect() {
+    return cardEffect;
+  }
+
+  public Position getPosition() {
+    return position;
   }
 
   /*

@@ -15,6 +15,7 @@ public class CityCard extends Card {
   public CityCard(int paramPrestigePoints, EnumMap<Colour, Integer> paramPrice,
                   String paramCardName, int anyColourCount) {
     super(paramPrestigePoints, paramPrice, paramCardName);
+    super.type = this.getClass().getSimpleName();
     this.anyColourCount = anyColourCount;
   }
 

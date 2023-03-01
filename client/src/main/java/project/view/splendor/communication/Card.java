@@ -1,22 +1,29 @@
 package project.view.splendor.communication;
 
+
 import java.util.EnumMap;
-import project.view.splendor.Colour;
 
-public class Card {
+public abstract class Card {
 
+  String type;
   private final int prestigePoints;
   private final EnumMap<Colour, Integer> price;
   private final String cardName;
+  public Card(int prestigePoints, EnumMap<Colour, Integer> price, String cardName) {
+    this.prestigePoints = prestigePoints;
+    this.price = price;
+    this.cardName = cardName;
+  }
 
-  public Card(int paramPrestigePoints, EnumMap<Colour, Integer> paramPrice, String paramCardName) {
-    prestigePoints = paramPrestigePoints;
-    price = paramPrice;
-    cardName = paramCardName;
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   public int getPrestigePoints() {
-
     return prestigePoints;
   }
 
@@ -26,27 +33,6 @@ public class Card {
 
   public String getCardName() {
     return cardName;
-  }
-
-  // Overriding card equals
-  @Override
-  public boolean equals(Object o) {
-    boolean name = true;
-    boolean preprestigePoint = true;
-    boolean price = true;
-    Card card = (Card) o;
-
-    if (!this.getCardName().equals(card.getCardName())) {
-      name = false;
-    } else if (this.getPrestigePoints() != card.getPrestigePoints()) {
-      preprestigePoint = false;
-    }
-    for (Colour i : Colour.values()) {
-      if (this.getPrice().get(i) != card.getPrice().get(i)) {
-        price = false;
-      }
-    }
-    return (name && preprestigePoint && price);
   }
 
 }
