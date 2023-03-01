@@ -1,6 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.controller.SplendorJsonHelper;
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
@@ -166,14 +166,7 @@ public class ActionGenerator {
       return result;
     }
 
-    EnumMap<Colour, Integer> rawMap = new EnumMap<>(Colour.class) {{
-      put(Colour.BLUE, 0);
-      put(Colour.RED, 0);
-      put(Colour.BLACK, 0);
-      put(Colour.GREEN, 0);
-      put(Colour.WHITE, 0);
-    }};
-
+    EnumMap<Colour, Integer> rawMap = SplendorDevHelper.getInstance().getRawGemColoursMap();
     EnumMap<Colour, Integer> tokenLeft = new EnumMap<>(bank.getAllTokens());
     tokenLeft.remove(Colour.GOLD); // exclude the gold token
     tokenLeft.remove(Colour.ORIENT); // exclude the orient token
@@ -235,7 +228,7 @@ public class ActionGenerator {
         new ArrayList<>(cardsToReserveAction(baseBoard, orientBoard, curPlayerInfo));
     allActions.addAll(cardsToPurchaseAction(baseBoard, orientBoard, curPlayerInfo));
     allActions.addAll(generateTakeTokenActions(bank, curPlayerInfo));
-    Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     Map<String, Action> curActionMap = new HashMap<>();
     for (Action action : allActions) {
       String actionJson = gsonParser.toJson(action).toUpperCase();
@@ -336,7 +329,7 @@ public class ActionGenerator {
     }
 
     Map<String, Action> actionMap = new HashMap<>();
-    Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     for (Action action : cascadeActions) {
       String actionJson = gsonParser.toJson(action, CardExtraAction.class);
       String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();
@@ -362,7 +355,7 @@ public class ActionGenerator {
     }
 
     Map<String, Action> actionMap = new HashMap<>();
-    Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     for (Action action : result) {
       String actionJson = gsonParser.toJson(action, ClaimNobleAction.class);
       String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();
@@ -454,6 +447,12 @@ public class ActionGenerator {
         if (playerTokens.get(colour) < combo.get(colour)) {
           isValid = false;
         }
+        // if the return went over the initial value, we do not allow it as well
+        int upperBound = tableTop.getBank().getInitialValue();
+        EnumMap<Colour,Integer> bankBalance = tableTop.getBank().getAllTokens();
+        if(bankBalance.get(colour) + combo.get(colour) > upperBound) {
+          isValid = false;
+        }
       }
       if (isValid) {
         returnTokenActions.add(new ReturnTokenAction(combo, extraTokenCount));
@@ -461,7 +460,7 @@ public class ActionGenerator {
     }
 
     Map<String, Action> actionMap = new HashMap<>();
-    Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     for (Action action : returnTokenActions) {
       String actionJson = gsonParser.toJson(action, ReturnTokenAction.class);
       String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();

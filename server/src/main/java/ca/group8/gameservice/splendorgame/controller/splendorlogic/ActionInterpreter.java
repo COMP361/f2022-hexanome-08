@@ -86,7 +86,7 @@ public class ActionInterpreter {
     actionChosen.execute(tableTop, playerInGame, actionGenerator, this);
 
     // the action has been executed, and the player's action map is possibly empty now, check!
-    if (actionMap.isEmpty()) {
+    if (actionGenerator.getPlayerActionMaps().get(playerName).isEmpty()) {
       // if the current player's action map is empty, we do end turn check
       // and then set to next player's turn
 

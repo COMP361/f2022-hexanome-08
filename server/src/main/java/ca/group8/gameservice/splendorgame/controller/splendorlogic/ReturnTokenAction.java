@@ -22,31 +22,10 @@ public class ReturnTokenAction extends Action {
     extraTokenCount = extraTokens;
   }
 
-  /**
-   * This method should set the private EnumMap tokensInHand equal to the parameter Map.
-   *
-   * @param tokens is an EnumMap of tokens
-   */
-  public void setTokens(EnumMap<Colour, Integer> tokens) {
-    for (Colour colour : Colour.values()) {
-      tokensToReturn.put(colour, tokens.get(colour));
-    }
-  }
-
   public EnumMap<Colour, Integer> getTokens() {
     return tokensToReturn;
   }
 
-  /**
-   * Set the number of extra tokens (which will need to be returned).
-   *
-   * @param number of tokens to return.
-   */
-  public void setExtraTokenCount(int number) {
-    //TODO: Check whether number must be GREATER than 0, or >=0
-    assert number >= 0;
-    extraTokenCount = number;
-  }
 
   public int getExtraTokenCount() {
     return extraTokenCount;
@@ -61,12 +40,12 @@ public class ReturnTokenAction extends Action {
   }
 
   @Override
-  Card getCurCard() throws NullPointerException {
+  public Card getCurCard() throws NullPointerException {
     throw new NullPointerException("There is no card associated with this action.");
   }
 
   @Override
-  Position getCardPosition() throws NullPointerException {
+  public Position getCardPosition() throws NullPointerException {
     throw new NullPointerException("There is no card position associated with this action.");
   }
 }

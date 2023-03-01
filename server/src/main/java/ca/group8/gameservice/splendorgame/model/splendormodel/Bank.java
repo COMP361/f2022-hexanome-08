@@ -70,7 +70,7 @@ public class Bank {
     //verify that this number of gems can be removed (meaning new sum will not be less than 0)
     //remove Tokens
     for (Colour colour : Colour.values()) {
-      if (colour != Colour.ORIENT) {
+      if (colour != Colour.ORIENT && !colour.equals(Colour.GOLD)) {
         int newVal = allTokens.get(colour) - paramTokens.get(colour);
         assert newVal >= 0;
         allTokens.replace(colour, newVal);

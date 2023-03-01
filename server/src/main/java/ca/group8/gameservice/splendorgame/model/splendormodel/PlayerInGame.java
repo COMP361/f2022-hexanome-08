@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import java.util.EnumMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class PlayerInGame {
     this.tokenHand = new TokenHand(0); // Initialize to 0 (empty)
     this.purchasedHand = new PurchasedHand();
     this.reservedHand = new ReservedHand();
-    this.wealth = new EnumMap<>(Colour.class);
+    this.wealth = SplendorDevHelper.getInstance().getRawTokenColoursMap(); // wealth including gold
     this.prestigePoints = 0;
   }
 
@@ -132,24 +133,14 @@ public class PlayerInGame {
    * Guarantee to return a map with only RED, BLUE, WHITE, BLACK AND GREEN
    */
   public EnumMap<Colour, Integer> getTotalGems() {
-    EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
-    // initialize first
-    for (Colour c : Colour.values()) {
-      totalGems.put(c, 0);
-    }
+    EnumMap<Colour, Integer> totalGems = SplendorDevHelper.getInstance().getRawGemColoursMap();
     if (purchasedHand.getDevelopmentCards().size() > 0) {
       for (DevelopmentCard card : purchasedHand.getDevelopmentCards()) {
         // Only count the card with regular gem colours
         if (card.hasRegularGemColour()) {
           Colour colour = card.getGemColour();
-          if (!totalGems.containsKey(colour)) {
-            // if gem map does not contain the colour, put the value in map
-            totalGems.put(colour, card.getGemNumber());
-          } else {
-            // if it contains it, increment on the old value
-            int oldValue = totalGems.get(colour);
-            totalGems.put(colour, oldValue + card.getGemNumber());
-          }
+          int oldValue = totalGems.get(colour);
+          totalGems.put(colour, oldValue + card.getGemNumber());
         }
       }
     }
@@ -165,8 +156,12 @@ public class PlayerInGame {
     //logger.info("All tokens in token hand: " + tokenHand.getAllTokens());
     //logger.info("All gems as a enum map: " + gems);
 
-    for (Colour colour : Colour.values()) {
-      wealth.put(colour, tokenHand.getAllTokens().get(colour) + gems.get(colour));
+    for (Colour colour : SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet()) {
+      if (colour.equals(Colour.GOLD)) {
+        wealth.put(colour, tokenHand.getAllTokens().get(colour));
+      } else {
+        wealth.put(colour, tokenHand.getAllTokens().get(colour) + gems.get(colour));
+      }
     }
     return wealth;
   }

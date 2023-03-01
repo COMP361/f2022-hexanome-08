@@ -1,6 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.controller.SplendorJsonHelper;
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.GameServerParameters;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import com.google.gson.Gson;
@@ -184,7 +184,7 @@ public class LobbyCommunicator {
   public void putSaveGame(Savegame savegame) throws UnirestException {
     String serviceName = savegame.getGamename();
     String saveGameId = savegame.getSavegameid();
-    String body = SplendorJsonHelper.getInstance().getGson().toJson(savegame, Savegame.class);
+    String body = SplendorDevHelper.getInstance().getGson().toJson(savegame, Savegame.class);
     String url = String.format("%s/api/gameservices/%s/savegames/%s", lobbyServiceAddress,
         serviceName, saveGameId);
     String accessToken;

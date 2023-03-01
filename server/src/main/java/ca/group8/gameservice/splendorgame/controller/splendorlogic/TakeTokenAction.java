@@ -31,12 +31,8 @@ public class TakeTokenAction extends Action {
     return tokensTaken;
   }
 
-  public void setTokens(EnumMap<Colour, Integer> tokens) {
-    this.tokensTaken = tokens;
-  }
-
   @Override
-  void execute(TableTop curTableTop, PlayerInGame playerInGame,
+  public void execute(TableTop curTableTop, PlayerInGame playerInGame,
                ActionGenerator actionGenerator,
                ActionInterpreter actionInterpreter) {
     Bank bank = curTableTop.getBank();
@@ -60,12 +56,12 @@ public class TakeTokenAction extends Action {
   }
 
   @Override
-  Card getCurCard() {
+  public Card getCurCard() throws NullPointerException {
     throw new NullPointerException("There is no card associated with this action.");
   }
 
   @Override
-  Position getCardPosition() {
+  public Position getCardPosition() throws NullPointerException {
     throw new NullPointerException("There is no card position associated with this action.");
   }
 

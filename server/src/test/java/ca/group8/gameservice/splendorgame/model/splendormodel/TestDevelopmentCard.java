@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.EnumMap;
 
 
 public class TestDevelopmentCard {
-    EnumMap<Colour, Integer> price = new EnumMap<>(Colour.class);
+    EnumMap<Colour, Integer> price = SplendorDevHelper.getInstance().getRawGemColoursMap();
     DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
         1, Colour.BLUE, 1, new ArrayList<>());
     List<CardEffect> orientEffects = new ArrayList<>();
