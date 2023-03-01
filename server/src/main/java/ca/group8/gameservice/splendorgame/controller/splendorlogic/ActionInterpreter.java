@@ -2,6 +2,8 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.CityBoard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.CityCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
@@ -12,7 +14,6 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
@@ -86,7 +87,8 @@ public class ActionInterpreter {
     actionChosen.execute(tableTop, playerInGame, actionGenerator, this);
 
     // the action has been executed, and the player's action map is possibly empty now, check!
-    if (actionGenerator.getPlayerActionMaps().get(playerName).isEmpty()) {
+    actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
+    if (actionMap.isEmpty()) {
       // if the current player's action map is empty, we do end turn check
       // and then set to next player's turn
 
@@ -145,37 +147,51 @@ public class ActionInterpreter {
       }
 
       // winners check (optionally with city extension)
-      if (tableTop.getGameBoards().containsKey(Extension.CITY)) {
-        // city winning check
+      boolean playerWonTheGame;
+      boolean hasCityExtension = tableTop.getGameBoards().containsKey(Extension.CITY);
+      if (hasCityExtension) {
+        // city winning check, can the player unlock a city or not.
+        CityBoard cityBoard = (CityBoard) tableTop.getBoard(Extension.CITY);
+        for (CityCard cityCard : cityBoard.getAllCityCards()) {
+          // unlock the first city card that's available to unlock
+          if (cityCard.canUnlock(playerInGame)) {
+            cityBoard.assignCityCard(playerName, cityCard);
+            break;
+          }
+        }
+        // if the player has one city card, then one wins
+        playerWonTheGame = cityBoard.getPlayerCities().get(playerName) != null;
       } else {
         // regular winning check
         int points = playerInGame.getPrestigePoints();
-        if (points >= 15) {
-          List<String> winners = gameInfo.getWinners();
-          List<String> allPlayers = gameInfo.getPlayerNames();
-          // if the current player is the last player, this game is over
-          if (playerName.equals(allPlayers.get(allPlayers.size() - 1))) {
-            if (winners.isEmpty()) { // this is the first and last winner
-              winners.add(playerName);
-              // game is over!
-              gameInfo.setFinished();
-            } else {
-              // we have several potential winners
-              winners.add(playerName);
-              decideWinner(winners);
-              gameInfo.setFinished();
-            }
-          } else {
-            // add the winner
-            winners.add(playerName);
-            // and can not say the game is finished
-          }
-        }
-
+        playerWonTheGame = points >= 15;
       }
 
-      if (!gameInfo.isFinished()) {
-        gameInfo.setNextPlayer();
+      // the boolean value will be decided differently based on whether we play
+      // with city extension or not
+      if (playerWonTheGame) {
+        List<String> winners = gameInfo.getWinners();
+        List<String> allPlayers = gameInfo.getPlayerNames();
+        // if the current player is the last player, this game is over
+        String lastPlayerName = allPlayers.get(allPlayers.size() - 1);
+        if (playerName.equals(lastPlayerName)) {
+          if (winners.isEmpty()) { // this is the first and last winner
+            winners.add(playerName);
+            // game is over!
+            gameInfo.setFinished();
+          } else {
+            // we have several potential winners
+            winners.add(playerName);
+            // choose and set all winners (might have tie)
+            decideWinners(winners);
+            // game is over!
+            gameInfo.setFinished();
+          }
+        } else {
+          // add the winner
+          winners.add(playerName);
+          // and can not say the game is finished
+        }
       }
 
       // set next turn
@@ -186,6 +202,11 @@ public class ActionInterpreter {
       //  private int burnCardCount = 0;
       //  private Colour burnCardColour = null;
       //  private DevelopmentCard stashedCard = null;
+
+      // if the game is not finished, set next player
+      if (!gameInfo.isFinished()) {
+        gameInfo.setNextPlayer();
+      }
 
     }
 
@@ -202,17 +223,43 @@ public class ActionInterpreter {
     // extra need to check the orient part of extra actions need to be generated
 
 
-    //TODO: Set to the next players turn? check winner?
+    //TODO: Set to the next players turn? check winner? (DONE ABOVE)
   }
 
 
-  private void decideWinner(List<String> winnerNames) {
-    // sorted the playerInGame descending
-    List<PlayerInGame> playerInGames = winnerNames.stream()
-        .map(playerStates::getOnePlayerInGame).sorted(Comparator.comparing(
-            (PlayerInGame player) -> player.getPurchasedHand().getTotalCardCount()))
+  // change the gameInfo winner list to only contain the winner
+  private void decideWinners(List<String> winnerNames) {
+
+
+    // first need to sort by points, see if there is a tie or not
+
+    // descending order, sorted by points
+    List<PlayerInGame> sortByPointsWinners = winnerNames.stream()
+        .map(playerStates::getOnePlayerInGame)
+        .sorted(Comparator.comparing(PlayerInGame::getPrestigePoints).reversed())
         .collect(Collectors.toList());
-    gameInfo.setWinners(Arrays.asList(playerInGames.get(0).getName()));
+
+    // get all players with the highest points
+    int highestPoints = sortByPointsWinners.get(0).getPrestigePoints();
+    List<PlayerInGame> playersWithMaxPoints = sortByPointsWinners.stream()
+        .filter(player -> player.getPrestigePoints() == highestPoints)
+        .collect(Collectors.toList());
+
+    // sort the playersWithMaxPoints now, ascending order by card counts
+    List<PlayerInGame> sortByDevCardCountWinners = playersWithMaxPoints.stream()
+        .sorted(Comparator.comparing(
+            (PlayerInGame player) -> player.getPurchasedHand().getTotalCardCount()
+        )).collect(Collectors.toList());
+
+    int minDevCardCount = sortByDevCardCountWinners.get(0).getPurchasedHand().getTotalCardCount();
+    // now decide the final winners with the highest points and min dev cards
+    List<String> finalWinners = sortByDevCardCountWinners.stream()
+        .filter(player -> player.getPurchasedHand().getTotalCardCount() == minDevCardCount)
+        .map(PlayerInGame::getName)
+        .collect(Collectors.toList());
+
+    // set the winners names to gameInfo
+    gameInfo.setWinners(finalWinners);
   }
 
   public ActionGenerator getActionGenerator() {
