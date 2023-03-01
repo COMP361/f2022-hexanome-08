@@ -50,7 +50,7 @@ public abstract class Action {
     return false;
   }
 
-  abstract Card getCurCard() throws NullPointerException;
+  abstract Card getCurCard();
 
   abstract Position getCardPosition() throws NullPointerException;
 }

@@ -147,7 +147,7 @@ public class DevelopmentCard extends Card {
       }
       // either we have a
       int i = 0;
-      while (i < goldTokenArr.length) {
+      while (i < goldTokenArr.length && diffPrice.values().stream().anyMatch(v -> v < 0)) {
         for (Colour colour : diffPrice.keySet()) {
           if (diffPrice.get(colour) < 0) {
             int curLeftOver = diffPrice.get(colour);

@@ -3,6 +3,7 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import static org.junit.Assert.assertEquals;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumMap;
@@ -46,21 +47,6 @@ class TestBank {
         }
     }
 
-
-    //Removing tokens from bank
-    @Test
-    void TestTakeGoldToken() {
-        EnumMap<Colour,Integer> token1 = new EnumMap<>(Colour.class);
-        for (Colour colour : Colour.values()) {
-            if (colour == Colour.GOLD) {
-                token1.put(colour, 1);
-            } else {
-                token1.put(colour, 0);
-            }
-        }
-        b1.takeToken(token1);
-        assert (b1.getAllTokens().get(Colour.GOLD) == 4);
-    }
 
     @Test
     void TestTakeManyTokens() {

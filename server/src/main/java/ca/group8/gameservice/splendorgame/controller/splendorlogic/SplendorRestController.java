@@ -1,6 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.controller.SplendorJsonHelper;
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGameState;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
@@ -294,7 +294,7 @@ public class SplendorRestController {
 
       Type actionMapType = new TypeToken<Map<String, Action>>() {
       }.getType();
-      Gson gsonParser = SplendorJsonHelper.getInstance().getGson();
+      Gson gsonParser = SplendorDevHelper.getInstance().getGson();
       String actionMapJson = gsonParser.toJson(actionMap, actionMapType);
       return ResponseEntity.status(HttpStatus.OK).body(actionMapJson);
     } catch (ModelAccessException e) {

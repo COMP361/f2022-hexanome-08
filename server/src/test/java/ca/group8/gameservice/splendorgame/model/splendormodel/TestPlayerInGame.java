@@ -3,6 +3,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -12,9 +13,9 @@ import org.junit.jupiter.api.Test;
 public class TestPlayerInGame {
   PlayerInGame p1 = new PlayerInGame("Ben");
   PlayerInGame p2 = new PlayerInGame("Mary");
-  EnumMap<Colour,Integer> price_1 = new EnumMap<>(Colour.class);
-  EnumMap<Colour,Integer> price_2 = new EnumMap<>(Colour.class);
-  EnumMap<Colour,Integer> price_3 = new EnumMap<>(Colour.class);
+  EnumMap<Colour,Integer> price_1 = SplendorDevHelper.getInstance().getRawGemColoursMap();
+  EnumMap<Colour,Integer> price_2 = SplendorDevHelper.getInstance().getRawGemColoursMap();
+  EnumMap<Colour,Integer> price_3 = SplendorDevHelper.getInstance().getRawGemColoursMap();
   List<CardEffect> purchaseEffects = new ArrayList<>();
   DevelopmentCard c1 = new DevelopmentCard(1,price_1,"card1",1,Colour.RED,1,purchaseEffects);
   DevelopmentCard c2 = new DevelopmentCard(2,price_2,"card2",1,Colour.BLUE,2,purchaseEffects);
@@ -23,8 +24,8 @@ public class TestPlayerInGame {
 
   @BeforeEach
   void setup() {
-    EnumMap<Colour,Integer> tokens = new EnumMap<>(Colour.class);
-    for (Colour c : Colour.values()) {
+    EnumMap<Colour,Integer> tokens = SplendorDevHelper.getInstance().getRawGemColoursMap();
+    for (Colour c : tokens.keySet()) {
       tokens.put(c,0);
       price_1.put(c,0);
       price_2.put(c,0);
@@ -63,7 +64,7 @@ public class TestPlayerInGame {
   @Test
   void TestGetTotalGems() {
     EnumMap<Colour, Integer> totalGems = p1.getTotalGems();
-    for (Colour c : Colour.values()) {
+    for (Colour c : totalGems.keySet()) {
       int gems = totalGems.get(c);
       if (c==Colour.RED) {
         assertEquals(1, gems);
@@ -78,7 +79,7 @@ public class TestPlayerInGame {
   @Test
   void TestGetWealth() {
     EnumMap<Colour, Integer> wealth = p1.getWealth();
-    for (Colour c : Colour.values()) {
+    for (Colour c : wealth.keySet()) {
       int gems = wealth.get(c);
       if (c==Colour.RED) {
         assertEquals(1,gems);
@@ -109,7 +110,7 @@ public class TestPlayerInGame {
     //pay tokens
     EnumMap<Colour, Integer> tokensPaid = p1.payTokensToBuy(0,c1);
 
-    for (Colour c : Colour.values()) {
+    for (Colour c : tokensPaid.keySet()) {
       assertEquals(c1.getPrice().get(c),tokensPaid.get(c));
     }
 

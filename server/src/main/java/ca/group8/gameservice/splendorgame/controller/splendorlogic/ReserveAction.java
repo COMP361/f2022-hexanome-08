@@ -35,14 +35,6 @@ public class ReserveAction extends Action {
     return curCard;
   }
 
-  public void setCardPosition(Position cardPosition) {
-    this.cardPosition = cardPosition;
-  }
-
-  public void setCurCard(DevelopmentCard curCard) {
-    this.curCard = curCard;
-  }
-
   public ReserveAction(Position position, DevelopmentCard curCard) {
     super.type = this.getClass().getSimpleName();
     this.cardPosition = position;
@@ -67,9 +59,11 @@ public class ReserveAction extends Action {
     if (cardEffects.size() > 0) {
       OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
       orientBoard.removeCard(cardPosition);
+      orientBoard.update();
     } else {
       BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
       baseBoard.removeCard(cardPosition);
+      baseBoard.update();
     }
 
     // add to player's reserved hand
@@ -85,7 +79,6 @@ public class ReserveAction extends Action {
       int goldTokenInHand = playerInGame.getTokenHand().getAllTokens().get(Colour.GOLD);
       playerInGame.getTokenHand().getAllTokens().put(Colour.GOLD, goldTokenInHand + 1);
     }
-
     // since we do not possibly generate more actions, we now know it's end of the turn
     // set action map to {}
     actionGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());

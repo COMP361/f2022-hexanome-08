@@ -3,10 +3,14 @@ package ca.group8.gameservice.splendorgame.controller;
 import ca.group8.gameservice.splendorgame.controller.splendorlogic.Action;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Board;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.isharipov.gson.adapters.PolymorphDeserializer;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
 
 /**
  * A helper singleton class that helps to resolve all abstract.
@@ -16,23 +20,41 @@ import io.github.isharipov.gson.adapters.PolymorphDeserializer;
  * * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
  * * Thank him so much!!!!!!!!!!!!!!!
  */
-public class SplendorJsonHelper {
-  private static SplendorJsonHelper instance = null;
+public class SplendorDevHelper {
+  private static SplendorDevHelper instance = null;
 
   private static Gson gson;
 
-  private SplendorJsonHelper() {
+  private static EnumMap<Colour, Integer> rawGemColoursMap;
+  private static EnumMap<Colour, Integer> rawTokenColoursMap;
+
+  private SplendorDevHelper() {
     gson = new GsonBuilder()
         .registerTypeAdapter(Action.class, new PolymorphDeserializer<Action>())
         .registerTypeAdapter(Board.class, new PolymorphDeserializer<Board>())
         .registerTypeAdapter(Power.class, new PolymorphDeserializer<Power>())
         .registerTypeAdapter(Card.class, new PolymorphDeserializer<Card>())
         .create();
+    rawGemColoursMap = new EnumMap<>(Colour.class) {{
+      put(Colour.BLUE, 0);
+      put(Colour.RED, 0);
+      put(Colour.BLACK, 0);
+      put(Colour.GREEN, 0);
+      put(Colour.WHITE, 0);
+    }};
+    rawTokenColoursMap = new EnumMap<>(Colour.class) {{
+      put(Colour.BLUE, 0);
+      put(Colour.RED, 0);
+      put(Colour.BLACK, 0);
+      put(Colour.GREEN, 0);
+      put(Colour.WHITE, 0);
+      put(Colour.GOLD, 0);
+    }};
   }
 
-  public static SplendorJsonHelper getInstance() {
+  public static SplendorDevHelper getInstance() {
     if (instance == null) {
-      instance = new SplendorJsonHelper();
+      instance = new SplendorDevHelper();
     }
     return instance;
   }
@@ -44,6 +66,25 @@ public class SplendorJsonHelper {
    */
   public Gson getGson() {
     return gson;
+  }
+
+
+  /**
+   * A raw map of gem colours (Red, blue, black, white, green), value = 0.
+   *
+   * @return a list of gem colours
+   */
+  public EnumMap<Colour, Integer> getRawGemColoursMap() {
+    return new EnumMap<>(rawGemColoursMap);
+  }
+
+  /**
+   * A raw map of token colours (red, blue, black, white, green, gold), value = 0.
+   *
+   * @return a list of token colours
+   */
+  public EnumMap<Colour, Integer>getRawTokenColoursMap() {
+    return new EnumMap<>(rawTokenColoursMap);
   }
 
 }

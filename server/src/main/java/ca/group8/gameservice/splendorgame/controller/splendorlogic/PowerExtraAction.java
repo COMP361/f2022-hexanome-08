@@ -29,7 +29,7 @@ public class PowerExtraAction extends Action {
 
   @Override
     // TODO
-  void execute(TableTop curTableTop, PlayerInGame playerInGame,
+  public void execute(TableTop curTableTop, PlayerInGame playerInGame,
                ActionGenerator actionListGenerator,
                ActionInterpreter actionInterpreter) {
 

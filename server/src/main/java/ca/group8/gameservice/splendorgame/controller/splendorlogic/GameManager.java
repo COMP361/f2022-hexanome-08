@@ -1,6 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.controller.SplendorJsonHelper;
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGameState;
@@ -11,11 +11,16 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,13 +40,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameManager {
 
-  private final String saveGameInfoFileName = "saved_games_data.json";
-  private final String saveGameMetaFileName = "saved_games_meta.json";
+  private final File saveGameInfoFile = new File("src/saved_games_data.json");
+  private final File saveGameMetaFile = new File("src/saved_games_meta.json");
+  //private final String saveGameInfoFileName = "saved_games_data.json";
+  //private final String saveGameMetaFileName = "saved_games_meta.json";
   private List<String> savedGameIds = new ArrayList<>();
   private final Map<Long, PlayerStates> activePlayers;
   private final Map<Long, GameInfo> activeGames;
   private final Map<Long, ActionInterpreter> gameActionInterpreters;
-
   private final LobbyCommunicator lobbyCommunicator;
   private final Logger logger;
 
@@ -66,43 +72,46 @@ public class GameManager {
   public void syncSavedGames() throws ModelAccessException {
 
     try {
+      Map<String, SavedGameState> savedGames = readSavedGameDataFromFile();
       // skip all steps if we do not have info in file
-      if (readSavedGameDataFromFile() == null || readSavedGameDataFromFile().isEmpty()) {
+      if (savedGames == null || savedGames.isEmpty()) {
         savedGameIds = new ArrayList<>();
-        return;
-      }
-      List<String> gameIdsFromData = new ArrayList<>(readSavedGameDataFromFile().keySet());
-      List<Savegame> savedMetaData = readSavedGameMetaDataFromFile();
-      List<String> gameIdsFromMetaData = savedMetaData.stream().map(Savegame::getSavegameid)
-          .collect(Collectors.toList());
-      if (gameIdsFromData.size() != gameIdsFromMetaData.size()) {
-        String error = "Inconsistency between meta/actual game data!";
-        logger.warn(error);
-        throw new ModelAccessException(error);
-      }
-      List<String> gameIdsFromLobby = lobbyCommunicator.getAllSaveGameIds();
-      // first, delete the game ids in lobby that are not in server
-      List<String> idsInLobbyNotInServer = gameIdsFromLobby.stream()
-          .filter(gameIdsFromData::contains)
-          .collect(Collectors.toList());
-      // iterate through the ids that shouldn't be in lobby and delete them
-      for (Savegame game : savedMetaData) {
-        if (idsInLobbyNotInServer.contains(game.getSavegameid())) {
-          lobbyCommunicator.deleteSavedGame(game.getGamename(), game.getSavegameid());
+
+      } else { // otherwise, the file exists and has content
+        List<String> gameIdsFromData = new ArrayList<>(savedGames.keySet());
+        List<Savegame> savedMetaData = readSavedGameMetaDataFromFile();
+        List<String> gameIdsFromMetaData = savedMetaData.stream().map(Savegame::getSavegameid)
+            .collect(Collectors.toList());
+        if (gameIdsFromData.size() != gameIdsFromMetaData.size()) {
+          String error = "Inconsistency between meta/actual game data!";
+          logger.warn(error);
+          throw new ModelAccessException(error);
         }
-      }
-      // obtain an updated lobby ids (now server might have ids that lobby doesn't have)
-      gameIdsFromLobby = lobbyCommunicator.getAllSaveGameIds();
-      List<String> idsInServerNotInLobby = gameIdsFromData.stream()
-          .filter(gameIdsFromLobby::contains)
-          .collect(Collectors.toList());
-      // iterate through again to put the ids into lobby (PUT request)
-      for (Savegame game : savedMetaData) {
-        if (idsInServerNotInLobby.contains(game.getSavegameid())) {
-          lobbyCommunicator.putSaveGame(game);
+        List<String> gameIdsFromLobby = lobbyCommunicator.getAllSaveGameIds();
+        // first, delete the game ids in lobby that are not in server
+        List<String> idsInLobbyNotInServer = gameIdsFromLobby.stream()
+            .filter(gameIdsFromData::contains)
+            .collect(Collectors.toList());
+        // iterate through the ids that shouldn't be in lobby and delete them
+        for (Savegame game : savedMetaData) {
+          if (idsInLobbyNotInServer.contains(game.getSavegameid())) {
+            lobbyCommunicator.deleteSavedGame(game.getGamename(), game.getSavegameid());
+          }
         }
+        // obtain an updated lobby ids (now server might have ids that lobby doesn't have)
+        gameIdsFromLobby = lobbyCommunicator.getAllSaveGameIds();
+        List<String> idsInServerNotInLobby = gameIdsFromData.stream()
+            .filter(gameIdsFromLobby::contains)
+            .collect(Collectors.toList());
+        // iterate through again to put the ids into lobby (PUT request)
+        for (Savegame game : savedMetaData) {
+          if (idsInServerNotInLobby.contains(game.getSavegameid())) {
+            lobbyCommunicator.putSaveGame(game);
+          }
+        }
+        savedGameIds = new ArrayList<>(gameIdsFromData);
       }
-      savedGameIds = new ArrayList<>(gameIdsFromData);
+
     } catch (IOException | UnirestException e) {
       logger.warn(e.getMessage());
     }
@@ -164,12 +173,13 @@ public class GameManager {
     // the game content rather than creating new objects.
     if (!launcherInfo.getSavegame().isEmpty()) {
       String saveGameId = launcherInfo.getSavegame();
+      List<String> curPlayerNames = launcherInfo.getPlayers().stream()
+          .map(PlayerInfo::getName)
+          .collect(Collectors.toList());
+      String creator = launcherInfo.getCreator();
+      Map<String, SavedGameState> savedGames;
       try {
-        List<String> curPlayerNames = launcherInfo.getPlayers().stream()
-            .map(PlayerInfo::getName)
-            .collect(Collectors.toList());
-        String creator = launcherInfo.getCreator();
-        Map<String, SavedGameState> savedGames = readSavedGameDataFromFile();
+        savedGames = readSavedGameDataFromFile();
         SavedGameState savedGame = savedGames.get(saveGameId);
         // rename the player names in this savedGameState
         savedGame.renamePlayers(curPlayerNames, creator);
@@ -179,8 +189,8 @@ public class GameManager {
         activePlayers.put(gameId, savedGame.getPlayerStates());
         gameActionInterpreters.put(gameId, savedGame.getActionInterpreter());
         return savedGame;
-      } catch (IOException e) {
-        logger.warn(e.getMessage());
+      }catch (IOException e) {
+        e.printStackTrace();
         throw new ModelAccessException(e.getMessage());
       }
     } else { // the case where we are not launching a saved game, create gameinfo, etc from scratch
@@ -248,13 +258,13 @@ public class GameManager {
             .get();
         // tell lobby to delete the save game
         lobbyCommunicator.deleteSaveGame(saveMeta);
-        // remove from the local field
-        this.savedGameIds.remove(gameId);
         SavedGameState savedGameState = dataMap.get(gameId);
         writeSavedGameMetaDataToFile(saveMeta, false);
         writeSavedGameDataToFile(gameId, savedGameState, false);
       }
 
+      // remove all game ids from local field
+      this.savedGameIds.clear();
     }
   }
 
@@ -297,13 +307,15 @@ public class GameManager {
    * @throws IOException in case the json file is missing.
    */
   public Map<String, SavedGameState> readSavedGameDataFromFile() throws IOException {
-    try {
-      FileReader fileReader = new FileReader(saveGameInfoFileName, StandardCharsets.UTF_8);
-      Type mapOfSaveGameStates = new TypeToken<Map<String, SavedGameState>>() {
-      }.getType();
-      return SplendorJsonHelper.getInstance().getGson().fromJson(fileReader, mapOfSaveGameStates);
-    } catch (IOException e) {
-      throw new IOException("file: server/saved_games_data.json not found, please create one!");
+    synchronized (saveGameInfoFile) {
+      try {
+        FileReader fileReader = new FileReader(saveGameInfoFile, StandardCharsets.UTF_8);
+        Type mapOfSaveGameStates = new TypeToken<Map<String, SavedGameState>>() {}.getType();
+        return SplendorDevHelper.getInstance().getGson().fromJson(fileReader, mapOfSaveGameStates);
+      } catch (IOException e) {
+        //throw new IOException("file: server/saved_games_data.json not found, please create one!");
+        throw new IOException(e.getMessage());
+      }
     }
   }
 
@@ -317,32 +329,34 @@ public class GameManager {
    */
   private void writeSavedGameDataToFile(String saveGameId,
                                         SavedGameState savedGameState, boolean addToFile) {
-    try {
-      Map<String, SavedGameState> allSaveGames = readSavedGameDataFromFile();
-      if (allSaveGames == null || (allSaveGames.isEmpty() && addToFile)) {
-        // in case the file is empty, just add the data
-        allSaveGames = new HashMap<>();
-        allSaveGames.put(saveGameId, savedGameState);
-      } else { // if the file is not empty, check if we have duplicate id when putting
-        if (addToFile) {
-          if (allSaveGames.containsKey(saveGameId)) {
-            return; // duplicate id, do not write anything
-          }
+    synchronized (saveGameInfoFile){
+      try {
+        Map<String, SavedGameState> allSaveGames = readSavedGameDataFromFile();
+        if (allSaveGames == null || (allSaveGames.isEmpty() && addToFile)) {
+          // in case the file is empty, just add the data
+          allSaveGames = new HashMap<>();
           allSaveGames.put(saveGameId, savedGameState);
-        } else {
-          allSaveGames.remove(saveGameId);
+        } else { // if the file is not empty, check if we have duplicate id when putting
+          if (addToFile) {
+            if (allSaveGames.containsKey(saveGameId)) {
+              return; // duplicate id, do not write anything
+            }
+            allSaveGames.put(saveGameId, savedGameState);
+          } else {
+            allSaveGames.remove(saveGameId);
+          }
         }
-      }
-      FileWriter dataWriter = new FileWriter(saveGameInfoFileName, StandardCharsets.UTF_8);
-      Type mapOfSaveGameStates = new TypeToken<Map<String, SavedGameState>>() {
-      }.getType();
-      String newSaveGamesJson = SplendorJsonHelper.getInstance().getGson()
-          .toJson(allSaveGames, mapOfSaveGameStates);
-      dataWriter.write(newSaveGamesJson);
-      dataWriter.close();
+        FileWriter dataWriter = new FileWriter(saveGameInfoFile, StandardCharsets.UTF_8);
+        Type mapOfSaveGameStates = new TypeToken<Map<String, SavedGameState>>() {
+        }.getType();
+        String newSaveGamesJson = SplendorDevHelper.getInstance().getGson()
+            .toJson(allSaveGames, mapOfSaveGameStates);
+        dataWriter.write(newSaveGamesJson);
+        dataWriter.close();
 
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
+      } catch (IOException e) {
+        logger.warn(e.getMessage());
+      }
     }
   }
 
@@ -354,13 +368,19 @@ public class GameManager {
    * @throws IOException in case of a file missing
    */
   public List<Savegame> readSavedGameMetaDataFromFile() throws IOException {
-    try {
-      FileReader fileReader = new FileReader(saveGameMetaFileName, StandardCharsets.UTF_8);
-      Type listOfSavegame = new TypeToken<List<Savegame>>() {
-      }.getType();
-      return SplendorJsonHelper.getInstance().getGson().fromJson(fileReader, listOfSavegame);
-    } catch (IOException e) {
-      throw new IOException("file: server/saved_games_meta.json not found, please create one!");
+    synchronized (saveGameMetaFile) {
+      try {
+        if(!saveGameMetaFile.exists()){
+          System.err.println("File not found: " + saveGameMetaFile.getPath());
+        }
+        FileReader fileReader = new FileReader(saveGameMetaFile, StandardCharsets.UTF_8);
+        Type listOfSavegame = new TypeToken<List<Savegame>>() {}.getType();
+        return SplendorDevHelper.getInstance().getGson().fromJson(fileReader, listOfSavegame);
+      } catch (IOException e) {
+        //throw new IOException("file: server/saved_games_meta.json not found, please create one!");
+        e.printStackTrace();
+        throw new IOException(e.getMessage());
+      }
     }
   }
 
@@ -373,35 +393,38 @@ public class GameManager {
    * @param addToFile the flag indicating delete or not
    */
   private void writeSavedGameMetaDataToFile(Savegame savegame, boolean addToFile) {
-    try {
-      List<Savegame> allSaveGamesMeta = readSavedGameMetaDataFromFile();
-      if (allSaveGamesMeta == null || (allSaveGamesMeta.isEmpty() && addToFile)) {
-        allSaveGamesMeta = new ArrayList<>();
-        allSaveGamesMeta.add(savegame);
-      } else {
-        if (addToFile) {
-          boolean hasDuplicateId = allSaveGamesMeta.stream()
-              .anyMatch(game -> game.getSavegameid().equals(savegame.getSavegameid()));
-          if (hasDuplicateId) {
-            return; // duplicated game id, do not add to json.
-          }
+    synchronized (saveGameMetaFile) {
+      try {
+        List<Savegame> allSaveGamesMeta = readSavedGameMetaDataFromFile();
+        if (allSaveGamesMeta == null || (allSaveGamesMeta.isEmpty() && addToFile)) {
+          allSaveGamesMeta = new ArrayList<>();
           allSaveGamesMeta.add(savegame);
         } else {
-          allSaveGamesMeta.removeIf(game -> game.getSavegameid().equals(savegame.getSavegameid()));
+          if (addToFile) {
+            boolean hasDuplicateId = allSaveGamesMeta.stream()
+                .anyMatch(game -> game.getSavegameid().equals(savegame.getSavegameid()));
+            if (hasDuplicateId) {
+              return; // duplicated game id, do not add to json.
+            }
+            allSaveGamesMeta.add(savegame);
+          } else {
+            allSaveGamesMeta.removeIf(game -> game.getSavegameid().equals(savegame.getSavegameid()));
+          }
         }
-      }
-      FileWriter metaDataWriter = new FileWriter(saveGameMetaFileName, StandardCharsets.UTF_8);
-      Type listOfSavegame = new TypeToken<List<Savegame>>() {
-      }.getType();
-      String newSaveGamesMetaJson = SplendorJsonHelper
-          .getInstance().getGson()
-          .toJson(allSaveGamesMeta, listOfSavegame);
 
-      metaDataWriter.write(newSaveGamesMetaJson);
-      metaDataWriter.close();
-    } catch (IOException e) {
-      logger.warn(e.getMessage());
+        FileWriter metaDataWriter = new FileWriter(saveGameMetaFile, StandardCharsets.UTF_8);
+        Type listOfSavegame = new TypeToken<List<Savegame>>() {}.getType();
+        String newSaveGamesMetaJson = SplendorDevHelper
+            .getInstance().getGson()
+            .toJson(allSaveGamesMeta, listOfSavegame);
+
+        metaDataWriter.write(newSaveGamesMetaJson);
+        metaDataWriter.close();
+      } catch (IOException e) {
+        logger.warn(e.getMessage());
+      }
     }
+
   }
 
   /**

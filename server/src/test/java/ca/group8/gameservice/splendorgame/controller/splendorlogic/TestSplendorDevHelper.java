@@ -1,6 +1,6 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.controller.SplendorJsonHelper;
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGameState;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Board;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
@@ -17,8 +17,6 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import io.github.isharipov.gson.adapters.PolymorphDeserializer;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Aim to test all abstract classes in the whole backend (make sure we can parse them correctly).
  */
-public class TestSplendorJsonHelper {
+public class TestSplendorDevHelper {
   List<String> names = new ArrayList<>(Arrays.asList("Bob", "Marry"));
   List<Extension> extensions = new ArrayList<>(Arrays.asList(Extension.BASE, Extension.ORIENT));
   PlayerStates playerStates = new PlayerStates(names);
@@ -68,7 +66,7 @@ public class TestSplendorJsonHelper {
 
     // rather than getting new Gson(), we use our customized
     // Gson object: SplendorJsonHelper.getInstance().getGson()
-    Gson curGson = SplendorJsonHelper.getInstance().getGson();
+    Gson curGson = SplendorDevHelper.getInstance().getGson();
     // serialize classes
     String listCardsJson = curGson.toJson(testCards, listOfCardType);
     // parse classes: fromJson(serialized string, type(List or Map you defined))
@@ -95,16 +93,16 @@ public class TestSplendorJsonHelper {
     TakeTokenAction ta = new TakeTokenAction(price);
     Map<String, Action> actionMap = new HashMap<>();
     // convert the pa (PurchaseAction) object to json string, and then hash it with md5
-    String paHashed = DigestUtils.md5Hex(SplendorJsonHelper.getInstance().getGson().toJson(pa).toUpperCase());
-    String raHashed = DigestUtils.md5Hex(SplendorJsonHelper.getInstance().getGson().toJson(ra).toUpperCase());
-    String taHashed = DigestUtils.md5Hex(SplendorJsonHelper.getInstance().getGson().toJson(ta).toUpperCase());
+    String paHashed = DigestUtils.md5Hex(SplendorDevHelper.getInstance().getGson().toJson(pa).toUpperCase());
+    String raHashed = DigestUtils.md5Hex(SplendorDevHelper.getInstance().getGson().toJson(ra).toUpperCase());
+    String taHashed = DigestUtils.md5Hex(SplendorDevHelper.getInstance().getGson().toJson(ta).toUpperCase());
     actionMap.put(paHashed, pa);
     actionMap.put(raHashed, ra);
     actionMap.put(taHashed, ta);
     // now serialize this whole map, we first register a Type Map<String,Action>
     Type actionMapType = new TypeToken<Map<String,Action>>(){}.getType();
     // our magical gson object that handles serializing/deserializing everything
-    Gson gson = SplendorJsonHelper.getInstance().getGson();
+    Gson gson = SplendorDevHelper.getInstance().getGson();
     String serializedMap = gson.toJson(actionMap, actionMapType);
     // now try to deserialize things
     Map<String, Action> newActionMap = gson.fromJson(serializedMap, actionMapType);
@@ -121,7 +119,7 @@ public class TestSplendorJsonHelper {
     DoubleGoldPower dp = new DoubleGoldPower();
     FivePointsPower fp = new FivePointsPower();
     Power[] powers = new Power[] {dp, fp};
-    Gson gson = SplendorJsonHelper.getInstance().getGson();
+    Gson gson = SplendorDevHelper.getInstance().getGson();
     String powersJson = gson.toJson(powers, Power[].class);
     Power[] newPowers = gson.fromJson(powersJson, Power[].class);
     assertArrayEquals(powers, newPowers);
@@ -133,7 +131,7 @@ public class TestSplendorJsonHelper {
     TableTop tt = new TableTop(names, extensions);
     Map<Extension,Board> boards = tt.getGameBoards();
     Type boardMapType = new TypeToken<Map<Extension,Board>>(){}.getType();
-    Gson gson = SplendorJsonHelper.getInstance().getGson();
+    Gson gson = SplendorDevHelper.getInstance().getGson();
     String boardsJson = gson.toJson(boards, boardMapType);
     Map<Extension,Board> newBoards = gson.fromJson(boardsJson, boardMapType);
 
@@ -145,7 +143,7 @@ public class TestSplendorJsonHelper {
    */
   @Test
   void testReferenceOfGameInfoAfterParsing() {
-    Gson gson = SplendorJsonHelper.getInstance().getGson();
+    Gson gson = SplendorDevHelper.getInstance().getGson();
     SavedGameState savedGameState = new SavedGameState(gameInfo, playerStates, actionInterpreter);
     Map<String,Map<String,Action>> actionMapFromGame = savedGameState.getGameInfo()
         .getPlayerActionMaps();
