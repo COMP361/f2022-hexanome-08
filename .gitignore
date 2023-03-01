@@ -7,8 +7,6 @@ client/.idea
 server/.idea
 client/target/
 server/target/
-server/*.iml
-client/*.iml
 client/src/main/resources/project/pictures
 .*
 !/.gitignore
