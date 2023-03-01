@@ -19,7 +19,6 @@ import javafx.scene.text.Text;
 import project.App;
 import project.CardActionController;
 import project.DeckActionController;
-import project.view.splendor.communication.BaseCard;
 
 /**
  * Gui class that represents a level of cards.
