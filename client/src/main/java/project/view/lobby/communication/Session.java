@@ -1,5 +1,6 @@
 package project.view.lobby.communication;
 
+import ca.mcgill.comp361.splendormodel.model.BaseBoard;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
