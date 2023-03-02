@@ -1,10 +1,11 @@
 package project.view.splendor;
 
 import java.util.List;
+
+import ca.group8.gameservice.splendorgame.model.splendormodel.NobleCard;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import project.view.splendor.communication.NobleCard;
 
 /**
  * Creates the GUI for the Noble Board.

@@ -5,6 +5,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -17,7 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import project.App;
-import project.view.splendor.communication.DevelopmentCard;
 
 /**
  * A class to visually represent a player in the game (vertical layout of player info).
@@ -132,7 +133,6 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
     visibleInfoTextMap.get(PlayerVisibleInfo.POINT).setText(Integer.toString(newPoints));
   }
 
-  @Override
   public void setNewTokenInHand(EnumMap<Colour, Integer> newTokens) {
     Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo =
         this.getPlayerColourWealthMap(this.playerPosition);
