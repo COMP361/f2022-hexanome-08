@@ -1,12 +1,10 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.actions.Action;
+import ca.mcgill.comp361.splendormodel.model.TableTop;
 import java.util.Map;
 import javafx.scene.layout.VBox;
 import project.view.InvalidDataException;
-import project.view.splendor.communication.Action;
-import project.view.splendor.communication.BaseBoard;
-import project.view.splendor.communication.Board;
-import project.view.splendor.communication.TableTop;
 
 public class BaseBoardGui implements BoardGui {
 
