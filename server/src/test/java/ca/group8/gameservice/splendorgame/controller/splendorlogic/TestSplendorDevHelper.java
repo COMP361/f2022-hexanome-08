@@ -88,7 +88,8 @@ public class TestSplendorDevHelper {
   @Test
   void testSerializedMapOfAction() {
     Position cardPosition = new Position(1,1);
-    PurchaseAction pa = new PurchaseAction(cardPosition,devCard,2);
+    PurchaseAction pa = new PurchaseAction(cardPosition,devCard,2,
+        SplendorDevHelper.getInstance().getRawTokenColoursMap());
     ReserveAction ra = new ReserveAction(cardPosition, devCard);
     TakeTokenAction ta = new TakeTokenAction(price);
     Map<String, Action> actionMap = new HashMap<>();

@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Test;
 public class TestPlayerInGame {
   PlayerInGame p1 = new PlayerInGame("Ben");
   PlayerInGame p2 = new PlayerInGame("Mary");
-  EnumMap<Colour,Integer> price_1 = SplendorDevHelper.getInstance().getRawGemColoursMap();
-  EnumMap<Colour,Integer> price_2 = SplendorDevHelper.getInstance().getRawGemColoursMap();
-  EnumMap<Colour,Integer> price_3 = SplendorDevHelper.getInstance().getRawGemColoursMap();
+  EnumMap<Colour,Integer> price_1 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+  EnumMap<Colour,Integer> price_2 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+  EnumMap<Colour,Integer> price_3 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
   List<CardEffect> purchaseEffects = new ArrayList<>();
   DevelopmentCard c1 = new DevelopmentCard(1,price_1,"card1",1,Colour.RED,1,purchaseEffects);
   DevelopmentCard c2 = new DevelopmentCard(2,price_2,"card2",1,Colour.BLUE,2,purchaseEffects);
@@ -24,7 +24,7 @@ public class TestPlayerInGame {
 
   @BeforeEach
   void setup() {
-    EnumMap<Colour,Integer> tokens = SplendorDevHelper.getInstance().getRawGemColoursMap();
+    EnumMap<Colour,Integer> tokens = SplendorDevHelper.getInstance().getRawTokenColoursMap();
     for (Colour c : tokens.keySet()) {
       tokens.put(c,0);
       price_1.put(c,0);
@@ -48,14 +48,14 @@ public class TestPlayerInGame {
   @Test
   void TestAddPrestigePoints() {
     assertEquals(0, p1.getPrestigePoints());
-    p1.addPrestigePoints(3);
+    p1.changePrestigePoints(3);
     assertEquals(3, p1.getPrestigePoints());
   }
 
   @Test
   void TestRemovePrestigePoints() {
     assertEquals(0, p1.getPrestigePoints());
-    p1.addPrestigePoints(5);
+    p1.changePrestigePoints(5);
     assertEquals(5, p1.getPrestigePoints());
     p1.removePrestigePoints(2);
     assertEquals(3, p1.getPrestigePoints());

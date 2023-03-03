@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,7 @@ public class TableTopTest {
         playerNames.add("P2");
         playerNames.add("P3");
         playerNames.add("P4");
+        //hi
         List<Extension> DLC = new ArrayList<Extension>();
         DLC.add(Extension.CITY);
         DLC.add(Extension.BASE);
@@ -39,6 +41,8 @@ public class TableTopTest {
         assert (b3.getClass().toString().equals("class ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard"));
         Board b4 = t1.getBoard(Extension.TRADING_POST);
         assert (b4.getClass().toString().equals("class ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard"));
+        List<Board> test = Arrays.asList(b1,b2);
+
     }
 
     @Test

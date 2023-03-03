@@ -123,7 +123,7 @@ public class CardExtraAction extends Action {
     //add card to hand, add prestige points
     int prestigeAmount = satchel.getPrestigePoints();
     curPlayer.getPurchasedHand().addDevelopmentCard(satchel);
-    curPlayer.addPrestigePoints(prestigeAmount);
+    curPlayer.changePrestigePoints(prestigeAmount);
 
     //reset stashedCard to null
     associatedActionInterpreter.setStashedCard(null);
