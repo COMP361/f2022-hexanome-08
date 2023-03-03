@@ -342,9 +342,11 @@ public class ActionInterpreter {
     return burnCardCount;
   }
 
-  public void setBurnCardCount(int number) {
+  public void addBurnCardCount(int number) {
     burnCardCount += number;
   }
+
+  public void removeBurnCardCount(int number) { burnCardCount-= number;}
 
   public void setBurnCardColour(
       Colour burnCardColour) {
