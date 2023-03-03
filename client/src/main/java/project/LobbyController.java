@@ -140,8 +140,7 @@ public class LobbyController {
     updateSessionInfoThread.start();
   }
 
-  private Set<Long> findDifferentSessionIds(Set<Long> setA,
-                                            Set<Long> setB) {
+  private Set<Long> findDifferentSessionIds(Set<Long> setA, Set<Long> setB) {
     HashSet<Long> resultSet = new HashSet<>();
     if (setA.size() > setB.size()) {
       for (Long l : setA) {

@@ -29,6 +29,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.connection.SplendorServiceRequestSender;
+import project.view.lobby.SessionGui;
+import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 import project.view.splendor.BaseCardLevelGui;
 import project.view.splendor.HorizontalPlayerInfoGui;
@@ -67,6 +69,8 @@ public class GameController implements Initializable {
 
   private final long gameId;
 
+  private final Session curSession;
+
   private NobleBoardGui nobleBoard;
 
   private TokenBankGui tokenBankGui;
@@ -78,8 +82,9 @@ public class GameController implements Initializable {
 
   private List<String> sortedPlayerNames = new ArrayList<>();
 
-  public GameController(long gameId) {
+  public GameController(long gameId, Session curSession) {
     this.gameId = gameId;
+    this.curSession = curSession;
   }
 
 
@@ -336,17 +341,6 @@ public class GameController implements Initializable {
     nameToPlayerInfoGuiMap.get(firstPlayer).setHighlight(true);
   }
 
-
-  private static Gson getActionGson() {
-    final RuntimeTypeAdapterFactory<Action> actionFactory = RuntimeTypeAdapterFactory
-        .of(Action.class, "type")
-        .registerSubtype(ReserveAction.class)
-        .registerSubtype(PurchaseAction.class)
-        .registerSubtype(TakeTokenAction.class);
-
-    return new GsonBuilder().registerTypeAdapterFactory(actionFactory).create();
-
-  }
 
 
   //private void assignActionsToCardBoard() throws UnirestException {
