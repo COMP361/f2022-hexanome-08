@@ -36,7 +36,7 @@ public class CardExtraAction extends Action {
                       ActionGenerator actionListGenerator, ActionInterpreter actionInterpreter) {
     //based on the cardEffect, execute the associated helper
     if(this.cardEffect == cardEffect.BURN_CARD){
-      burnActionHelper(curTableTop, playerInGame, actionListGenerator);
+      burnActionHelper(curTableTop, playerInGame, actionListGenerator, actionInterpreter);
     }else if(this.cardEffect == cardEffect.SATCHEL){
       satchelActionHelper(curTableTop, playerInGame, actionListGenerator, actionInterpreter);
     }else if(this.cardEffect == cardEffect.RESERVE_NOBLE){
@@ -148,7 +148,9 @@ public class CardExtraAction extends Action {
   //TODO
   public void burnActionHelper(TableTop curTableTop,
                                PlayerInGame curPlayer,
-                               ActionGenerator associatedActionGenerator) {
+                               ActionGenerator associatedActionGenerator,
+                               ActionInterpreter associatedActionInterpreter) {
 
   }
+
 }
