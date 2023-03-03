@@ -6,12 +6,14 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import project.view.lobby.communication.GameParameters;
+import project.view.lobby.communication.Savegame;
 import project.view.lobby.communication.SessionList;
 
 
@@ -158,11 +160,21 @@ public class LobbyServiceRequestSender {
     requestBody.put("game", gameName);
     requestBody.put("savegame", saveGameName);
 
-    Unirest.post(lobbyUrl + "/api/sessions")
-        .header("Content-Type", "application/json")
-        .queryString("access_token", accessToken)
-        .body(requestBody)
-        .asString();
+    HttpResponse<String> response = null;
+    try {
+      response = Unirest.post(lobbyUrl + "/api/sessions")
+          .header("Content-Type", "application/json")
+          .queryString("access_token", accessToken)
+          .body(requestBody)
+          .asString();
+    } catch (UnirestException e) {
+      System.out.println(e.getMessage());
+    }
+    assert response != null;
+    if (response.getStatus() != 200) {
+      throw new UnirestException("Failed to send create session request");
+    }
+
   }
 
   /**
@@ -261,6 +273,37 @@ public class LobbyServiceRequestSender {
   public void sendLaunchSessionRequest(Long sessionId, String accessToken) throws UnirestException {
     Unirest.post(lobbyUrl + "/api/sessions/" + sessionId.toString())
         .queryString("access_token", accessToken).asString();
+  }
+
+
+  /**
+   * Return an array of Savegame to one specific game service (base, city or trade).
+   * to the player with accessToken.
+   *
+   * @param accessToken     access token of the player
+   * @param gameServiceName splendorbase, splendorcity, ... (game service names)
+   * @return an array of Savegame to one specific game service, can be empty
+   */
+  public Savegame[] getAllSavedGames(String accessToken, String gameServiceName)
+      throws UnirestException {
+    String url = String.format("%s/api/gameservices/%s/savegames",
+        lobbyUrl, gameServiceName);
+    Savegame[] result = new Savegame[0];
+    try {
+      HttpResponse<String> response = Unirest.get(url)
+          .queryString("access_token", accessToken)
+          .asString();
+      String jsonString = response.getBody();
+      result = new Gson().fromJson(jsonString, Savegame[].class);
+
+      if (response.getStatus() != 200) {
+        String msg = "Unable to perform GET all sessions request to LS";
+        throw new UnirestException(msg);
+      }
+    } catch (UnirestException e) {
+      System.out.println(e.getMessage());
+    }
+    return result;
   }
 
 

@@ -52,9 +52,9 @@ public class LogInController {
       App.setUser(curUser);
 
       // if user is player, display admin_lobby_page
-      if (App.getUser().getAuthority().equals("ROLE_ADMIN")) {
+      if (App.getUser().getAuthority().equals("ROLE_ADMIN") ||
+          App.getUser().getAuthority().equals("ROLE_PLAYER")) {
         App.setRoot("admin_lobby_page");
-        // TODO: how to visually display these session objects as JavaFX GUI?
 
       } else { // otherwise, player_lobby_page
         // App.setRoot("player_lobby_page");
@@ -77,45 +77,8 @@ public class LogInController {
 
   public void initialize() {
     userName.setText("ruoyu");
-    userPassword.setText("Dd991218?");
+    userPassword.setText("abc123_ABC123");
 
-
-    // Testing serialization problem
-    //
-    //final RuntimeTypeAdapterFactory<People> typeFactory = RuntimeTypeAdapterFactory
-    //    .of(People.class, "type")
-    //    .registerSubtype(Student.class)
-    //    .registerSubtype(Prof.class);
-    //
-    //final RuntimeTypeAdapterFactory<Student> typeStudentFactory = RuntimeTypeAdapterFactory
-    //    .of(Student.class, "type")
-    //    .registerSubtype(Undergrad.class)
-    //    .registerSubtype(Grad.class);
-
-    //final Gson gson = new GsonBuilder()
-    //    .registerTypeAdapterFactory(typeFactory)
-    //    .registerTypeAdapterFactory(typeStudentFactory)
-    //    .create();
-
-    //final TypeToken<List<People>> requestListTypeToken = new TypeToken<>() {
-    //};
-    //final Gson gson = new GsonBuilder()
-    //    .registerTypeAdapter(Student.class, new PolymorphDeserializer<Student>())
-    //    .create();
-    //
-    //final List<Student> requestList = Arrays.asList(
-    //    new Grad("addr1"),
-    //    new Undergrad("addr2",3), new Undergrad("addr3", 4));
-    //
-    //final String serialized = gson.toJson(requestList,
-    //    requestListTypeToken.getType());
-    //System.out.println("Original List: " + requestList);
-    //System.out.println("Serialized JSON: " + serialized);
-    //
-    //final List<Student> deserializedRequestList = gson.fromJson(serialized,
-    //    requestListTypeToken.getType());
-    //
-    //System.out.println("Deserialized list: " + deserializedRequestList);
   }
 
 }

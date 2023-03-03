@@ -1,6 +1,8 @@
 package project;
 
 
+import ca.mcgill.comp361.splendormodel.model.Colour;
+import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import project.view.splendor.Colour;
-import project.view.splendor.communication.DevelopmentCard;
+import ca.mcgill.comp361.splendormodel.model.*;
 
 /**
  * Purchase controller class.

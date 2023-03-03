@@ -1,8 +1,8 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.model.NobleCard;
 import java.util.List;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.NobleCard;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;

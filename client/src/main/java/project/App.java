@@ -1,5 +1,6 @@
 package project;
 
+import ca.mcgill.comp361.splendormodel.model.Colour;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -17,7 +18,6 @@ import project.connection.LobbyServiceRequestSender;
 import project.connection.SplendorServiceRequestSender;
 import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.User;
-import project.view.splendor.Colour;
 
 
 /**

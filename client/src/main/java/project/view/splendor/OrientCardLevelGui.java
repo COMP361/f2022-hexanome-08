@@ -1,10 +1,10 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
