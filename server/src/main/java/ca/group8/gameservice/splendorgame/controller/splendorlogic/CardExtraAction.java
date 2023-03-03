@@ -151,6 +151,33 @@ public class CardExtraAction extends Action {
                                ActionGenerator associatedActionGenerator,
                                ActionInterpreter associatedActionInterpreter) {
 
+    DevelopmentCard cardToBurn = (DevelopmentCard) this.curCard;
+    int burnNumber = associatedActionInterpreter.getBurnCardCount();
+    int gemNumber = cardToBurn.getGemNumber();
+    //make it negative since you're taking away points
+    int prestigePoints = -1 * cardToBurn.getPrestigePoints();
+
+    //remove burned card from purchaseHand and remove it's prestige points
+    curPlayer.getPurchasedHand().removeDevelopmentCard((DevelopmentCard) this.curCard);
+    curPlayer.changePrestigePoints(prestigePoints);
+
+    //remove the gems from burned card from total amount needed to burn
+    associatedActionInterpreter.removeBurnCardCount(gemNumber);
+
+    //if you have finished burning cards
+    if(burnNumber - gemNumber <= 0){
+      //take stashed card and add to player's hand
+      DevelopmentCard newCard = associatedActionInterpreter.getStashedCard();
+      curPlayer.getPurchasedHand().addDevelopmentCard(newCard);
+
+      //add prestige points
+      int newPrestigePoints = newCard.getPrestigePoints();
+      curPlayer.changePrestigePoints(newPrestigePoints);
+
+      associatedActionInterpreter.setStashedCard(null);
+    }
+
+    //TODO: in the sequence diagram it says the remove the stashed card from board but I think thats done in PurchaseAction
   }
 
 }
