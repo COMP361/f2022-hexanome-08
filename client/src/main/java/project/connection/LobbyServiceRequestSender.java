@@ -271,8 +271,14 @@ public class LobbyServiceRequestSender {
    */
 
   public void sendLaunchSessionRequest(Long sessionId, String accessToken) throws UnirestException {
-    Unirest.post(lobbyUrl + "/api/sessions/" + sessionId.toString())
-        .queryString("access_token", accessToken).asString();
+    HttpResponse<String> response = Unirest
+        .post(lobbyUrl + "/api/sessions/" + sessionId.toString())
+        .queryString("access_token", accessToken)
+        .asString();
+    if (response.getStatus() != 200) {
+      throw new UnirestException("Can not launch the session!, token = " +
+          accessToken + " and id: " + sessionId + "Error code: " + response.getStatus());
+    }
   }
 
 

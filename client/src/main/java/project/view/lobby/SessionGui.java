@@ -118,9 +118,16 @@ public class SessionGui extends HBox {
         // 0. sessionId needs to be passed to this controller, the other info
         // I can get from based on this sessionId (gameId)
         GameBoardLayoutConfig config = App.getGuiLayouts();
+        // whenever the user clicks play button, we will reset the game request sender to
+        // send correct REST requests to our backend in a right path name (splendorbase, city...)
         App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
+
+        // passing Session as param of GameController param cuz it contains optionally
+        // the save game id, later will be used to save game
         App.loadPopUpWithController("splendor_base_game_board.fxml",
-            new GameController(curSessionId), config.getAppWidth(), config.getAppHeight());
+            new GameController(curSessionId, curSession),
+            config.getAppWidth(),
+            config.getAppHeight());
 
         Button playButton = (Button) event.getSource();
         Stage lobbyWindow = (Stage) playButton.getScene().getWindow();
