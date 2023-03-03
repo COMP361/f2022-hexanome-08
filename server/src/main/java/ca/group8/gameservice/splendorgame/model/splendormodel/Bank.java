@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class Bank {
   //TODO: Do we want to have this param?? Or should we implement this logic in GameState
   //TODO: and pass an integer value to Bank representing the initial gem values.
   public Bank(int numPlayers) {
-    this.allTokens = new EnumMap<>(Colour.class);
+    this.allTokens = SplendorDevHelper.getInstance().getRawTokenColoursMap();
     if (numPlayers == 2) {
       initialValue = 4;
     } else {
@@ -46,18 +47,14 @@ public class Bank {
    * @param paramTokens token map as the price
    */
   public void returnToken(EnumMap<Colour, Integer> paramTokens) {
-    //verify that this number of gems can be added (meaning new sum will not exceed initial value)
-    for (Colour colour : Colour.values()) {
-      if (colour != Colour.ORIENT) {
-        assert (allTokens.get(colour) + paramTokens.get(colour)) <= initialValue;
-      }
-    }
+    ////verify that this number of gems can be added (meaning new sum will not exceed initial value)
+    //for (Colour colour : SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet()) {
+    //  assert (allTokens.get(colour) + paramTokens.get(colour)) <= initialValue;
+    //}
     //add Tokens
-    for (Colour colour : Colour.values()) {
-      if (colour != Colour.ORIENT) {
-        int newVal = allTokens.get(colour) + paramTokens.get(colour);
-        allTokens.replace(colour, newVal);
-      }
+    for (Colour colour : SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet()) {
+      int newVal = allTokens.get(colour) + paramTokens.get(colour);
+      allTokens.replace(colour, newVal);
     }
   }
 
