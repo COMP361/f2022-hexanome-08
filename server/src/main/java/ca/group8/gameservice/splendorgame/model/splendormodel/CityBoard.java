@@ -25,6 +25,8 @@ public class CityBoard extends Board {
     // can not test generateCityCards() because JSON parsing has random order issue
     List<CityCard> allCards = super.generateCityCards();
     // randomly get exactly 3 city cards on board (the rule)
+    // TODO: Fix the fact that we might draw 2 city cards: city1_1 and city1_2
+    // this should NOT BE allowed!
     Collections.shuffle(allCards);
     List<CityCard> cityCardsInUse = allCards.subList(0, 3);
     for (int i = 0; i < allCityCards.length; i++) {
