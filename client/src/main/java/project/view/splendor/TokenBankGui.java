@@ -1,5 +1,6 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.model.Colour;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashMap;
