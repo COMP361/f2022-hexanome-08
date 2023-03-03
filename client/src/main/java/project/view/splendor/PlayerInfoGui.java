@@ -1,10 +1,9 @@
 package project.view.splendor;
 
+import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
+
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
-import javafx.scene.text.Text;
-import project.view.splendor.communication.DevelopmentCard;
 
 /**
  * TODO.

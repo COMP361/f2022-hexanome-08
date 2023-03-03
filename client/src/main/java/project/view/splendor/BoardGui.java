@@ -1,9 +1,12 @@
 package project.view.splendor;
 
-import ca.mcgill.comp361.splendormodel.actions.Action;
-import ca.mcgill.comp361.splendormodel.model.TableTop;
-import java.util.Map;
+
+
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.Action;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import project.view.InvalidDataException;
+
+import java.util.Map;
 
 public interface BoardGui {
 

@@ -1,9 +1,10 @@
 package project.view.splendor;
 
-import java.util.Map;
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.Action;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import project.view.InvalidDataException;
-import project.view.splendor.communication.Action;
-import project.view.splendor.communication.TableTop;
+
+import java.util.Map;
 
 public class TraderBoardGui implements BoardGui{
 

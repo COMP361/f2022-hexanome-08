@@ -5,6 +5,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -15,7 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import project.App;
-import project.view.splendor.communication.DevelopmentCard;
 
 /**
  * TODO.
