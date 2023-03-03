@@ -243,9 +243,9 @@ public class SessionGui extends HBox {
     }
   }
 
-  /**
-   * TODO.
-   */
+  ///**
+  // * TODO.
+  // */
   public void updateSessionGui() {
     // if user is in this game, then we only need to delete the Leave button to Play
     // if user is NOT in this game, change the Join button to Watch

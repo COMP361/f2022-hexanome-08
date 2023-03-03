@@ -1,7 +1,8 @@
 package project.view.splendor;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 
+import ca.mcgill.comp361.splendormodel.model.Colour;
+import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import java.util.EnumMap;
 import java.util.List;
 

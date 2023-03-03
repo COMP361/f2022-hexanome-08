@@ -1,5 +1,6 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,8 @@ import project.DeckActionController;
 public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
   private final int level;
-  private List<BaseCard> cards;
-  private List<BaseCard> deck;
+  private List<DevelopmentCard> cards;
+  private List<DevelopmentCard> deck;
 
   /**
    * Constructor of BaseCardLevelGui class.
@@ -36,7 +37,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
    * @param cards a list of cards (fixed length of 4)
    * @param deck a list of cards (change length based on level)
    */
-  public BaseCardLevelGui(int level, List<BaseCard> cards, List<BaseCard> deck) {
+  public BaseCardLevelGui(int level, List<DevelopmentCard> cards, List<DevelopmentCard> deck) {
     this.level = level;
     this.cards = cards;
     this.deck = deck;
@@ -69,10 +70,10 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     return getAllCardsGui().get(cardIndex);
   }
 
-  private void setUpCards(List<BaseCard> cards) {
+  private void setUpCards(List<DevelopmentCard> cards) {
     assert cards.size() == 4;
     int i = 0;
-    for (BaseCard card : cards) {
+    for (DevelopmentCard card : cards) {
       String curCardName = card.getCardName();
       int curCardLevel = card.getLevel();
       String cardPath =
@@ -150,11 +151,11 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     }
   }
 
-  public void setCards(List<BaseCard> cards) {
+  public void setCards(List<DevelopmentCard> cards) {
     this.cards = cards;
   }
 
-  public void setDeck(List<BaseCard> deck) {
+  public void setDeck(List<DevelopmentCard> deck) {
     this.deck = deck;
   }
 

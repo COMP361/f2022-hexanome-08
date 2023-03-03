@@ -1,12 +1,13 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.model.Colour;
+import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
