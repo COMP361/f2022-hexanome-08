@@ -83,7 +83,6 @@ public class CardExtraAction extends Action {
   }
    */
 
-  //TODO:
   public void reserveNobleActionHelper(TableTop curTableTop,
                                        PlayerInGame curPlayer,
                                        ActionGenerator associatedActionGenerator) {
@@ -101,7 +100,6 @@ public class CardExtraAction extends Action {
     curPlayer.getReservedHand().addNobleCard(noble);
   }
 
-  //TODO
   public void satchelActionHelper(TableTop curTableTop,
                                   PlayerInGame curPlayer,
                                   ActionGenerator associatedActionGenerator,
@@ -145,7 +143,6 @@ public class CardExtraAction extends Action {
 
   }
 
-  //TODO
   public void burnActionHelper(TableTop curTableTop,
                                PlayerInGame curPlayer,
                                ActionGenerator associatedActionGenerator,
