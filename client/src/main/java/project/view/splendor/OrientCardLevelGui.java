@@ -1,8 +1,10 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -16,9 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import project.App;
-import project.CardActionController;
 import project.DeckActionController;
-import project.view.splendor.communication.DevelopmentCard;
 
 /**
  * TODO: Creates the GUI for a list of orient level cards.

@@ -15,12 +15,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -88,25 +84,34 @@ public class GameManager {
           throw new ModelAccessException(error);
         }
         List<String> gameIdsFromLobby = lobbyCommunicator.getAllSaveGameIds();
-        // first, delete the game ids in lobby that are not in server
-        List<String> idsInLobbyNotInServer = gameIdsFromLobby.stream()
-            .filter(gameIdsFromData::contains)
-            .collect(Collectors.toList());
-        // iterate through the ids that shouldn't be in lobby and delete them
-        for (Savegame game : savedMetaData) {
-          if (idsInLobbyNotInServer.contains(game.getSavegameid())) {
-            lobbyCommunicator.deleteSavedGame(game.getGamename(), game.getSavegameid());
+        if (gameIdsFromLobby.size() == 0) {
+          // Lobby has no saved game ids, put all ids in meta file into lobby
+          for (Savegame game : savedMetaData) {
+            lobbyCommunicator.putSaveGame(game);
           }
         }
-        // obtain an updated lobby ids (now server might have ids that lobby doesn't have)
-        gameIdsFromLobby = lobbyCommunicator.getAllSaveGameIds();
-        List<String> idsInServerNotInLobby = gameIdsFromData.stream()
-            .filter(gameIdsFromLobby::contains)
-            .collect(Collectors.toList());
-        // iterate through again to put the ids into lobby (PUT request)
-        for (Savegame game : savedMetaData) {
-          if (idsInServerNotInLobby.contains(game.getSavegameid())) {
-            lobbyCommunicator.putSaveGame(game);
+
+        if (gameIdsFromLobby.size() > 0) {
+          // first, delete the game ids in lobby that are not in server
+          List<String> idsInLobbyNotInServer = gameIdsFromLobby.stream()
+              .filter(gameIdsFromData::contains)
+              .collect(Collectors.toList());
+          // iterate through the ids that shouldn't be in lobby and delete them
+          for (Savegame game : savedMetaData) {
+            if (idsInLobbyNotInServer.contains(game.getSavegameid())) {
+              lobbyCommunicator.deleteSavedGame(game.getGamename(), game.getSavegameid());
+            }
+          }
+          // obtain an updated lobby ids (now server might have ids that lobby doesn't have)
+          gameIdsFromLobby = lobbyCommunicator.getAllSaveGameIds();
+          List<String> idsInServerNotInLobby = gameIdsFromData.stream()
+              .filter(gameIdsFromLobby::contains)
+              .collect(Collectors.toList());
+          // iterate through again to put the ids into lobby (PUT request)
+          for (Savegame game : savedMetaData) {
+            if (idsInServerNotInLobby.contains(game.getSavegameid())) {
+              lobbyCommunicator.putSaveGame(game);
+            }
           }
         }
         savedGameIds = new ArrayList<>(gameIdsFromData);
@@ -171,6 +176,7 @@ public class GameManager {
       throws ModelAccessException {
     // if we have a non-empty savegame id, then we load
     // the game content rather than creating new objects.
+    logger.info("Trying to launch a game");
     if (!launcherInfo.getSavegame().isEmpty()) {
       String saveGameId = launcherInfo.getSavegame();
       List<String> curPlayerNames = launcherInfo.getPlayers().stream()
@@ -220,6 +226,8 @@ public class GameManager {
       activeGames.put(gameId, newGameInfo);
       activePlayers.put(gameId, newPlayerStates);
       gameActionInterpreters.put(gameId, newActionInterpreter);
+      logger.info("Launched game " + gameId);
+      logger.info("Current game ids: " + activeGames.keySet());
       return new SavedGameState(newGameInfo, newPlayerStates, newActionInterpreter);
     }
   }

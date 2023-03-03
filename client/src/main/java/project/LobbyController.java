@@ -5,10 +5,13 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +21,7 @@ import javafx.scene.control.ScrollPane;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.connection.LobbyServiceRequestSender;
 import project.view.lobby.communication.GameParameters;
+import project.view.lobby.communication.Savegame;
 import project.view.lobby.communication.Session;
 import project.view.lobby.SessionGui;
 import project.view.lobby.SessionGuiManager;
@@ -32,12 +36,10 @@ public class LobbyController {
   @FXML
   private ChoiceBox<String> gameChoices;
 
-  // TODO: Add the GUI to display the saved games for player to create load session from
-  @FXML
-  private ChoiceBox<String> savedGames;
-
   @FXML
   private ScrollPane allSessionScrollPane;
+
+  private final Map<String, Savegame> allSaveGamesMap = new HashMap<>();
 
   @FXML
   protected void onCreateSessionButtonClick() throws UnirestException {
@@ -48,13 +50,18 @@ public class LobbyController {
     // Get the current game display name in the choice box
     String displayGameName = gameChoices.getValue();
     String gameName = gameNameMapping.get(displayGameName);
+    String saveGameId = "";
+    // display name can be a game service name or a saved id, do that check
+    if (allSaveGamesMap.containsKey(displayGameName)) {
+      // then we need to get the service name and save game id from here
+      Savegame savegame = allSaveGamesMap.get(displayGameName);
+      gameName = savegame.getGamename();
+      saveGameId = savegame.getSavegameid();
+    }
+
     String accessToken = curUser.getAccessToken();
     String creator = curUser.getUsername();
-    // TODO: Change the saveGameName to a input of this method, or somehow get the value
-    //  as long as it's not "" (maybe should read it from a drop down select menu)
-    //  the session will have this savegameid associated with it, and then we can launch it
-    //  to make sure we are indeed launching a saved game before
-    lobbyRequestSender.sendCreateSessionRequest(creator, accessToken, gameName, "");
+    lobbyRequestSender.sendCreateSessionRequest(creator, accessToken, gameName, saveGameId);
   }
 
 
@@ -133,8 +140,7 @@ public class LobbyController {
     updateSessionInfoThread.start();
   }
 
-  private Set<Long> findDifferentSessionIds(Set<Long> setA,
-                                            Set<Long> setB) {
+  private Set<Long> findDifferentSessionIds(Set<Long> setA, Set<Long> setB) {
     HashSet<Long> resultSet = new HashSet<>();
     if (setA.size() > setB.size()) {
       for (Long l : setA) {
@@ -166,12 +172,26 @@ public class LobbyController {
     LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
+
     // map from display name to actual game name
     for (GameParameters g : gameParameters) {
       gameDisplayNames.add(g.getDisplayName());
       lobbyRequestSender.addGameNameMapping(g.getDisplayName(), g.getName());
+
+      // use every game name to get the list of all save game ids
+      String token = App.getUser().getAccessToken();
+      Savegame[] savegames = lobbyRequestSender.getAllSavedGames(token, g.getName());
+      if (savegames.length > 0) {
+        // we have more than 1 saved game ids for this current service game
+        for (Savegame savegame : savegames) {
+          allSaveGamesMap.put(savegame.getSavegameid(), savegame);
+          gameDisplayNames.add(savegame.getSavegameid());
+        }
+      }
     }
-    // Available games to choose from ChoiceBox
+
+
+    // Available games to choose from ChoiceBox (Note, this includes save game ids)
     ObservableList<String> gameOptionsList = FXCollections.observableArrayList(gameDisplayNames);
     gameChoices.setItems(gameOptionsList);
 

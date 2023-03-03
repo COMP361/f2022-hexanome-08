@@ -81,7 +81,7 @@ public class LobbyCommunicator {
           // Send the PUT request if it is "ROLE_SERVICE"
           String curGameName = gameServiceNames.get(i);
           String curDisplayName = gameServiceDisplayNames.get(i);
-          String curGameLocation = gameServiceLocation + curGameName;
+          String curGameLocation = gameServiceLocation + "/" + curGameName;
           GameServerParameters curGameServerParams
               = new GameServerParameters(curGameName, curDisplayName,
               curGameLocation, 4, 2, "false");

@@ -161,6 +161,7 @@ public class SplendorRestController {
                                            @RequestBody LauncherInfo launcherInfo) {
     try {
       // check validity of this launcherInfo
+      logger.info("Checking validity");
       gameValidator.validLauncherInfo(gameId, launcherInfo);
 
       // added the game related to this launcher info to manager
