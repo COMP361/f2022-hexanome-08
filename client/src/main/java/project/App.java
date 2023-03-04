@@ -14,8 +14,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import project.connection.GameRequestSender;
 import project.connection.LobbyServiceRequestSender;
-import project.connection.SplendorServiceRequestSender;
 import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.User;
 
@@ -47,8 +47,8 @@ public class App extends Application {
   //    new SplendorServiceRequestSender(
   //        "http://76.66.139.161:4246/", "splendorbase");
   // TODO: This should not be a global variable in App!!!
-  private static final SplendorServiceRequestSender gameRequestSender =
-      new SplendorServiceRequestSender(
+  private static final GameRequestSender gameRequestSender =
+      new GameRequestSender(
           "http://127.0.0.1:4246/", "splendorbase");
 
 
@@ -177,7 +177,7 @@ public class App extends Application {
     return lobbyRequestSender;
   }
 
-  public static SplendorServiceRequestSender getGameRequestSender() {
+  public static GameRequestSender getGameRequestSender() {
     return gameRequestSender;
   }
 
