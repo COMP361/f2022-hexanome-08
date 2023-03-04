@@ -4,12 +4,9 @@ package project;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -28,8 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.apache.commons.codec.digest.DigestUtils;
-import project.connection.SplendorServiceRequestSender;
-import project.view.lobby.SessionGui;
+import project.connection.GameRequestSender;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 import project.view.splendor.BaseCardLevelGui;
@@ -40,7 +36,6 @@ import project.view.splendor.PlayerPosition;
 import project.view.splendor.TokenBankGui;
 import project.view.splendor.VerticalPlayerInfoGui;
 import ca.mcgill.comp361.splendormodel.model.*;
-import ca.mcgill.comp361.splendormodel.actions.*;
 
 /**
  * Game controller for game GUI.
@@ -112,7 +107,6 @@ public class GameController implements Initializable {
         //TODO: We need to sort them LATER!!!!
         result.get(card.getGemColour()).add(card);
       }
-
     }
     return result;
   }
@@ -140,15 +134,28 @@ public class GameController implements Initializable {
     };
   }
 
-  private EventHandler<ActionEvent> createOpenMyPurchaseCardClick(
-      List<DevelopmentCard> allDevCards) {
+  /**
+   * Whenever MyPurchaseCard button is clicked, we load "my_development_cards.fxml".
+   * The gui display logic is controlled by a PurchaseHandController.
+   * We shall get a new PlayerInGame for curPlayer everytime the player clicks on this button.
+   *
+   * @return the event defined to handle the assign controller and send requests.
+   */
+  private EventHandler<ActionEvent> createOpenMyPurchaseCardClick() {
     return event -> {
-      // TODO: Add a parameter for this method: Map<Colour, List<DevelopmentCard>> cardsMap here
-      Map<Colour, List<DevelopmentCard>> colourToCardStackMap = reorganizeCardsInHand(allDevCards);
+      GameRequestSender sender = App.getGameRequestSender();
+      String curPlayerName = App.getUser().getUsername();
+      String playerStatsJson = sender.sendGetAllPlayerInfoRequest(gameId, "").getBody();
+      Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+      PlayerStates playerStates = gsonParser.fromJson(playerStatsJson, PlayerStates.class);
+      // every time button click, we have up-to-date information
+      PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
+      PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
+
       try {
         App.loadPopUpWithController(
             "my_development_cards.fxml",
-            new PurchaseHandController(colourToCardStackMap),
+            new PurchaseHandController(purchasedHand),
             800,
             600);
       } catch (IOException e) {
@@ -197,65 +204,59 @@ public class GameController implements Initializable {
   }
 
 
-  //private Thread generateAllPlayerInfoUpdateThread(
-  //    SplendorServiceRequestSender gameRequestSender, GameInfo firstGameInfo) {
-  //  return new Thread(() -> {
-  //    String hashedResponse = "";
-  //    HttpResponse<String> longPullResponse = null;
-  //    boolean isFirstCheck = true;
-  //    while (true) {
-  //      int responseCode = 408;
-  //      while (responseCode == 408) {
-  //        try {
-  //          longPullResponse =
-  //              gameRequestSender.sendGetAllPlayerInfoRequest(gameId, hashedResponse);
-  //        } catch (UnirestException e) {
-  //          throw new RuntimeException(e);
-  //        }
-  //        responseCode = longPullResponse.getStatus();
-  //      }
-  //
-  //      if (responseCode == 200) {
-  //        hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
-  //        // decode this response into PlayerInGame class with Gson
-  //        String responseInJsonString = longPullResponse.getBody();
-  //        PlayerStates playerStates = new Gson().fromJson(responseInJsonString, PlayerStates.class);
-  //        if (isFirstCheck) {
-  //          int initTokenAmount =
-  //              playerStates.getPlayersInfo().get(App.getUser().getUsername()).getTokenHand()
-  //                  .getInitialAmount();
-  //          try {
-  //            setupPlayerInfoGui(playerStates,
-  //                initTokenAmount,
-  //                App.getGuiLayouts(),
-  //                App.getUser(),
-  //                firstGameInfo.getFirstPlayer());
-  //          } catch (UnirestException e) {
-  //            throw new RuntimeException(e);
-  //          }
-  //
-  //          isFirstCheck = false;
-  //        } else {
-  //          for (PlayerInGame playerInfo : playerStates.getPlayersInfo().values()) {
-  //            if (playerInfo.getName().equals(App.getUser().getUsername())) {
-  //              List<DevelopmentCard> allDevCards =
-  //                  playerInfo.getPurchasedHand().getDevelopmentCards();
-  //              List<DevelopmentCard> allReserveCards =
-  //                  playerInfo.getReservedHand().getDevelopmentCards();
-  //              myCardButton
-  //                  .setOnAction(createOpenMyPurchaseCardClick(allDevCards));
-  //
-  //              myReservedCardsButton
-  //                  .setOnAction(
-  //                      createOpenMyReserveCardClick(new ArrayList<>(), new ArrayList<>()));
-  //            }
-  //            updatePlayerInfoGui(playerInfo);
-  //          }
-  //        }
-  //      }
-  //    }
-  //  });
-  //}
+  private Thread generateAllPlayerInfoUpdateThread(
+      GameRequestSender gameRequestSender, GameInfo firstGameInfo) {
+    return new Thread(() -> {
+      String hashedResponse = "";
+      HttpResponse<String> longPullResponse = null;
+      boolean isFirstCheck = true;
+      while (true) {
+        int responseCode = 408;
+        while (responseCode == 408) {
+          longPullResponse = gameRequestSender.sendGetAllPlayerInfoRequest(gameId, hashedResponse);
+          responseCode = longPullResponse.getStatus();
+        }
+
+        if (responseCode == 200) {
+          hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
+          // decode this response into PlayerInGame class with Gson
+          String responseInJsonString = longPullResponse.getBody();
+          Gson splendorParser = SplendorDevHelper.getInstance().getGson();
+          PlayerStates playerStates = splendorParser
+              .fromJson(responseInJsonString, PlayerStates.class);
+          if (isFirstCheck) {
+            try {
+              setupPlayerInfoGui(playerStates,
+                  0,
+                  App.getGuiLayouts(),
+                  App.getUser(),
+                  firstGameInfo.getFirstPlayerName());
+            } catch (UnirestException e) {
+              throw new RuntimeException(e);
+            }
+
+            isFirstCheck = false;
+          } else {
+            for (PlayerInGame playerInfo : playerStates.getPlayersInfo().values()) {
+              if (playerInfo.getName().equals(App.getUser().getUsername())) {
+                List<DevelopmentCard> allDevCards =
+                    playerInfo.getPurchasedHand().getDevelopmentCards();
+                List<DevelopmentCard> allReserveCards =
+                    playerInfo.getReservedHand().getDevelopmentCards();
+                myCardButton
+                    .setOnAction(createOpenMyPurchaseCardClick());
+
+                myReservedCardsButton
+                    .setOnAction(
+                        createOpenMyReserveCardClick(new ArrayList<>(), new ArrayList<>()));
+              }
+              updatePlayerInfoGui(playerInfo);
+            }
+          }
+        }
+      }
+    });
+  }
 
 
   private void setupPlayerInfoGui(PlayerStates playerStates, int initTokenAmount,
@@ -285,7 +286,7 @@ public class GameController implements Initializable {
     List<DevelopmentCard> allReserveCards =
         curPlayerInfo.getReservedHand().getDevelopmentCards();
     myCardButton
-        .setOnAction(createOpenMyPurchaseCardClick(allDevCards));
+        .setOnAction(createOpenMyPurchaseCardClick());
 
     myReservedCardsButton
         .setOnAction(createOpenMyReserveCardClick(new ArrayList<>(), new ArrayList<>()));
@@ -529,7 +530,7 @@ public class GameController implements Initializable {
   @Override
   // TODO: This method contains what's gonna happen after clicking "play" on the board
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
+    GameRequestSender gameRequestSender = App.getGameRequestSender();
 
     System.out.println("Current user: " + App.getUser().getUsername());
     System.out.println(gameRequestSender.getGameServiceName());
@@ -538,11 +539,12 @@ public class GameController implements Initializable {
           gameRequestSender.sendGetGameInfoRequest(gameId, "");
       Gson gsonParser = SplendorDevHelper.getInstance().getGson();
       GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
-      //Thread playerInfoRelatedThread =
-      //    generateAllPlayerInfoUpdateThread(gameRequestSender, curGameInfo);
+      TableTop firstTableTop = curGameInfo.getTableTop();
+      Thread playerInfoRelatedThread =
+          generateAllPlayerInfoUpdateThread(gameRequestSender, curGameInfo);
       //Thread mainGameUpdateThread = generateGameInfoUpdateThread(gameRequestSender);
       //// start the thread for main board and playerInfo update at the same time
-      //playerInfoRelatedThread.start();
+      playerInfoRelatedThread.start();
       //mainGameUpdateThread.start();
     } catch (UnirestException e) {
       throw new RuntimeException(e);

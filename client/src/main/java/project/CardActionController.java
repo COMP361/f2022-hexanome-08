@@ -9,7 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import project.connection.SplendorServiceRequestSender;
+import project.connection.GameRequestSender;
 
 /**
  * Card action controller class.
@@ -40,7 +40,7 @@ public class CardActionController implements Initializable {
       if (actionHash[0] != null) {
         // TODO: Index 0 is the hash for purchase hash
         // it's clickable, we can send some requests here
-        SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
+        GameRequestSender gameRequestSender = App.getGameRequestSender();
         String playerName = App.getUser().getUsername();
         String accessToken = App.getUser().getAccessToken();
         // sends a POST request that tells the server which action we chose
@@ -63,7 +63,7 @@ public class CardActionController implements Initializable {
       if (actionHash[1] != null) {
         // TODO: Index 1 is the hash for reserve hash
         // it's clickable, we can send some requests here
-        SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
+        GameRequestSender gameRequestSender = App.getGameRequestSender();
         String playerName = App.getUser().getUsername();
         String accessToken = App.getUser().getAccessToken();
         // sends a POST request that tells the server which action we chose

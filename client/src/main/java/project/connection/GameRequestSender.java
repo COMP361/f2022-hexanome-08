@@ -1,24 +1,18 @@
 package project.connection;
 
-import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * TODO.
  */
-public class SplendorServiceRequestSender {
+public class GameRequestSender {
 
   private final String gameUrl;
   private String gameServiceName;
 
-  public SplendorServiceRequestSender(String gameUrl, String gameServiceName) {
+  public GameRequestSender(String gameUrl, String gameServiceName) {
     this.gameUrl = gameUrl;
     this.gameServiceName = gameServiceName;
   }
@@ -75,22 +69,28 @@ public class SplendorServiceRequestSender {
    * @param gameId game id
    * @param hashPreviousResponse hashed Previous Response
    * @return A http response with JSON string as the body
-   * @throws UnirestException in case of a failed request
    */
   public HttpResponse<String> sendGetAllPlayerInfoRequest(long gameId,
-                                                          String hashPreviousResponse)
-      throws UnirestException {
-    if (hashPreviousResponse.equals("")) {
-      return Unirest.get(String.format("%s/api/games/%s/playerStates",
-          gameUrl + gameServiceName, gameId)).asString();
-    } else {
-      return Unirest.get(String.format("%s/api/games/%s/playerStates",
-              gameUrl + gameServiceName, gameId))
-          .queryString("hash", hashPreviousResponse)
-          .asString();
+                                                          String hashPreviousResponse) {
 
+    HttpResponse<String> response = null;
+    try {
+      if (hashPreviousResponse.equals("")) {
+        response = Unirest.get(
+            String.format("%s/api/games/%s/playerStates",
+            gameUrl + gameServiceName, gameId)).asString();
+      } else {
+        response = Unirest.get(String.format("%s/api/games/%s/playerStates",
+                gameUrl + gameServiceName, gameId))
+            .queryString("hash", hashPreviousResponse)
+            .asString();
+
+      }
+    } catch (UnirestException e) {
+      e.printStackTrace();
     }
 
+    return response;
   }
 
   /**
