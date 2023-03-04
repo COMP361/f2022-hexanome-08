@@ -131,9 +131,12 @@ public class CardExtraAction extends Action {
     int level = satchel.getLevel();
 
     //update the board with new card
+    //took it out, done in PurchaseAction
+    /*
     OrientBoard board = ((OrientBoard) curTableTop.getBoard(Extension.ORIENT));
     Card replacement = board.popLevelCardFromDeck(level);
     board.getLevelCardsOnBoard(level)[index] = (DevelopmentCard) replacement;
+     */
   }
 
   //TODO
@@ -173,8 +176,6 @@ public class CardExtraAction extends Action {
 
       associatedActionInterpreter.setStashedCard(null);
     }
-
-    //TODO: in the sequence diagram it says the remove the stashed card from board but I think thats done in PurchaseAction
   }
 
 }
