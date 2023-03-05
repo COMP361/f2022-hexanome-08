@@ -22,6 +22,8 @@ public class GameBoardLayoutConfig {
   private double baseCardBoardLayoutY;
   private double orientCardBoardLayoutX;
   private double orientCardBoardLayoutY;
+  private double powerAndCityBoardLayoutX;
+  private double powerAndCityBoardLayoutY;
 
   public void setAppWidth(double appWidth) {
     this.appWidth = appWidth;
@@ -166,4 +168,12 @@ public class GameBoardLayoutConfig {
   public double getOrientCardBoardLayoutY() {
     return orientCardBoardLayoutY;
   }
+
+  public void setPowerAndCityBoardLayoutX(double powerAndCityBoardLayoutX) {this.powerAndCityBoardLayoutX = powerAndCityBoardLayoutX;}
+
+  public void setPowerAndCityBoardLayoutY(double powerAndCityBoardLayoutY) {this.powerAndCityBoardLayoutY = powerAndCityBoardLayoutY;}
+
+  public double getPowerAndCityBoardLayoutX() {return powerAndCityBoardLayoutX;}
+
+  public double getPowerAndCityBoardLayoutY() {return powerAndCityBoardLayoutY;}
 }
