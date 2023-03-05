@@ -101,7 +101,7 @@
                         <ImageView fitHeight="122.0" fitWidth="137.0" layoutY="-105.0" pickOnBounds="true"
                                    preserveRatio="true">
                             <image>
-                                <Image url="@pictures/ta_pictures/maex.png"/>
+                                <Image url="@pictures/ta_pictures/julia.png"/>
                             </image>
                         </ImageView>
                         <Circle centerX="40.0" centerY="20.0" fill="#acdef4" layoutX="70.0" layoutY="-70.0"

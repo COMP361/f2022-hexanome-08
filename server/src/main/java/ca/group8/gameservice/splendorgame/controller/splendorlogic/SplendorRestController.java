@@ -254,7 +254,7 @@ public class SplendorRestController {
    * TODO: send GET request to this location TWICE per turn, one at beginning, one at the end.
    * because we need to make sure everything on the board is not available for user to click
    * if it's not their turn
-   * <p>
+   *
    * This end point is only used to get the initial actionMap (Purchase, Reserve, TakeToken)
    * The cascade case will update the Map< String, Map< String, Action > > in GameInfo, which is
    * under long-polling control. Therefore user can get updated action map to handle cascade action
@@ -264,9 +264,9 @@ public class SplendorRestController {
       "/splendorbase/api/games/{gameId}/players/{playerName}/actions",
       "/splendorcity/api/games/{gameId}/players/{playerName}/actions"},
       produces = "application/json; charset=utf-8")
-  public ResponseEntity<String> getActions(@PathVariable long gameId,
-                                           @PathVariable String playerName,
-                                           @RequestParam(value = "access_token")
+  public ResponseEntity<String> getInitialActions(@PathVariable long gameId,
+                                                  @PathVariable String playerName,
+                                                  @RequestParam(value = "access_token")
                                            String accessToken) {
     try {
       // check if anything is valid about this game id and the player with the access token

@@ -51,16 +51,22 @@ public class GameRequestSender {
    * @return A http response with JSON string as the body
    * @throws UnirestException in case of a failed request
    */
-  public HttpResponse<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse)
-      throws UnirestException {
-    if (hashPreviousResponse.equals("")) {
-      return Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId).asString();
-    } else {
-      return Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId)
-          .queryString("hash", hashPreviousResponse)
-          .asString();
+  public HttpResponse<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse) {
+    HttpResponse<String> response = null;
+    try {
+      if (hashPreviousResponse.equals("")) {
+        // instant request
+        response = Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId).asString();
+      } else {
+        // long polling request
+        response = Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId)
+            .queryString("hash", hashPreviousResponse)
+            .asString();
+      }
+    } catch (UnirestException e) {
+      e.printStackTrace();
     }
-
+    return response;
   }
 
   /**
@@ -94,22 +100,30 @@ public class GameRequestSender {
   }
 
   /**
-   * Send a instant response request to get all possible action map for current player.
+   * Send an instant response request to get all.
+   * initial actions map for current player. (reserve, purchase, take token actions OR empty).
    *
    * @param gameId game id
    * @param playerName current player name
    * @param accessToken current player's access token
    * @return A http response with JSON string as the body
-   * @throws UnirestException in case of a failed request
    */
-  public HttpResponse<String> sendGetPlayerActionsRequest(long gameId, String playerName,
-                                                          String accessToken)
-      throws UnirestException {
+  public HttpResponse<String> sendGetInitialPlayerActions(long gameId, String playerName,
+                                                          String accessToken) {
+    String url =  String.format("%s/api/games/%s/players/%s/actions",
+        gameUrl + gameServiceName,
+        gameId, playerName);
 
-    return Unirest
-        .get(String.format("%s/api/games/%s/players/%s/actions", gameUrl + gameServiceName,
-            gameId, playerName))
-        .queryString("access_token", accessToken).asString();
+    HttpResponse<String> response = null;
+    try {
+      response = Unirest.get(url)
+          .queryString("access_token", accessToken)
+          .asString();
+    } catch (UnirestException e) {
+      e.printStackTrace();
+    }
+
+    return response;
   }
 
   /**
