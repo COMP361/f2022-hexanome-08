@@ -4,27 +4,24 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<Pane fx:id="resCardPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="406.0" prefWidth="789.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+
+<Pane fx:id="resCardPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label layoutX="326.0" layoutY="29.0" text="My Reserved Cards"/>
-        <HBox fx:id="reservedDevCardsHbox" layoutX="224.0" layoutY="80.0" prefHeight="150.0" prefWidth="340.0"
-              spacing="20.0">
+        <Label layoutX="326.0" layoutY="29.0" text="My Reserved Cards" />
+        <HBox fx:id="reservedDevCardsHbox" layoutX="224.0" layoutY="80.0" prefHeight="150.0" prefWidth="340.0" spacing="20.0">
             <children>
-                <ImageView id="card" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
-                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
-                <ImageView id="newReserveCard" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true"
-                           preserveRatio="true"/>
+                <ImageView id="card" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                <ImageView id="newReserveCard" fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
             </children>
         </HBox>
-        <HBox fx:id="reservedNoblesHbox" layoutX="126.0" layoutY="211.0" prefHeight="150.0" prefWidth="540.0"
-              spacing="10.0">
+        <HBox fx:id="reservedNoblesHbox" layoutX="126.0" layoutY="211.0" prefHeight="150.0" prefWidth="540.0" spacing="10.0">
             <children>
-                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
-                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
-                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
-                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
-                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"/>
+                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fitHeight="150.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
             </children>
         </HBox>
     </children>
