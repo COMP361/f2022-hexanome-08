@@ -1,6 +1,7 @@
 package project;
 
 
+import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import java.net.URL;
@@ -48,12 +49,15 @@ public class PurchaseHandController implements Initializable {
   private final Map<Colour, List<DevelopmentCard>> colourCardsMap;
 
   private final List<NobleCard> nobleCards;
-  public PurchaseHandController(PurchasedHand purchasedHand) {
+
+  private final Map<String, Action> playerActions;
+  public PurchaseHandController(PurchasedHand purchasedHand, Map<String, Action> playerActions) {
     // organize all dev cards (including gold colour ones) into colour map
     List<DevelopmentCard> allCardsInHand = purchasedHand.getDevelopmentCards();
     this.colourCardsMap = reorganizeCardsInHand(allCardsInHand);
     this.colourGroupMap = new HashMap<>();
     this.nobleCards = purchasedHand.getNobleCards();
+    this.playerActions = playerActions;
   }
 
 
@@ -153,6 +157,7 @@ public class PurchaseHandController implements Initializable {
   }
 
 
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     Colour[] baseColours = App.getBaseColours();
@@ -174,6 +179,10 @@ public class PurchaseHandController implements Initializable {
     for (Colour c : colourGroupMap.keySet()) {
       if (colourCardsMap.containsKey(c)) {
         List<DevelopmentCard> cardsOfOneColour = colourCardsMap.get(c);
+        //TODO: assign actions to image views with playerActions, depending on what kind of
+        // actions (only CardExtraAction of Satchel can happen in this purchase hand, only for normal
+        // cards with RED, WHITE, BLUE, GREEN, BLACK colours)
+        // Bind actions to image view during generateCardSatchelPair(...) method
         List<HBox> allPairs = generateCardSatchelPair(cardsOfOneColour);
         addCardSatchelPairToColourGroup(allPairs, colourGroupMap.get(c));
       }

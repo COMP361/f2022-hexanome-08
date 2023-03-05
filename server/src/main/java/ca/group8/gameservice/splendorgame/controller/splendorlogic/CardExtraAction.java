@@ -25,7 +25,7 @@ public class CardExtraAction extends Action {
                          Position position) {
     assert curCard != null;
     super.type = this.getClass().getSimpleName();
-    curCard = curCard;
+    this.curCard = curCard;
     this.cardEffect = cardEffect;
     this.position = position;
   }
