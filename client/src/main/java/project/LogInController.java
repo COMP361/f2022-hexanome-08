@@ -1,20 +1,24 @@
 package project;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
-import project.connection.LobbyServiceRequestSender;
+import project.connection.LobbyRequestSender;
+import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.User;
 
 /**
  * Lobby GUI controller.
  */
-public class LogInController {
+public class LogInController implements Initializable {
 
   @FXML
   private TextField userName;
@@ -37,7 +41,7 @@ public class LogInController {
     String userNameStr = userName.getText();
     String userPasswordStr = userPassword.getText();
     // retrieve the parsed JSONObject from the response
-    LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+    LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     JSONObject logInResponseJson = lobbyRequestSender
         .sendLogInRequest(userNameStr, userPasswordStr);
 
@@ -52,9 +56,15 @@ public class LogInController {
       App.setUser(curUser);
 
       // if user is player, display admin_lobby_page
+      GameBoardLayoutConfig config = App.getGuiLayouts();
       if (App.getUser().getAuthority().equals("ROLE_ADMIN") ||
           App.getUser().getAuthority().equals("ROLE_PLAYER")) {
-        App.setRoot("admin_lobby_page");
+        App.loadPopUpWithController("admin_lobby_page.fxml",
+            new LobbyController(),
+            config.getAppWidth(),
+            config.getAppHeight());
+        Stage logInWindow = (Stage) quitGameButton.getScene().getWindow();
+        logInWindow.close();
 
       } else { // otherwise, player_lobby_page
         // App.setRoot("player_lobby_page");
@@ -75,10 +85,9 @@ public class LogInController {
     curStage.close();
   }
 
-  public void initialize() {
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
     userName.setText("ruoyu");
     userPassword.setText("abc123_ABC123");
-
   }
-
 }

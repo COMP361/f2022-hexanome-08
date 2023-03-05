@@ -3,7 +3,6 @@ package project;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,7 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import project.connection.GameRequestSender;
-import project.connection.LobbyServiceRequestSender;
+import project.connection.LobbyRequestSender;
 import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.User;
 
@@ -38,8 +37,8 @@ public class App extends Application {
   //    new LobbyServiceRequestSender("http://76.66.139.161:4242");
 
   // TODO: Change this to singleton later LobbyServiceRequestSender
-  private static final LobbyServiceRequestSender lobbyRequestSender =
-      new LobbyServiceRequestSender("http://127.0.0.1:4242");
+  private static final LobbyRequestSender lobbyRequestSender =
+      new LobbyRequestSender("http://127.0.0.1:4242");
 
   // http://127.0.0.1:4246/splendor
   // http://76.66.139.161:4246/splendor
@@ -173,7 +172,7 @@ public class App extends Application {
   }
 
 
-  public static LobbyServiceRequestSender getLobbyServiceRequestSender() {
+  public static LobbyRequestSender getLobbyServiceRequestSender() {
     return lobbyRequestSender;
   }
 

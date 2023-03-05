@@ -4,22 +4,23 @@ import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import org.apache.commons.codec.digest.DigestUtils;
-import project.connection.LobbyServiceRequestSender;
+import project.connection.LobbyRequestSender;
 import project.view.lobby.communication.GameParameters;
 import project.view.lobby.communication.Savegame;
 import project.view.lobby.communication.Session;
@@ -31,7 +32,7 @@ import project.view.lobby.communication.User;
 /**
  * login GUI controller.
  */
-public class LobbyController {
+public class LobbyController implements Initializable {
 
   @FXML
   private ChoiceBox<String> gameChoices;
@@ -43,7 +44,7 @@ public class LobbyController {
 
   @FXML
   protected void onCreateSessionButtonClick() throws UnirestException {
-    LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+    LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     User curUser = App.getUser();
     Map<String, String> gameNameMapping = lobbyRequestSender.getGameNameMapping();
 
@@ -84,7 +85,7 @@ public class LobbyController {
       HttpResponse<String> longPullResponse = null;
       Session localSession;
       boolean isFirstCheck = true;
-      LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+      LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
       while (true) {
         int responseCode = 408;
         while (responseCode == 408) {
@@ -138,6 +139,7 @@ public class LobbyController {
 
     Thread updateSessionInfoThread = getUpdateOneSessionGuiThread(sessionId);
     updateSessionInfoThread.start();
+    SessionGuiManager.addSessionUpdateThread(updateSessionInfoThread);
   }
 
   private Set<Long> findDifferentSessionIds(Set<Long> setA, Set<Long> setB) {
@@ -161,15 +163,12 @@ public class LobbyController {
   }
 
 
-  /**
-   * Initializing info for local lobby.
-   *
-   * @throws UnirestException in case unirest failed to send a request
-   */
-  public void initialize() throws UnirestException {
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    SessionGuiManager.resetManager();
     // Get all available games and pre-set the ChoiceBox
     // mainly about display on session info
-    LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+    LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
 
@@ -277,6 +276,7 @@ public class LobbyController {
       }
     });
     updateAddRemoveSessionThread.start();
+    SessionGuiManager.addSessionUpdateThread(updateAddRemoveSessionThread);
 
   }
 }
