@@ -6,7 +6,6 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,7 @@ import project.view.lobby.communication.SessionList;
 /**
  * class that is responsible to send different requests to the LS.
  */
-public class LobbyServiceRequestSender {
+public class LobbyRequestSender {
   private final String lobbyUrl;
   private final Map<String, String> gameNameMapping;
 
@@ -31,7 +30,7 @@ public class LobbyServiceRequestSender {
    *
    * @param lobbyUrlInput lobby url
    */
-  public LobbyServiceRequestSender(String lobbyUrlInput) {
+  public LobbyRequestSender(String lobbyUrlInput) {
     lobbyUrl = lobbyUrlInput;
     gameNameMapping = new HashMap<>();
     localSessionList = new SessionList();
@@ -187,21 +186,26 @@ public class LobbyServiceRequestSender {
    * @return A list of Game
    * @throws UnirestException in case unirest failed to send a request
    */
-  public List<GameParameters> sendAllGamesRequest() throws UnirestException {
-    HttpResponse<JsonNode> allGamesResponse =
-        Unirest.get(lobbyUrl + "/api/gameservices").asJson();
-    JSONArray allGamesJsonArray = allGamesResponse.getBody().getArray();
-    Gson gson = new Gson();
-    List<GameParameters> resultList = new ArrayList<>();
-    for (int i = 0; i < allGamesJsonArray.length(); i++) {
-      String jsonString = allGamesJsonArray.getJSONObject(i).toString();
-      // this method will assign the attributes of Game that can be assigned at this time
-      // name & displayName, the others will stay as null
-      GameParameters curGameParameters = gson.fromJson(jsonString, GameParameters.class);
-      resultList.add(curGameParameters);
-    }
+  public List<GameParameters> sendAllGamesRequest() {
+    try {
+      HttpResponse<JsonNode> allGamesResponse =
+          Unirest.get(lobbyUrl + "/api/gameservices").asJson();
+      JSONArray allGamesJsonArray = allGamesResponse.getBody().getArray();
+      Gson gson = new Gson();
+      List<GameParameters> resultList = new ArrayList<>();
+      for (int i = 0; i < allGamesJsonArray.length(); i++) {
+        String jsonString = allGamesJsonArray.getJSONObject(i).toString();
+        // this method will assign the attributes of Game that can be assigned at this time
+        // name & displayName, the others will stay as null
+        GameParameters curGameParameters = gson.fromJson(jsonString, GameParameters.class);
+        resultList.add(curGameParameters);
+      }
 
-    return resultList;
+      return resultList;
+    } catch (UnirestException e) {
+      e.printStackTrace();
+      return new ArrayList<>();
+    }
   }
 
   /**
@@ -223,13 +227,16 @@ public class LobbyServiceRequestSender {
    *
    * @param accessToken access token
    * @param sessionId   session id
-   * @throws UnirestException in case unirest failed to send a request
    */
-  public void sendDeleteSessionRequest(String accessToken, Long sessionId)
-      throws UnirestException {
+  public void sendDeleteSessionRequest(String accessToken, Long sessionId) {
+    try {
+      Unirest.delete(lobbyUrl + "/api/sessions/" + sessionId.toString())
+          .queryString("access_token", accessToken)
+          .asString();
+    } catch (UnirestException e) {
+      e.printStackTrace();
+    }
 
-    Unirest.delete(lobbyUrl + "/api/sessions/" + sessionId.toString())
-        .queryString("access_token", accessToken).asString();
   }
 
 
@@ -294,8 +301,7 @@ public class LobbyServiceRequestSender {
    * @param gameServiceName splendorbase, splendorcity, ... (game service names)
    * @return an array of Savegame to one specific game service, can be empty
    */
-  public Savegame[] getAllSavedGames(String accessToken, String gameServiceName)
-      throws UnirestException {
+  public Savegame[] getAllSavedGames(String accessToken, String gameServiceName) {
     String url = String.format("%s/api/gameservices/%s/savegames",
         lobbyUrl, gameServiceName);
     Savegame[] result = new Savegame[0];

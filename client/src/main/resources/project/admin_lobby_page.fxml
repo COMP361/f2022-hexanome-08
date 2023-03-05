@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="830.0" maxWidth="1200.0" prefHeight="830.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.LobbyController">
+<AnchorPane maxHeight="830.0" maxWidth="1200.0" prefHeight="830.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <HBox alignment="TOP_CENTER" prefHeight="119.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
         <BorderPane.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

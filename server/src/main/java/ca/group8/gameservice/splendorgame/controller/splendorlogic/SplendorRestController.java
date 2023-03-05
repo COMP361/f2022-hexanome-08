@@ -137,6 +137,19 @@ public class SplendorRestController {
       // save the game detailed info to our game server as json file
       // and the metadata Savegame to LS
       gameManager.saveGame(saveGameInfo, gameId);
+
+
+      // forcing this game to be finished
+      GameInfo curGame = gameManager.getGameById(gameId);
+      curGame.setFinished();
+      // immediately tell the client, game is over
+      gameInfoBroadcastContentManager.get(gameId).touch();
+      // remove anything related to this game from game manager
+      gameManager.deleteGame(gameId);
+      // remove the broadcast content manager which controls the
+      // long polling updates
+      gameInfoBroadcastContentManager.remove(gameId);
+      allPlayerInfoBroadcastContentManager.remove(gameId);
       return ResponseEntity.status(HttpStatus.OK).body("");
     } catch (ModelAccessException e) {
       logger.warn(e.getMessage());

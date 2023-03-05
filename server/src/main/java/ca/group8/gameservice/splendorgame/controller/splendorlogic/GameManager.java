@@ -308,9 +308,10 @@ public class GameManager {
     }
 
     // TODO: 2. store the actual data and metadata into the file
+    GameInfo gameInfo = activeGames.get(gameId);
     SavedGameState newSaveGame =
         new SavedGameState(
-            activeGames.get(gameId),
+            gameInfo,
             activePlayers.get(gameId),
             gameActionInterpreters.get(gameId));
     savedGameIds.add(savegame.getSavegameid());

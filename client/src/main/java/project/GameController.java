@@ -25,8 +25,11 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.connection.GameRequestSender;
+import project.connection.LobbyRequestSender;
+import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 import project.view.splendor.ActionIdPair;
@@ -93,6 +96,7 @@ public class GameController implements Initializable {
 
   private List<String> sortedPlayerNames = new ArrayList<>();
 
+  private boolean gameIsFinished = false;
   public GameController(long gameId, Session curSession) {
     this.gameId = gameId;
     this.curSession = curSession;
@@ -420,7 +424,6 @@ public class GameController implements Initializable {
         // always do one, just in case
         // after this, curUser.getAccessToken() will for sure have a valid token
         App.refreshUserToken(curUser);
-
         int responseCode = 408;
         while (responseCode == 408) {
           longPullResponse = gameRequestSender.sendGetGameInfoRequest(gameId, hashedResponse);
@@ -434,6 +437,29 @@ public class GameController implements Initializable {
           String responseInJsonString = longPullResponse.getBody();
           Gson gsonParser = SplendorDevHelper.getInstance().getGson();
           GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
+          if (curGameInfo.isFinished()) {
+            gameIsFinished = true;
+            // if it's the creator's client, send a request to LS to remove the session
+            if(curUser.getUsername().equals(curGameInfo.getCreator())) {
+              LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+              String creatorAccessToken = curUser.getAccessToken();
+              lobbyRequestSender.sendDeleteSessionRequest(creatorAccessToken, gameId);
+            }
+            // load the lobby page GUI again
+            Platform.runLater(() -> {
+              try {
+                App.loadPopUpWithController("admin_lobby_page.fxml",
+                    new LobbyController(),
+                    config.getAppWidth(),
+                    config.getAppHeight());
+              } catch (IOException e) {
+                throw new RuntimeException(e);
+              }
+              Stage gameWindow = (Stage) playerBoardAnchorPane.getScene().getWindow();
+              gameWindow.close();
+            });
+            break;
+          }
           //TODO: For this game application, we always play BASE + ORIENT, thus
           // we do not worry about NOT having their GUI set up
 
@@ -591,7 +617,9 @@ public class GameController implements Initializable {
       return event -> {
         try {
           App.loadPopUpWithController("save_game.fxml",
-              new SaveGamePopUpController(gameInfo, gameId), 360, 170);
+              new SaveGamePopUpController(gameInfo, gameId),
+              360,
+              170);
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
@@ -637,9 +665,14 @@ public class GameController implements Initializable {
     playerInfoThread.start();
     Thread mainGameUpdateThread = generateGameInfoUpdateThread();
     mainGameUpdateThread.start();
+    Thread cleanUpThread = new Thread(() -> {
+      // busy waiting
+      while(!gameIsFinished) {}
+      playerInfoThread.interrupt();
+      mainGameUpdateThread.interrupt();
+    });
+    // terminate the monitor threads after game is finished
+    cleanUpThread.start();
     //// start the thread for main board and playerInfo update at the same time
-
-
-
   }
 }

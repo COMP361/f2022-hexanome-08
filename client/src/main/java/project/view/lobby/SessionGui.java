@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.GameController;
-import project.connection.LobbyServiceRequestSender;
+import project.connection.LobbyRequestSender;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 
@@ -104,7 +104,6 @@ public class SessionGui extends HBox {
       // just load the board to this user, nothing else should be done
       try {
         App.setRoot("splendor_base_game_board");
-        //stopAndClearThreads(); TODO: Might need a way to clean up the threads later ...
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -141,14 +140,10 @@ public class SessionGui extends HBox {
   private EventHandler<ActionEvent> createDeleteSessionHandler() {
     return event -> {
       SessionGuiManager sessionsVbox = SessionGuiManager.getInstance();
-      LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+      LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
       sessionsVbox.getChildren().remove(this);
-      try {
-        String accessToken = curUser.getAccessToken();
-        lobbyRequestSender.sendDeleteSessionRequest(accessToken, curSessionId);
-      } catch (UnirestException e) {
-        throw new RuntimeException(e);
-      }
+      String accessToken = curUser.getAccessToken();
+      lobbyRequestSender.sendDeleteSessionRequest(accessToken, curSessionId);
     };
   }
 
@@ -157,7 +152,7 @@ public class SessionGui extends HBox {
   private EventHandler<ActionEvent> createLaunchSessionHandler() {
     return event -> {
       try {
-        LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+        LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
         String accessToken = curUser.getAccessToken();
         lobbyRequestSender.sendLaunchSessionRequest(curSessionId, accessToken);
       } catch (UnirestException e) {
@@ -170,7 +165,7 @@ public class SessionGui extends HBox {
   private EventHandler<ActionEvent> createJoinLeaveSessionHandler() {
     return event -> {
       Button joinAndLeaveButton = (Button) event.getSource();
-      LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+      LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
       String accessToken = curUser.getAccessToken();
       String curUserName = curUser.getUsername();
       // If the button says "Join", send join request
