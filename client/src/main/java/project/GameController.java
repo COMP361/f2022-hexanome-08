@@ -1,6 +1,7 @@
 package project;
 
 
+import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import com.google.gson.Gson;
@@ -20,8 +21,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -71,9 +70,12 @@ public class GameController implements Initializable {
   private TokenBankGui tokenBankGui;
 
   private String prePlayerName;
+
   private final Map<Integer, BaseCardLevelGui> baseCardGuiMap = new HashMap<>();
 
   private final Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap = new HashMap<>();
+
+  private final Map<String, Integer> nameToArmCodeMap = new HashMap<>();
 
   private List<String> sortedPlayerNames = new ArrayList<>();
 
@@ -92,39 +94,25 @@ public class GameController implements Initializable {
     App.setRoot("admin_lobby_page");
   }
 
-  private Map<Colour, List<DevelopmentCard>> reorganizeCardsInHand(
-      List<DevelopmentCard> allDevCards) {
-    Map<Colour, List<DevelopmentCard>> result = new HashMap<>();
-    for (DevelopmentCard card : allDevCards) {
-      if (!result.containsKey(card.getGemColour())) {
-        // initialize the list for cards
-        List<DevelopmentCard> cardsOfOneColour = new ArrayList<>();
-        cardsOfOneColour.add(card);
-        result.put(card.getGemColour(), cardsOfOneColour);
-      } else {
-        // if result contains this colour before, then we just
-        // need to add this card to the list the colour maps to
-        //TODO: We need to sort them LATER!!!!
-        result.get(card.getGemColour()).add(card);
-      }
-    }
-    return result;
-  }
 
-  private EventHandler<ActionEvent> createOpenMyReserveCardClick(
-      List<DevelopmentCard> reserveCards, List<NobleCard> reservedNobles) {
+  private EventHandler<ActionEvent> createOpenMyReserveCardClick() {
     return event -> {
-      // TODO: Implement making reserveCards and reserveNobles into ImageViews
-      Image img2 = new Image("project/pictures/noble/noble1.png");
-      List<ImageView> testNobleImageViews = new ArrayList<>();
-      for (int i = 0; i < 5; i++) {
-        ImageView imgV = new ImageView(img2);
-        testNobleImageViews.add(imgV);
-      }
+      GameRequestSender sender = App.getGameRequestSender();
+      String curPlayerName = App.getUser().getUsername();
+      String playerStatsJson = sender.sendGetAllPlayerInfoRequest(gameId, "").getBody();
+      Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+      PlayerStates playerStates = gsonParser.fromJson(playerStatsJson, PlayerStates.class);
+      // every time button click, we have up-to-date information
+      PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
+      ReservedHand reservedHand = playerInGame.getReservedHand();
+      String gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
+      GameInfo gameInfo = gsonParser.fromJson(gameInfoJson, GameInfo.class);
+      String playerName = App.getUser().getUsername();
+      Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
       try {
         App.loadPopUpWithController("my_reserved_cards.fxml",
-            new ReservedHandController(testNobleImageViews, testNobleImageViews),
+            new ReservedHandController(reservedHand, playerActions),
             800,
             600);
       } catch (IOException e) {
@@ -151,11 +139,15 @@ public class GameController implements Initializable {
       // every time button click, we have up-to-date information
       PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
       PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
+      String gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
+      GameInfo gameInfo = gsonParser.fromJson(gameInfoJson, GameInfo.class);
+      String playerName = App.getUser().getUsername();
+      Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
       try {
         App.loadPopUpWithController(
             "my_development_cards.fxml",
-            new PurchaseHandController(purchasedHand),
+            new PurchaseHandController(purchasedHand, playerActions),
             800,
             600);
       } catch (IOException e) {
@@ -226,10 +218,8 @@ public class GameController implements Initializable {
               .fromJson(responseInJsonString, PlayerStates.class);
           if (isFirstCheck) {
             try {
-              setupPlayerInfoGui(playerStates,
+              setupAllPlayerInfoGui(playerStates,
                   0,
-                  App.getGuiLayouts(),
-                  App.getUser(),
                   firstGameInfo.getFirstPlayerName());
             } catch (UnirestException e) {
               throw new RuntimeException(e);
@@ -239,16 +229,8 @@ public class GameController implements Initializable {
           } else {
             for (PlayerInGame playerInfo : playerStates.getPlayersInfo().values()) {
               if (playerInfo.getName().equals(App.getUser().getUsername())) {
-                List<DevelopmentCard> allDevCards =
-                    playerInfo.getPurchasedHand().getDevelopmentCards();
-                List<DevelopmentCard> allReserveCards =
-                    playerInfo.getReservedHand().getDevelopmentCards();
-                myCardButton
-                    .setOnAction(createOpenMyPurchaseCardClick());
-
-                myReservedCardsButton
-                    .setOnAction(
-                        createOpenMyReserveCardClick(new ArrayList<>(), new ArrayList<>()));
+                myCardButton.setOnAction(createOpenMyPurchaseCardClick());
+                myReservedCardsButton.setOnAction(createOpenMyReserveCardClick());
               }
               updatePlayerInfoGui(playerInfo);
             }
@@ -259,17 +241,35 @@ public class GameController implements Initializable {
   }
 
 
-  private void setupPlayerInfoGui(PlayerStates playerStates, int initTokenAmount,
-                                  GameBoardLayoutConfig config, User curUser, String firstPlayer)
+  private void setupAllPlayerInfoGui(PlayerStates playerStates, int initTokenAmount,
+                                     String firstPlayer)
       throws UnirestException {
-
+    GameBoardLayoutConfig config = App.getGuiLayouts();
+    User curUser = App.getUser();
     // first check, then sort the player names accordingly based on different clients
     List<String> playerNames = new ArrayList<>(playerStates.getPlayersInfo().keySet());
     if (sortedPlayerNames.isEmpty()) {
       sortedPlayerNames = sortPlayerNames(App.getUser().getUsername(), playerNames);
     }
-    HorizontalPlayerInfoGui btmPlayerGui =
-        new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM, curUser.getUsername(), initTokenAmount);
+    // btmPlayer Gui is equivalent to current player gui
+    // if this map is empty, then we are not playing
+    HorizontalPlayerInfoGui btmPlayerGui;
+    String curPlayerName = curUser.getUsername();
+    if (nameToArmCodeMap.isEmpty()) {
+     btmPlayerGui = new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM,
+         curPlayerName,
+         initTokenAmount,
+         -1);
+     // armCode with -1 which means we will not get the arm image view to display anything
+    } else {
+      // we are playing Trader extension, need to set the arm code accordingly
+      int armCode = nameToArmCodeMap.get(curPlayerName);
+      btmPlayerGui = new HorizontalPlayerInfoGui(PlayerPosition.BOTTOM,
+          curPlayerName,
+          initTokenAmount,
+          armCode);
+    }
+    // store the GUI to a map so that it's easier to access later
     nameToPlayerInfoGuiMap.put(curUser.getUsername(), btmPlayerGui);
     btmPlayerGui.setup(config.getBtmPlayerLayoutX(), config.getBtmPlayerLayoutY());
     List<HorizontalPlayerInfoGui> horizontalPlayers = new ArrayList<>();
@@ -277,49 +277,79 @@ public class GameController implements Initializable {
 
     // The My PurchaseHand and My Reserve Hand buttons functionality assign
     // Do not do long pulling here (hash = "" -> instant response)
-    //HttpResponse<String> inventoryResponse =
-    //    gameRequestSender.sendGetPlayerInventoryRequest(
-    //        gameId, curUser.getUsername(), curUser.getAccessToken(), "");
-    PlayerInGame curPlayerInfo = playerStates.getPlayersInfo().get(curUser.getUsername());
-    List<DevelopmentCard> allDevCards =
-        curPlayerInfo.getPurchasedHand().getDevelopmentCards();
-    List<DevelopmentCard> allReserveCards =
-        curPlayerInfo.getReservedHand().getDevelopmentCards();
-    myCardButton
-        .setOnAction(createOpenMyPurchaseCardClick());
-
-    myReservedCardsButton
-        .setOnAction(createOpenMyReserveCardClick(new ArrayList<>(), new ArrayList<>()));
+    myCardButton.setOnAction(createOpenMyPurchaseCardClick());
+    myReservedCardsButton.setOnAction(createOpenMyReserveCardClick());
 
     // set up other player area with data from server
     String leftPlayerName = sortedPlayerNames.get(1);
     List<VerticalPlayerInfoGui> verticalPlayers = new ArrayList<>();
-    VerticalPlayerInfoGui leftPlayerGui =
-        new VerticalPlayerInfoGui(PlayerPosition.LEFT, leftPlayerName, initTokenAmount);
+
+    // same logic as setting up horizontal player GUI, check if we need to display arm type
+    VerticalPlayerInfoGui leftPlayerGui;
+    if (nameToArmCodeMap.isEmpty()) {
+      leftPlayerGui = new VerticalPlayerInfoGui(PlayerPosition.LEFT,
+          leftPlayerName,
+          initTokenAmount,
+          -1);
+      // armCode with -1 which means we will not get the arm image view to display anything
+    } else {
+      // we are playing Trader extension, need to set the arm code accordingly
+      int armCode = nameToArmCodeMap.get(leftPlayerName);
+      leftPlayerGui = new VerticalPlayerInfoGui(PlayerPosition.LEFT,
+          leftPlayerName,
+          initTokenAmount,
+          armCode);
+    }
     // set up
     leftPlayerGui.setup(config.getLeftPlayerLayoutX(), config.getLeftPlayerLayoutY());
     // add to array, so that we can add them to gui at the same time later
     verticalPlayers.add(leftPlayerGui);
-
     // put them into global map for !firstCheck case
     nameToPlayerInfoGuiMap.put(leftPlayerName, leftPlayerGui);
+
+    // now if we have 3 players or more, then more gui need to be added
     int curPlayersCount = sortedPlayerNames.size();
     if (curPlayersCount >= 3) {
       String topPlayerName = sortedPlayerNames.get(2);
-      HorizontalPlayerInfoGui topPlayerGui =
-          new HorizontalPlayerInfoGui(PlayerPosition.TOP, topPlayerName, initTokenAmount);
+      HorizontalPlayerInfoGui topPlayerGui;
+
+      if (nameToArmCodeMap.isEmpty()) {
+        topPlayerGui = new HorizontalPlayerInfoGui(PlayerPosition.TOP,
+            topPlayerName,
+            initTokenAmount,
+            -1);
+        // armCode with -1 which means we will not get the arm image view to display anything
+      } else {
+        // we are playing Trader extension, need to set the arm code accordingly
+        int armCode = nameToArmCodeMap.get(topPlayerName);
+        topPlayerGui = new HorizontalPlayerInfoGui(PlayerPosition.TOP,
+            topPlayerName,
+            initTokenAmount,
+            armCode);
+      }
       topPlayerGui.setup(config.getTopPlayerLayoutX(), config.getTopPlayerLayoutY());
-
       horizontalPlayers.add(topPlayerGui);
-
       nameToPlayerInfoGuiMap.put(topPlayerName, topPlayerGui);
+
+
       if (curPlayersCount == 4) {
         String rightPlayerName = sortedPlayerNames.get(3);
-        VerticalPlayerInfoGui rightPlayerGui =
-            new VerticalPlayerInfoGui(PlayerPosition.RIGHT, rightPlayerName, initTokenAmount);
-
-        rightPlayerGui.setup(config.getRightPlayerLayoutX(),
-            config.getRightPlayerLayoutY());
+        VerticalPlayerInfoGui rightPlayerGui;
+        if (nameToArmCodeMap.isEmpty()) {
+          rightPlayerGui = new VerticalPlayerInfoGui(PlayerPosition.RIGHT,
+              rightPlayerName,
+              initTokenAmount,
+              -1);
+          // armCode with -1 which means we will not get the arm image view to display anything
+        } else {
+          // we are playing Trader extension, need to set the arm code accordingly
+          int armCode = nameToArmCodeMap.get(rightPlayerName);
+          rightPlayerGui = new VerticalPlayerInfoGui(PlayerPosition.RIGHT,
+              rightPlayerName,
+              initTokenAmount,
+              armCode);
+        }
+        rightPlayerGui.setup(config.getRightPlayerLayoutX(), config.getRightPlayerLayoutY());
         verticalPlayers.add(rightPlayerGui);
         nameToPlayerInfoGuiMap.put(rightPlayerName, rightPlayerGui);
       }
@@ -531,24 +561,28 @@ public class GameController implements Initializable {
   // TODO: This method contains what's gonna happen after clicking "play" on the board
   public void initialize(URL url, ResourceBundle resourceBundle) {
     GameRequestSender gameRequestSender = App.getGameRequestSender();
-
     System.out.println("Current user: " + App.getUser().getUsername());
     System.out.println(gameRequestSender.getGameServiceName());
-    try {
-      HttpResponse<String> firstGameInfoResponse =
-          gameRequestSender.sendGetGameInfoRequest(gameId, "");
-      Gson gsonParser = SplendorDevHelper.getInstance().getGson();
-      GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
-      TableTop firstTableTop = curGameInfo.getTableTop();
-      Thread playerInfoRelatedThread =
-          generateAllPlayerInfoUpdateThread(gameRequestSender, curGameInfo);
-      //Thread mainGameUpdateThread = generateGameInfoUpdateThread(gameRequestSender);
-      //// start the thread for main board and playerInfo update at the same time
-      playerInfoRelatedThread.start();
-      //mainGameUpdateThread.start();
-    } catch (UnirestException e) {
-      throw new RuntimeException(e);
+
+    HttpResponse<String> firstGameInfoResponse =
+        gameRequestSender.sendGetGameInfoRequest(gameId, "");
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+    GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
+    List<Extension> extensionsPlaying = curGameInfo.getExtensions();
+    List<String> playerNames = curGameInfo.getPlayerNames();
+    // if we are playing the Trading Extension, initialize the map of player name
+    if (extensionsPlaying.contains(Extension.TRADING_POST)) {
+      for (int i = 1; i <= playerNames.size(); i++) {
+        nameToArmCodeMap.put(playerNames.get(i-1), i);
+      }
     }
+    TableTop firstTableTop = curGameInfo.getTableTop();
+    Thread playerInfoRelatedThread =
+        generateAllPlayerInfoUpdateThread(gameRequestSender, curGameInfo);
+    //Thread mainGameUpdateThread = generateGameInfoUpdateThread(gameRequestSender);
+    //// start the thread for main board and playerInfo update at the same time
+    playerInfoRelatedThread.start();
+    //mainGameUpdateThread.start();
 
   }
 }

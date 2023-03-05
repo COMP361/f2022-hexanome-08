@@ -205,6 +205,12 @@ public class App extends Application {
     return String.format("project/pictures/noble/%s.png", cardName);
   }
 
+  // Note that arm code can only be 1,2,3,4
+  public static String getArmPath(int armCode) {
+    assert armCode >= 1 && armCode <=4;
+    return String.format("project/pictures/power/arm%s.png", armCode);
+  }
+
   public static String getOrientCardPath(String cardName, int level) {
     assert level >= 1 && level <= 3;
     return String.format("project/pictures/orient/%d/%s.png", level, cardName);
