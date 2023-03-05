@@ -9,9 +9,9 @@ import java.util.Map;
 public interface BoardGui {
 
   // set up the board in terms of Gui pictures
-  void guiSetup(TableTop tableTop);
+  void initialGuiActionSetup(TableTop tableTop, Map<String, Action> playerActionMap);
 
   // assign actions to the gui
-  void assignActionsToBoard(Map<String, Action> actionMap) throws InvalidDataException;
+  void updateGuiAction(Map<String, Action> actionMap) throws InvalidDataException;
 
 }

@@ -7,12 +7,12 @@ import project.view.InvalidDataException;
 
 public class CityBoardGui implements BoardGui {
   @Override
-  public void guiSetup(TableTop tableTop) {
+  public void initialGuiActionSetup(TableTop tableTop, Map<String, Action> playerActionMap) {
 
   }
 
   @Override
-  public void assignActionsToBoard(Map<String, Action> actionMap) throws InvalidDataException {
+  public void updateGuiAction(Map<String, Action> actionMap) throws InvalidDataException {
 
   }
 }

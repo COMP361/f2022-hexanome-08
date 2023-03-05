@@ -1,10 +1,12 @@
 package project.view.splendor;
 
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
+import ca.mcgill.comp361.splendormodel.model.Position;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Map;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -97,27 +99,27 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
     };
   }
 
-  private EventHandler<MouseEvent> createClickOnDeckHandler() {
-    return event -> {
-      try {
-        App.loadPopUpWithController("deck_action.fxml",
-            new DeckActionController(), 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    };
-  }
+  //private EventHandler<MouseEvent> createClickOnDeckHandler() {
+  //  return event -> {
+  //    try {
+  //      App.loadPopUpWithController("deck_action.fxml",
+  //          new DeckActionController(), 360, 170);
+  //    } catch (IOException e) {
+  //      throw new RuntimeException(e);
+  //    }
+  //  };
+  //}
 
-  private void bindActionToCardAndDeck() {
-    // get all cards first
-    List<ImageView> allCards = getAllCardsGui();
-    for (int i = 0; i < allCards.size(); i++) {
-      DevelopmentCard curCard = cards.get(i);
-      allCards.get(i).setOnMouseClicked(createClickOnCardHandler(curCard));
-    }
-    Group deck = (Group) this.getChildren().get(2);
-    deck.setOnMouseClicked(createClickOnDeckHandler());
-  }
+  //private void bindActionToCardAndDeck() {
+  //  // get all cards first
+  //  List<ImageView> allCards = getAllCardsGui();
+  //  for (int i = 0; i < allCards.size(); i++) {
+  //    DevelopmentCard curCard = cards.get(i);
+  //    allCards.get(i).setOnMouseClicked(createClickOnCardHandler(curCard));
+  //  }
+  //  Group deck = (Group) this.getChildren().get(2);
+  //  deck.setOnMouseClicked(createClickOnDeckHandler());
+  //}
 
   @Override
   public List<ImageView> getAllCardsGui() {
@@ -135,7 +137,7 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
   }
 
   @Override
-  public void bindActionToCardAndDeck(String[][] actionHashLookUp, long gameId) {
+  public void bindActionToCardAndDeck(Map<Position, List<ActionIdPair>> positionToActionMap, long gameId) {
 
   }
 
@@ -144,7 +146,7 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
   public void setup() {
     setDeckLevelText();
     setUpCards(cards);
-    bindActionToCardAndDeck();
+    //bindActionToCardAndDeck();
   }
 
 }

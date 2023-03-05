@@ -43,6 +43,10 @@ public class GameInfo implements BroadcastContent {
     tableTop = new TableTop(playerNames, extensions);
     this.creator = creator;
     this.isFinished = false;
+    // initialize empty map for each player
+    for (String name : playerNames) {
+      playerActionMaps.put(name,new HashMap<>());
+    }
 
   }
 

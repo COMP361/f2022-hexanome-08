@@ -1,6 +1,8 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.model.Position;
 import java.util.List;
+import java.util.Map;
 import javafx.scene.image.ImageView;
 
 /**
@@ -14,5 +16,5 @@ public interface DevelopmentCardBoardGui {
 
   ImageView getOneCardGui(int cardIndex);
 
-  void bindActionToCardAndDeck(String[][] actionHashLookUp, long gameId);
+  void bindActionToCardAndDeck(Map<Position, List<ActionIdPair>> positionToActionMap, long gameId);
 }

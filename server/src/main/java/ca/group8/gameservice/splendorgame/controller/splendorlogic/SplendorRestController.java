@@ -15,6 +15,7 @@ import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -172,7 +173,6 @@ public class SplendorRestController {
       // add the game info broadcast content for long polling
       gameInfoBroadcastContentManager
           .put(gameId, new BroadcastContentManager<>(savedGameState.getGameInfo()));
-
       // add the player states broadcast content for long polling
       allPlayerInfoBroadcastContentManager
           .put(gameId, new BroadcastContentManager<>(savedGameState.getPlayerStates()));
@@ -239,10 +239,11 @@ public class SplendorRestController {
       //  throw new ModelAccessException("Can not get players for game " + gameId
       //      + ". The game has not been launched or does not exist!");
       //}
-      gameManager.getGameById(gameId);
+      GameInfo game = gameManager.getGameById(gameId);
       // if we can find the game, print the list of player names
-      String allPlayersInGame =
-          new Gson().toJson(gameManager.getGameById(gameId).getPlayerNames());
+      Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+      Type listOfNames = new TypeToken<List<String>>(){}.getType();
+      String allPlayersInGame = gsonParser.toJson(game.getPlayerNames(), listOfNames);
       return ResponseEntity.status(HttpStatus.OK).body(allPlayersInGame);
     } catch (ModelAccessException e) {
       // something went wrong.
@@ -326,7 +327,11 @@ public class SplendorRestController {
       gameValidator.gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
       ActionInterpreter actionInterpreter = gameManager.getGameActionInterpreter(gameId);
       actionInterpreter.interpretAction(actionId, playerName);
-      // TODO: Start from here tmr
+
+      // if anything might have changed, let the client side know immediately
+      allPlayerInfoBroadcastContentManager.get(gameId).touch();
+      gameInfoBroadcastContentManager.get(gameId).touch();
+
       // end of turn check
       GameInfo curGame = gameManager.getGameById(gameId);
       if (curGame.isFinished()) {

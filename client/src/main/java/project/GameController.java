@@ -7,7 +7,6 @@ import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -451,22 +450,16 @@ public class GameController implements Initializable {
           // First, check what extensions are we playing
           List<Extension> extensions = curGameInfo.getExtensions();
           TableTop tableTop = curGameInfo.getTableTop();
+          // always get the action map from game info
           String playerName = curUser.getUsername();
-          String accessToken = curUser.getAccessToken();
-          String actionMapJson = gameRequestSender
-              .sendGetInitialPlayerActions(gameId, playerName, accessToken).getBody();
-          Type actionMapType = new TypeToken<Map<String, Action>>() {}.getType();
-          Map<String, Action> playerActionMap = gsonParser.fromJson(actionMapJson, actionMapType);
+          Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
           if (isFirstCheck) {
             // generate BoardGui based on extension type
             for (Extension extension : extensions) {
               switch (extension) {
                 case BASE:
-                  BaseBoardGui baseBoardGui = new BaseBoardGui(
-                      playerBoardAnchorPane,
-                      playerActionMap,
-                      gameId);
-                  baseBoardGui.guiSetup(tableTop);
+                  BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane, gameId);
+                  baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
                   extensionBoardGuiMap.put(extension, baseBoardGui);
                   break;
                 case ORIENT:
