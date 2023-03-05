@@ -245,9 +245,8 @@ public class App extends Application {
    * A static method to refresh the user's access token.
    *
    * @param user user
-   * @throws UnirestException in case of a failed request
    */
-  public static void refreshUserToken(User user) throws UnirestException {
+  public static void refreshUserToken(User user) {
     String newAccessToken = lobbyRequestSender.sendRefreshTokenRequest(user.getRefreshToken());
     user.setAccessToken(newAccessToken);
   }

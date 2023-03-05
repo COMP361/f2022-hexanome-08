@@ -133,15 +133,22 @@ public class GameRequestSender {
    * @param playerName player name
    * @param accessToken access token
    * @param actionId the MD5 hashed id of the chosen action
-   * @throws UnirestException in case of a failed request
    */
   public void sendPlayerActionChoiceRequest(long gameId, String playerName,
-                                            String accessToken, String actionId)
-      throws UnirestException {
-    HttpResponse<String> response =
-        Unirest.post(String.format("%s/api/games/%s/players/%s/actions/%s",
-                gameUrl + gameServiceName, gameId, playerName, actionId))
-            .queryString("access_token", accessToken).asString();
+                                            String accessToken, String actionId) {
+    try {
+      HttpResponse<String> response =
+          Unirest.post(String.format("%s/api/games/%s/players/%s/actions/%s",
+                  gameUrl + gameServiceName,
+                  gameId,
+                  playerName,
+                  actionId))
+              .queryString("access_token", accessToken)
+              .asString();
+    } catch (UnirestException e) {
+      e.printStackTrace();
+    }
+
   }
 
 

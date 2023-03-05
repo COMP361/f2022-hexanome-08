@@ -114,16 +114,20 @@ public class LobbyServiceRequestSender {
    * @return A string that is the new access token
    * @throws UnirestException in case of a failed request
    */
-  public String sendRefreshTokenRequest(String refreshToken) throws UnirestException {
-    JSONObject refreshResponseJson = Unirest.post(lobbyUrl + "/oauth/token")
-        .basicAuth("bgp-client-name", "bgp-client-pw")
-        .field("grant_type", "refresh_token")
-        .field("refresh_token", refreshToken)
-        .asJson()
-        .getBody()
-        .getObject();
-    return refreshResponseJson.getString("access_token");
-
+  public String sendRefreshTokenRequest(String refreshToken) {
+    try {
+      JSONObject refreshResponseJson = Unirest.post(lobbyUrl + "/oauth/token")
+          .basicAuth("bgp-client-name", "bgp-client-pw")
+          .field("grant_type", "refresh_token")
+          .field("refresh_token", refreshToken)
+          .asJson()
+          .getBody()
+          .getObject();
+      return refreshResponseJson.getString("access_token");
+    } catch (UnirestException e) {
+      e.printStackTrace();
+      return "";
+    }
   }
 
 
