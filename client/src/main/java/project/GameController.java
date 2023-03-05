@@ -22,12 +22,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.connection.GameRequestSender;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
+import project.view.splendor.ActionIdPair;
 import project.view.splendor.BaseBoardGui;
 import project.view.splendor.BaseCardLevelGui;
 import project.view.splendor.BoardGui;
@@ -60,6 +62,9 @@ public class GameController implements Initializable {
 
   @FXML
   private Button myCardButton;
+
+  @FXML
+  private Button saveButton;
 
   @FXML
   private Button myReservedCardsButton;
@@ -582,6 +587,17 @@ public class GameController implements Initializable {
     });
   }
 
+  private EventHandler<ActionEvent> createClickOnSaveButtonEvent(GameInfo gameInfo, long gameId) {
+      return event -> {
+        try {
+          App.loadPopUpWithController("save_game.fxml",
+              new SaveGamePopUpController(gameInfo, gameId), 360, 170);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      };
+  }
+
   @Override
   // TODO: This method contains what's gonna happen after clicking "play" on the board
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -593,6 +609,15 @@ public class GameController implements Initializable {
         gameRequestSender.sendGetGameInfoRequest(gameId, "");
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
+
+    saveButton.setDisable(true);
+    if (App.getUser().getUsername().equals(curGameInfo.getCreator())) {
+      // if the current user is the creator, activate the save button, otherwise it
+      // greyed out
+      saveButton.setDisable(false);
+      saveButton.setOnAction(createClickOnSaveButtonEvent(curGameInfo, gameId));
+    }
+
     List<String> playerNames = curGameInfo.getPlayerNames();
     // sort the player names and store it to this game controller
     if (sortedPlayerNames.isEmpty()) {

@@ -1,8 +1,10 @@
 package project.connection;
 
+import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import project.view.lobby.communication.Savegame;
 
 /**
  * TODO.
@@ -67,6 +69,30 @@ public class GameRequestSender {
       e.printStackTrace();
     }
     return response;
+  }
+
+
+  /**
+   * Send a save game request to our game service backend.
+   *
+   * @param gameId
+   * @param savegame
+   * @param accessToken
+   */
+  public void sendSaveGameRequest(long gameId, Savegame savegame, String accessToken) {
+    HttpResponse<String> response = null;
+    String url = String.format("%s/api/games/%s/savegame", gameUrl + gameServiceName, gameId);
+    String body = SplendorDevHelper.getInstance().getGson().toJson(savegame, Savegame.class);
+    try {
+      response = Unirest.put(url)
+          .header("Content-Type", "application/json")
+          .queryString("access_token", accessToken)
+          .body(body)
+          .asString();
+    } catch (UnirestException e) {
+      e.printStackTrace();
+      System.out.println("Failed to save this game: " + gameId);
+    }
   }
 
   /**

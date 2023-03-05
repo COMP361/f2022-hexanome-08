@@ -1,1 +1,18 @@
-[{"players":["ruoyu","pengyu"],"gamename":"splendortrade","savegameid":"gameId1"}]
+[
+  {
+    "players": [
+      "ruoyu",
+      "pengyu"
+    ],
+    "gamename": "splendortrade",
+    "savegameid": "gameId1"
+  },
+  {
+    "players": [
+      "ruoyu",
+      "julia"
+    ],
+    "gamename": "splendortrade",
+    "savegameid": "123"
+  }
+]

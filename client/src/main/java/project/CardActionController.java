@@ -74,12 +74,13 @@ public class CardActionController implements Initializable {
     // TODO: Send the request in here to the game server, for now do nothing
     return event -> {
       // it's clickable, we can send some requests here
-      Button button = (Button) event.getSource();
+
       GameRequestSender gameRequestSender = App.getGameRequestSender();
       String playerName = App.getUser().getUsername();
       String accessToken = App.getUser().getAccessToken();
       // sends a POST request that tells the server which action we chose
       gameRequestSender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
+      Button button = (Button) event.getSource();
       Stage curWindow = (Stage) button.getScene().getWindow();
       curWindow.close();
     };
