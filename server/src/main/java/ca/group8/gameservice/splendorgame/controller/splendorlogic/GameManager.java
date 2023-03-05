@@ -8,6 +8,7 @@ import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -218,7 +219,8 @@ public class GameManager {
           .map(PlayerInfo::getName)
           .collect(Collectors.toList());
       // randomly shuffle the playerNames
-      Collections.shuffle(playerNames);
+      // TODO: Mute for debug
+      //Collections.shuffle(playerNames);
       GameInfo newGameInfo = new GameInfo(gameExtensions, playerNames, launcherInfo.getCreator());
       PlayerStates newPlayerStates = new PlayerStates(playerNames);
       ActionInterpreter newActionInterpreter = new ActionInterpreter(newGameInfo, newPlayerStates);
@@ -226,6 +228,16 @@ public class GameManager {
       activeGames.put(gameId, newGameInfo);
       activePlayers.put(gameId, newPlayerStates);
       gameActionInterpreters.put(gameId, newActionInterpreter);
+
+      // generate default actions for every player according to their names
+      ActionGenerator actionGenerator = newActionInterpreter.getActionGenerator();
+      String firstPlayerName = newGameInfo.getFirstPlayerName();
+      for (PlayerInGame playerInGame : newPlayerStates.getPlayersInfo().values()) {
+        // only set the initial actions for the first player, others' remain empty
+        if (playerInGame.getName().equals(firstPlayerName)) {
+          actionGenerator.setInitialActions(playerInGame);
+        }
+      }
       logger.info("Launched game " + gameId);
       logger.info("Current game ids: " + activeGames.keySet());
       return new SavedGameState(newGameInfo, newPlayerStates, newActionInterpreter);

@@ -37,7 +37,10 @@ public class ReservedHandController implements Initializable {
     // initialize the list of image views from player's reserved hand
     for (NobleCard nobleCard : reservedNobles) {
       String noblePath = App.getNoblePath(nobleCard.getCardName());
-      playerNobles.add(new ImageView(new Image(noblePath)));
+      ImageView nobleImageView = new ImageView(new Image(noblePath));
+      nobleImageView.setFitHeight(100);
+      nobleImageView.setFitWidth(100);
+      playerNobles.add(nobleImageView);
     }
 
     for (DevelopmentCard card : reservedCards) {
@@ -47,7 +50,10 @@ public class ReservedHandController implements Initializable {
       } else {
         cardPath = App.getBaseCardPath(card.getCardName(), card.getLevel());
       }
-      playerCards.add(new ImageView(new Image(cardPath)));
+      ImageView cardImageView = new ImageView(new Image(cardPath));
+      cardImageView.setFitWidth(80);
+      cardImageView.setFitHeight(100);
+      playerCards.add(cardImageView);
     }
 
     this.playerActions = playerActions;
@@ -58,10 +64,12 @@ public class ReservedHandController implements Initializable {
     // add the image view to the Hbox to display
     for (ImageView imageView : playerNobles) {
       reservedNoblesHbox.getChildren().add(imageView);
+      reservedNoblesHbox.setSpacing(5);
     }
 
     for (ImageView imageView : playerCards) {
       reservedDevCardsHbox.getChildren().add(imageView);
+      reservedDevCardsHbox.setSpacing(5);
     }
   }
 }

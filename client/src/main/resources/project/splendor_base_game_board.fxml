@@ -5,67 +5,26 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Rectangle?>
 
 <AnchorPane fx:id="playerBoardAnchorPane" maxHeight="900.0" maxWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox fx:id="nobleList" layoutX="950.0" layoutY="200.0" prefHeight="500.0" prefWidth="100.0">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="500.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
-         </children></VBox>
-        <HBox fx:id="token" layoutX="190.0" layoutY="133.0" prefHeight="130.0" prefWidth="750.0">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="130.0" stroke="BLACK" strokeType="INSIDE" width="750.0" />
-         </children></HBox>
+        <VBox fx:id="nobleList" layoutX="950.0" layoutY="200.0" prefHeight="500.0" prefWidth="100.0" />
+        <HBox fx:id="token" layoutX="190.0" layoutY="133.0" prefHeight="130.0" prefWidth="750.0" />
         <VBox fx:id="baseCardBoard" layoutX="200.0" layoutY="375.0" prefHeight="390.0" prefWidth="455.0">
             <children>
                 <HBox fx:id="level3BaseCard" prefHeight="130.0" prefWidth="415.0" />
                 <HBox fx:id="level2BaseCard" prefHeight="130.0" prefWidth="415.0" />
                 <HBox fx:id="level1BaseCard" prefHeight="130.0" prefWidth="415.0" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="130.0" stroke="BLACK" strokeType="INSIDE" width="455.0" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="130.0" stroke="BLACK" strokeType="INSIDE" width="455.0" />
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="130.0" stroke="BLACK" strokeType="INSIDE" width="455.0" />
             </children>
         </VBox>
-        <VBox fx:id="orientCardBoard" layoutX="680.0" layoutY="375.0" prefHeight="390.0" prefWidth="250.0">
-            <children>
-                <HBox fx:id="level3OriebtCard" prefHeight="130.0" prefWidth="250.0">
-               <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="130.0" stroke="BLACK" strokeType="INSIDE" width="250.0" />
-               </children></HBox>
-                <HBox fx:id="level2OriebtCard" prefHeight="130.0" prefWidth="250.0">
-               <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="130.0" stroke="BLACK" strokeType="INSIDE" width="250.0" />
-               </children></HBox>
-                <HBox fx:id="level1OriebtCard" prefHeight="130.0" prefWidth="250.0">
-               <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="130.0" stroke="BLACK" strokeType="INSIDE" width="250.0" />
-               </children></HBox>
-            </children>
-        </VBox>
-        <HBox fx:id="topPlayer" alignment="TOP_RIGHT" layoutX="268.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0" BorderPane.alignment="TOP_RIGHT">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="125.0" stroke="BLACK" strokeType="INSIDE" width="665.0" />
-         </children></HBox>
-        <VBox fx:id="leftPlayer" alignment="BOTTOM_LEFT" layoutY="118.0" maxHeight="665.0" maxWidth="125.0" prefHeight="665.0" prefWidth="125.0" BorderPane.alignment="BOTTOM_LEFT">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="665.0" stroke="BLACK" strokeType="INSIDE" width="125.0" />
-         </children></VBox>
-        <VBox fx:id="rightPlayer" alignment="BOTTOM_LEFT" layoutX="1075.0" layoutY="118.0" maxHeight="800.0" maxWidth="125.0" prefHeight="665.0" prefWidth="125.0">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="665.0" stroke="BLACK" strokeType="INSIDE" width="125.0" />
-         </children></VBox>
-        <HBox fx:id="currentPlayer" alignment="TOP_RIGHT" layoutX="268.0" layoutY="775.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="125.0" stroke="BLACK" strokeType="INSIDE" width="665.0" />
-         </children></HBox>
+        <VBox fx:id="orientCardBoard" layoutX="680.0" layoutY="375.0" prefHeight="390.0" prefWidth="250.0" />
+        <HBox fx:id="topPlayer" alignment="TOP_RIGHT" layoutX="268.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0" BorderPane.alignment="TOP_RIGHT" />
+        <VBox fx:id="leftPlayer" alignment="BOTTOM_LEFT" layoutY="118.0" maxHeight="665.0" maxWidth="125.0" prefHeight="665.0" prefWidth="125.0" BorderPane.alignment="BOTTOM_LEFT" />
+        <VBox fx:id="rightPlayer" alignment="BOTTOM_LEFT" layoutX="1075.0" layoutY="118.0" maxHeight="800.0" maxWidth="125.0" prefHeight="665.0" prefWidth="125.0" />
+        <HBox fx:id="currentPlayer" alignment="TOP_RIGHT" layoutX="268.0" layoutY="775.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0" />
         <Button fx:id="myCardButton" layoutX="1008.0" layoutY="808.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Cards" />
         <Button fx:id="myReservedCardsButton" layoutX="1008.0" layoutY="834.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Reserved Cards" />
         <Button fx:id="quitButton" layoutX="1118.0" layoutY="14.0" mnemonicParsing="false" text="Quit" />
-      <HBox layoutX="190.0" layoutY="270.0" prefHeight="100.0" prefWidth="750.0">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" stroke="BLACK" strokeType="INSIDE" width="750.0" />
-         </children>
-      </HBox>
+      <HBox layoutX="190.0" layoutY="270.0" prefHeight="100.0" prefWidth="750.0" />
     </children>
 </AnchorPane>

@@ -14,12 +14,12 @@ public class OrientBoardGui implements BoardGui{
   //private final OrientBoard orientBoard;
   //private final Extension extension = Extension.ORIENT;
   @Override
-  public void guiSetup(TableTop tableTop) {
+  public void initialGuiActionSetup(TableTop tableTop, Map<String, Action> playerActionMap) {
 
   }
 
   @Override
-  public void assignActionsToBoard(Map<String, Action> actionMap) throws InvalidDataException {
+  public void updateGuiAction(Map<String, Action> actionMap) throws InvalidDataException {
 
   }
 }

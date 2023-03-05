@@ -285,6 +285,8 @@ public class TokenBankGui extends HBox {
       if (tokenCombMatchedActionId().equals("")) {
         // means we did not find a match yet, allow user to keep taking
         curNum += 1;
+        String newNum = curNum + "";
+        displayZone.setText(newNum);
         // the after effect of +1
         if (!tokenCombMatchedActionId().equals("")) {
           Button confirmButton = getConfirmButton();
@@ -300,8 +302,7 @@ public class TokenBankGui extends HBox {
         String actionId = tokenCombMatchedActionId();
         confirmButton.setOnAction(createConfirmTakeTokenHandler(actionId));
       }
-      String newNum = curNum + "";
-      displayZone.setText(newNum);
+
 
     };
   }
@@ -328,7 +329,6 @@ public class TokenBankGui extends HBox {
     }
     Button confirmButton = getConfirmButton();
     confirmButton.setDisable(true);
-    //confirmButton.setOnAction(createConfirmTakeTokenHandler());
   }
 
 

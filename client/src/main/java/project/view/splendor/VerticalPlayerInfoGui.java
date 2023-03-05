@@ -138,7 +138,7 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
   public void setNewTokenInHand(EnumMap<Colour, Integer> newTokens) {
     Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo =
         this.getPlayerColourWealthMap(this.playerPosition);
-    for (Colour colour : Colour.values()) {
+    for (Colour colour : wealthInfo.keySet()) {
       Map<PlayerWealthInfo, Text> info = wealthInfo.get(colour);
       info.get(PlayerWealthInfo.TOKEN).setText(Integer.toString(newTokens.get(colour)));
     }
