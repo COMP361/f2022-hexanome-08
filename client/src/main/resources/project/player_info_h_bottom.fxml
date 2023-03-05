@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.Group?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -14,9 +13,7 @@
 <fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="665.0" type="HBox" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.App">
     <Group>
         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="126.0" stroke="BLACK" strokeType="INSIDE" width="126.0" />
-        <ImageView fitHeight="110.0" fitWidth="110.0" layoutX="8.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@pictures/ta_pictures/marianick.png" />
-        </ImageView>
+        <ImageView fitHeight="110.0" fitWidth="110.0" layoutX="8.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />
         <Circle fill="#acdef4" layoutX="108.0" layoutY="17.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
         <Text layoutX="106.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
         <Circle fill="#e3f2ac" layoutX="109.0" layoutY="51.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
@@ -25,11 +22,7 @@
         <Text layoutX="96.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
         <Text layoutX="113.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
         <Text layoutX="98.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-      <ImageView fitHeight="56.0" fitWidth="42.0" layoutX="8.0" layoutY="76.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@pictures/ta_pictures/marianick.png" />
-         </image>
-      </ImageView>
+      <ImageView fitHeight="56.0" fitWidth="42.0" layoutX="8.0" layoutY="76.0" pickOnBounds="true" preserveRatio="true" />
     </Group>
     <VBox prefHeight="200.0" prefWidth="100.0">
         <Region prefHeight="200.0" prefWidth="200.0" />

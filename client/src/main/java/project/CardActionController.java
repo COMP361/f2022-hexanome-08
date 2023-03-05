@@ -44,12 +44,8 @@ public class CardActionController implements Initializable {
         String playerName = App.getUser().getUsername();
         String accessToken = App.getUser().getAccessToken();
         // sends a POST request that tells the server which action we chose
-        try {
-          gameRequestSender
-              .sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[0]);
-        } catch (UnirestException e) {
-          throw new RuntimeException(e);
-        }
+        gameRequestSender
+            .sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[0]);
         Stage curWindow = (Stage) purchaseButton.getScene().getWindow();
         curWindow.close();
       }
@@ -67,12 +63,8 @@ public class CardActionController implements Initializable {
         String playerName = App.getUser().getUsername();
         String accessToken = App.getUser().getAccessToken();
         // sends a POST request that tells the server which action we chose
-        try {
-          gameRequestSender
-              .sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[1]);
-        } catch (UnirestException e) {
-          throw new RuntimeException(e);
-        }
+        gameRequestSender
+            .sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionHash[1]);
         Stage curWindow = (Stage) goBackButton.getScene().getWindow();
         curWindow.close();
       }
