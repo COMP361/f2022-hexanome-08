@@ -1,7 +1,6 @@
 package project;
 
 import ca.mcgill.comp361.splendormodel.model.Colour;
-import ca.mcgill.comp361.splendormodel.model.SplendorGameException;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import java.io.FileNotFoundException;
@@ -37,24 +36,23 @@ public class App extends Application {
 
   private static Scene lobby;
 
-   //One and the only one requestSender
+  // One and the only one requestSender
   private static final LobbyRequestSender lobbyRequestSender =
       new LobbyRequestSender("http://76.66.139.161:4242");
 
   // TODO: Change this to singleton later LobbyServiceRequestSender
-//  private static final LobbyRequestSender lobbyRequestSender =
-//      new LobbyRequestSender("http://127.0.0.1:4242");
-
-  // http://127.0.0.1:4246/splendor
-  // http://76.66.139.161:4246/splendor
+  //private static final LobbyRequestSender lobbyRequestSender =
+  //    new LobbyRequestSender("http://127.0.0.1:4242");
+/**/
+   //http://127.0.0.1:4246/splendor
+   //http://76.66.139.161:4246/splendorbvb
   private static final GameRequestSender gameRequestSender =
-      new GameRequestSender(
-          "http://76.66.139.161:4246/", "splendorbase");
+      new GameRequestSender("http://76.66.139.161:4246/", "splendorbase");
   // TODO: This should not be a global variable in App!!!
-//  private static final GameRequestSender gameRequestSender =
-//      new GameRequestSender(
-//          "http://127.0.0.1:4246/", "splendorbase");
-//
+  //private static final GameRequestSender gameRequestSender =
+  //    new GameRequestSender(
+  //        "http://127.0.0.1:4246/", "splendorbase");
+
 
   private static final Colour[] allColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
