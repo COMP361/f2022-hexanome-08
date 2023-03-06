@@ -86,8 +86,6 @@ public class GameController implements Initializable {
 
   private TokenBankGui tokenBankGui;
 
-  private List<BoardGui> allBoardGuis = new ArrayList<>();
-
   private String prePlayerName;
 
   private final Map<Integer, BaseCardLevelGui> baseCardGuiMap = new HashMap<>();
@@ -503,9 +501,7 @@ public class GameController implements Initializable {
             Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
             //System.out.println("Player: " + playerName + playerActionMap.values());
             // clear up all children in playerBoardAnchorPane
-
-
-            for (BoardGui boardGui : allBoardGuis) {
+            for (BoardGui boardGui : extensionBoardGuiMap.values()) {
               Platform.runLater(boardGui::clearContent);
             }
 
@@ -521,7 +517,9 @@ public class GameController implements Initializable {
                   extensionBoardGuiMap.put(extension, new OrientBoardGui());
                   break;
                 case TRADING_POST:
-                  extensionBoardGuiMap.put(extension, new TraderBoardGui());
+                  TraderBoardGui traderBoardGui = new TraderBoardGui();
+                  traderBoardGui.initialGuiActionSetup(tableTop,playerActionMap);
+                  extensionBoardGuiMap.put(extension, traderBoardGui);
                   break;
                 case CITY:
                   extensionBoardGuiMap.put(extension, new CityBoardGui());
