@@ -6,6 +6,10 @@ import com.google.gson.stream.JsonReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -61,6 +65,14 @@ public class App extends Application {
   private static User user;
 
   private static GameBoardLayoutConfig guiLayouts;
+
+  private static Thread lobbyGuiThread = null;
+
+  private final static List<Thread> gameGuiThread = new ArrayList<>();
+
+  private static LobbyController lobbyController = null;
+
+  private static final Map<Long, GameController> gameControllerMap = new HashMap<>();
 
 
   /**
@@ -228,8 +240,9 @@ public class App extends Application {
    * @param popUpStageWidth window width
    * @param popUpStageHeight window height
    * @throws IOException in case fxml is not found
+   * @return the stage (window) that displays the scene loaded with the fxml file.
    */
-  public static void loadPopUpWithController(String fxmlName, Object controller,
+  public static Stage loadPopUpWithController(String fxmlName, Object controller,
                                              double popUpStageWidth, double popUpStageHeight)
       throws IOException {
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
@@ -238,6 +251,7 @@ public class App extends Application {
     newStage.setScene(new Scene(fxmlLoader.load(), popUpStageWidth, popUpStageHeight));
     newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     newStage.show();
+    return newStage;
   }
 
   /**
@@ -249,4 +263,38 @@ public class App extends Application {
     String newAccessToken = lobbyRequestSender.sendRefreshTokenRequest(user.getRefreshToken());
     user.setAccessToken(newAccessToken);
   }
+
+  public static void addGameThread(Thread thread) {
+    gameGuiThread.add(thread);
+  }
+
+  public static void killGameThread() {
+    for (Thread thread : gameGuiThread) {
+      thread.interrupt();
+    }
+    gameGuiThread.clear();
+  }
+
+  public static void setAppLobbyGuiThread(Thread thread) {
+    App.lobbyGuiThread = thread;
+  }
+
+  public static Thread getAppLobbyGuiThread() {
+    return App.lobbyGuiThread;
+  }
+
+  public static List<Thread> getGameGuiThreads() {
+    return gameGuiThread;
+  }
+
+
+
+  public static void setLobbyController(LobbyController lobbyController) {
+    App.lobbyController = lobbyController;
+  }
+
+  public static LobbyController getLobbyController() {
+    return lobbyController;
+  }
+
 }

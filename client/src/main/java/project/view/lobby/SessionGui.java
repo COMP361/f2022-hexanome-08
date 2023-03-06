@@ -127,7 +127,8 @@ public class SessionGui extends HBox {
             new GameController(curSessionId, curSession),
             config.getAppWidth(),
             config.getAppHeight());
-
+        App.getAppLobbyGuiThread().interrupt();
+        App.setAppLobbyGuiThread(null);
         Button playButton = (Button) event.getSource();
         Stage lobbyWindow = (Stage) playButton.getScene().getWindow();
         lobbyWindow.close();

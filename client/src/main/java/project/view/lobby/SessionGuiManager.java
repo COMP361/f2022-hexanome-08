@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.application.Platform;
 import javafx.scene.layout.VBox;
 
 /**
@@ -14,7 +15,6 @@ public class SessionGuiManager extends VBox {
   private static SessionGuiManager sessionsVbox = null;
   private static final Map<Long, SessionGui> sessionIdGuiMap = new HashMap<>();
 
-  private static final List<Thread> updateSessionThreads = new ArrayList<>();
 
   private SessionGuiManager() {}
 
@@ -34,13 +34,11 @@ public class SessionGuiManager extends VBox {
   /**
    * Clean up everything after loading into another page
    */
-  public static void resetManager() {
-    sessionsVbox.getChildren().clear();
+  public static void clearSessionsRecorded() {
+    Platform.runLater(() -> {
+      sessionsVbox.getChildren().clear();
+    });
     sessionIdGuiMap.clear();
-    for (Thread thread : updateSessionThreads) {
-      thread.interrupt();
-    }
-    updateSessionThreads.clear();
   }
 
   public static void removeSessionGui(SessionGui newSessionGui) {
@@ -53,21 +51,12 @@ public class SessionGuiManager extends VBox {
 
 
   public static void addSessionGui(SessionGui newSessionGui) {
-    sessionsVbox.getChildren().add(newSessionGui);
-  }
-
-  public static void addSessionIdGuiMap(SessionGui newSessionGui, Long sessionId) {
-    sessionIdGuiMap.put(sessionId, newSessionGui);
+    Platform.runLater(() -> {
+      sessionsVbox.getChildren().add(newSessionGui);
+    });
 
   }
 
-  public static Map<Long, SessionGui> getSessionIdGuiMap() {
-    return sessionIdGuiMap;
-  }
-
-  public static void addSessionUpdateThread(Thread thread) {
-    updateSessionThreads.add(thread);
-  }
 
 }
 

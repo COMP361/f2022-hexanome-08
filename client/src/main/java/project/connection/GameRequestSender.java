@@ -53,8 +53,9 @@ public class GameRequestSender {
    * @return A http response with JSON string as the body
    * @throws UnirestException in case of a failed request
    */
-  public HttpResponse<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse) {
-    HttpResponse<String> response = null;
+  public HttpResponse<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse)
+  throws UnirestException {
+    HttpResponse<String> response;
     try {
       if (hashPreviousResponse.equals("")) {
         // instant request
@@ -66,7 +67,7 @@ public class GameRequestSender {
             .asString();
       }
     } catch (UnirestException e) {
-      e.printStackTrace();
+      throw new UnirestException("Connection failed, session no longer exist");
     }
     return response;
   }
