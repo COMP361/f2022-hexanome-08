@@ -106,7 +106,7 @@ public class BaseBoardGui implements BoardGui {
   }
 
   private Map<Position, List<ActionIdPair>> getPositionActions (
-      Map<String, Action> reservePurchaseActions) {
+          Map<String, Action> reservePurchaseActions) {
     Map<Position, List<ActionIdPair>> positionToActionMap = new HashMap<>();
     // assign actions to positions (each position can have a list of action pair associated)
     for (String actionId : reservePurchaseActions.keySet()) {

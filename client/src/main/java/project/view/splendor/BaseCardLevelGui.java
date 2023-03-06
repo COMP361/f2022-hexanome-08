@@ -102,8 +102,6 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
   private EventHandler<MouseEvent> createClickOnDeckHandler(long gameId, String actionId) {
     return event -> {
-
-
       try {
         App.loadPopUpWithController("deck_action.fxml",
             new DeckActionController(gameId, actionId), 360, 170);
@@ -113,45 +111,27 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     };
   }
 
-  //@Override
-  //public void bindActionToCardAndDeck(String[][] actionHashLookUp, long gameId) {
-  //  // get all cards first
-  //  List<ImageView> allCards = getAllCardsGui();
-  //  for (int i = 0; i < allCards.size(); i++) {
-  //    String[] actionHashOptions = actionHashLookUp[i];
-  //    allCards.get(i).setOnMouseClicked(createClickOnCardHandler(gameId, actionHashOptions));
-  //  }
-  //
-  //  Group deck = (Group) this.getChildren().get(0);
-  //  deck.setOnMouseClicked(createClickOnDeckHandler());
-  //}
-  //
-
 
   private void setDeckLevelText() {
     Group levelCard = (Group) this.getChildren().get(0);
     Rectangle rectangle = (Rectangle) levelCard.getChildren().get(0);
     int newRemainingCards = deck.size();
+    Text deck = (Text) levelCard.getChildren().get(1);
+    Text levelOfCard = (Text) levelCard.getChildren().get(2);
     if (level == 3) {
       rectangle.setFill(Color.DODGERBLUE);
-      Text deck = (Text) levelCard.getChildren().get(1);
-      Text levelOfCard = (Text) levelCard.getChildren().get(2);
       deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(". . .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));
     } else if (level == 2) {
       rectangle.setFill(Color.YELLOW);
-      Text deck = (Text) levelCard.getChildren().get(1);
-      Text levelOfCard = (Text) levelCard.getChildren().get(2);
       deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(" . .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));
     } else if (level == 1) {
       rectangle.setFill(Paint.valueOf("#30ff1f"));
-      Text deck = (Text) levelCard.getChildren().get(1);
-      Text levelOfCard = (Text) levelCard.getChildren().get(2);
       deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(" .");
