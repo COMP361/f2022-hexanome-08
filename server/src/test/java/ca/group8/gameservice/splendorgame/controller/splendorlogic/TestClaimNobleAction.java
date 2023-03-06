@@ -2,6 +2,7 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
@@ -14,6 +15,9 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.NobleCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,16 +39,31 @@ public class TestClaimNobleAction {
   PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
   EnumMap<Colour, Integer> price1 = new EnumMap<>(Colour.class);
   List<CardEffect> cardEffects = new ArrayList<>();
-  DevelopmentCard d1 = new DevelopmentCard(2, price1,
-      "card1", 1, Colour.RED, 2,cardEffects);
+  DevelopmentCard d1 = new DevelopmentCard(1, price1,
+      "card1", 1, Colour.GREEN, 2,cardEffects);
+  DevelopmentCard d2 = new DevelopmentCard(1, price1,
+      "card1", 1, Colour.GREEN, 2,cardEffects);
+  DevelopmentCard d3 = new DevelopmentCard(1, price1,
+      "card1", 1, Colour.GREEN, 2,cardEffects);
+  DevelopmentCard d4 = new DevelopmentCard(1, price1,
+      "card1", 1, Colour.GREEN, 2,cardEffects);
+  DevelopmentCard d5 = new DevelopmentCard(1, price1,
+      "card1", 1, Colour.GREEN, 2,cardEffects);
   NobleCard n1 = new NobleCard(1,price1, "noble1");
   Position position = new Position(2,1);
   ClaimNobleAction claimNobleAction = new ClaimNobleAction(n1, position);
 
   @BeforeEach
   void setUp() {
+
     price1.put(Colour.RED,2);
+    playerInGame.getPurchasedHand().addDevelopmentCard(d1);
+    playerInGame.getPurchasedHand().addDevelopmentCard(d2);
+    playerInGame.getPurchasedHand().addDevelopmentCard(d3);
+    playerInGame.getPurchasedHand().addDevelopmentCard(d4);
+    playerInGame.getPurchasedHand().addDevelopmentCard(d5);
   }
+
 
   @Test
   void addNobleToPlayerHand() {
@@ -59,5 +78,14 @@ public class TestClaimNobleAction {
    BaseBoard b1 = (BaseBoard) gameInfo.getTableTop().getBoard(Extension.BASE);
     List<NobleCard> nobles = b1.getNobles();
     assertFalse(b1.getNobles().contains(n1));
+  }
+
+  //must be run after the addNobleTest
+  @Test
+  void testPowerUnlock() {
+    TraderBoard t = (TraderBoard) gameInfo.getTableTop().getBoard(Extension.TRADING_POST);
+    Power p = t.getPlayerOnePower(playerInGame.getName(), PowerEffect.FIVE_POINTS);
+    assertTrue(p.isUnlocked());
+    assertEquals(11,playerInGame.getPrestigePoints());
   }
 }
