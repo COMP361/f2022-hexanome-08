@@ -1,6 +1,10 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import java.util.EnumMap;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represents the bank.
@@ -21,7 +25,7 @@ public class Bank {
   //TODO: Do we want to have this param?? Or should we implement this logic in GameState
   //TODO: and pass an integer value to Bank representing the initial gem values.
   public Bank(int numPlayers) {
-    this.allTokens = new EnumMap<>(Colour.class);
+    this.allTokens = SplendorDevHelper.getInstance().getRawTokenColoursMap();
     if (numPlayers == 2) {
       initialValue = 4;
     } else {
@@ -45,18 +49,17 @@ public class Bank {
    * @param paramTokens token map as the price
    */
   public void returnToken(EnumMap<Colour, Integer> paramTokens) {
-    //verify that this number of gems can be added (meaning new sum will not exceed initial value)
-    for (Colour colour : Colour.values()) {
-      if (colour != Colour.ORIENT) {
-        assert (allTokens.get(colour) + paramTokens.get(colour)) <= initialValue;
-      }
-    }
+    ////verify that this number of gems can be added (meaning new sum will not exceed initial value)
+    //for (Colour colour : SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet()) {
+    //  assert (allTokens.get(colour) + paramTokens.get(colour)) <= initialValue;
+    //}
     //add Tokens
-    for (Colour colour : Colour.values()) {
-      if (colour != Colour.ORIENT) {
-        int newVal = allTokens.get(colour) + paramTokens.get(colour);
-        allTokens.replace(colour, newVal);
-      }
+    Logger logger  = LoggerFactory.getLogger(Bank.class);
+    logger.warn("bank balance: " + allTokens);
+    logger.warn("tokens return: " + paramTokens);
+    for (Colour colour : SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet()) {
+      int newVal = allTokens.get(colour) + paramTokens.get(colour);
+      allTokens.replace(colour, newVal);
     }
   }
 
@@ -65,11 +68,11 @@ public class Bank {
    *
    * @param paramTokens the tokens map that player wants to take
    */
-  void takeToken(EnumMap<Colour, Integer> paramTokens) {
+  public void takeToken(EnumMap<Colour, Integer> paramTokens) {
     //verify that this number of gems can be removed (meaning new sum will not be less than 0)
     //remove Tokens
     for (Colour colour : Colour.values()) {
-      if (colour != Colour.ORIENT) {
+      if (colour != Colour.ORIENT && !colour.equals(Colour.GOLD)) {
         int newVal = allTokens.get(colour) - paramTokens.get(colour);
         assert newVal >= 0;
         allTokens.replace(colour, newVal);
@@ -80,6 +83,19 @@ public class Bank {
 
   public EnumMap<Colour, Integer> getAllTokens() {
     return allTokens;
+  }
+
+  /**
+   * @return a number indicating how many non-gold tokens are left
+   */
+  public int getRegularTokenCount() {
+
+    return allTokens.entrySet()
+        .stream()
+        .filter(entry -> !entry.getKey().equals(Colour.GOLD) &&
+            !entry.getKey().equals(Colour.ORIENT))
+        .mapToInt(Map.Entry::getValue)
+        .sum();
   }
 
   public int getInitialValue() {

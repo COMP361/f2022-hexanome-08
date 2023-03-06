@@ -6,7 +6,7 @@ import java.util.Objects;
 
 /**
  * This class represents the Power functionality in the Trading Post Extension.
- *
+ * <p>
  * Every abstract class was serialized/deserialized using the repository from:
  * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
  * Thank him so much!!!!!!!!!!!!!!!
@@ -43,7 +43,7 @@ public abstract class Power {
    * @param playerInfo the Player whose qualifications we are checking.
    * @return a boolean value of whether the Player can unlock this power.
    */
-  abstract boolean validityCheck(PlayerInGame playerInfo);
+  public abstract boolean validityCheck(PlayerInGame playerInfo);
 
   public boolean isUnlocked() {
     return unlocked;

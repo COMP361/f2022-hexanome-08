@@ -14,60 +14,42 @@ import java.util.Map;
  */
 public class GameInfo implements BroadcastContent {
 
+  private String creator;
   private String currentPlayer; //represents which player's turn it is currently
-  private final List<String> winners;
-  private final List<String> playerNames;
-  private final String firstPlayerName; //should be Player Name of first player.
+  private List<String> winners;
+  private List<String> playerNames;
+  private String firstPlayerName; //should be Player Name of first player.
 
   private final TableTop tableTop;
   private final List<Extension> extensions;
 
-  private final Map<String, Map<String, Action>> playerActionMaps = new HashMap<>();
+  private boolean isFinished;
+  private Map<String, Map<String, Action>> playerActionMaps = new HashMap<>();
 
 
   /**
    * Constructor for a game state instance. Stores all info related to game except the detail.
    * information of each player
    *
-   * @param extensions extensions that are used in the game.
+   * @param extensions  extensions that are used in the game.
    * @param playerNames players who are playing the game
    */
-  public GameInfo(List<Extension> extensions, List<String> playerNames) {
-    // TODO: OPTIONALLY Shuffle the list of playerNames before assigning it to the field
-    // Collections.shuffle(playerNames);
+  public GameInfo(List<Extension> extensions, List<String> playerNames, String creator) {
     this.playerNames = playerNames;
     this.winners = new ArrayList<>();
     firstPlayerName = playerNames.get(0);
     currentPlayer = playerNames.get(0);
     this.extensions = Collections.unmodifiableList(extensions);
     tableTop = new TableTop(playerNames, extensions);
+    this.creator = creator;
+    this.isFinished = false;
+    // initialize empty map for each player
+    for (String name : playerNames) {
+      playerActionMaps.put(name,new HashMap<>());
+    }
 
   }
 
-  /**
-   * Update (overwrite) the given player's action map with a new map.
-   *
-   * @param playerName   player name that we want to modify action map on
-   * @param newActionMap the new action map
-   */
-  public void updatePlayerActionMap(String playerName, Map<String, Action> newActionMap) {
-    playerActionMaps.put(playerName, newActionMap);
-  }
-
-
-  public void addWinner(String potentialWinner) {
-    winners.add(potentialWinner);
-  }
-
-
-  public int getNumOfPlayers() {
-    return playerNames.size();
-  }
-
-
-  public boolean isFinished() {
-    return winners.size() > 0;
-  }
 
   /**
    * Gets the player who's currently making a move.
@@ -76,6 +58,14 @@ public class GameInfo implements BroadcastContent {
    */
   public String getCurrentPlayer() {
     return currentPlayer;
+  }
+
+  public boolean isFinished() {
+    return isFinished;
+  }
+
+  public void setFinished() {
+    isFinished = true;
   }
 
   /**
@@ -110,6 +100,43 @@ public class GameInfo implements BroadcastContent {
 
   public Map<String, Map<String, Action>> getPlayerActionMaps() {
     return playerActionMaps;
+  }
+
+  public String getCreator() {
+    return creator;
+  }
+
+  public void setWinners(List<String> winners) {
+    this.winners = winners;
+  }
+
+  /**
+   * Call this method to rename the player names if the ones who want to play now does not.
+   * match with the ones who saved this game before.
+   *
+   * @param playerNames the current player names who want to play this game
+   */
+  public void renamePlayers(List<String> playerNames, String creator) {
+    if (!playerNames.equals(this.playerNames)) {
+      Collections.shuffle(playerNames);
+      this.playerNames = playerNames;
+      this.creator = creator;
+      this.firstPlayerName = playerNames.get(0);
+      // rename all boards if necessary (base and orient do not need updates)
+      for (Extension extension : tableTop.getGameBoards().keySet()) {
+        tableTop.getBoard(extension).renamePlayers(playerNames);
+      }
+      // rename action map names
+      int nameIndex = 0;
+      Map<String, Map<String, Action>> newActionMap = new HashMap<>();
+      for (String curName : playerActionMaps.keySet()) {
+        Map<String, Action> curActionMap = playerActionMaps.get(curName);
+        String newName = playerNames.get(nameIndex);
+        nameIndex += 1;
+        newActionMap.put(newName, curActionMap);
+      }
+      playerActionMaps = newActionMap;
+    }
   }
 
   @Override

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.Group?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -10,27 +9,25 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="665.0"
-         prefWidth="125.0" type="VBox" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="project.App">
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="665.0" prefWidth="125.0" type="VBox" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.App">
     <HBox prefHeight="100.0" prefWidth="200.0">
-        <Region prefHeight="200.0" prefWidth="200.0"/>
+        <Region prefHeight="200.0" prefWidth="200.0" />
         <Group>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ed3737" height="90.0" stroke="BLACK" strokeType="INSIDE"
-                       width="90.0"/>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ed3737" height="90.0" stroke="BLACK" strokeType="INSIDE" width="90.0" />
             <Text layoutX="20.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Text>
             <Text layoutX="45.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|">
                 <font>
-                    <Font size="18.0"/>
+                    <Font size="18.0" />
                 </font>
             </Text>
             <Text layoutX="60.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Text>
         </Group>
@@ -38,23 +35,22 @@
 
 
     <HBox prefHeight="100.0" prefWidth="200.0">
-        <Region prefHeight="200.0" prefWidth="200.0"/>
+        <Region prefHeight="200.0" prefWidth="200.0" />
         <Group>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#000000d5" height="90.0" stroke="BLACK" strokeType="INSIDE"
-                       width="90.0"/>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#000000d5" height="90.0" stroke="BLACK" strokeType="INSIDE" width="90.0" />
             <Text fill="WHITE" layoutX="20.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Text>
             <Text fill="WHITE" layoutX="45.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|">
                 <font>
-                    <Font size="18.0"/>
+                    <Font size="18.0" />
                 </font>
             </Text>
             <Text fill="WHITE" layoutX="60.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Text>
         </Group>
@@ -63,23 +59,22 @@
 
 
     <HBox prefHeight="100.0" prefWidth="200.0">
-        <Region prefHeight="200.0" prefWidth="200.0"/>
+        <Region prefHeight="200.0" prefWidth="200.0" />
         <Group>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="90.0" stroke="BLACK" strokeType="INSIDE"
-                       width="90.0"/>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="90.0" stroke="BLACK" strokeType="INSIDE" width="90.0" />
             <Text layoutX="20.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Text>
             <Text layoutX="45.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|">
                 <font>
-                    <Font size="18.0"/>
+                    <Font size="18.0" />
                 </font>
             </Text>
             <Text layoutX="60.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Text>
         </Group>
@@ -87,23 +82,22 @@
 
 
     <HBox prefHeight="100.0" prefWidth="200.0">
-        <Region prefHeight="200.0" prefWidth="200.0"/>
+        <Region prefHeight="200.0" prefWidth="200.0" />
         <Group>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="90.0" stroke="BLACK" strokeType="INSIDE"
-                       width="90.0"/>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="90.0" stroke="BLACK" strokeType="INSIDE" width="90.0" />
             <Text layoutX="20.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Text>
             <Text layoutX="45.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|">
                 <font>
-                    <Font size="18.0"/>
+                    <Font size="18.0" />
                 </font>
             </Text>
             <Text layoutX="60.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Text>
         </Group>
@@ -111,23 +105,22 @@
 
 
     <HBox prefHeight="100.0" prefWidth="200.0">
-        <Region prefHeight="200.0" prefWidth="200.0"/>
+        <Region prefHeight="200.0" prefWidth="200.0" />
         <Group>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#30ff1f" height="90.0" stroke="BLACK" strokeType="INSIDE"
-                       width="90.0"/>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#30ff1f" height="90.0" stroke="BLACK" strokeType="INSIDE" width="90.0" />
             <Text layoutX="20.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Text>
             <Text layoutX="45.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|">
                 <font>
-                    <Font size="18.0"/>
+                    <Font size="18.0" />
                 </font>
             </Text>
             <Text layoutX="60.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Text>
         </Group>
@@ -136,13 +129,12 @@
 
 
     <HBox prefHeight="100.0" prefWidth="200.0">
-        <Region prefHeight="200.0" prefWidth="200.0"/>
+        <Region prefHeight="200.0" prefWidth="200.0" />
         <Group>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#faff1f" height="90.0" stroke="BLACK" strokeType="INSIDE"
-                       width="90.0"/>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#faff1f" height="90.0" stroke="BLACK" strokeType="INSIDE" width="90.0" />
             <Text layoutX="40.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Text>
         </Group>
@@ -150,20 +142,17 @@
     </HBox>
 
     <Group>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="126.0" stroke="BLACK" strokeType="INSIDE"
-                   width="126.0"/>
-        <ImageView fitHeight="110.0" fitWidth="110.0" layoutX="8.0" layoutY="8.0" pickOnBounds="true"
-                   preserveRatio="true">
-            <Image url="@pictures/ta_pictures/linus.png"/>
-        </ImageView>
-        <Circle fill="#acdef4" layoutX="108.0" layoutY="17.0" radius="17.0" stroke="BLACK" strokeType="INSIDE"/>
-        <Text layoutX="106.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|"/>
-        <Circle fill="#e3f2ac" layoutX="109.0" layoutY="51.0" radius="17.0" stroke="BLACK" strokeType="INSIDE"/>
-        <Text layoutX="108.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|"/>
-        <Text layoutX="109.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="15"/>
-        <Text layoutX="96.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0"/>
-        <Text layoutX="98.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0"/>
-        <Text layoutX="113.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0"/>
+        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="126.0" stroke="BLACK" strokeType="INSIDE" width="126.0" />
+        <ImageView fitHeight="110.0" fitWidth="110.0" layoutX="8.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />
+        <Circle fill="#acdef4" layoutX="108.0" layoutY="17.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+        <Text layoutX="106.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
+        <Circle fill="#e3f2ac" layoutX="109.0" layoutY="51.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+        <Text layoutX="108.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
+        <Text layoutX="109.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="15" />
+        <Text layoutX="96.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+        <Text layoutX="98.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+        <Text layoutX="113.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+      <ImageView fitHeight="55.0" fitWidth="41.0" layoutX="8.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true" />
     </Group>
 
 </fx:root>

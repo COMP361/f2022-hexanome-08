@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.GameController;
-import project.connection.LobbyServiceRequestSender;
+import project.connection.LobbyRequestSender;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 
@@ -29,6 +29,9 @@ public class SessionGui extends HBox {
 
   private final User curUser;
 
+
+  // TODO: Needs to add a field -> String saveGameId, constructed in constructor
+  //private final String saveGameId;
   /**
    * This constructs a new SessionGUI.
    *
@@ -48,6 +51,11 @@ public class SessionGui extends HBox {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public void setup() {
+    setSessionButtons();
+    setSessionInfoText();
   }
 
   private String formatSessionInfo(Session session) {
@@ -96,7 +104,6 @@ public class SessionGui extends HBox {
       // just load the board to this user, nothing else should be done
       try {
         App.setRoot("splendor_base_game_board");
-        //stopAndClearThreads(); TODO: Might need a way to clean up the threads later ...
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -110,10 +117,18 @@ public class SessionGui extends HBox {
         // 0. sessionId needs to be passed to this controller, the other info
         // I can get from based on this sessionId (gameId)
         GameBoardLayoutConfig config = App.getGuiLayouts();
+        // whenever the user clicks play button, we will reset the game request sender to
+        // send correct REST requests to our backend in a right path name (splendorbase, city...)
         App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
-        App.loadPopUpWithController("splendor_base_game_board.fxml",
-            new GameController(curSessionId), config.getAppWidth(), config.getAppHeight());
 
+        // passing Session as param of GameController param cuz it contains optionally
+        // the save game id, later will be used to save game
+        App.loadPopUpWithController("splendor_base_game_board.fxml",
+            new GameController(curSessionId, curSession),
+            config.getAppWidth(),
+            config.getAppHeight());
+        App.getAppLobbyGuiThread().interrupt();
+        App.setAppLobbyGuiThread(null);
         Button playButton = (Button) event.getSource();
         Stage lobbyWindow = (Stage) playButton.getScene().getWindow();
         lobbyWindow.close();
@@ -126,14 +141,10 @@ public class SessionGui extends HBox {
   private EventHandler<ActionEvent> createDeleteSessionHandler() {
     return event -> {
       SessionGuiManager sessionsVbox = SessionGuiManager.getInstance();
-      LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+      LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
       sessionsVbox.getChildren().remove(this);
-      try {
-        String accessToken = curUser.getAccessToken();
-        lobbyRequestSender.sendDeleteSessionRequest(accessToken, curSessionId);
-      } catch (UnirestException e) {
-        throw new RuntimeException(e);
-      }
+      String accessToken = curUser.getAccessToken();
+      lobbyRequestSender.sendDeleteSessionRequest(accessToken, curSessionId);
     };
   }
 
@@ -142,7 +153,7 @@ public class SessionGui extends HBox {
   private EventHandler<ActionEvent> createLaunchSessionHandler() {
     return event -> {
       try {
-        LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+        LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
         String accessToken = curUser.getAccessToken();
         lobbyRequestSender.sendLaunchSessionRequest(curSessionId, accessToken);
       } catch (UnirestException e) {
@@ -155,7 +166,7 @@ public class SessionGui extends HBox {
   private EventHandler<ActionEvent> createJoinLeaveSessionHandler() {
     return event -> {
       Button joinAndLeaveButton = (Button) event.getSource();
-      LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+      LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
       String accessToken = curUser.getAccessToken();
       String curUserName = curUser.getUsername();
       // If the button says "Join", send join request
@@ -235,9 +246,9 @@ public class SessionGui extends HBox {
     }
   }
 
-  /**
-   * TODO.
-   */
+  ///**
+  // * TODO.
+  // */
   public void updateSessionGui() {
     // if user is in this game, then we only need to delete the Leave button to Play
     // if user is NOT in this game, change the Join button to Watch
@@ -288,11 +299,6 @@ public class SessionGui extends HBox {
         }
       }
     }
-  }
-
-  public void setup() {
-    setSessionButtons();
-    setSessionInfoText();
   }
 
 }

@@ -1,12 +1,5 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.CardExtraAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.ClaimNobleAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.PowerExtraAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.PurchaseAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.ReserveAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.TakeTokenAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.UpdateReturnTokenAction;
 import io.github.isharipov.gson.adapters.JsonSubtype;
 import io.github.isharipov.gson.adapters.JsonType;
 import java.io.FileReader;
@@ -22,10 +15,10 @@ import org.springframework.util.ResourceUtils;
 
 /**
  * The super abstract class that defines the behavior of all extension boards.
- *
+ * <p>
  * Every abstract class was serialized/deserialized using the repository from:
- *  * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
- *  * Thank him so much!!!!!!!!!!!!!!!
+ * * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
+ * * Thank him so much!!!!!!!!!!!!!!!
  */
 
 @JsonType(
@@ -188,5 +181,15 @@ public abstract class Board {
     } catch (ParseException | IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  /**
+   * Call this method to rename the player names if the ones who want to play now does not.
+   * match with the ones who saved this game before.
+   *
+   * @param playerNames the current player names who want to play this game
+   */
+  public void renamePlayers(List<String> playerNames) {
+    // do nothing for base and orient board
   }
 }

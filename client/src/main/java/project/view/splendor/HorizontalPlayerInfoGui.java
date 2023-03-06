@@ -1,10 +1,13 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.model.Colour;
+import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -15,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import project.App;
-import project.view.splendor.communication.DevelopmentCard;
 
 /**
  * TODO.
@@ -25,6 +27,8 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
   private final String playerName;
   private final int initialTokenNum;
 
+  private final int armCode;
+
   /**
    * TODO.
    *
@@ -33,10 +37,11 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
    * @param initialTokenNum TODO.
    */
   public HorizontalPlayerInfoGui(PlayerPosition playerPosition, String playerName,
-                                 int initialTokenNum) {
+                                 int initialTokenNum, int armCode) {
     this.playerPosition = playerPosition;
     this.playerName = playerName;
     this.initialTokenNum = initialTokenNum;
+    this.armCode = armCode;
     // TODO: The fxml associated with this class, must be bind to controller = project.App
     FXMLLoader fxmlLoader;
     if (playerPosition.equals(PlayerPosition.TOP)) {
@@ -148,7 +153,7 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
   public void setNewTokenInHand(EnumMap<Colour, Integer> newTokens) {
     Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo =
         this.getPlayerColourWealthMap(this.playerPosition);
-    for (Colour colour : Colour.values()) {
+    for (Colour colour : wealthInfo.keySet()) {
       Map<PlayerWealthInfo, Text> info = wealthInfo.get(colour);
       info.get(PlayerWealthInfo.TOKEN).setText(Integer.toString(newTokens.get(colour)));
     }
@@ -201,6 +206,25 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     }
   }
 
+  private void setupArmImage(int armCode) {
+    // only update the image if armCode > 0 -> we are playing trader extension
+    if (armCode > 0) {
+      int childrenCount = this.getChildren().size();
+      Group imageGroup = null;
+      if (playerPosition.equals(PlayerPosition.TOP)) {
+        imageGroup = (Group) this.getChildren().get(childrenCount - 1);
+      }
+
+      if (playerPosition.equals(PlayerPosition.BOTTOM)) {
+        imageGroup = (Group) this.getChildren().get(0);
+      }
+      String armPath = App.getArmPath(armCode);
+      Image armImage = new Image(armPath);
+      ImageView armImageView = (ImageView) imageGroup.getChildren().get(10);
+      armImageView.setImage(armImage);
+    }
+  }
+
   @Override
   public void setup(double layoutX, double layoutY) {
     // set the layout of the GUI
@@ -208,5 +232,6 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     setLayoutY(layoutY);
     giveInitialStartTokens();
     setupPlayerImage();
+    setupArmImage(armCode);
   }
 }

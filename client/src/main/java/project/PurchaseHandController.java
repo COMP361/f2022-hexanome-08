@@ -1,12 +1,16 @@
 package project;
 
 
+import ca.mcgill.comp361.splendormodel.actions.Action;
+import ca.mcgill.comp361.splendormodel.model.Colour;
+import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -14,45 +18,96 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import project.view.splendor.Colour;
-import project.view.splendor.communication.DevelopmentCard;
+import ca.mcgill.comp361.splendormodel.model.*;
 
 /**
- * Purchase controller class.
+ * Purchase controller class, controls the visual updates happening in purchase hand.
+ * associated with "my_development_cards.fxml"
+ *
  */
 public class PurchaseHandController implements Initializable {
 
   @FXML
+  // each index represent the group of displaying all cards of one colour
+  // there are 6 colours to display (hold the Groups)
   private HBox cardStackHbox;
 
+  @FXML
+  // place to store the gold token cards.
+  // hold the Gold->List<DevCards>
+  private VBox goldTokenCardsVbox;
+
+  @FXML
+  // hold List<NobleCard>
+  private VBox noblesUnLocked;
+
   private final Map<Colour, Group> colourGroupMap;
+
   private final Map<Colour, List<DevelopmentCard>> colourCardsMap;
 
-  public PurchaseHandController(Map<Colour, List<DevelopmentCard>> colourCardsMap) {
+  private final List<NobleCard> nobleCards;
+
+  private final Map<String, Action> playerActions;
+  public PurchaseHandController(PurchasedHand purchasedHand, Map<String, Action> playerActions) {
+    // organize all dev cards (including gold colour ones) into colour map
+    List<DevelopmentCard> allCardsInHand = purchasedHand.getDevelopmentCards();
+    this.colourCardsMap = reorganizeCardsInHand(allCardsInHand);
     this.colourGroupMap = new HashMap<>();
-    this.colourCardsMap = colourCardsMap;
+    this.nobleCards = purchasedHand.getNobleCards();
+    this.playerActions = playerActions;
   }
 
+
+  /**
+   * Put cards in different groups based on colour type.
+   * The colour can be gold.
+   *
+   * @param allDevCards
+   * @return
+   */
+  private Map<Colour, List<DevelopmentCard>> reorganizeCardsInHand(
+      List<DevelopmentCard> allDevCards) {
+    Map<Colour, List<DevelopmentCard>> result = new HashMap<>();
+    for (DevelopmentCard card : allDevCards) {
+      if (!result.containsKey(card.getGemColour())) {
+        // initialize the list for cards
+        List<DevelopmentCard> cardsOfOneColour = new ArrayList<>();
+        cardsOfOneColour.add(card);
+        result.put(card.getGemColour(), cardsOfOneColour);
+      } else {
+        // if result contains this colour before, then we just
+        // need to add this card to the list the colour maps to
+        //TODO: We need to sort them LATER!!!!
+        result.get(card.getGemColour()).add(card);
+      }
+    }
+    return result;
+  }
+
+
+
+
+  // Add the satchel mark display to every dev card (exclude the orient gold card)
   private List<HBox> generateCardSatchelPair(List<DevelopmentCard> oneColourCards) {
     List<HBox> result = new ArrayList<>();
     for (DevelopmentCard card : oneColourCards) {
       Rectangle satchelMark = new Rectangle();
-      // TODO: Colour will be assigned differently if the card is linked
+      // Colour will be assigned differently if the card is linked
       if (card.isPaired()) {
         satchelMark.setFill(Color.BLUE);
       } else {
         satchelMark.setFill(Color.WHITESMOKE);
       }
       Image img;
-      // TODO: check the card type in some way in the future...
-      img = new Image(App.getBaseCardPath(card.getCardName(), card.getLevel()));
-      //if (card instanceof DevelopmentCard) {
-      //  img = new Image(App.getBaseCardPath(card.getCardName(), card.getLevel()));
-      //} else {
-      //  img = new Image(App.getOrientCardPath(card.getCardName(), card.getLevel()));
-      //}
+      // has some effect -> orient
+      if (card.getPurchaseEffects().size() > 0) {
+        img = new Image(App.getOrientCardPath(card.getCardName(), card.getLevel()));
+      } else { // otherwise, base
+        img = new Image(App.getBaseCardPath(card.getCardName(), card.getLevel()));
+      }
       ImageView imgV = new ImageView(img);
       imgV.setFitWidth(100);
       imgV.setFitHeight(150);
@@ -64,6 +119,7 @@ public class PurchaseHandController implements Initializable {
     return result;
   }
 
+  // display it a bit inclined
   private void addCardSatchelPairToColourGroup(
       List<HBox> cardSatchelPairs, Group groupOfOneColour) {
 
@@ -79,28 +135,61 @@ public class PurchaseHandController implements Initializable {
     }
   }
 
+  private void addGoldTokenCards(List<DevelopmentCard> goldTokenCards, VBox goldTokenCardsVbox) {
+    if (goldTokenCards != null && goldTokenCards.size() > 0) {
+      for (DevelopmentCard card : goldTokenCards) {
+        String cardPath = App.getOrientCardPath(card.getCardName(), card.getLevel());
+        Image image = new Image(cardPath);
+        ImageView imageView = new ImageView(image);
+        // add the image view to vbox
+        goldTokenCardsVbox.getChildren().add(imageView);
+      }
+    }
+  }
+
+  private void addNobleCards(List<NobleCard> nobleCards, VBox noblesUnLocked) {
+    for (NobleCard nobleCard : nobleCards) {
+      String noblePath = App.getNoblePath(nobleCard.getCardName());
+      ImageView imageView = new ImageView(new Image(noblePath));
+      // add the image view to vbox
+      noblesUnLocked.getChildren().add(imageView);
+    }
+  }
+
+
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     Colour[] baseColours = App.getBaseColours();
-    // assigning colour to each group
+    // the groups are stored in HBox in FXML file, there are 6 elements in the HBox
+    // the first 5 are groups that store regular dev cards
+    // the 6th element is the VBox storing gold orient cards
     for (int i = 0; i < 5; i++) {
       Colour curColour = baseColours[i];
       Group colourGroup = (Group) cardStackHbox.getChildren().get(i);
+      // store a colour map look up reference to the GUI group so that it
+      // is easier to have access to it rather than counting the index from 0 to 4
       colourGroupMap.put(curColour, colourGroup);
     }
-    // TODO: Send request and get the list of cards the player has and make it
-    // (currently, HARDCODED!)
+
+    // add the gold colour cards' image views to vbox
+    List<DevelopmentCard> goldTokenCards = colourCardsMap.get(Colour.GOLD);
+    addGoldTokenCards(goldTokenCards, goldTokenCardsVbox);
 
     for (Colour c : colourGroupMap.keySet()) {
       if (colourCardsMap.containsKey(c)) {
         List<DevelopmentCard> cardsOfOneColour = colourCardsMap.get(c);
+        //TODO: assign actions to image views with playerActions, depending on what kind of
+        // actions (only CardExtraAction of Satchel can happen in this purchase hand, only for normal
+        // cards with RED, WHITE, BLUE, GREEN, BLACK colours)
+        // Bind actions to image view during generateCardSatchelPair(...) method
         List<HBox> allPairs = generateCardSatchelPair(cardsOfOneColour);
         addCardSatchelPairToColourGroup(allPairs, colourGroupMap.get(c));
       }
     }
 
-    // TODO: Needs to implement how the Orient cards are displayed in hand
+    // display the noble cards to GUI
+    addNobleCards(nobleCards, noblesUnLocked);
 
   }
 }

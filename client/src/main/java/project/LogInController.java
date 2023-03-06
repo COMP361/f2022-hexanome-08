@@ -1,20 +1,24 @@
 package project;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
-import project.connection.LobbyServiceRequestSender;
+import project.connection.LobbyRequestSender;
+import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.User;
 
 /**
  * Lobby GUI controller.
  */
-public class LogInController {
+public class LogInController implements Initializable {
 
   @FXML
   private TextField userName;
@@ -37,7 +41,7 @@ public class LogInController {
     String userNameStr = userName.getText();
     String userPasswordStr = userPassword.getText();
     // retrieve the parsed JSONObject from the response
-    LobbyServiceRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+    LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     JSONObject logInResponseJson = lobbyRequestSender
         .sendLogInRequest(userNameStr, userPasswordStr);
 
@@ -52,9 +56,18 @@ public class LogInController {
       App.setUser(curUser);
 
       // if user is player, display admin_lobby_page
-      if (App.getUser().getAuthority().equals("ROLE_ADMIN")) {
-        App.setRoot("admin_lobby_page");
-        // TODO: how to visually display these session objects as JavaFX GUI?
+      GameBoardLayoutConfig config = App.getGuiLayouts();
+      if (App.getUser().getAuthority().equals("ROLE_ADMIN") ||
+          App.getUser().getAuthority().equals("ROLE_PLAYER")) {
+        if(App.getLobbyController() == null) {
+          App.setLobbyController(new LobbyController());
+        }
+        App.loadPopUpWithController("admin_lobby_page.fxml",
+            App.getLobbyController(),
+            config.getAppWidth(),
+            config.getAppHeight());
+        Stage logInWindow = (Stage) quitGameButton.getScene().getWindow();
+        logInWindow.close();
 
       } else { // otherwise, player_lobby_page
         // App.setRoot("player_lobby_page");
@@ -75,47 +88,9 @@ public class LogInController {
     curStage.close();
   }
 
-  public void initialize() {
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
     userName.setText("ruoyu");
-    userPassword.setText("Dd991218?");
-
-
-    // Testing serialization problem
-    //
-    //final RuntimeTypeAdapterFactory<People> typeFactory = RuntimeTypeAdapterFactory
-    //    .of(People.class, "type")
-    //    .registerSubtype(Student.class)
-    //    .registerSubtype(Prof.class);
-    //
-    //final RuntimeTypeAdapterFactory<Student> typeStudentFactory = RuntimeTypeAdapterFactory
-    //    .of(Student.class, "type")
-    //    .registerSubtype(Undergrad.class)
-    //    .registerSubtype(Grad.class);
-
-    //final Gson gson = new GsonBuilder()
-    //    .registerTypeAdapterFactory(typeFactory)
-    //    .registerTypeAdapterFactory(typeStudentFactory)
-    //    .create();
-
-    //final TypeToken<List<People>> requestListTypeToken = new TypeToken<>() {
-    //};
-    //final Gson gson = new GsonBuilder()
-    //    .registerTypeAdapter(Student.class, new PolymorphDeserializer<Student>())
-    //    .create();
-    //
-    //final List<Student> requestList = Arrays.asList(
-    //    new Grad("addr1"),
-    //    new Undergrad("addr2",3), new Undergrad("addr3", 4));
-    //
-    //final String serialized = gson.toJson(requestList,
-    //    requestListTypeToken.getType());
-    //System.out.println("Original List: " + requestList);
-    //System.out.println("Serialized JSON: " + serialized);
-    //
-    //final List<Student> deserializedRequestList = gson.fromJson(serialized,
-    //    requestListTypeToken.getType());
-    //
-    //System.out.println("Deserialized list: " + deserializedRequestList);
+    userPassword.setText("abc123_ABC123");
   }
-
 }

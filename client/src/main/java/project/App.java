@@ -1,11 +1,15 @@
 package project;
 
+import ca.mcgill.comp361.splendormodel.model.Colour;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,11 +17,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import project.connection.LobbyServiceRequestSender;
-import project.connection.SplendorServiceRequestSender;
+import project.connection.GameRequestSender;
+import project.connection.LobbyRequestSender;
 import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.User;
-import project.view.splendor.Colour;
 
 
 /**
@@ -34,19 +37,21 @@ public class App extends Application {
   private static Scene lobby;
 
   // One and the only one requestSender
-  //private static final LobbyServiceRequestSender lobbyRequestSender =
-  //    new LobbyServiceRequestSender("http://76.66.139.161:4242");
-  private static final LobbyServiceRequestSender lobbyRequestSender =
-      new LobbyServiceRequestSender("http://127.0.0.1:4242");
+  private static final LobbyRequestSender lobbyRequestSender =
+      new LobbyRequestSender("http://76.66.139.161:4242");
 
-  // http://127.0.0.1:4246/splendor
-  // http://76.66.139.161:4246/splendor
-  //private static final SplendorServiceRequestSender gameRequestSender =
-  //    new SplendorServiceRequestSender(
-  //        "http://76.66.139.161:4246/", "splendorbase");
-  private static final SplendorServiceRequestSender gameRequestSender =
-      new SplendorServiceRequestSender(
-          "http://127.0.0.1:4246/", "splendorbase");
+  // TODO: Change this to singleton later LobbyServiceRequestSender
+  //private static final LobbyRequestSender lobbyRequestSender =
+  //    new LobbyRequestSender("http://127.0.0.1:4242");
+/**/
+   //http://127.0.0.1:4246/splendor
+   //http://76.66.139.161:4246/splendorbvb
+  private static final GameRequestSender gameRequestSender =
+      new GameRequestSender("http://76.66.139.161:4246/", "splendorbase");
+  // TODO: This should not be a global variable in App!!!
+  //private static final GameRequestSender gameRequestSender =
+  //    new GameRequestSender(
+  //        "http://127.0.0.1:4246/", "splendorbase");
 
 
   private static final Colour[] allColours = new Colour[] {
@@ -59,6 +64,14 @@ public class App extends Application {
   private static User user;
 
   private static GameBoardLayoutConfig guiLayouts;
+
+  private static Thread lobbyGuiThread = null;
+
+  private final static List<Thread> gameGuiThread = new ArrayList<>();
+
+  private static LobbyController lobbyController = null;
+
+  private static final Map<Long, GameController> gameControllerMap = new HashMap<>();
 
 
   /**
@@ -170,11 +183,11 @@ public class App extends Application {
   }
 
 
-  public static LobbyServiceRequestSender getLobbyServiceRequestSender() {
+  public static LobbyRequestSender getLobbyServiceRequestSender() {
     return lobbyRequestSender;
   }
 
-  public static SplendorServiceRequestSender getGameRequestSender() {
+  public static GameRequestSender getGameRequestSender() {
     return gameRequestSender;
   }
 
@@ -202,6 +215,12 @@ public class App extends Application {
     return String.format("project/pictures/noble/%s.png", cardName);
   }
 
+  // Note that arm code can only be 1,2,3,4
+  public static String getArmPath(int armCode) {
+    assert armCode >= 1 && armCode <=4;
+    return String.format("project/pictures/power/arm%s.png", armCode);
+  }
+
   public static String getOrientCardPath(String cardName, int level) {
     assert level >= 1 && level <= 3;
     return String.format("project/pictures/orient/%d/%s.png", level, cardName);
@@ -220,8 +239,9 @@ public class App extends Application {
    * @param popUpStageWidth window width
    * @param popUpStageHeight window height
    * @throws IOException in case fxml is not found
+   * @return the stage (window) that displays the scene loaded with the fxml file.
    */
-  public static void loadPopUpWithController(String fxmlName, Object controller,
+  public static Stage loadPopUpWithController(String fxmlName, Object controller,
                                              double popUpStageWidth, double popUpStageHeight)
       throws IOException {
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
@@ -230,16 +250,50 @@ public class App extends Application {
     newStage.setScene(new Scene(fxmlLoader.load(), popUpStageWidth, popUpStageHeight));
     newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     newStage.show();
+    return newStage;
   }
 
   /**
    * A static method to refresh the user's access token.
    *
    * @param user user
-   * @throws UnirestException in case of a failed request
    */
-  public static void refreshUserToken(User user) throws UnirestException {
+  public static void refreshUserToken(User user) {
     String newAccessToken = lobbyRequestSender.sendRefreshTokenRequest(user.getRefreshToken());
     user.setAccessToken(newAccessToken);
   }
+
+  public static void addGameThread(Thread thread) {
+    gameGuiThread.add(thread);
+  }
+
+  public static void killGameThread() {
+    for (Thread thread : gameGuiThread) {
+      thread.interrupt();
+    }
+    gameGuiThread.clear();
+  }
+
+  public static void setAppLobbyGuiThread(Thread thread) {
+    App.lobbyGuiThread = thread;
+  }
+
+  public static Thread getAppLobbyGuiThread() {
+    return App.lobbyGuiThread;
+  }
+
+  public static List<Thread> getGameGuiThreads() {
+    return gameGuiThread;
+  }
+
+
+
+  public static void setLobbyController(LobbyController lobbyController) {
+    App.lobbyController = lobbyController;
+  }
+
+  public static LobbyController getLobbyController() {
+    return lobbyController;
+  }
+
 }
