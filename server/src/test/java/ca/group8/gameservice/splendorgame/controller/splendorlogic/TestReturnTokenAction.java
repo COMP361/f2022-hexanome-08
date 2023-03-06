@@ -38,6 +38,8 @@ public class TestReturnTokenAction {
   ReturnTokenAction returnTokenAction = new ReturnTokenAction(returnValue,2);
   EnumMap<Colour, Integer> playerTokens =
       new EnumMap<>(SplendorDevHelper.getInstance().getRawTokenColoursMap());
+  EnumMap<Colour, Integer> tokensToTake =
+      new EnumMap<>(SplendorDevHelper.getInstance().getRawTokenColoursMap());
 
   @BeforeEach
   void setUp() {
@@ -46,26 +48,30 @@ public class TestReturnTokenAction {
     for (Colour colour : colours.keySet()) {
       if (colour==Colour.RED) {
         returnValue.put(colour.RED,2);
-        playerTokens.put(colour,7);
+        playerTokens.put(colour,1);
+        tokensToTake.put(colour,1);
       } else if (colour==Colour.GREEN) {
         returnValue.put(colour,1);
         playerTokens.put(Colour.GREEN,3);
+        tokensToTake.put(colour,3);
       } else {
         returnValue.put(colour,0);
         playerTokens.put(colour,0);
+        tokensToTake.put(colour,0);
       }
     }
 
     playerInGame.getTokenHand().addToken(playerTokens);
+    gameInfo.getTableTop().getBank().takeToken(tokensToTake);
 
   }
 
   @Test
   void testReturnToken() {
     returnTokenAction.execute(gameInfo.getTableTop(),playerInGame,actionGenerator,actionInterpreter);
-    assertEquals(5, playerInGame.getTokenHand().getAllTokens().get(Colour.RED));
+    assertEquals(1, playerInGame.getTokenHand().getAllTokens().get(Colour.RED));
     assertEquals(2, playerInGame.getTokenHand().getAllTokens().get(Colour.GREEN));
-    //assertEquals(5, gameInfo.getTableTop().getBank().getAllTokens().get(Colour.RED));
+    assertEquals(5, gameInfo.getTableTop().getBank().getAllTokens().get(Colour.RED));
 
   }
 
