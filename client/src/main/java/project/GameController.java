@@ -514,7 +514,7 @@ public class GameController implements Initializable {
                   extensionBoardGuiMap.put(extension, baseBoardGui);
                   break;
                 case ORIENT:
-                  extensionBoardGuiMap.put(extension, new OrientBoardGui());
+                  extensionBoardGuiMap.put(extension, new OrientBoardGui(playerBoardAnchorPane, gameId));
                   break;
                 case TRADING_POST:
                   TraderBoardGui traderBoardGui = new TraderBoardGui();
