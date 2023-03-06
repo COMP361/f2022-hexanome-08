@@ -11,8 +11,8 @@ public class FivePointsPower extends Power {
   }
 
   @Override
-  boolean validityCheck(PlayerInGame playerInfo) {
-    //must have 5 green gem cards and 1 noble
+  public boolean validityCheck(PlayerInGame playerInfo) {
+    //must have 5 green gem cards and at least 1 noble
     return playerInfo.getPurchasedHand().getGemCountOfColour(Colour.GREEN) >= 5
         && playerInfo.getPurchasedHand().getNobleCards().size() >= 1;
   }

@@ -2,8 +2,8 @@
 
 ## Ruoyu's README is great
 
-
 ### M7 prep
+#### Backend
 In order to keep a clean running environment, we will need the help from docker. To run the project correctly, follow the steps:
 1. clone https://github.com/m5c/BoardGamePlatform any place you like.
 2. cd into `BoardGamePlatform` and run `updatesubmodules.ps1` for windows with powershell or "./updatesubmodules.sh" for mac after you cloned it.
@@ -11,6 +11,13 @@ In order to keep a clean running environment, we will need the help from docker.
 4. make sure you are under `BoardGamePlatform` directory and docker desktop running, then type: `docker compose up` in the terminal, and you should have both database and lobby service ready.
 5. use `mvn clean spring-boot:run` under our `server` directory to run it, you should be good to go to test the server.
 - Note: I have a dummy running instance of merging this manually running `server` thing into `docker compose up` prepared for M8, but for now, just follow these steps for M7.
+
+#### Frontend (how to run client)
+1. Run the docker container of databased obtained from previous `docker compose up`. *(Only the database!!!!!)*
+2. `mvn clean spring-boot:run` https://github.com/m5c/LobbyService.git the lobby service outside of the container
+3. `mvn clean spring-boot:run -P test` under our server folder. The `-P test` argument is used to use a different property file to skip checkstyle/javadoc for testing purpose.
+4. `mvn clean javafx:run` or click the run button in client folder. (I prefer the button)
+5. You should be able to see a running instance of client.
 
 ### M5 prep
 1. Run code with a coverage report: the button on top right with a shield shape.

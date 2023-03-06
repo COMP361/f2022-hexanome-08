@@ -1,12 +1,5 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.CardExtraAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.ClaimNobleAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.PowerExtraAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.PurchaseAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.ReserveAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.TakeTokenAction;
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.UpdateReturnTokenAction;
 import io.github.isharipov.gson.adapters.JsonSubtype;
 import io.github.isharipov.gson.adapters.JsonType;
 import java.util.EnumMap;
@@ -14,10 +7,10 @@ import java.util.Objects;
 
 /**
  * This class represents the SuperClass of all Cards/nobles.
- *
+ * <p>
  * Every abstract class was serialized/deserialized using the repository from:
- *  * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
- *  * Thank him so much!!!!!!!!!!!!!!!
+ * * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
+ * * Thank him so much!!!!!!!!!!!!!!!
  */
 
 @JsonType(

@@ -3,6 +3,7 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Where all purchased cards go.
@@ -59,6 +60,20 @@ public class PurchasedHand {
       }
     }
     return result;
+  }
+
+
+  /**
+   * Get the total number of dev cards in hand (paired cards count as 2)
+   *
+   * @return
+   */
+  public int getTotalCardCount() {
+    List<DevelopmentCard> pairedCards = developmentCards.stream()
+        .filter(DevelopmentCard::isPaired)
+        .collect(Collectors.toList());
+
+    return pairedCards.size() + developmentCards.size();
   }
 
   /**

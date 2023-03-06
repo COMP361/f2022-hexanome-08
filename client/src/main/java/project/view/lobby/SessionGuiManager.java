@@ -1,7 +1,10 @@
 package project.view.lobby;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import javafx.application.Platform;
 import javafx.scene.layout.VBox;
 
 /**
@@ -12,8 +15,9 @@ public class SessionGuiManager extends VBox {
   private static SessionGuiManager sessionsVbox = null;
   private static final Map<Long, SessionGui> sessionIdGuiMap = new HashMap<>();
 
-  private SessionGuiManager() {
-  }
+
+  private SessionGuiManager() {}
+
 
   /**
    * Singleton get instance method.
@@ -27,6 +31,16 @@ public class SessionGuiManager extends VBox {
     return sessionsVbox;
   }
 
+  /**
+   * Clean up everything after loading into another page
+   */
+  public static void clearSessionsRecorded() {
+    Platform.runLater(() -> {
+      sessionsVbox.getChildren().clear();
+    });
+    sessionIdGuiMap.clear();
+  }
+
   public static void removeSessionGui(SessionGui newSessionGui) {
     sessionsVbox.getChildren().remove(newSessionGui);
   }
@@ -37,16 +51,10 @@ public class SessionGuiManager extends VBox {
 
 
   public static void addSessionGui(SessionGui newSessionGui) {
-    sessionsVbox.getChildren().add(newSessionGui);
-  }
+    Platform.runLater(() -> {
+      sessionsVbox.getChildren().add(newSessionGui);
+    });
 
-  public static void addSessionIdGuiMap(SessionGui newSessionGui, Long sessionId) {
-    sessionIdGuiMap.put(sessionId, newSessionGui);
-
-  }
-
-  public static Map<Long, SessionGui> getSessionIdGuiMap() {
-    return sessionIdGuiMap;
   }
 
 

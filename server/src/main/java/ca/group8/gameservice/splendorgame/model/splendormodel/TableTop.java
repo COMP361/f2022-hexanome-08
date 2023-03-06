@@ -49,7 +49,8 @@ public class TableTop implements BroadcastContent {
       case CITY:
         resultBoard = new CityBoard(playerNames);
         break;
-      default: break;
+      default:
+        break;
     }
     return resultBoard;
   }
@@ -83,6 +84,11 @@ public class TableTop implements BroadcastContent {
    */
   public Bank getBank() {
     return bank;
+  }
+
+
+  public Map<Extension, Board> getGameBoards() {
+    return gameBoards;
   }
 
 }

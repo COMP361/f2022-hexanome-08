@@ -1,5 +1,9 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.actions.ReturnTokenAction;
+import ca.mcgill.comp361.splendormodel.actions.TakeTokenAction;
+import ca.mcgill.comp361.splendormodel.model.Colour;
+import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -16,16 +20,22 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import project.App;
+import project.connection.GameRequestSender;
 
 /**
  * Create the GUI for the bank.
  */
 public class TokenBankGui extends HBox {
 
+  private Map<String, TakeTokenAction> takeTokenActionMap = new HashMap<>();
+  private Map<String, ReturnTokenAction> returnTokenActionMap = new HashMap<>();
+  private final long gameId;
+
   /**
    * Construct the Token Bank GUI.
    */
-  public TokenBankGui() {
+  public TokenBankGui(long gameId) {
+    this.gameId = gameId;
     // TODO: The fxml associated with this class, must be bind to controller = project.App
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/project/token_bank.fxml"));
     fxmlLoader.setRoot(this);
@@ -42,92 +52,84 @@ public class TokenBankGui extends HBox {
     return (Button) confirmVbox.getChildren().get(1);
   }
 
-  private EventHandler<ActionEvent> createTakeTokenHandler(
-      Label displayZone, Colour curColour) {
-    return event -> {
-      // add only if it's a valid take
-      // for this colour
-      // and for all colour
-      int curNum = Integer.parseInt(displayZone.getText());
-      int tokenLeft = Integer.parseInt(this.getColourTokenBankMap().get(curColour).getText());
-      // can only increment if 0 <= takeNum < 2 && bank > 0
+  //private EventHandler<ActionEvent> createTakeTokenHandler(
+  //    Label displayZone, Colour curColour) {
+  //  return event -> {
+  //    // add only if it's a valid take
+  //    // for this colour
+  //    // and for all colour
+  //    int curNum = Integer.parseInt(displayZone.getText());
+  //    int tokenLeft = Integer.parseInt(this.getColourTokenBankMap().get(curColour).getText());
+  //    // can only increment if 0 <= takeNum < 2 && bank > 0
+  //
+  //    int uniqueColourTakenCount = 0;
+  //    for (Colour c : this.getTakeTokenDecision().keySet()) {
+  //      int curColourTake = this.getTakeTokenDecision().get(c);
+  //      if (curColourTake > 0) {
+  //        uniqueColourTakenCount += 1;
+  //      }
+  //    }
+  //
+  //    if (curNum == 0 && uniqueColourTakenCount == 2) {
+  //      curNum += 1;
+  //      String newNum = curNum + "";
+  //      displayZone.setText(newNum);
+  //    } else {
+  //      if (!(curNum == 1 && uniqueColourTakenCount == 2)
+  //          && curNum < 2 && curNum >= 0 && tokenLeft > 0
+  //          && !banFromTaking(uniqueColourTakenCount)) {
+  //        // then we can have this Label being changed
+  //        if (curNum == 1) {
+  //          if (tokenLeft >= 4) {
+  //            curNum += 1;
+  //            String newNum = curNum + "";
+  //            displayZone.setText(newNum);
+  //          }
+  //        } else {
+  //          curNum += 1;
+  //          String newNum = curNum + "";
+  //          displayZone.setText(newNum);
+  //        }
+  //
+  //      }
+  //    }
+  //    uniqueColourTakenCount = 0;
+  //    for (Colour c : this.getTakeTokenDecision().keySet()) {
+  //      int curColourTake = this.getTakeTokenDecision().get(c);
+  //      if (curColourTake > 0) {
+  //        uniqueColourTakenCount += 1;
+  //      }
+  //    }
+  //    if (banFromTaking(uniqueColourTakenCount)) {
+  //      getConfirmButton().setDisable(false);
+  //    }
+  //  };
+  //}
 
-      int uniqueColourTakenCount = 0;
-      for (Colour c : this.getTakeTokenDecision().keySet()) {
-        int curColourTake = this.getTakeTokenDecision().get(c);
-        if (curColourTake > 0) {
-          uniqueColourTakenCount += 1;
-        }
-      }
 
-      if (curNum == 0 && uniqueColourTakenCount == 2) {
-        curNum += 1;
-        String newNum = curNum + "";
-        displayZone.setText(newNum);
-      } else {
-        if (!(curNum == 1 && uniqueColourTakenCount == 2)
-            && curNum < 2 && curNum >= 0 && tokenLeft > 0
-            && !banFromTaking(uniqueColourTakenCount)) {
-          // then we can have this Label being changed
-          if (curNum == 1) {
-            if (tokenLeft >= 4) {
-              curNum += 1;
-              String newNum = curNum + "";
-              displayZone.setText(newNum);
-            }
-          } else {
-            curNum += 1;
-            String newNum = curNum + "";
-            displayZone.setText(newNum);
-          }
-
-        }
-      }
-      uniqueColourTakenCount = 0;
-      for (Colour c : this.getTakeTokenDecision().keySet()) {
-        int curColourTake = this.getTakeTokenDecision().get(c);
-        if (curColourTake > 0) {
-          uniqueColourTakenCount += 1;
-        }
-      }
-      if (banFromTaking(uniqueColourTakenCount)) {
-        getConfirmButton().setDisable(false);
-      }
-    };
-  }
-
-  private EventHandler<ActionEvent> createBackTokenHandler(
-      Label displayZone) {
-    return event -> {
-      int curNum = Integer.parseInt(displayZone.getText());
-      // can always decrease as long as > 0
-      if (curNum > 0) {
-        // then we can have this Label being changed
-        curNum -= 1;
-        String newNum = curNum + "";
-        getConfirmButton().setDisable(true);
-        displayZone.setText(newNum);
-      }
-    };
-  }
-
-  private EventHandler<ActionEvent> createConfirmTakeTokenHandler() {
+  private EventHandler<ActionEvent> createConfirmTakeTokenHandler(String actionId) {
     // TODO: Need to send the request to Game server for future use
     return event -> {
-      Map<Colour, Text> bankTokenBankMap = getColourTokenBankMap();
-      Map<Colour, Integer> playerDecision = getTakeTokenDecision();
+      GameRequestSender sender = App.getGameRequestSender();
+      String playerName = App.getUser().getUsername();
+      String accessToken = App.getUser().getAccessToken();
+      sender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
+      //Map<Colour, Text> bankTokenBankMap = getColourTokenBankMap();
+      //Map<Colour, Integer> playerDecision = getTakeTokenDecision();
       Map<Colour, Label> playerNewDecisions = getColourTokenTakeMap();
-      for (Colour c : playerDecision.keySet()) {
+      for (Colour c : playerNewDecisions.keySet()) {
         if (!c.equals(Colour.GOLD)) {
-          Text bankBalanceText = bankTokenBankMap.get(c);
+          //Text bankBalanceText = bankTokenBankMap.get(c);
           Label playerNewChoice = playerNewDecisions.get(c);
-          int curTokenLeft = Integer.parseInt(bankBalanceText.getText());
-          int curTokenTake = playerDecision.get(c);
-          int newBankBalance = curTokenLeft - curTokenTake;
+          //int curTokenLeft = Integer.parseInt(bankBalanceText.getText());
+          //int curTokenTake = playerDecision.get(c);
+          //int newBankBalance = curTokenLeft - curTokenTake;
+          // reset decision back to 0
           playerNewChoice.setText("0");
-          bankBalanceText.setText(newBankBalance + "");
+          //bankBalanceText.setText(newBankBalance + "");
         }
       }
+      // disable
       getConfirmButton().setDisable(true);
     };
 
@@ -159,6 +161,7 @@ public class TokenBankGui extends HBox {
     }
   }
 
+  // the Label stores the number of player current take token decision (contains no gold colour)
   private Map<Colour, Label> getColourTokenTakeMap() {
     // processing token number Text of 5 regular token
     Map<Colour, Label> resultMap = new HashMap<>();
@@ -170,6 +173,18 @@ public class TokenBankGui extends HBox {
       resultMap.put(colours[i], takeTokenNum);
     }
     return resultMap;
+  }
+
+  // return a map of player's take token decision in colour -> int format
+  private Map<Colour, Integer> getTokensTakenDecision() {
+    Map<Colour, Integer> result = new HashMap<>();
+    Map<Colour, Label> tokensTakenInLabel = getColourTokenTakeMap();
+    for (Colour colour : tokensTakenInLabel.keySet()) {
+      int amount = Integer.parseInt(tokensTakenInLabel.get(colour).getText());
+      result.put(colour, amount);
+    }
+    result.put(Colour.GOLD, 0);
+    return result;
   }
 
   /**
@@ -196,6 +211,7 @@ public class TokenBankGui extends HBox {
     return resultTextList;
   }
 
+  // display the bank balance correctly
   private void setColourTokenBankMap(Map<Colour, Integer> bankBalanceMap) {
     Map<Colour, Text> curBankTokenBankMap = getColourTokenBankMap();
     Colour[] allColours = App.getAllColours();
@@ -211,13 +227,86 @@ public class TokenBankGui extends HBox {
    *
    * @return a map from colour to the GUI object Text containing the user decision
    */
-  private Map<Colour, Integer> getTakeTokenDecision() {
-    Map<Colour, Integer> result = new HashMap<>();
+  private EnumMap<Colour, Integer> getTakeTokenDecision() {
+    EnumMap<Colour, Integer> result = SplendorDevHelper.getInstance().getRawTokenColoursMap();
     for (Colour c : this.getColourTokenTakeMap().keySet()) {
       int curTake = Integer.parseInt(this.getColourTokenTakeMap().get(c).getText());
       result.put(c, curTake);
     }
     return result;
+  }
+
+
+  // return "" if found no action id matching
+  private String tokenCombMatchedActionId() {
+    EnumMap<Colour, Integer> currentChoiceComb = getTakeTokenDecision();
+    if (takeTokenActionMap.size() > 0) {
+      for (String actionId : takeTokenActionMap.keySet()) {
+        TakeTokenAction takeTokenAction = takeTokenActionMap.get(actionId);
+        EnumMap<Colour, Integer> comb = takeTokenAction.getTokens();
+        // if any combination matches,
+        if (comb.equals(currentChoiceComb)) {
+          System.out.println("Current choice: " + comb);
+          System.out.println("Action Combo: " + currentChoiceComb);
+          return actionId;
+        }
+      }
+    }
+    // can return more
+    //if (returnTokenActionMap.size() > 0) {
+    //  for (String actionId : returnTokenActionMap.keySet()) {
+    //    ReturnTokenAction returnTokenAction = returnTokenActionMap.get(actionId);
+    //    EnumMap<Colour, Integer> comb = returnTokenAction.getTokens();
+    //    // if any combination matches,
+    //    if (comb.equals(currentChoiceComb)) {
+    //      return actionId;
+    //    }
+    //  }
+    //}
+    return "";
+  }
+
+
+  private EventHandler<ActionEvent> createBackTokenHandler(Label displayZone) {
+    return event -> {
+      int curNum = Integer.parseInt(displayZone.getText());
+      // can always decrease as long as > 0
+      if (curNum > 0) {
+        // then we can have this Label being changed
+        curNum -= 1;
+        String newNum = curNum + "";
+        getConfirmButton().setDisable(true);
+        displayZone.setText(newNum);
+      }
+    };
+  }
+  private EventHandler<ActionEvent> createTakeTokenHandler(Label displayZone) {
+    return event -> {
+
+      int curNum = Integer.parseInt(displayZone.getText());
+      if (tokenCombMatchedActionId().equals("")) {
+        // means we did not find a match yet, allow user to keep taking
+        curNum += 1;
+        String newNum = curNum + "";
+        displayZone.setText(newNum);
+        // the after effect of +1
+        if (!tokenCombMatchedActionId().equals("")) {
+          Button confirmButton = getConfirmButton();
+          // do not allow taking anymore, activate confirm button
+          confirmButton.setDisable(false);
+          String actionId = tokenCombMatchedActionId();
+          confirmButton.setOnAction(createConfirmTakeTokenHandler(actionId));
+        }
+      } else {
+        Button confirmButton = getConfirmButton();
+        // do not allow taking anymore, activate confirm button
+        confirmButton.setDisable(false);
+        String actionId = tokenCombMatchedActionId();
+        confirmButton.setOnAction(createConfirmTakeTokenHandler(actionId));
+      }
+
+
+    };
   }
 
   /**
@@ -233,12 +322,15 @@ public class TokenBankGui extends HBox {
       Button plusButton = (Button) curGroup.getChildren().get(1);
       Button minusButton = (Button) curGroup.getChildren().get(2);
       Label displayLabel = (Label) curGroup.getChildren().get(curGroup.getChildren().size() - 2);
-      plusButton.setOnAction(createTakeTokenHandler(displayLabel, curColour));
+      if (takeTokenActionMap.isEmpty() && returnTokenActionMap.isEmpty()) {
+        plusButton.setDisable(true);
+        minusButton.setDisable(true);
+      }
+      plusButton.setOnAction(createTakeTokenHandler(displayLabel));
       minusButton.setOnAction(createBackTokenHandler(displayLabel));
     }
     Button confirmButton = getConfirmButton();
     confirmButton.setDisable(true);
-    confirmButton.setOnAction(createConfirmTakeTokenHandler());
   }
 
 
@@ -250,8 +342,9 @@ public class TokenBankGui extends HBox {
    * @param layoutY layout y
    * @param firstSetup whether it's first set up or not
    */
-  public void setup(EnumMap<Colour, Integer> bankMap, double layoutX, double layoutY,
-                    boolean firstSetup) {
+  public void setup(Map<String, TakeTokenAction> takeTokenActionMap, EnumMap<Colour, Integer> bankMap,
+                    double layoutX, double layoutY, boolean firstSetup) {
+    this.takeTokenActionMap = takeTokenActionMap;
     // set the layout of the GUI
     if (firstSetup) {
       setLayoutX(layoutX);

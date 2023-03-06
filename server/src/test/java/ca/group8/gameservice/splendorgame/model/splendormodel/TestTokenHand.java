@@ -19,11 +19,11 @@ public class TestTokenHand {
     @BeforeEach
     void setup() {
         t1 = new TokenHand(3);
-        price1 = new EnumMap<>(Colour.class);
-        price2 = new EnumMap<>(Colour.class);
-        price3 = new EnumMap<>(Colour.class);
+        price1 = new EnumMap<>(t1.getAllTokens());
+        price2 = new EnumMap<>(t1.getAllTokens());
+        price3 = new EnumMap<>(t1.getAllTokens());
         int counter = 1;
-        for (Colour colour : Colour.values()) {
+        for (Colour colour : t1.getAllTokens().keySet()) {
             price2.put(colour, 2);
             price1.put(colour, 1);
             price3.put(colour, counter);
