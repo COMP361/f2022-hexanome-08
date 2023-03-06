@@ -11,7 +11,6 @@ public interface BoardGui {
   // set up the board in terms of Gui pictures
   void initialGuiActionSetup(TableTop tableTop, Map<String, Action> playerActionMap);
 
-  // assign actions to the gui
-  void updateGuiAction(Map<String, Action> actionMap) throws InvalidDataException;
+  void clearContent();
 
 }

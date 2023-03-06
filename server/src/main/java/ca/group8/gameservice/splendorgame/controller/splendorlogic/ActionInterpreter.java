@@ -267,6 +267,11 @@ public class ActionInterpreter {
       // if the game is not finished, set next player
       if (!gameInfo.isFinished()) {
         gameInfo.setNextPlayer();
+        // after you set next player, action map should be initialized again for all players
+        String nextPlayerName = gameInfo.getCurrentPlayer();
+        for (PlayerInGame player : playerStates.getPlayersInfo().values()) {
+          actionGenerator.setInitialActions(player, nextPlayerName);
+        }
       }
     }
   }

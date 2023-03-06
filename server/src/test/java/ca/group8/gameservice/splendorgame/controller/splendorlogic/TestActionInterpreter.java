@@ -37,7 +37,7 @@ public class TestActionInterpreter {
 
   @Test
   public void testReserveAction_BaseCard() {
-    actionGenerator.setInitialActions(playerInGame);
+    //actionGenerator.setInitialActions(playerInGame);
     Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(curPlayerName);
     DevelopmentCard reservedCard = null;
     for (String actionId : playerActionMap.keySet()) {
@@ -61,7 +61,7 @@ public class TestActionInterpreter {
 
   @Test
   public void testReserveAction_OrientCard() {
-    actionGenerator.setInitialActions(playerInGame);
+    //actionGenerator.setInitialActions(playerInGame);
     Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(curPlayerName);
     DevelopmentCard reservedCard = null;
     for (String actionId : playerActionMap.keySet()) {
@@ -85,7 +85,7 @@ public class TestActionInterpreter {
 
   @Test
   public void testTakeTokenAction_NoReturnToken() {
-    actionGenerator.setInitialActions(playerInGame);
+    //actionGenerator.setInitialActions(playerInGame);
     Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(curPlayerName);
     EnumMap<Colour, Integer> tokensTakenFromBank = new EnumMap<>(Colour.class);
     for (String actionId : playerActionMap.keySet()) {
@@ -148,7 +148,7 @@ public class TestActionInterpreter {
     //System.out.println(playerInGame.getTokenHand().getAllTokens());
 
 
-    actionGenerator.setInitialActions(playerInGame);
+    //actionGenerator.setInitialActions(playerInGame);
     Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(curPlayerName);
     EnumMap<Colour, Integer> tokensTakenFromBank = new EnumMap<>(Colour.class);
     for (String actionId : playerActionMap.keySet()) {

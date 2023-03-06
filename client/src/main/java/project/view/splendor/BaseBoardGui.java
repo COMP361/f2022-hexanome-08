@@ -19,6 +19,8 @@ import java.util.Map;
 
 import java.util.stream.Collectors;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import project.App;
@@ -61,7 +63,9 @@ public class BaseBoardGui implements BoardGui {
     for (String actionId : playerActionMap.keySet()) {
       Action action = playerActionMap.get(actionId);
       if (action instanceof TakeTokenAction) {
-        takeTokenActionMap.put(actionId, (TakeTokenAction) action);
+        TakeTokenAction takeTokenAction = (TakeTokenAction) action;
+        System.out.println(takeTokenAction.getTokens());
+        takeTokenActionMap.put(actionId, takeTokenAction);
       }
     }
     EnumMap<Colour, Integer> bankBalance = tableTop.getBank().getAllTokens();
@@ -135,9 +139,12 @@ public class BaseBoardGui implements BoardGui {
     return positionToActionMap;
   }
 
+
   @Override
-  public void updateGuiAction(Map<String, Action> actionMap) throws InvalidDataException {
-    // if the type of the input board is not BaseBoard, throw an InvalidDataException
-    //if(board.getType().equals("BaseBoard"))
+  public void clearContent() {
+    ObservableList<Node> currentChildren = playerBoardAnchorPane.getChildren();
+    currentChildren.remove(nobleBoardGui);
+    currentChildren.remove(tokenBankGui);
+    baseCardBoard.getChildren().clear();
   }
 }

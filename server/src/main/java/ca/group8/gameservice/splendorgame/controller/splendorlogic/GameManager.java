@@ -231,12 +231,10 @@ public class GameManager {
 
       // generate default actions for every player according to their names
       ActionGenerator actionGenerator = newActionInterpreter.getActionGenerator();
-      String firstPlayerName = newGameInfo.getFirstPlayerName();
+      String currentPlayerName = newGameInfo.getCurrentPlayer();
       for (PlayerInGame playerInGame : newPlayerStates.getPlayersInfo().values()) {
         // only set the initial actions for the first player, others' remain empty
-        if (playerInGame.getName().equals(firstPlayerName)) {
-          actionGenerator.setInitialActions(playerInGame);
-        }
+        actionGenerator.setInitialActions(playerInGame, currentPlayerName);
       }
       logger.info("Launched game " + gameId);
       logger.info("Current game ids: " + activeGames.keySet());
