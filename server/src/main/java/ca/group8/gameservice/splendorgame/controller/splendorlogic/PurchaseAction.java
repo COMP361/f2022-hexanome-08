@@ -152,6 +152,8 @@ public class PurchaseAction extends Action {
       actionGenerator.updateCascadeActions(playerInGame, curCard, CardEffect.SATCHEL);
     }
 
+
+
   }
 
   public EnumMap<Colour, Integer> getTokensToBePaid() {

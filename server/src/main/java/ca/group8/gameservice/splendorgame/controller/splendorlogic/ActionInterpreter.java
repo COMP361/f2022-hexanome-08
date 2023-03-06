@@ -38,6 +38,7 @@ public class ActionInterpreter {
   private PlayerStates playerStates;
   private GameInfo gameInfo;
   private ActionGenerator actionGenerator;
+  private boolean bonusTokenStashed = false;
 
   /**
    * Constructor.
@@ -88,6 +89,14 @@ public class ActionInterpreter {
     TableTop tableTop = gameInfo.getTableTop();
     PlayerInGame playerInGame = playerStates.getOnePlayerInGame(playerName);
     actionChosen.execute(tableTop, playerInGame, actionGenerator, this);
+    if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)){
+      TraderBoard board = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
+      Power power = board.getPlayerOnePower(playerName, PowerEffect.EXTRA_TOKEN);
+      if(actionChosen instanceof PurchaseAction && power.isUnlocked()){
+        bonusTokenStashed = true;
+      }
+    }
+
 
     // the action has been executed, and the player's action map is possibly empty now, check!
     actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
@@ -189,8 +198,18 @@ public class ActionInterpreter {
             playerInGame.changePrestigePoints(diffAmount);
           }
         }
+        //check if player still needs to take bonus token
+        if(traderBoard.getPlayerOnePower(playerName, PowerEffect.EXTRA_TOKEN).isUnlocked()){
+          if(bonusTokenStashed){
+            bonusTokenStashed = false;
+            actionGenerator.updateBonusTokenPowerActions(playerInGame);
+          }
+        }
+        bonusTokenStashed = false;
 
       }
+
+
 
       // winners check (optionally with city extension)
       boolean playerWonTheGame;
@@ -353,4 +372,7 @@ public class ActionInterpreter {
     this.burnCardColour = burnCardColour;
   }
 
+  public void setBonusToken(boolean bonusToken) {
+    this.bonusTokenStashed = bonusToken;
+  }
 }

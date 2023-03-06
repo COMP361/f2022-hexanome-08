@@ -390,9 +390,25 @@ public class ActionGenerator {
     playerActionMaps.put(playerName, actionMap);
   }
 
-  //TODO
-  public void updatePowerActions(String playerName, PowerEffect powerEffect) {
 
+  public void updateBonusTokenPowerActions(PlayerInGame player) {
+    List<Action> actions = new ArrayList<>();
+    EnumMap<Colour, Integer> rawMap = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+    EnumMap<Colour,Integer> bankTokens = tableTop.getBank().getAllTokens();
+    for(Colour colour: rawMap.keySet()){
+      if(bankTokens.get(colour)>0){
+        actions.add(new BonusTokenPowerAction(player, colour));
+      }
+    }
+    Map<String, Action> actionMap = new HashMap<>();
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+    for (Action action : actions) {
+      String actionJson = gsonParser.toJson(action, BonusTokenPowerAction.class);
+      String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();
+      actionMap.put(actionId, action);
+    }
+    String playerName = player.getName();
+    playerActionMaps.put(playerName, actionMap);
   }
 
   /**
