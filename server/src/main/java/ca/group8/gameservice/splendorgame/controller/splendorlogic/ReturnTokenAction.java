@@ -1,10 +1,13 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
+import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
+import ca.group8.gameservice.splendorgame.model.splendormodel.SplendorGameException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
 import java.util.EnumMap;
 
 /**
@@ -32,10 +35,16 @@ public class ReturnTokenAction extends Action {
   }
 
   @Override
-    // TODO
   void execute(TableTop curTableTop, PlayerInGame playerInGame,
                ActionGenerator actionListGenerator,
                ActionInterpreter actionInterpreter) {
+
+    //remove tokens from Player's tokenHand & add those tokens to the bank
+    playerInGame.getTokenHand().removeToken(tokensToReturn);
+    curTableTop.getBank().returnToken(tokensToReturn);
+
+    //TODO: Do we need to check the case when they do not provide the right number of tokens
+    //TODO: to return? Or can we have that validation on the front end?
 
   }
 
