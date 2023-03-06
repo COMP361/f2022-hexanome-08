@@ -48,8 +48,8 @@ public class TestReturnTokenAction {
     for (Colour colour : colours.keySet()) {
       if (colour==Colour.RED) {
         returnValue.put(colour.RED,2);
-        playerTokens.put(colour,1);
-        tokensToTake.put(colour,1);
+        playerTokens.put(colour,3);
+        tokensToTake.put(colour,3);
       } else if (colour==Colour.GREEN) {
         returnValue.put(colour,1);
         playerTokens.put(Colour.GREEN,3);
@@ -68,10 +68,13 @@ public class TestReturnTokenAction {
 
   @Test
   void testReturnToken() {
-    returnTokenAction.execute(gameInfo.getTableTop(),playerInGame,actionGenerator,actionInterpreter);
+    returnTokenAction.execute(
+        gameInfo.getTableTop(),playerInGame,actionGenerator,actionInterpreter);
     assertEquals(1, playerInGame.getTokenHand().getAllTokens().get(Colour.RED));
     assertEquals(2, playerInGame.getTokenHand().getAllTokens().get(Colour.GREEN));
-    assertEquals(5, gameInfo.getTableTop().getBank().getAllTokens().get(Colour.RED));
+    assertEquals(3, gameInfo.getTableTop().getBank().getAllTokens().get(Colour.RED));
+    assertEquals(2, gameInfo.getTableTop().getBank().getAllTokens().get(Colour.GREEN));
+
 
   }
 
