@@ -225,8 +225,8 @@ public class ActionGenerator {
       EnumMap<Colour, Integer> twoSameColourTokens = new EnumMap<>(rawMap);
       if (tokenLeft.get(colour) >= 4) {
         twoSameColourTokens.put(colour, 2);
+        result.add(new TakeTokenAction(twoSameColourTokens));
       }
-      result.add(new TakeTokenAction(twoSameColourTokens));
 
       // generate more cases if the player has the 2+1 power on
       if (hasTwoPlusOnePower) {
@@ -266,7 +266,13 @@ public class ActionGenerator {
    *
    * @param curPlayerInfo current player's associated player info
    */
-  public void setInitialActions(PlayerInGame curPlayerInfo) {
+  public void setInitialActions(PlayerInGame curPlayerInfo, String curTurnPlayerName) {
+    if (!curTurnPlayerName.equals(curPlayerInfo.getName())) {
+      String playerName = curPlayerInfo.getName();
+      // clean up the action map if it's not your turn
+      playerActionMaps.put(playerName, new HashMap<>());
+      return; // skipped checking the rest
+    }
 
     // we know by default, orient and base are always on the table
     BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);

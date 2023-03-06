@@ -86,6 +86,8 @@ public class GameController implements Initializable {
 
   private TokenBankGui tokenBankGui;
 
+  private List<BoardGui> allBoardGuis = new ArrayList<>();
+
   private String prePlayerName;
 
   private final Map<Integer, BaseCardLevelGui> baseCardGuiMap = new HashMap<>();
@@ -499,33 +501,47 @@ public class GameController implements Initializable {
             // always get the action map from game info
             String playerName = curUser.getUsername();
             Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
-            if (isFirstCheck) {
-              // generate BoardGui based on extension type
-              for (Extension extension : extensions) {
-                switch (extension) {
-                  case BASE:
-                    BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane, gameId);
-                    baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
-                    extensionBoardGuiMap.put(extension, baseBoardGui);
-                    break;
-                  case ORIENT:
-                    extensionBoardGuiMap.put(extension, new OrientBoardGui());
-                    break;
-                  case TRADING_POST:
-                    extensionBoardGuiMap.put(extension, new TraderBoardGui());
-                    break;
-                  case CITY:
-                    extensionBoardGuiMap.put(extension, new CityBoardGui());
-                    break;
-                  default: break;
-                }
-              }
+            //System.out.println("Player: " + playerName + playerActionMap.values());
+            // clear up all children in playerBoardAnchorPane
 
 
-
-            } else {
-              // make use of extensionBoardGuiMap and do updates
+            for (BoardGui boardGui : allBoardGuis) {
+              Platform.runLater(boardGui::clearContent);
             }
+
+            // generate BoardGui based on extension type
+            for (Extension extension : extensions) {
+              switch (extension) {
+                case BASE:
+                  BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane, gameId);
+                  baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+                  extensionBoardGuiMap.put(extension, baseBoardGui);
+                  break;
+                case ORIENT:
+                  extensionBoardGuiMap.put(extension, new OrientBoardGui());
+                  break;
+                case TRADING_POST:
+                  extensionBoardGuiMap.put(extension, new TraderBoardGui());
+                  break;
+                case CITY:
+                  extensionBoardGuiMap.put(extension, new CityBoardGui());
+                  break;
+                default: break;
+              }
+            }
+
+
+
+
+
+            //if (isFirstCheck) {
+            //
+            //
+            //
+            //
+            //} else {
+            //  // make use of extensionBoardGuiMap and do updates
+            //}
 
 
 

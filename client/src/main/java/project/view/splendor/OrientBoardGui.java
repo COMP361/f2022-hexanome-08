@@ -19,7 +19,8 @@ public class OrientBoardGui implements BoardGui{
   }
 
   @Override
-  public void updateGuiAction(Map<String, Action> actionMap) throws InvalidDataException {
+  public void clearContent() {
 
   }
+
 }

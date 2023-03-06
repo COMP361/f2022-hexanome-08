@@ -12,7 +12,8 @@ public class CityBoardGui implements BoardGui {
   }
 
   @Override
-  public void updateGuiAction(Map<String, Action> actionMap) throws InvalidDataException {
+  public void clearContent() {
 
   }
+
 }

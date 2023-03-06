@@ -51,15 +51,12 @@ public class NobleBoardGui extends VBox {
    */
   public void setup(List<NobleCard> allNobles, double layoutX, double layoutY, boolean firstSetup) {
 
-    // GUI class dependent things to setup
-    if (firstSetup) {
-      // set the layout of the GUI
-      setLayoutX(layoutX);
-      setLayoutY(layoutY);
-      setSpacing(nobleImageSpace);
-    } else {
-      this.getChildren().clear();
-    }
+    // GUI class dependent things to set up
+    // set the layout of the GUI
+    this.getChildren().clear();
+    setLayoutX(layoutX);
+    setLayoutY(layoutY);
+    setSpacing(nobleImageSpace);
     for (NobleCard noble : allNobles) {
       String nobleName = noble.getCardName();
       Image img = new Image(String.format("project/pictures/noble/%s.png", nobleName));
@@ -68,6 +65,8 @@ public class NobleBoardGui extends VBox {
       imgv.setFitHeight(nobleImageHeight);
       this.getChildren().add(imgv);
     }
+
+
 
   }
 }
