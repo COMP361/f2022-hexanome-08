@@ -84,6 +84,7 @@ public class PurchaseAction extends Action {
     PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
     int points = curCard.getPrestigePoints();
 
+
     if (effectNum == 0) {
       // tokens off from hands
       playerInGame.payTokensToBuy(goldCardsRequired, tokensToBePaid);
@@ -93,11 +94,16 @@ public class PurchaseAction extends Action {
       playerInGame.changePrestigePoints(points);
       // tokens go back to bank
       curBank.returnToken(tokensToBePaid);
-      // remove card from board
-      BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
-      baseBoard.removeCard(cardPosition);
-      // fill up the board
-      baseBoard.update();
+
+      //if cardPosition.getX()==0, it would mean this is from reservedHand. Therefore
+      //we would skip the steps to remove & replace card on board.
+      if(!(cardPosition.getX()==0)) {
+        // remove card from board
+        BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
+        baseBoard.removeCard(cardPosition);
+        // fill up the board
+        baseBoard.update();
+      }
     }
 
     if (effectNum == 1) {
@@ -113,11 +119,16 @@ public class PurchaseAction extends Action {
         playerInGame.payTokensToBuy(goldCardsRequired, tokensToBePaid);
         // tokens go back to bank
         curBank.returnToken(tokensToBePaid);
-        // remove card from board
-        OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
-        orientBoard.removeCard(cardPosition);
-        // fill up the board
-        orientBoard.update();
+
+        //if cardPosition.getX()==0, it would mean this is from reservedHand. Therefore
+        //we would skip the steps to remove & replace card on board.
+        if(!(cardPosition.getX()==0)) {
+          // remove card from board
+          OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
+          orientBoard.removeCard(cardPosition);
+          // fill up the board
+          orientBoard.update();
+        }
 
         if (curEffect.equals(CardEffect.SATCHEL)) {
           actionInterpreter.setStashedCard(curCard);
@@ -144,11 +155,16 @@ public class PurchaseAction extends Action {
       playerInGame.payTokensToBuy(goldCardsRequired, tokensToBePaid);
       // tokens go back to bank
       curBank.returnToken(tokensToBePaid);
-      // remove card from board
-      OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
-      orientBoard.removeCard(cardPosition);
-      // fill up the board
-      orientBoard.update();
+
+      //if cardPosition.getX()==0, it would mean this is from reservedHand. Therefore
+      //we would skip the steps to remove & replace card on board.
+      if(!(cardPosition.getX()==0)) {
+        // remove card from board
+        OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
+        orientBoard.removeCard(cardPosition);
+        // fill up the board
+        orientBoard.update();
+      }
       actionGenerator.updateCascadeActions(playerInGame, curCard, CardEffect.SATCHEL);
     }
 

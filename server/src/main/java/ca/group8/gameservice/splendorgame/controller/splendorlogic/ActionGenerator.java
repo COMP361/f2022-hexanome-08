@@ -117,6 +117,7 @@ public class ActionGenerator {
     for (int level = 1; level <= 3; level++) {
       DevelopmentCard[] baseLevelCards = baseBoard.getLevelCardsOnBoard(level);
       DevelopmentCard[] orientLevelCards = orientBoard.getLevelCardsOnBoard(level);
+
       for (int cardIndex = 0; cardIndex < baseLevelCards.length; cardIndex++) {
         int goldCardsNeeded = 0;
         Position cardPosition = new Position(level, cardIndex);
@@ -189,6 +190,50 @@ public class ActionGenerator {
           } else {
             tokensPaid.put(Colour.GOLD, goldTokensInHand);
             goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand)/2);
+          }
+        }
+        result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+      }
+    }
+
+    //get list of cards in player's reserve card hand
+    DevelopmentCard[] reservedCards = curPlayerInfo.getReservedHand().getDevelopmentCards()
+        .toArray(DevelopmentCard[]::new);
+    if(reservedCards.length>0) { //only iterate
+      for (int cardIndex = 0; cardIndex < reservedCards.length; cardIndex++) {
+        int goldCardsNeeded = 0;
+        //x coordinate = 0, means this is a card in the reserve hand!
+        Position cardPosition = new Position(0, cardIndex);
+        DevelopmentCard card = reservedCards[cardIndex];
+        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
+        if (goldTokenNeeded == -1) {
+          continue; // this card can not be bought
+        }
+        // always generate reserve actions for base cards for index 0,1,2,3
+        EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        for (Colour c : totalGems.keySet()) {
+          if (c.equals(Colour.GOLD)) {
+            continue;
+          }
+          //calculate price after discount
+          int priceAfterDiscount = tokensPaid.get(c) - totalGems.get(c);
+          //if price is negative, meaning you have more gems than required, just set tokens paid to 0.
+          if (priceAfterDiscount <= 0) {
+            tokensPaid.put(c, 0);
+          } else if (priceAfterDiscount > totalTokens.get(c)) {
+            tokensPaid.put(c, totalTokens.get(c));
+          } else {
+            tokensPaid.put(c, priceAfterDiscount);
+          }
+        }
+
+        if (goldTokenNeeded > 0) {
+          int goldTokensInHand = totalTokens.get(Colour.GOLD);
+          if (goldTokensInHand >= goldTokenNeeded) {
+            tokensPaid.put(Colour.GOLD, goldTokenNeeded);
+          } else {
+            tokensPaid.put(Colour.GOLD, goldTokensInHand);
+            goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
           }
         }
         result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
