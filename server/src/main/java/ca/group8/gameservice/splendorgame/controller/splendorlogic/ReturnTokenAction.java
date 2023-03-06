@@ -43,9 +43,6 @@ public class ReturnTokenAction extends Action {
     playerInGame.getTokenHand().removeToken(tokensToReturn);
     curTableTop.getBank().returnToken(tokensToReturn);
 
-    //TODO: Do we need to check the case when they do not provide the right number of tokens
-    //TODO: to return? Or can we have that validation on the front end?
-
   }
 
   @Override
