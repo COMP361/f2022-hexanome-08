@@ -253,8 +253,8 @@ public class ActionGenerator {
         threeDiffColourTokens.put(colourList.get(0), 1);
         threeDiffColourTokens.put(colourList.get(1), 1);
         threeDiffColourTokens.put(colourList.get(2), 1);
+        result.add(new TakeTokenAction(threeDiffColourTokens));
       }
-      result.add(new TakeTokenAction(threeDiffColourTokens));
     }
 
     return result;
