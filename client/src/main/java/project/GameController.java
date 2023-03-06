@@ -7,6 +7,7 @@ import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -95,7 +97,6 @@ public class GameController implements Initializable {
   private final Map<Extension, BoardGui> extensionBoardGuiMap = new HashMap<>();
 
   private List<String> sortedPlayerNames = new ArrayList<>();
-
   private boolean gameIsFinished = false;
   public GameController(long gameId, Session curSession) {
     this.gameId = gameId;
@@ -123,7 +124,12 @@ public class GameController implements Initializable {
       // every time button click, we have up-to-date information
       PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
       ReservedHand reservedHand = playerInGame.getReservedHand();
-      String gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
+      String gameInfoJson;
+      try {
+        gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
+      } catch (UnirestException e) {
+        throw new RuntimeException(e);
+      }
       GameInfo gameInfo = gsonParser.fromJson(gameInfoJson, GameInfo.class);
       String playerName = App.getUser().getUsername();
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
@@ -157,7 +163,12 @@ public class GameController implements Initializable {
       // every time button click, we have up-to-date information
       PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
       PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
-      String gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
+      String gameInfoJson;
+      try {
+        gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
+      } catch (UnirestException e) {
+        throw new RuntimeException(e);
+      }
       GameInfo gameInfo = gsonParser.fromJson(gameInfoJson, GameInfo.class);
       String playerName = App.getUser().getUsername();
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
@@ -419,197 +430,205 @@ public class GameController implements Initializable {
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
       boolean isFirstCheck = true;
-
-      while (true) {
-        // always do one, just in case
-        // after this, curUser.getAccessToken() will for sure have a valid token
-        App.refreshUserToken(curUser);
-        int responseCode = 408;
-        while (responseCode == 408) {
-          longPullResponse = gameRequestSender.sendGetGameInfoRequest(gameId, hashedResponse);
-          responseCode = longPullResponse.getStatus();
-        }
-
-        if (responseCode == 200) {
-          // update the MD5 hash of previous response
-          hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
-          // decode this response into GameInfo class with Gson
-          String responseInJsonString = longPullResponse.getBody();
-          Gson gsonParser = SplendorDevHelper.getInstance().getGson();
-          GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
-          if (curGameInfo.isFinished()) {
-            gameIsFinished = true;
-            // if it's the creator's client, send a request to LS to remove the session
-            if(curUser.getUsername().equals(curGameInfo.getCreator())) {
-              LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
-              String creatorAccessToken = curUser.getAccessToken();
-              lobbyRequestSender.sendDeleteSessionRequest(creatorAccessToken, gameId);
-            }
-            // load the lobby page GUI again
-            Platform.runLater(() -> {
-              try {
-                App.loadPopUpWithController("admin_lobby_page.fxml",
-                    new LobbyController(),
-                    config.getAppWidth(),
-                    config.getAppHeight());
-              } catch (IOException e) {
-                throw new RuntimeException(e);
-              }
-              Stage gameWindow = (Stage) playerBoardAnchorPane.getScene().getWindow();
-              gameWindow.close();
-            });
-            break;
+      try {
+        while (!Thread.currentThread().isInterrupted()) {
+          // always do one, just in case
+          // after this, curUser.getAccessToken() will for sure have a valid token
+          App.refreshUserToken(curUser);
+          int responseCode = 408;
+          while (responseCode == 408) {
+            longPullResponse = gameRequestSender.sendGetGameInfoRequest(gameId, hashedResponse);
+            responseCode = longPullResponse.getStatus();
           }
-          //TODO: For this game application, we always play BASE + ORIENT, thus
-          // we do not worry about NOT having their GUI set up
-
-          // if isFirstCheck = True (setting up stage)
-          // Step 1. setup base board gui
-
-          // Step 2. setup orient board gui
-
-          // Step 3. (optionally) setup extension board gui
-
-
-          // if isFirstCheck = False (update stage)
-          // Step 1. update base board gui
-
-          // Step 2. update orient board gui
-
-          // Step 3. (optionally) update extension board gui
-
-          // First, check what extensions are we playing
-          List<Extension> extensions = curGameInfo.getExtensions();
-          TableTop tableTop = curGameInfo.getTableTop();
-          // always get the action map from game info
-          String playerName = curUser.getUsername();
-          Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
-          if (isFirstCheck) {
-            // generate BoardGui based on extension type
-            for (Extension extension : extensions) {
-              switch (extension) {
-                case BASE:
-                  BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane, gameId);
-                  baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
-                  extensionBoardGuiMap.put(extension, baseBoardGui);
-                  break;
-                case ORIENT:
-                  extensionBoardGuiMap.put(extension, new OrientBoardGui());
-                  break;
-                case TRADING_POST:
-                  extensionBoardGuiMap.put(extension, new TraderBoardGui());
-                  break;
-                case CITY:
-                  extensionBoardGuiMap.put(extension, new CityBoardGui());
-                  break;
-                default: break;
-              }
-            }
-
-
-
-          } else {
-            // make use of extensionBoardGuiMap and do updates
+          if (Thread.currentThread().isInterrupted()) {
+            throw new InterruptedException("game info update thread is interrupted");
           }
 
+          if (responseCode == 200) {
+            // update the MD5 hash of previous response
+            hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
+            // decode this response into GameInfo class with Gson
+            String responseInJsonString = longPullResponse.getBody();
+            Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+            GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
+            if (curGameInfo.isFinished()) {
+              gameIsFinished = true;
+              // if it's the creator's client, send a request to LS to remove the session
+              if(curUser.getUsername().equals(curGameInfo.getCreator())) {
+                LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+                String creatorAccessToken = curUser.getAccessToken();
+                lobbyRequestSender.sendDeleteSessionRequest(creatorAccessToken, gameId);
+              }
+              // load the lobby page GUI again
+              Platform.runLater(() -> {
+                try {
+                  App.loadPopUpWithController("admin_lobby_page.fxml",
+                      App.getLobbyController(),
+                      config.getAppWidth(),
+                      config.getAppHeight());
+                } catch (IOException e) {
+                  throw new RuntimeException(e);
+                }
+                Stage gameWindow = (Stage) playerBoardAnchorPane.getScene().getWindow();
+                gameWindow.close();
+              });
+              // saved the previous game, interrupt this thread.
+              Thread.currentThread().interrupt();
+            }
+            //TODO: For this game application, we always play BASE + ORIENT, thus
+            // we do not worry about NOT having their GUI set up
+
+            // if isFirstCheck = True (setting up stage)
+            // Step 1. setup base board gui
+
+            // Step 2. setup orient board gui
+
+            // Step 3. (optionally) setup extension board gui
+
+
+            // if isFirstCheck = False (update stage)
+            // Step 1. update base board gui
+
+            // Step 2. update orient board gui
+
+            // Step 3. (optionally) update extension board gui
+
+            // First, check what extensions are we playing
+            List<Extension> extensions = curGameInfo.getExtensions();
+            TableTop tableTop = curGameInfo.getTableTop();
+            // always get the action map from game info
+            String playerName = curUser.getUsername();
+            Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
+            if (isFirstCheck) {
+              // generate BoardGui based on extension type
+              for (Extension extension : extensions) {
+                switch (extension) {
+                  case BASE:
+                    BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane, gameId);
+                    baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+                    extensionBoardGuiMap.put(extension, baseBoardGui);
+                    break;
+                  case ORIENT:
+                    extensionBoardGuiMap.put(extension, new OrientBoardGui());
+                    break;
+                  case TRADING_POST:
+                    extensionBoardGuiMap.put(extension, new TraderBoardGui());
+                    break;
+                  case CITY:
+                    extensionBoardGuiMap.put(extension, new CityBoardGui());
+                    break;
+                  default: break;
+                }
+              }
+
+
+
+            } else {
+              // make use of extensionBoardGuiMap and do updates
+            }
 
 
 
 
 
-          //if (isFirstCheck) {
-          //  // TODO: Potential nested clickable noble cards
-          //  // initialize noble area
-          //  nobleBoard = new NobleBoardGui(100, 100, 5);
-          //  List<NobleCard> nobles = curGameInfo.getTableTop().getNobles();
-          //  Platform.runLater(() -> {
-          //    nobleBoard.setup(nobles, config.getNobleLayoutX(), config.getNobleLayoutY(), true);
-          //    playerBoardAnchorPane.getChildren().add(nobleBoard);
-          //  });
-          //
-          //  // initialize token area
-          //  tokenBankGui = new TokenBankGui();
-          //  EnumMap<Colour, Integer> bankBalance =
-          //      curGameInfo.getTableTop().getBank().getAllTokens();
-          //  Platform.runLater(() -> {
-          //    tokenBankGui.setup(bankBalance,
-          //        config.getTokenBankLayoutX(),
-          //        config.getTokenBankLayoutY(), true);
-          //    playerBoardAnchorPane.getChildren().add(tokenBankGui);
-          //  });
-          //
-          //  // initialize the base board
-          //  for (int i = 3; i >= 1; i--) {
-          //    List<BaseCard> oneLevelCards =
-          //        curGameInfo.getTableTop().getBaseBoard().getBaseCardsOnBoard().get(i);
-          //    List<BaseCard> oneLevelDeck =
-          //        curGameInfo.getTableTop().getBaseBoard().getBaseDecks().get(i);
-          //    BaseCardLevelGui baseCardLevelGui =
-          //        new BaseCardLevelGui(i, oneLevelCards, oneLevelDeck);
-          //    baseCardLevelGui.setup();
-          //    Platform.runLater(() -> {
-          //      baseCardBoard.getChildren().add(baseCardLevelGui);
-          //    });
-          //    baseCardGuiMap.put(i, baseCardLevelGui);
-          //  }
-          //  try {
-          //    System.out.println(
-          //        "First time generate actions for player: " + curUser.getUsername());
-          //    assignActionsToCardBoard();
-          //  } catch (UnirestException e) {
-          //    throw new RuntimeException(e);
-          //  }
-          //  isFirstCheck = false;
-          //} else { // If it is not first check.....
-          //  // need to display
-          //  // TODO:
-          //  //  1. NEW Cards on board (and their actions)
-          //  //  2. New Nobles on board (and their actions) DONE
-          //  //  3. New token bank info (and action?) DONE
-          //
-          //  // First step, change the highlight (if prePlayer and curren player does not match)
-          //  String currentPlayerName = curGameInfo.getCurrentPlayer();
-          //  if (!prePlayerName.equals(currentPlayerName)) {
-          //    nameToPlayerInfoGuiMap.get(prePlayerName).setHighlight(false);
-          //    nameToPlayerInfoGuiMap.get(currentPlayerName).setHighlight(true);
-          //    prePlayerName = currentPlayerName;
-          //  } // if they are the same, no need to change the height colour
-          //
-          //  List<NobleCard> nobles = curGameInfo.getTableTop().getNobles();
-          //  Platform.runLater(() -> {
-          //    nobleBoard.setup(nobles,
-          //        config.getNobleLayoutX(),
-          //        config.getNobleLayoutY(), false);
-          //  });
-          //
-          //  EnumMap<Colour, Integer> bankBalance =
-          //      curGameInfo.getTableTop().getBank().getAllTokens();
-          //  Platform.runLater(() -> {
-          //    tokenBankGui.setup(bankBalance,
-          //        config.getTokenBankLayoutX(),
-          //        config.getTokenBankLayoutY(), false);
-          //  });
-          //
-          //  // update the cards GUI
-          //  for (int i = 3; i >= 1; i--) {
-          //    BaseCardLevelGui oneLevelCardsGui = baseCardGuiMap.get(i);
-          //    List<BaseCard> oneLevelCards =
-          //        curGameInfo.getTableTop().getBaseBoard().getBaseCardsOnBoard().get(i);
-          //    List<BaseCard> oneLevelDeck =
-          //        curGameInfo.getTableTop().getBaseBoard().getBaseDecks().get(i);
-          //    oneLevelCardsGui.setCards(oneLevelCards);
-          //    oneLevelCardsGui.setDeck(oneLevelDeck);
-          //    oneLevelCardsGui.setup();
-          //  }
-          //  try {
-          //    System.out.println("Updating actions for player: " + curUser.getUsername());
-          //    assignActionsToCardBoard();
-          //  } catch (UnirestException e) {
-          //    throw new RuntimeException(e);
-          //  }
-          //}
+
+            //if (isFirstCheck) {
+            //  // TODO: Potential nested clickable noble cards
+            //  // initialize noble area
+            //  nobleBoard = new NobleBoardGui(100, 100, 5);
+            //  List<NobleCard> nobles = curGameInfo.getTableTop().getNobles();
+            //  Platform.runLater(() -> {
+            //    nobleBoard.setup(nobles, config.getNobleLayoutX(), config.getNobleLayoutY(), true);
+            //    playerBoardAnchorPane.getChildren().add(nobleBoard);
+            //  });
+            //
+            //  // initialize token area
+            //  tokenBankGui = new TokenBankGui();
+            //  EnumMap<Colour, Integer> bankBalance =
+            //      curGameInfo.getTableTop().getBank().getAllTokens();
+            //  Platform.runLater(() -> {
+            //    tokenBankGui.setup(bankBalance,
+            //        config.getTokenBankLayoutX(),
+            //        config.getTokenBankLayoutY(), true);
+            //    playerBoardAnchorPane.getChildren().add(tokenBankGui);
+            //  });
+            //
+            //  // initialize the base board
+            //  for (int i = 3; i >= 1; i--) {
+            //    List<BaseCard> oneLevelCards =
+            //        curGameInfo.getTableTop().getBaseBoard().getBaseCardsOnBoard().get(i);
+            //    List<BaseCard> oneLevelDeck =
+            //        curGameInfo.getTableTop().getBaseBoard().getBaseDecks().get(i);
+            //    BaseCardLevelGui baseCardLevelGui =
+            //        new BaseCardLevelGui(i, oneLevelCards, oneLevelDeck);
+            //    baseCardLevelGui.setup();
+            //    Platform.runLater(() -> {
+            //      baseCardBoard.getChildren().add(baseCardLevelGui);
+            //    });
+            //    baseCardGuiMap.put(i, baseCardLevelGui);
+            //  }
+            //  try {
+            //    System.out.println(
+            //        "First time generate actions for player: " + curUser.getUsername());
+            //    assignActionsToCardBoard();
+            //  } catch (UnirestException e) {
+            //    throw new RuntimeException(e);
+            //  }
+            //  isFirstCheck = false;
+            //} else { // If it is not first check.....
+            //  // need to display
+            //  // TODO:
+            //  //  1. NEW Cards on board (and their actions)
+            //  //  2. New Nobles on board (and their actions) DONE
+            //  //  3. New token bank info (and action?) DONE
+            //
+            //  // First step, change the highlight (if prePlayer and curren player does not match)
+            //  String currentPlayerName = curGameInfo.getCurrentPlayer();
+            //  if (!prePlayerName.equals(currentPlayerName)) {
+            //    nameToPlayerInfoGuiMap.get(prePlayerName).setHighlight(false);
+            //    nameToPlayerInfoGuiMap.get(currentPlayerName).setHighlight(true);
+            //    prePlayerName = currentPlayerName;
+            //  } // if they are the same, no need to change the height colour
+            //
+            //  List<NobleCard> nobles = curGameInfo.getTableTop().getNobles();
+            //  Platform.runLater(() -> {
+            //    nobleBoard.setup(nobles,
+            //        config.getNobleLayoutX(),
+            //        config.getNobleLayoutY(), false);
+            //  });
+            //
+            //  EnumMap<Colour, Integer> bankBalance =
+            //      curGameInfo.getTableTop().getBank().getAllTokens();
+            //  Platform.runLater(() -> {
+            //    tokenBankGui.setup(bankBalance,
+            //        config.getTokenBankLayoutX(),
+            //        config.getTokenBankLayoutY(), false);
+            //  });
+            //
+            //  // update the cards GUI
+            //  for (int i = 3; i >= 1; i--) {
+            //    BaseCardLevelGui oneLevelCardsGui = baseCardGuiMap.get(i);
+            //    List<BaseCard> oneLevelCards =
+            //        curGameInfo.getTableTop().getBaseBoard().getBaseCardsOnBoard().get(i);
+            //    List<BaseCard> oneLevelDeck =
+            //        curGameInfo.getTableTop().getBaseBoard().getBaseDecks().get(i);
+            //    oneLevelCardsGui.setCards(oneLevelCards);
+            //    oneLevelCardsGui.setDeck(oneLevelDeck);
+            //    oneLevelCardsGui.setup();
+            //  }
+            //  try {
+            //    System.out.println("Updating actions for player: " + curUser.getUsername());
+            //    assignActionsToCardBoard();
+            //  } catch (UnirestException e) {
+            //    throw new RuntimeException(e);
+            //  }
+            //}
+          }
         }
+      } catch (InterruptedException | UnirestException e) {
+        System.out.println(e.getMessage());
       }
+
     });
   }
 
@@ -629,12 +648,33 @@ public class GameController implements Initializable {
   @Override
   // TODO: This method contains what's gonna happen after clicking "play" on the board
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    GameRequestSender gameRequestSender = App.getGameRequestSender();
-    System.out.println("Current user: " + App.getUser().getUsername());
-    System.out.println(gameRequestSender.getGameServiceName());
+    //System.out.println("Starting game:" + gameId);
+    //System.out.println("At game controller" + this);
+    //System.out.println("We have game threads: " + App.getGameGuiThreads()
+    //    .stream()
+    //    .map(Thread::getName)
+    //    .collect(Collectors.toList()));
+    //
+    //System.out.println("Killing....");
+    //App.killGameThread();
+    ////App.killLobbyThread();
+    //System.out.println("After killing:");
+    //System.out.println("We now have game threads: " + App.getGameGuiThreads()
+    //    .stream()
+    //    .map(Thread::getName)
+    //    .collect(Collectors.toList()));
 
-    HttpResponse<String> firstGameInfoResponse =
-        gameRequestSender.sendGetGameInfoRequest(gameId, "");
+
+    GameRequestSender gameRequestSender = App.getGameRequestSender();
+    //System.out.println("Current user: " + App.getUser().getUsername());
+    //System.out.println(gameRequestSender.getGameServiceName());
+
+    HttpResponse<String> firstGameInfoResponse = null;
+    try {
+      firstGameInfoResponse = gameRequestSender.sendGetGameInfoRequest(gameId, "");
+    } catch (UnirestException e) {
+      System.out.println(e.getMessage());
+    }
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
 
@@ -665,14 +705,7 @@ public class GameController implements Initializable {
     playerInfoThread.start();
     Thread mainGameUpdateThread = generateGameInfoUpdateThread();
     mainGameUpdateThread.start();
-    Thread cleanUpThread = new Thread(() -> {
-      // busy waiting
-      while(!gameIsFinished) {}
-      playerInfoThread.interrupt();
-      mainGameUpdateThread.interrupt();
-    });
-    // terminate the monitor threads after game is finished
-    cleanUpThread.start();
-    //// start the thread for main board and playerInfo update at the same time
+    App.addGameThread(playerInfoThread);
+    App.addGameThread(mainGameUpdateThread);
   }
 }

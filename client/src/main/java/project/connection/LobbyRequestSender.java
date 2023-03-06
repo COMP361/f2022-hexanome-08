@@ -58,12 +58,20 @@ public class LobbyRequestSender {
    */
   public HttpResponse<String> sendGetAllSessionDetailRequest(
       String hashPreviousResponse) throws UnirestException {
+    HttpResponse<String> response;
     if (hashPreviousResponse.equals("")) {
-      return Unirest.get(lobbyUrl + "/api/sessions").asString();
+      response = Unirest.get(lobbyUrl + "/api/sessions").asString();
     } else {
-      return Unirest.get(lobbyUrl + "/api/sessions")
-          .queryString("hash", hashPreviousResponse).asString();
+      response = Unirest.get(lobbyUrl + "/api/sessions")
+          .queryString("hash", hashPreviousResponse)
+          .asString();
     }
+    if (response.getStatus() != 200 && response.getStatus() != 408) {
+      System.out.println(response.getBody());
+      throw new UnirestException(
+          "Failed to get all sessions details, response status: " + response.getStatus());
+    }
+    return response;
   }
 
   /**

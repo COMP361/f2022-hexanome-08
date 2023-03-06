@@ -59,8 +59,11 @@ public class LogInController implements Initializable {
       GameBoardLayoutConfig config = App.getGuiLayouts();
       if (App.getUser().getAuthority().equals("ROLE_ADMIN") ||
           App.getUser().getAuthority().equals("ROLE_PLAYER")) {
+        if(App.getLobbyController() == null) {
+          App.setLobbyController(new LobbyController());
+        }
         App.loadPopUpWithController("admin_lobby_page.fxml",
-            new LobbyController(),
+            App.getLobbyController(),
             config.getAppWidth(),
             config.getAppHeight());
         Stage logInWindow = (Stage) quitGameButton.getScene().getWindow();
