@@ -99,11 +99,11 @@ public class PlayerInGame {
     if (purchasedHand.getDevelopmentCards().size() > 0) {
       for (DevelopmentCard card : purchasedHand.getDevelopmentCards()) {
         // Only count the card with regular gem colours
-        if (card.hasRegularGemColour()) {
-          Colour colour = card.getGemColour();
-          int oldValue = totalGems.get(colour);
-          totalGems.put(colour, oldValue + card.getGemNumber());
-        }
+        //if (card.hasRegularGemColour()) {
+        //}
+        Colour colour = card.getGemColour();
+        int oldValue = totalGems.get(colour);
+        totalGems.put(colour, oldValue + card.getGemNumber());
       }
     }
     return totalGems;
