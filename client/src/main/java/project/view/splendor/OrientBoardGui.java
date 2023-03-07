@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.view.InvalidDataException;
@@ -23,12 +24,15 @@ public class OrientBoardGui implements BoardGui{
   private Map<Integer, OrientCardLevelGui> orientCardLevelGuiMap = new HashMap<>();
   private VBox orientCardsBoard;
   private final AnchorPane playerBoardAnchorPane;
+
+  private final Rectangle coverRectangle;
   private final long gameId;
 
-  public OrientBoardGui(AnchorPane playerBoardAnchorPane, long gameId) {
+  public OrientBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
     this.gameId = gameId;
     this.playerBoardAnchorPane = playerBoardAnchorPane;
     this.orientCardsBoard = new VBox();
+    this.coverRectangle = coverRectangle;
   }
 
   @Override
@@ -48,7 +52,7 @@ public class OrientBoardGui implements BoardGui{
     for (int i = 3; i >=1; i--) {
       DevelopmentCard[] cardsOnBoard = orientBoard.getLevelCardsOnBoard(i);
       List<DevelopmentCard> deck = orientBoard.getDecks().get(i);
-      OrientCardLevelGui orientBoardGui  = new OrientCardLevelGui(i, cardsOnBoard, deck);
+      OrientCardLevelGui orientBoardGui  = new OrientCardLevelGui(i, cardsOnBoard, deck, coverRectangle);
       orientBoardGui.setup();
       orientBoardGui.bindActionToCardAndDeck(positionToActionMap, gameId);
       orientCardLevelGuiMap.put(i, orientBoardGui);

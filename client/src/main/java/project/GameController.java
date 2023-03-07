@@ -27,6 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.connection.GameRequestSender;
@@ -70,6 +71,10 @@ public class GameController implements Initializable {
 
   @FXML
   private Button saveButton;
+
+  private final Rectangle coverRectangle = new Rectangle(
+      App.getGuiLayouts().getAppWidth(),
+      App.getGuiLayouts().getAppHeight());
 
   @FXML
   private Button myReservedCardsButton;
@@ -135,8 +140,8 @@ public class GameController implements Initializable {
       try {
         App.loadPopUpWithController("my_reserved_cards.fxml",
             new ReservedHandController(reservedHand, playerActions),
-            800,
-            600);
+            coverRectangle,800, 600);
+
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -175,6 +180,7 @@ public class GameController implements Initializable {
         App.loadPopUpWithController(
             "my_development_cards.fxml",
             new PurchaseHandController(purchasedHand, playerActions),
+            coverRectangle,
             800,
             600);
       } catch (IOException e) {
@@ -373,58 +379,6 @@ public class GameController implements Initializable {
     nameToPlayerInfoGuiMap.get(firstPlayer).setHighlight(true);
   }
 
-
-
-  //private void assignActionsToCardBoard() throws UnirestException {
-  //  SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
-  //  User curUser = App.getUser();
-  //  HttpResponse<String> actionMapResponse =
-  //      gameRequestSender.sendGetPlayerActionsRequest(gameId, curUser.getUsername(),
-  //          curUser.getAccessToken());
-  //  Type actionMapType = new TypeToken<Map<String, Action>>() {
-  //  }.getType();
-  //  Gson actionGson = GameController.getActionGson();
-  //  Map<String, Action> resultActionsMap =
-  //      actionGson.fromJson(actionMapResponse.getBody(), actionMapType);
-  //
-  //  // if the action map is not empty, assign functions to the cards
-  //  String[][][] actionHashesLookUp = new String[3][4][2];
-  //  if (!resultActionsMap.isEmpty()) {
-  //    // if result action map is not empty, we need to assign hash values to it
-  //    for (String actionHash : resultActionsMap.keySet()) {
-  //      Action curAction = resultActionsMap.get(actionHash);
-  //      if (curAction.checkIsCardAction()) {
-  //        if (!(curAction.getCard() == null) && !(curAction.getPosition() == null)) {
-  //          Position curPosition = curAction.getPosition();
-  //          int level = curPosition.getCoordinateX();
-  //          int cardIndex = curPosition.getCoordinateY();
-  //          if (curAction instanceof PurchaseAction) {
-  //            actionHashesLookUp[3 - level][cardIndex][0] = actionHash;
-  //          } else {
-  //            actionHashesLookUp[3 - level][cardIndex][1] = actionHash;
-  //          }
-  //        }
-  //
-  //      } else {
-  //        // TODO: LATER, TAKE TOKEN ACTION OR SOMETHING ELSE
-  //      }
-  //    }
-  //  }
-  //  System.out.println("All actions: " + resultActionsMap);
-  //
-  //  // Since we now have all String[2] actionHashes, we can go and
-  //  // assign them to cards
-  //  for (int i = 0; i < 3; i++) {
-  //    if (resultActionsMap.isEmpty()) {
-  //      // if it's empty, reset the values
-  //      actionHashesLookUp[i] = new String[4][2];
-  //    }
-  //    baseCardGuiMap
-  //        .get(3 - i)
-  //        .bindActionToCardAndDeck(actionHashesLookUp[i], gameId);
-  //  }
-  //}
-
   //
   private Thread generateGameInfoUpdateThread() {
     GameRequestSender gameRequestSender = App.getGameRequestSender();
@@ -468,15 +422,9 @@ public class GameController implements Initializable {
                   App.loadNewSceneToPrimaryStage(
                       "admin_lobby_page.fxml",
                       App.getLobbyController());
-                  //App.loadPopUpWithController(
-                  //    App.getLobbyController(),
-                  //    config.getAppWidth(),
-                  //    config.getAppHeight());
                 } catch (IOException e) {
                   throw new RuntimeException(e);
                 }
-                //Stage gameWindow = (Stage) playerBoardAnchorPane.getScene().getWindow();
-                //gameWindow.close();
               });
 
               // saved the previous game, interrupt the game update
@@ -523,12 +471,14 @@ public class GameController implements Initializable {
             for (Extension extension : extensions) {
               switch (extension) {
                 case BASE:
-                  BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane, gameId);
+                  BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane,
+                      gameId, coverRectangle);
                   baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
                   extensionBoardGuiMap.put(extension, baseBoardGui);
                   break;
                 case ORIENT:
-                  OrientBoardGui orientBoardGui = new OrientBoardGui(playerBoardAnchorPane, gameId);
+                  OrientBoardGui orientBoardGui = new OrientBoardGui(playerBoardAnchorPane,
+                      gameId, coverRectangle);
                   orientBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
                   extensionBoardGuiMap.put(extension, orientBoardGui);
                   break;
@@ -557,6 +507,7 @@ public class GameController implements Initializable {
         try {
           App.loadPopUpWithController("save_game.fxml",
               new SaveGamePopUpController(gameInfo, gameId),
+              coverRectangle,
               360,
               170);
         } catch (IOException e) {
@@ -568,6 +519,11 @@ public class GameController implements Initializable {
   @Override
   // TODO: This method contains what's gonna happen after clicking "play" on the board
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    // the shaded shape that is used to prevent player to mess around with
+    // actions when we do not allow them to click on things that are
+    // not in pop up window
+    playerBoardAnchorPane.getChildren().add(coverRectangle);
+    coverRectangle.setVisible(false);
     GameRequestSender gameRequestSender = App.getGameRequestSender();
     //System.out.println("Current user: " + App.getUser().getUsername());
     //System.out.println(gameRequestSender.getGameServiceName());
