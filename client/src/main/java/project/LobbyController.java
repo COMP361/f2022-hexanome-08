@@ -78,18 +78,18 @@ public class LobbyController implements Initializable {
   }
 
 
-  @FXML
-  protected void onLogOutFromLobbyMenu() throws IOException {
-    // clean up local lobby session cache before logging out
-    App.setUser(null);
-    App.setRoot("start_page");
-  }
-
-  @FXML
-  public void joinGameDev() throws IOException {
-    // TODO: For debug usage
-    App.setRoot("splendor_base_game_board");
-  }
+  //@FXML
+  //protected void onLogOutFromLobbyMenu() throws IOException {
+  //  // clean up local lobby session cache before logging out
+  //  App.setUser(null);
+  //  App.setRoot("start_page");
+  //}
+  //
+  //@FXML
+  //public void joinGameDev() throws IOException {
+  //  // TODO: For debug usage
+  //  App.setRoot("splendor_base_game_board");
+  //}
 
 
 
