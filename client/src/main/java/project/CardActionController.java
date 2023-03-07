@@ -30,8 +30,8 @@ public class CardActionController implements Initializable {
   @FXML
   private Button reserveButton;
 
-  @FXML
-  private Button goBackButton;
+  //@FXML
+  //private Button goBackButton;
 
   public CardActionController(long gameId, List<ActionIdPair> allActionsPair) {
     this.gameId = gameId;
@@ -87,13 +87,13 @@ public class CardActionController implements Initializable {
   }
 
 
-
-  private EventHandler<ActionEvent> createOnClickBackHandler() {
-    return event -> {
-      Stage curWindow = (Stage) goBackButton.getScene().getWindow();
-      curWindow.close();
-    };
-  }
+  //
+  //private EventHandler<ActionEvent> createOnClickBackHandler() {
+  //  return event -> {
+  //    Stage curWindow = (Stage) goBackButton.getScene().getWindow();
+  //    curWindow.close();
+  //  };
+  //}
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -114,6 +114,6 @@ public class CardActionController implements Initializable {
       }
     }
 
-    goBackButton.setOnAction(createOnClickBackHandler());
+    //goBackButton.setOnAction(createOnClickBackHandler());
   }
 }
