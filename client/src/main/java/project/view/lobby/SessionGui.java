@@ -102,11 +102,11 @@ public class SessionGui extends HBox {
   private EventHandler<ActionEvent> createWatchGameHandler() {
     return event -> {
       // just load the board to this user, nothing else should be done
-      try {
-        App.setRoot("splendor_base_game_board");
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      //try {
+      //  App.setRoot("splendor_base_game_board");
+      //} catch (IOException e) {
+      //  throw new RuntimeException(e);
+      //}
     };
   }
 
@@ -123,15 +123,17 @@ public class SessionGui extends HBox {
 
         // passing Session as param of GameController param cuz it contains optionally
         // the save game id, later will be used to save game
-        App.loadPopUpWithController("splendor_base_game_board.fxml",
-            new GameController(curSessionId, curSession),
-            config.getAppWidth(),
-            config.getAppHeight());
+        //App.loadPopUpWithController("splendor_base_game_board.fxml",
+        //    new GameController(curSessionId, curSession),
+        //    config.getAppWidth(),
+        //    config.getAppHeight());
+        App.loadNewSceneToPrimaryStage("splendor_base_game_board.fxml",
+            new GameController(curSessionId, curSession));
         App.getAppLobbyGuiThread().interrupt();
         App.setAppLobbyGuiThread(null);
         Button playButton = (Button) event.getSource();
-        Stage lobbyWindow = (Stage) playButton.getScene().getWindow();
-        lobbyWindow.close();
+        //Stage lobbyWindow = (Stage) playButton.getScene().getWindow();
+        //lobbyWindow.close();
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
