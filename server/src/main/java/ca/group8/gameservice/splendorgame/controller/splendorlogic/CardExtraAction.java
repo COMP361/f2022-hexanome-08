@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.*;
+import java.util.List;
 
 /**
  * This class represents an extra DevelopmentCard action.
@@ -35,13 +36,13 @@ public class CardExtraAction extends Action {
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
                       ActionGenerator actionListGenerator, ActionInterpreter actionInterpreter) {
     //based on the cardEffect, execute the associated helper
-    if(this.cardEffect == cardEffect.BURN_CARD){
-      burnActionHelper(curTableTop, playerInGame, actionListGenerator, actionInterpreter);
-    }else if(this.cardEffect == cardEffect.SATCHEL){
-      satchelActionHelper(curTableTop, playerInGame, actionListGenerator, actionInterpreter);
-    }else if(this.cardEffect == cardEffect.RESERVE_NOBLE){
-      reserveNobleActionHelper(curTableTop, playerInGame, actionListGenerator);
-    }else if(this.cardEffect == cardEffect.FREE_CARD){
+    if(this.cardEffect == CardEffect.BURN_CARD){
+      burnActionHelper( playerInGame, actionInterpreter);
+    }else if(this.cardEffect == CardEffect.SATCHEL){
+      satchelActionHelper(playerInGame, actionInterpreter);
+    }else if(this.cardEffect == CardEffect.RESERVE_NOBLE){
+      reserveNobleActionHelper(curTableTop, playerInGame);
+    }else if(this.cardEffect == CardEffect.FREE_CARD){
       //Don't know which card is the freeCard
       freeCardActionHelper(curTableTop, playerInGame, actionInterpreter);
     }
@@ -63,9 +64,8 @@ public class CardExtraAction extends Action {
   }
 
   @Override
-  //TODO: Do we have an associated position? If not, have it throw a null pointer exception.
   public Position getCardPosition() {
-    return null;
+    return position;
   }
 
   public CardEffect getCardEffect() {
@@ -84,8 +84,7 @@ public class CardExtraAction extends Action {
    */
 
   public void reserveNobleActionHelper(TableTop curTableTop,
-                                       PlayerInGame curPlayer,
-                                       ActionGenerator associatedActionGenerator) {
+                                       PlayerInGame curPlayer) {
 
     // Make sure curCard is right type
     if (!(this.curCard instanceof NobleCard)) {
@@ -100,9 +99,7 @@ public class CardExtraAction extends Action {
     curPlayer.getReservedHand().addNobleCard(noble);
   }
 
-  public void satchelActionHelper(TableTop curTableTop,
-                                  PlayerInGame curPlayer,
-                                  ActionGenerator associatedActionGenerator,
+  public void satchelActionHelper(PlayerInGame curPlayer,
                                   ActionInterpreter associatedActionInterpreter) {
 
     if (!(this.curCard instanceof DevelopmentCard)) {
@@ -112,7 +109,7 @@ public class CardExtraAction extends Action {
     }
     //owned card = card you are pairing to. satchel is card you just bought.
     DevelopmentCard ownedCard = (DevelopmentCard) this.curCard;
-    DevelopmentCard satchel = (DevelopmentCard) associatedActionInterpreter.getStashedCard();
+    DevelopmentCard satchel = associatedActionInterpreter.getStashedCard();
 
     //pair the card
     ownedCard.setIsPaired(true);
@@ -125,14 +122,14 @@ public class CardExtraAction extends Action {
 
     //reset stashedCard to null
     associatedActionInterpreter.setStashedCard(null);
-
+    /*
     //which row and column
     int index = position.getY();
     int level = satchel.getLevel();
 
     //update the board with new card
     //took it out, done in PurchaseAction
-    /*
+
     OrientBoard board = ((OrientBoard) curTableTop.getBoard(Extension.ORIENT));
     Card replacement = board.popLevelCardFromDeck(level);
     board.getLevelCardsOnBoard(level)[index] = (DevelopmentCard) replacement;
@@ -144,11 +141,56 @@ public class CardExtraAction extends Action {
                                    PlayerInGame curPlayer,
                                    ActionInterpreter associatedActionInterpreter) {
 
+    DevelopmentCard freeCard = (DevelopmentCard) this.curCard;
+    List<CardEffect> cardEffects = freeCard.getPurchaseEffects();
+    int effectNum = cardEffects.size();
+    int prestigePoints = freeCard.getPrestigePoints();
+
+    //if it is a base card
+    if( effectNum == 0 ) {
+      BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
+      //remove freeCard from Board, replace
+      baseBoard.removeCard(this.position);
+      baseBoard.update();
+      curPlayer.getPurchasedHand().addDevelopmentCard(freeCard);
+      curPlayer.changePrestigePoints(prestigePoints);
+
+      //if it is an orient card
+    }else {
+      ActionGenerator actionGenerator = associatedActionInterpreter.getActionGenerator();
+      CardEffect currentEffect = cardEffects.get(0);
+
+      // Case for most orient cards
+      if ( effectNum == 1 ) {
+        OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
+        //remove freeCard from Board, replace.
+        orientBoard.removeCard(this.position);
+        orientBoard.update();
+
+        if ( currentEffect == CardEffect.SATCHEL ) {
+          associatedActionInterpreter.setStashedCard(freeCard);
+        } else {
+          curPlayer.getPurchasedHand().addDevelopmentCard(freeCard);
+          curPlayer.changePrestigePoints(prestigePoints);
+        }
+        if ( currentEffect != CardEffect.BURN_CARD) {
+          actionGenerator.updateCascadeActions(curPlayer,freeCard,currentEffect);
+        }
+
+      // Special case where an orient card has satchel and free card.
+      } else if ( effectNum == 2 ) {
+        associatedActionInterpreter.setStashedCard(freeCard);
+        associatedActionInterpreter.setFreeCardLevel( freeCard.getLevel() - 1 );
+
+        actionGenerator.updateCascadeActions(curPlayer,freeCard,CardEffect.SATCHEL);
+      //Should never reach here.
+      } else {
+        System.out.println("FreeCard: Error, size of CardEffect List is not 0,1,2");
+      }
+    }
   }
 
-  public void burnActionHelper(TableTop curTableTop,
-                               PlayerInGame curPlayer,
-                               ActionGenerator associatedActionGenerator,
+  public void burnActionHelper (PlayerInGame curPlayer,
                                ActionInterpreter associatedActionInterpreter) {
 
     DevelopmentCard cardToBurn = (DevelopmentCard) this.curCard;

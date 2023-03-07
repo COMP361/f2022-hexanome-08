@@ -1,89 +1,102 @@
-//package ca.group8.gameservice.splendorgame.model.splendormodel;
-//
-//import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
-//import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
-//import org.junit.jupiter.api.BeforeAll;
-//import org.junit.jupiter.api.BeforeEach;
-//
-//import java.io.FileNotFoundException;
-//import java.util.ArrayList;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//class GameInfoTest {
-//
-//    ArrayList<String> playerNames = new ArrayList<String>();
-//    ArrayList<PlayerInGame> activePlayerInGames = new ArrayList<PlayerInGame>();
-//    GameInfo g1;
-//    TableTop tableTop;
-//
-//    @BeforeEach
-//    void setup() throws FileNotFoundException {
-//        playerNames.add("P1");
-//        playerNames.add("P2");
-//        PlayerInGame p1 = new PlayerInGame("P1");
-//        PlayerInGame p2 = new PlayerInGame("P2");
-//        activePlayerInGames.add(p1);
-//        activePlayerInGames.add(p2);
-//        tableTop = new TableTop(activePlayerInGames);
-//        g1 = new GameInfo(playerNames);
-//    }
-//
-//    @org.junit.jupiter.api.Test
-//    void addWinner() {
-//    }
-//
-//    @org.junit.jupiter.api.Test
-//    void checkWinner() {
-//    }
-//
-//    @org.junit.jupiter.api.Test
-//    void getNumOfPlayers() {
-//        assert (g1.getNumOfPlayers() == 2);
-//    }
-//
-//    @org.junit.jupiter.api.Test
-//    void isFinished() {
-//        assert (!g1.isFinished());
-//    }
-//
-//    @org.junit.jupiter.api.Test
-//    void getCurrentPlayer() {
-//        assert (activePlayerInGames.get(0).equals(g1.getCurrentPlayer()));
-//    }
-//
-//    @org.junit.jupiter.api.Test
-//    void setNextPlayer() {
-//        g1.setNextPlayer();
-//        assert (activePlayerInGames.get(1).equals(g1.getCurrentPlayer()));
-//    }
-//
-//    @org.junit.jupiter.api.Test
-//    void getWinner() {
-//        assert (g1.getWinners().size() == 0);
-//    }
-//
-//    @org.junit.jupiter.api.Test
-//    void getFirstPlayer() {
-//        assert (g1.getFirstPlayer().equals("P1"));
-//    }
-//
-//    @org.junit.jupiter.api.Test
-//    void getActivePlayers() {
-//        assert (g1.getActivePlayers().size() == activePlayerInGames.size());
-//    }
-//
-//    @org.junit.jupiter.api.Test
-//    void getPlayerNames() {
-//        assert (playerNames.equals(g1.getPlayerNames()));
-//    }
-//
-//   /* @org.junit.jupiter.api.Test
-//    void getTableTop() {
-//        assert (g1.getTableTop().getPlayers().size() == activePlayerInGames.size());
-//        assert (g1.getTableTop().getPlayers().get(0).equals(activePlayerInGames.get(0)));
-//        assert (g1.getTableTop().getPlayers().get(1).equals(activePlayerInGames.get(1)));
-//    }
-//    */
-//
-//}
+package ca.group8.gameservice.splendorgame.model.splendormodel;
+
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import ca.group8.gameservice.splendorgame.controller.splendorlogic.Action;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class TestGameInfo {
+
+    private GameInfo gameInfo;
+    private List<String> playerNames;
+    private List<Extension> extensions;
+    private TableTop tableTop;
+    private String firstPlayer;
+
+    @BeforeEach
+    public void setUp() {
+
+        playerNames = new ArrayList<String>();
+        playerNames.add("Player1");
+        playerNames.add("Player2");
+
+        extensions = new ArrayList<Extension>();
+        extensions.add(Extension.BASE);
+        extensions.add(Extension.TRADING_POST);
+
+        gameInfo = new GameInfo(extensions, playerNames);
+        tableTop = new TableTop(playerNames, extensions);
+        firstPlayer = "Player1";
+
+        gameInfo = new GameInfo(extensions,playerNames);
+
+
+    }
+
+   /* @Test
+    void TestUpdatePlayerActionMap(){
+        Map<String, Action> actionMap = new HashMap<>();
+        actionMap.put("BuyCard", new Action("BuyCard", "Card1"));
+        gameInfo.updatePlayerActionMap("Player1", actionMap);
+        assertEquals(actionMap, gameInfo.getPlayerActionMaps().get("Player1"));
+
+    }*/
+
+    @Test
+    void testGetCurrentPlayer(){
+        assertEquals("Player1", gameInfo.getCurrentPlayer());
+    }
+
+    @Test
+    void testSetNextPlayer(){
+        gameInfo.setNextPlayer();
+        assertEquals("Player2", gameInfo.getCurrentPlayer());
+    }
+
+    @Test
+    void testAddWinner(){
+        gameInfo.addWinner("Player1");
+        assertTrue(gameInfo.getWinners().contains("Player1"));
+    }
+
+    @Test
+    void testIsFinished(){
+        assertFalse(gameInfo.isFinished());
+        gameInfo.addWinner("Player1");
+        assertTrue(gameInfo.isFinished());
+    }
+
+    @Test
+    void testGetExtensions(){
+        assertEquals(extensions, gameInfo.getExtensions());
+    }
+
+
+    @Test
+    void testIsEmpty(){
+        assertFalse(gameInfo.isEmpty());
+    }
+
+    @Test
+    void testGetFirstPlayerName(){
+        assertEquals(firstPlayer, gameInfo.getFirstPlayerName());
+    }
+
+    @Test
+    void testGetPlayerNames(){
+        assertEquals(playerNames, gameInfo.getPlayerNames());
+    }
+
+    @Test
+    void testGetNumOfPlayers(){
+        assertEquals(playerNames.size(), gameInfo.getNumOfPlayers());
+    }
+
+}
