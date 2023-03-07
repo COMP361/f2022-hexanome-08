@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="playerBoardAnchorPane" maxHeight="900.0" maxWidth="1200.0" prefHeight="900.0" prefWidth="1200.0" style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="playerBoardAnchorPane" maxHeight="900.0" maxWidth="1600.0" prefHeight="900.0" prefWidth="1600.0" style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox fx:id="nobleList" layoutX="950.0" layoutY="200.0" prefHeight="500.0" prefWidth="100.0" />
         <HBox fx:id="token" layoutX="190.0" layoutY="133.0" prefHeight="130.0" prefWidth="750.0" />
@@ -22,10 +22,10 @@
         <VBox fx:id="leftPlayer" alignment="BOTTOM_LEFT" layoutY="118.0" maxHeight="665.0" maxWidth="125.0" prefHeight="665.0" prefWidth="125.0" BorderPane.alignment="BOTTOM_LEFT" />
         <VBox fx:id="rightPlayer" alignment="BOTTOM_LEFT" layoutX="1075.0" layoutY="118.0" maxHeight="800.0" maxWidth="125.0" prefHeight="665.0" prefWidth="125.0" />
         <HBox fx:id="currentPlayer" alignment="TOP_RIGHT" layoutX="268.0" layoutY="775.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0" />
-        <Button fx:id="myCardButton" layoutX="1008.0" layoutY="808.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Cards" />
-        <Button fx:id="myReservedCardsButton" layoutX="1008.0" layoutY="834.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Reserved Cards" />
-        <Button fx:id="quitButton" layoutX="1118.0" layoutY="14.0" mnemonicParsing="false" text="Quit" />
+        <Button fx:id="myCardButton" layoutX="1208.0" layoutY="720.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Cards" />
+        <Button fx:id="myReservedCardsButton" layoutX="1208.0" layoutY="757.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Reserved Cards" />
+        <Button fx:id="quitButton" layoutX="1518.0" layoutY="14.0" mnemonicParsing="false" text="Quit" />
       <HBox layoutX="190.0" layoutY="270.0" prefHeight="100.0" prefWidth="750.0" />
-      <Button fx:id="saveButton" layoutX="1120.0" layoutY="50.0" mnemonicParsing="false" text="Save" />
+      <Button fx:id="saveButton" layoutX="1518.0" layoutY="50.0" mnemonicParsing="false" text="Save" />
     </children>
 </AnchorPane>

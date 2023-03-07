@@ -9,7 +9,7 @@
 
 <AnchorPane fx:id="playerBoardAnchorPane" maxHeight="900.0" maxWidth="1600.0" prefHeight="900.0" prefWidth="1600.0" style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox fx:id="nobleList" layoutX="950.0" layoutY="200.0" prefHeight="500.0" prefWidth="100.0">
+        <VBox fx:id="nobleList" layoutX="950.0" layoutY="150.0" prefHeight="500.0" prefWidth="100.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="500.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
          </children></VBox>
@@ -52,14 +52,14 @@
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="665.0" stroke="BLACK" strokeType="INSIDE" width="125.0" />
          </children></VBox>
-        <HBox fx:id="currentPlayer" alignment="TOP_RIGHT" layoutX="268.0" layoutY="680.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0">
+        <HBox fx:id="currentPlayer" alignment="TOP_RIGHT" layoutX="468.0" layoutY="680.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="125.0" stroke="BLACK" strokeType="INSIDE" width="665.0" />
          </children></HBox>
-        <Button fx:id="myCardButton" layoutX="1008.0" layoutY="720.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Cards" />
-        <Button fx:id="myReservedCardsButton" layoutX="1008.0" layoutY="757.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Reserved Cards" />
+        <Button fx:id="myCardButton" layoutX="1208.0" layoutY="720.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Cards" />
+        <Button fx:id="myReservedCardsButton" layoutX="1208.0" layoutY="757.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Reserved Cards" />
         <Button fx:id="quitButton" layoutX="1118.0" layoutY="14.0" mnemonicParsing="false" text="Quit" />
-      <HBox layoutX="190.0" layoutY="150.0" prefHeight="100.0" prefWidth="750.0">
+      <HBox layoutX="190.0" layoutY="135.0" prefHeight="100.0" prefWidth="750.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" stroke="BLACK" strokeType="INSIDE" width="750.0" />
          </children>
