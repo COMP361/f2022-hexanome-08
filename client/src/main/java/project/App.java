@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
@@ -217,9 +218,14 @@ public class App extends Application {
    * @param popUpStageHeight window height
    * @throws IOException in case fxml is not found
    */
-  public static void loadPopUpWithController(String fxmlName, Object controller,
+  public static void loadPopUpWithController(String fxmlName, Object controller, Rectangle cover,
                                              double popUpStageWidth, double popUpStageHeight)
       throws IOException {
+
+    // the new stage is shown, make the rectangle visible
+    cover.setVisible(true);
+    cover.setOpacity(0.2);
+    cover.toFront();
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
     fxmlLoader.setController(controller);
     Stage newStage = new Stage();
@@ -227,7 +233,10 @@ public class App extends Application {
     newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     //newStage.setFullScreen(false);
     newStage.setAlwaysOnTop(true);
-    newStage.showAndWait();
+    newStage.show();
+    newStage.setOnCloseRequest(closeEvent -> {
+      cover.setVisible(false);
+    });
   }
 
   /**
