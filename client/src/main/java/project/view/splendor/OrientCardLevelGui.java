@@ -90,7 +90,8 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
     return event -> {
       try {
         App.loadPopUpWithController("card_action.fxml",
-                new CardActionController(gameId,  allActions),coverRectangle, 360, 170);
+                new CardActionController(gameId,  allActions, coverRectangle),
+            coverRectangle, 360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -101,7 +102,8 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
     return event -> {
       try {
         App.loadPopUpWithController("deck_action.fxml",
-                new DeckActionController(gameId, actionId),coverRectangle, 360, 170);
+                new DeckActionController(gameId, actionId, coverRectangle),
+            coverRectangle, 360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

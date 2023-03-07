@@ -83,6 +83,8 @@ public class GameController implements Initializable {
 
   private final long gameId;
 
+  private String lastTurnPlayerName;
+
   private final Session curSession;
 
   private NobleBoardGui nobleBoard;
@@ -139,7 +141,7 @@ public class GameController implements Initializable {
 
       try {
         App.loadPopUpWithController("my_reserved_cards.fxml",
-            new ReservedHandController(reservedHand, playerActions),
+            new ReservedHandController(reservedHand, playerActions, coverRectangle),
             coverRectangle,800, 600);
 
       } catch (IOException e) {
@@ -178,7 +180,7 @@ public class GameController implements Initializable {
 
       try {
         App.loadPopUpWithController("my_development_cards.fxml",
-            new PurchaseHandController(purchasedHand, playerActions),
+            new PurchaseHandController(purchasedHand, playerActions, coverRectangle),
             coverRectangle,
             800,
             600);
@@ -197,15 +199,15 @@ public class GameController implements Initializable {
     return new ArrayList<>(allPlayerNames);
   }
 
-  private Map<PlayerPosition, String> setPlayerToPosition(String curPlayerName,
-                                                          List<String> allPlayerNames) {
-    Map<PlayerPosition, String> resultMap = new HashMap<>();
-    List<String> orderedNames = sortPlayerNames(curPlayerName, allPlayerNames);
-    for (int i = 0; i < orderedNames.size(); i++) {
-      resultMap.put(PlayerPosition.values()[i], orderedNames.get(i));
-    }
-    return resultMap;
-  }
+  //private Map<PlayerPosition, String> setPlayerToPosition(String curPlayerName,
+  //                                                        List<String> allPlayerNames) {
+  //  Map<PlayerPosition, String> resultMap = new HashMap<>();
+  //  List<String> orderedNames = sortPlayerNames(curPlayerName, allPlayerNames);
+  //  for (int i = 0; i < orderedNames.size(); i++) {
+  //    resultMap.put(PlayerPosition.values()[i], orderedNames.get(i));
+  //  }
+  //  return resultMap;
+  //}
 
 
   /**
@@ -233,12 +235,11 @@ public class GameController implements Initializable {
   }
 
 
-  private Thread generateAllPlayerInfoUpdateThread(String firstPlayerName) {
+  private Thread generateAllPlayerInfoUpdateThread() {
     return new Thread(() -> {
       GameRequestSender gameRequestSender = App.getGameRequestSender();
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
-      boolean isFirstCheck = true;
       try {
         while (!Thread.currentThread().isInterrupted()) {
           int responseCode = 408;
@@ -256,22 +257,15 @@ public class GameController implements Initializable {
             // decode this response into PlayerInGame class with Gson
             String responseInJsonString = longPullResponse.getBody();
             Gson splendorParser = SplendorDevHelper.getInstance().getGson();
-            PlayerStates playerStates = splendorParser
-                .fromJson(responseInJsonString, PlayerStates.class);
-            if (isFirstCheck) {
-              setupAllPlayerInfoGui(0, firstPlayerName);
-              isFirstCheck = false;
-            } else {
-              // not first check, updating the player info gui
-              for (PlayerInGame playerInfo : playerStates.getPlayersInfo().values()) {
-                //// if we are updating the btm player info, buttons need to be re-assign actions
-                //if (playerInfo.getName().equals(App.getUser().getUsername())) {
-                //  myCardButton.setOnAction(createOpenMyPurchaseCardClick());
-                //  myReservedCardsButton.setOnAction(createOpenMyReserveCardClick());
-                //}
-                updatePlayerInfoGui(playerInfo);
-              }
+            PlayerStates playerStates = splendorParser.fromJson(responseInJsonString, PlayerStates.class);
+            // set up GUI
+            setupAllPlayerInfoGui(0);
+
+            // update information on the GUI
+            for (PlayerInGame playerInfo : playerStates.getPlayersInfo().values()) {
+              updatePlayerInfoGui(playerInfo);
             }
+
           }
         }
       } catch (InterruptedException e) {
@@ -284,7 +278,7 @@ public class GameController implements Initializable {
 
 
   // For setup initial playerInfoGuis to display for the first time
-  private void setupAllPlayerInfoGui(int initTokenAmount, String firstPlayer) {
+  private void setupAllPlayerInfoGui(int initTokenAmount) {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     User curUser = App.getUser();
 
@@ -374,8 +368,8 @@ public class GameController implements Initializable {
         }
       }
     });
-    // at this point, the map can not be empty, safely get the playerGui
-    nameToPlayerInfoGuiMap.get(firstPlayer).setHighlight(true);
+    //// at this point, the map can not be empty, safely get the playerGui
+    //nameToPlayerInfoGuiMap.get(firstPlayer).setHighlight(true);
   }
 
   //
@@ -444,15 +438,6 @@ public class GameController implements Initializable {
             // TODO: Step 4. update MyPurchaseHand and MyReserveHand
 
 
-            // highlight players accordingly
-            String curTurnPlayerName = curGameInfo.getCurrentPlayer();
-            if (!nameToPlayerInfoGuiMap.isEmpty()) {
-              for (String name : nameToPlayerInfoGuiMap.keySet()) {
-                nameToPlayerInfoGuiMap.get(name).setHighlight(name.equals(curTurnPlayerName));
-              }
-            }
-
-
             // First, check what extensions are we playing
             List<Extension> extensions = curGameInfo.getExtensions();
             TableTop tableTop = curGameInfo.getTableTop();
@@ -489,6 +474,14 @@ public class GameController implements Initializable {
                   extensionBoardGuiMap.put(extension, new CityBoardGui());
                   break;
                 default: break;
+              }
+            }
+
+            // highlight players accordingly
+            String curTurnPlayerName = curGameInfo.getCurrentPlayer();
+            if (!nameToPlayerInfoGuiMap.isEmpty()) {
+              for (String name : nameToPlayerInfoGuiMap.keySet()) {
+                nameToPlayerInfoGuiMap.get(name).setHighlight(name.equals(curTurnPlayerName));
               }
             }
           }
@@ -534,7 +527,7 @@ public class GameController implements Initializable {
     }
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
-
+    //lastTurnPlayerName = curGameInfo.getFirstPlayerName();
     saveButton.setDisable(true);
     if (App.getUser().getUsername().equals(curGameInfo.getCreator())) {
       // if the current user is the creator, activate the save button, otherwise it
@@ -557,8 +550,8 @@ public class GameController implements Initializable {
         nameToArmCodeMap.put(playerNames.get(i-1), i);
       }
     }
-    String firstPlayerName = curGameInfo.getFirstPlayerName();
-    playerInfoThread = generateAllPlayerInfoUpdateThread(firstPlayerName);
+
+    playerInfoThread = generateAllPlayerInfoUpdateThread();
     playerInfoThread.start();
 
     Thread mainGameUpdateThread = generateGameInfoUpdateThread();

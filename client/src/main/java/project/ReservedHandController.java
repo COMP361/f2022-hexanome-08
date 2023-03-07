@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Rectangle;
 
 /**
  * Reserve hand controller class.
@@ -30,8 +31,12 @@ public class ReservedHandController implements Initializable {
   private final List<ImageView> playerNobles = new ArrayList<>();
 
   private final Map<String, Action> playerActions;
+  private final Rectangle coverRectangle;
 
-  public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions) {
+  public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions,
+                                Rectangle coverRectangle) {
+
+    this.coverRectangle = coverRectangle;
     List<NobleCard> reservedNobles = reservedHand.getNobleCards();
     List<DevelopmentCard> reservedCards = reservedHand.getDevelopmentCards();
     // initialize the list of image views from player's reserved hand
