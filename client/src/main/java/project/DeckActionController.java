@@ -18,10 +18,6 @@ public class DeckActionController implements Initializable {
   @FXML
   private Button reserveButton;
 
-  @FXML
-  private Button goBackButton;
-
-
   private final long gameId;
   private final String actionId;
 
@@ -39,21 +35,21 @@ public class DeckActionController implements Initializable {
       String accessToken = App.getUser().getAccessToken();
       sender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
       System.out.println("Reserved From the Deck");
-      Stage curWindow = (Stage) goBackButton.getScene().getWindow();
+      Stage curWindow = (Stage) reserveButton.getScene().getWindow();
       curWindow.close();
     };
   }
 
-  private EventHandler<ActionEvent> createOnClickBackHandler() {
-    return event -> {
-      Stage curWindow = (Stage) goBackButton.getScene().getWindow();
-      curWindow.close();
-    };
-  }
+  //private EventHandler<ActionEvent> createOnClickBackHandler() {
+  //  return event -> {
+  //    Stage curWindow = (Stage) goBackButton.getScene().getWindow();
+  //    curWindow.close();
+  //  };
+  //}
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    goBackButton.setOnAction(createOnClickBackHandler());
+    //goBackButton.setOnAction(createOnClickBackHandler());
     reserveButton.setOnAction(createOnClickReserveHandler());
   }
 }

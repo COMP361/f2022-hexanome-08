@@ -177,8 +177,7 @@ public class GameController implements Initializable {
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
       try {
-        App.loadPopUpWithController(
-            "my_development_cards.fxml",
+        App.loadPopUpWithController("my_development_cards.fxml",
             new PurchaseHandController(purchasedHand, playerActions),
             coverRectangle,
             800,
@@ -419,8 +418,7 @@ public class GameController implements Initializable {
               // load the lobby page GUI again
               Platform.runLater(() -> {
                 try {
-                  App.loadNewSceneToPrimaryStage(
-                      "admin_lobby_page.fxml",
+                  App.loadNewSceneToPrimaryStage("admin_lobby_page.fxml",
                       App.getLobbyController());
                 } catch (IOException e) {
                   throw new RuntimeException(e);
