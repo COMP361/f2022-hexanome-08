@@ -73,8 +73,6 @@ public class GameController implements Initializable {
 
   @FXML
   private Button myReservedCardsButton;
-
-  // TODO: assign function to it later
   @FXML
   private Button quitButton;
 
@@ -85,8 +83,6 @@ public class GameController implements Initializable {
   private NobleBoardGui nobleBoard;
 
   private TokenBankGui tokenBankGui;
-
-  private String prePlayerName;
 
   private final Map<Integer, BaseCardLevelGui> baseCardGuiMap = new HashMap<>();
 
@@ -373,9 +369,6 @@ public class GameController implements Initializable {
         }
       }
     });
-    // since it's in the first check, curTurn and firstPlayer are same,
-    // highlight first player
-    prePlayerName = firstPlayer;
     // at this point, the map can not be empty, safely get the playerGui
     nameToPlayerInfoGuiMap.get(firstPlayer).setHighlight(true);
   }
@@ -434,7 +427,6 @@ public class GameController implements Initializable {
 
   //
   private Thread generateGameInfoUpdateThread() {
-    GameBoardLayoutConfig config = App.getGuiLayouts();
     GameRequestSender gameRequestSender = App.getGameRequestSender();
     User curUser = App.getUser(); // at this point, user will not be Null
     return new Thread(() -> {
@@ -495,20 +487,25 @@ public class GameController implements Initializable {
             //TODO: For this game application, we always play BASE + ORIENT, thus
             // we do not worry about NOT having their GUI set up
 
-            // if isFirstCheck = True (setting up stage)
-            // Step 1. setup base board gui
+            // Step 0. who's turn is it update (highlight feature)
 
-            // Step 2. setup orient board gui
-
-            // Step 3. (optionally) setup extension board gui
-
-
-            // if isFirstCheck = False (update stage)
             // Step 1. update base board gui
 
             // Step 2. update orient board gui
 
             // Step 3. (optionally) update extension board gui
+
+            // TODO: Step 4. update MyPurchaseHand and MyReserveHand
+
+
+            // highlight players accordingly
+            String curTurnPlayerName = curGameInfo.getCurrentPlayer();
+            if (!nameToPlayerInfoGuiMap.isEmpty()) {
+              for (String name : nameToPlayerInfoGuiMap.keySet()) {
+                nameToPlayerInfoGuiMap.get(name).setHighlight(name.equals(curTurnPlayerName));
+              }
+            }
+
 
             // First, check what extensions are we playing
             List<Extension> extensions = curGameInfo.getExtensions();
@@ -536,7 +533,7 @@ public class GameController implements Initializable {
                   extensionBoardGuiMap.put(extension, orientBoardGui);
                   break;
                 case TRADING_POST:
-                  TraderBoardGui traderBoardGui = new TraderBoardGui();
+                  TraderBoardGui traderBoardGui = new TraderBoardGui(playerBoardAnchorPane, gameId);
                   traderBoardGui.initialGuiActionSetup(tableTop,playerActionMap);
                   extensionBoardGuiMap.put(extension, traderBoardGui);
                   break;
@@ -607,11 +604,11 @@ public class GameController implements Initializable {
       }
     }
     String firstPlayerName = curGameInfo.getFirstPlayerName();
-    Thread mainGameUpdateThread = generateGameInfoUpdateThread();
-    mainGameUpdateThread.start();
     playerInfoThread = generateAllPlayerInfoUpdateThread(firstPlayerName);
     playerInfoThread.start();
-    //App.addGameThread(playerInfoThread);
-    //App.addGameThread(mainGameUpdateThread);
+
+    Thread mainGameUpdateThread = generateGameInfoUpdateThread();
+    mainGameUpdateThread.start();
+
   }
 }

@@ -66,12 +66,6 @@ public class LogInController implements Initializable {
         App.loadNewSceneToPrimaryStage(
             "admin_lobby_page.fxml",
             App.getLobbyController());
-        //App.loadPopUpWithController("admin_lobby_page.fxml",
-        //    App.getLobbyController(),
-        //    config.getAppWidth(),
-        //    config.getAppHeight());
-        //Stage logInWindow = (Stage) quitGameButton.getScene().getWindow();
-        //logInWindow.close();
 
       } else { // otherwise, player_lobby_page
         // App.setRoot("player_lobby_page");
