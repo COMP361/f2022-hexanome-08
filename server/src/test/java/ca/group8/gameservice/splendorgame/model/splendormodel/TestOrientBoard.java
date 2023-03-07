@@ -65,6 +65,18 @@ public class TestOrientBoard {
     generateDeckPerLevel.invoke(board,cardPool);
   }
 
+  @Test
+  void createOrientBoard() {
+    OrientBoard orientBoard = new OrientBoard();
+    for (int i = 1; i <= 3; i++) {
+      int cardsOnBoard = orientBoard.getCardsOnBoard().get(i).length;
+      int levelDeckSize = orientBoard.getDecks().get(i).size();
+      System.out.println(Arrays.toString(orientBoard.getCardsOnBoard().get(i)));
+      System.out.println(orientBoard.getDecks().get(i));
+      System.out.println("level: " + i + " with cards on board: " + cardsOnBoard + " with deck size: " + levelDeckSize);
+    }
+  }
+
   /**
    * Implicitly tested getDecks as well.
    */

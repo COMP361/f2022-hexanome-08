@@ -20,7 +20,7 @@ import project.view.InvalidDataException;
 
 public class OrientBoardGui implements BoardGui{
 
-  private Map<Integer, OrientCardLevelGui> orientCardLevelGuiMap;
+  private Map<Integer, OrientCardLevelGui> orientCardLevelGuiMap = new HashMap<>();
   private VBox orientCardsBoard;
   private final AnchorPane playerBoardAnchorPane;
   private final long gameId;
@@ -35,8 +35,6 @@ public class OrientBoardGui implements BoardGui{
   public void initialGuiActionSetup(TableTop tableTop, Map<String, Action> playerActionMap) {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     OrientBoard orientBoard = (OrientBoard) tableTop.getBoard(Extension.ORIENT);
-
-
     // set up and add base card GUI, only purchase and reserve actions are
     // there in the action map at this point (or empty)
     Map<String, Action> reservePurchaseActions = playerActionMap.entrySet()
@@ -84,8 +82,8 @@ public class OrientBoardGui implements BoardGui{
         cardPosition = reserveAction.getCardPosition();
         card = reserveAction.getCurCard();
       }
-      // only take the positions of the card with no effect
-      if (card.getPurchaseEffects().size() == 0) {
+      // only card with purchase effects size > 0 is orient card
+      if (card.getPurchaseEffects().size() > 0) {
         List<ActionIdPair> actions;
         if (!positionToActionMap.containsKey(cardPosition)) {
           actions = new ArrayList<>();
@@ -102,7 +100,6 @@ public class OrientBoardGui implements BoardGui{
 
   @Override
   public void clearContent() {
-    ObservableList<Node> currentChildren = playerBoardAnchorPane.getChildren();
     orientCardsBoard.getChildren().clear();
   }
 }

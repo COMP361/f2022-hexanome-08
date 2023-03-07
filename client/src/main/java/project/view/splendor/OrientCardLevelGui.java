@@ -149,7 +149,7 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
     for (Position position : curLevelMap.keySet()) {
       if (position.getY() == -1) {
         // assign reserve action to deck (deck is only clickable if player has such action)
-        Group deck = (Group) this.getChildren().get(0);
+        Group deck = (Group) this.getChildren().get(2);
         ActionIdPair actionIdPair = curLevelMap.get(position).get(0);
         String actionId = actionIdPair.getActionId();
         deck.setOnMouseClicked(createClickOnDeckHandler(gameId, actionId));
