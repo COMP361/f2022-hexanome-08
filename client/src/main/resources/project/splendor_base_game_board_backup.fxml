@@ -40,7 +40,7 @@
                </children></HBox>
             </children>
         </VBox>
-        <HBox fx:id="topPlayer" alignment="TOP_RIGHT" layoutX="268.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0" BorderPane.alignment="TOP_RIGHT">
+        <HBox fx:id="topPlayer" alignment="TOP_RIGHT" layoutX="468.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0" BorderPane.alignment="TOP_RIGHT">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="125.0" stroke="BLACK" strokeType="INSIDE" width="665.0" />
          </children></HBox>
@@ -52,13 +52,13 @@
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="665.0" stroke="BLACK" strokeType="INSIDE" width="125.0" />
          </children></VBox>
-        <HBox fx:id="currentPlayer" alignment="TOP_RIGHT" layoutX="468.0" layoutY="680.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0">
+        <HBox fx:id="currentPlayer" alignment="TOP_RIGHT" layoutX="468.0" layoutY="700.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="125.0" stroke="BLACK" strokeType="INSIDE" width="665.0" />
          </children></HBox>
         <Button fx:id="myCardButton" layoutX="1208.0" layoutY="720.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Cards" />
         <Button fx:id="myReservedCardsButton" layoutX="1208.0" layoutY="757.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Reserved Cards" />
-        <Button fx:id="quitButton" layoutX="1118.0" layoutY="14.0" mnemonicParsing="false" text="Quit" />
+        <Button fx:id="quitButton" layoutX="1499.0" layoutY="20.0" mnemonicParsing="false" text="Quit" />
       <HBox layoutX="190.0" layoutY="135.0" prefHeight="100.0" prefWidth="750.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" stroke="BLACK" strokeType="INSIDE" width="750.0" />
