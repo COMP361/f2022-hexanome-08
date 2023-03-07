@@ -51,13 +51,16 @@ public class PurchaseHandController implements Initializable {
   private final List<NobleCard> nobleCards;
 
   private final Map<String, Action> playerActions;
-  public PurchaseHandController(PurchasedHand purchasedHand, Map<String, Action> playerActions) {
+
+  private final Rectangle coverRectangle;
+  public PurchaseHandController(PurchasedHand purchasedHand, Map<String, Action> playerActions, Rectangle coverRectangle) {
     // organize all dev cards (including gold colour ones) into colour map
     List<DevelopmentCard> allCardsInHand = purchasedHand.getDevelopmentCards();
     this.colourCardsMap = reorganizeCardsInHand(allCardsInHand);
     this.colourGroupMap = new HashMap<>();
     this.nobleCards = purchasedHand.getNobleCards();
     this.playerActions = playerActions;
+    this.coverRectangle = coverRectangle;
   }
 
 

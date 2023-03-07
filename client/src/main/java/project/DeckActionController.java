@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import project.connection.GameRequestSender;
 
@@ -21,9 +22,12 @@ public class DeckActionController implements Initializable {
   private final long gameId;
   private final String actionId;
 
-  public DeckActionController(long gameId, String actionId) {
+  private final Rectangle coverRectangle;
+
+  public DeckActionController(long gameId, String actionId, Rectangle coverRectangle) {
     this.gameId = gameId;
     this.actionId = actionId;
+    this.coverRectangle = coverRectangle;
   }
 
 
@@ -34,8 +38,8 @@ public class DeckActionController implements Initializable {
       String playerName = App.getUser().getUsername();
       String accessToken = App.getUser().getAccessToken();
       sender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
-      System.out.println("Reserved From the Deck");
       Stage curWindow = (Stage) reserveButton.getScene().getWindow();
+      coverRectangle.setVisible(false);
       curWindow.close();
     };
   }
