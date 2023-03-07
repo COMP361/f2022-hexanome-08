@@ -105,7 +105,7 @@ public class DevelopmentCard extends Card {
    * @return whether this dev card is base card or not
    */
   public boolean isBaseCard() {
-    return purchaseEffects.isEmpty();
+    return purchaseEffects.isEmpty() && gemNumber == 1;
   }
 
   /**
