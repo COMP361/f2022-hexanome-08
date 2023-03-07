@@ -515,6 +515,8 @@ public class GameController implements Initializable {
     // not in pop up window
     playerBoardAnchorPane.getChildren().add(coverRectangle);
     coverRectangle.setVisible(false);
+    coverRectangle.widthProperty().bind(playerBoardAnchorPane.widthProperty());
+    coverRectangle.heightProperty().bind(playerBoardAnchorPane.heightProperty());
     GameRequestSender gameRequestSender = App.getGameRequestSender();
     //System.out.println("Current user: " + App.getUser().getUsername());
     //System.out.println(gameRequestSender.getGameServiceName());
