@@ -7,7 +7,7 @@ import project.view.InvalidDataException;
 
 import java.util.Map;
 
-public class TraderBoardGui implements BoardGui {
+public class TraderBoardGui implements BoardGui{
 
 
   private final long gameId;
