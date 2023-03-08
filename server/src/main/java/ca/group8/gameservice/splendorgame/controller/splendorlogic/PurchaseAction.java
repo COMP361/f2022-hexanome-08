@@ -31,16 +31,16 @@ public class PurchaseAction extends Action {
    * Constructor of purchase action.
    *
    * @param cardPosition      position on board
-   * @param DevelopmentCard   DevelopmentCard associated with action
+   * @param developmentCard   DevelopmentCard associated with action
    * @param goldCardsRequired number of gold card required
    * @param tokensToBePaid    a enum map of tokens to be paid
    */
-  public PurchaseAction(Position cardPosition, DevelopmentCard DevelopmentCard,
+  public PurchaseAction(Position cardPosition, DevelopmentCard developmentCard,
                         int goldCardsRequired, EnumMap<Colour, Integer> tokensToBePaid) {
-    assert cardPosition != null && DevelopmentCard != null && goldCardsRequired >= 0;
+    assert cardPosition != null && developmentCard != null && goldCardsRequired >= 0;
     super.type = this.getClass().getSimpleName();
     this.cardPosition = cardPosition;
-    this.curCard = DevelopmentCard;
+    this.curCard = developmentCard;
     this.goldCardsRequired = goldCardsRequired;
     this.tokensToBePaid = tokensToBePaid;
   }
