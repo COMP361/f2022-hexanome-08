@@ -1,4 +1,4 @@
-package project;
+package project.controllers.stagecontrollers;
 
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
@@ -24,8 +24,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import org.apache.commons.codec.digest.DigestUtils;
+import project.App;
+import project.GameBoardLayoutConfig;
+import project.controllers.popupcontrollers.GameOverPopUpController;
+import project.controllers.popupcontrollers.PurchaseHandController;
+import project.controllers.popupcontrollers.ReservedHandController;
+import project.controllers.popupcontrollers.SaveGamePopUpController;
 import project.connection.GameRequestSender;
-import project.connection.LobbyRequestSender;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 import project.view.splendor.BaseBoardGui;

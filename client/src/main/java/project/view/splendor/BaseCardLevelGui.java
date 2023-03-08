@@ -1,8 +1,5 @@
 package project.view.splendor;
 
-import ca.mcgill.comp361.splendormodel.actions.Action;
-import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
-import ca.mcgill.comp361.splendormodel.actions.ReserveAction;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.Position;
 import java.io.IOException;
@@ -24,9 +21,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import project.App;
-import project.CardActionController;
-import project.DeckActionController;
-import project.connection.GameRequestSender;
+import project.controllers.popupcontrollers.CardActionController;
+import project.controllers.popupcontrollers.DeckActionController;
 
 /**
  * Gui class that represents a level of cards.

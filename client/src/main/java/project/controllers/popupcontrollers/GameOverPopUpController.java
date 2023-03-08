@@ -1,4 +1,4 @@
-package project;
+package project.controllers.popupcontrollers;
 
 import java.io.IOException;
 import java.net.URL;
@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import project.App;
 
 public class GameOverPopUpController implements Initializable {
 

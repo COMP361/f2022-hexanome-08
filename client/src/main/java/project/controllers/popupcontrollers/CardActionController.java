@@ -1,4 +1,4 @@
-package project;
+package project.controllers.popupcontrollers;
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import project.App;
 import project.connection.GameRequestSender;
 import project.view.splendor.ActionIdPair;
 

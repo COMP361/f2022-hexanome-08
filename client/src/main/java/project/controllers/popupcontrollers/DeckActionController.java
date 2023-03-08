@@ -1,4 +1,4 @@
-package project;
+package project.controllers.popupcontrollers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import project.App;
 import project.connection.GameRequestSender;
 
 /**

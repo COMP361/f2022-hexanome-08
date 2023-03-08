@@ -22,8 +22,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import project.App;
-import project.CardActionController;
-import project.DeckActionController;
+import project.controllers.popupcontrollers.CardActionController;
+import project.controllers.popupcontrollers.DeckActionController;
 
 /**
  * TODO: Creates the GUI for a list of orient level cards.
