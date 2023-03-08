@@ -97,12 +97,24 @@ public class PurchaseAction extends Action {
 
       //if cardPosition.getX()==0, it would mean this is from reservedHand. Therefore
       //we would skip the steps to remove & replace card on board.
-      if(!(cardPosition.getX()==0)) {
-        // remove card from board
-        BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
-        baseBoard.removeCard(cardPosition);
-        // fill up the board
-        baseBoard.update();
+      if(cardPosition.getX()!=0) {
+
+        if(curCard.isBaseCard()) {
+          // remove card from board
+          BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
+          baseBoard.removeCard(cardPosition);
+          // fill up the board
+          baseBoard.update();
+        } else {
+          // remove card from board
+          OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
+          orientBoard.removeCard(cardPosition);
+          // fill up the board
+          orientBoard.update();
+        }
+      } else { //means this is a reserved card, so remove from player's ReserveHand
+        playerInGame.getReservedHand().removeDevelopmentCard(curCard);
+
       }
     }
 
@@ -122,12 +134,17 @@ public class PurchaseAction extends Action {
 
         //if cardPosition.getX()==0, it would mean this is from reservedHand. Therefore
         //we would skip the steps to remove & replace card on board.
-        if(!(cardPosition.getX()==0)) {
+        if(cardPosition.getX()!=0) {
+
           // remove card from board
           OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
           orientBoard.removeCard(cardPosition);
           // fill up the board
           orientBoard.update();
+
+        } else { //means this is a reserved card, so remove from player's ReserveHand
+          playerInGame.getReservedHand().removeDevelopmentCard(curCard);
+
         }
 
         if (curEffect.equals(CardEffect.SATCHEL)) {
@@ -158,12 +175,19 @@ public class PurchaseAction extends Action {
 
       //if cardPosition.getX()==0, it would mean this is from reservedHand. Therefore
       //we would skip the steps to remove & replace card on board.
-      if(!(cardPosition.getX()==0)) {
+      //if cardPosition.getX()==0, it would mean this is from reservedHand. Therefore
+      //we would skip the steps to remove & replace card on board.
+      if(cardPosition.getX()!=0) {
+
         // remove card from board
         OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
         orientBoard.removeCard(cardPosition);
         // fill up the board
         orientBoard.update();
+
+      } else { //means this is a reserved card, so remove from player's ReserveHand
+        playerInGame.getReservedHand().removeDevelopmentCard(curCard);
+
       }
       actionGenerator.updateCascadeActions(playerInGame, curCard, CardEffect.SATCHEL);
     }
