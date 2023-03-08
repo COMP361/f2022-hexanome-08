@@ -231,6 +231,12 @@ public class GameController implements Initializable {
       playerInfoGui.setNewPrestigePoints(newPoints);
       playerInfoGui.setNewTokenInHand(newTokenInHand);
       playerInfoGui.setGemsInHand(allDevCards);
+      System.out.println("Current player info: "+ curPlayerInGame.getName());
+      System.out.println("Tokens in hand: " + newTokenInHand);
+      System.out.println("Development cards: "+ allDevCards);
+      System.out.println("Player wealth: " + curPlayerInGame.getWealth());
+      System.out.println();
+      System.out.println();
     });
   }
 

@@ -153,6 +153,7 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
   public void setNewTokenInHand(EnumMap<Colour, Integer> newTokens) {
     Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo =
         this.getPlayerColourWealthMap(this.playerPosition);
+    System.out.println("Current Wealth: " + wealthInfo);
     for (Colour colour : wealthInfo.keySet()) {
       Map<PlayerWealthInfo, Text> info = wealthInfo.get(colour);
       info.get(PlayerWealthInfo.TOKEN).setText(Integer.toString(newTokens.get(colour)));
@@ -162,6 +163,8 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
   @Override
   public void setGemsInHand(List<DevelopmentCard> allDevCardsInHand) {
     EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
+    totalGems.remove(Colour.ORIENT);
+
     Colour[] baseColours = App.getBaseColours();
     for (Colour c : baseColours) {
       totalGems.put(c, 0);
