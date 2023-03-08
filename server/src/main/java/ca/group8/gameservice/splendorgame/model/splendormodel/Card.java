@@ -7,8 +7,8 @@ import java.util.Objects;
 
 /**
  * This class represents the SuperClass of all Cards/nobles.
- * <p>
- * Every abstract class was serialized/deserialized using the repository from:
+ *
+ * <p>Every abstract class was serialized/deserialized using the repository from:
  * * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
  * * Thank him so much!!!!!!!!!!!!!!!
  */
@@ -23,10 +23,10 @@ import java.util.Objects;
 )
 public abstract class Card {
 
-  String type;
   private final int prestigePoints;
   private final EnumMap<Colour, Integer> price;
   private final String cardName;
+  String type;
 
   /**
    * * params include prestige points, price and name.
@@ -63,9 +63,9 @@ public abstract class Card {
 
     Card other = (Card) o;
 
-    return this.cardName.equals(other.cardName) &&
-        this.prestigePoints == other.prestigePoints &&
-        this.price.equals(other.price);
+    return this.cardName.equals(other.cardName)
+            && this.prestigePoints == other.prestigePoints
+            && this.price.equals(other.price);
   }
 
   @Override

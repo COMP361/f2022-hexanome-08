@@ -135,7 +135,7 @@ public class GameController implements Initializable {
 
       try {
         App.loadPopUpWithController("my_reserved_cards.fxml",
-            new ReservedHandController(reservedHand, playerActions, coverRectangle),
+            new ReservedHandController(reservedHand, playerActions, coverRectangle, gameId),
             coverRectangle, 800, 600);
 
       } catch (IOException e) {
@@ -458,8 +458,14 @@ public class GameController implements Initializable {
                   extensionBoardGuiMap.put(extension, orientBoardGui);
                   break;
                 case TRADING_POST:
-                  TraderBoardGui traderBoardGui = new TraderBoardGui(playerBoardAnchorPane, gameId);
+                  GameBoardLayoutConfig config = App.getGuiLayouts();
+                  TraderBoardGui traderBoardGui = new TraderBoardGui(gameId, nameToArmCodeMap);
                   traderBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+                  traderBoardGui.setLayoutX(config.getPacBoardLayoutX());
+                  traderBoardGui.setLayoutY(config.getPacBoardLayoutY());
+                  Platform.runLater(() -> {
+                    playerBoardAnchorPane.getChildren().add(traderBoardGui);
+                  });
                   extensionBoardGuiMap.put(extension, traderBoardGui);
                   break;
                 case CITY:
@@ -468,10 +474,8 @@ public class GameController implements Initializable {
                       gameId, coverRectangle);
                   cityBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
                   extensionBoardGuiMap.put(extension, cityBoardGui);
-
                   break;
-                default:
-                  break;
+                default: break;
               }
             }
 

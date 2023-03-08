@@ -54,7 +54,7 @@ public class Bank {
     //  assert (allTokens.get(colour) + paramTokens.get(colour)) <= initialValue;
     //}
     //add Tokens
-    Logger logger  = LoggerFactory.getLogger(Bank.class);
+    Logger logger = LoggerFactory.getLogger(Bank.class);
     logger.warn("bank balance: " + allTokens);
     logger.warn("tokens return: " + paramTokens);
     for (Colour colour : SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet()) {
@@ -86,14 +86,16 @@ public class Bank {
   }
 
   /**
+   * getRegularTokenCount.
+   *
    * @return a number indicating how many non-gold tokens are left
    */
   public int getRegularTokenCount() {
 
     return allTokens.entrySet()
         .stream()
-        .filter(entry -> !entry.getKey().equals(Colour.GOLD) &&
-            !entry.getKey().equals(Colour.ORIENT))
+        .filter(entry -> !entry.getKey().equals(Colour.GOLD)
+                && !entry.getKey().equals(Colour.ORIENT))
         .mapToInt(Map.Entry::getValue)
         .sum();
   }

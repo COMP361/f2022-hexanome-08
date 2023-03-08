@@ -14,15 +14,13 @@ import java.util.Map;
  */
 public class GameInfo implements BroadcastContent {
 
+  private final TableTop tableTop;
+  private final List<Extension> extensions;
   private String creator;
   private String currentPlayer; //represents which player's turn it is currently
   private List<String> winners;
   private List<String> playerNames;
   private String firstPlayerName; //should be Player Name of first player.
-
-  private final TableTop tableTop;
-  private final List<Extension> extensions;
-
   private boolean isFinished;
   private Map<String, Map<String, Action>> playerActionMaps = new HashMap<>();
 
@@ -45,7 +43,7 @@ public class GameInfo implements BroadcastContent {
     this.isFinished = false;
     // initialize empty map for each player
     for (String name : playerNames) {
-      playerActionMaps.put(name,new HashMap<>());
+      playerActionMaps.put(name, new HashMap<>());
     }
 
   }
@@ -81,10 +79,13 @@ public class GameInfo implements BroadcastContent {
     return new ArrayList<>(winners);
   }
 
+  public void setWinners(List<String> winners) {
+    this.winners = winners;
+  }
+
   public String getFirstPlayerName() {
     return firstPlayerName;
   }
-
 
   public List<String> getPlayerNames() {
     return playerNames;
@@ -104,10 +105,6 @@ public class GameInfo implements BroadcastContent {
 
   public String getCreator() {
     return creator;
-  }
-
-  public void setWinners(List<String> winners) {
-    this.winners = winners;
   }
 
   /**

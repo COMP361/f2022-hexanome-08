@@ -88,7 +88,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     }
   }
 
-  private EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
+  public EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
                                                             List<ActionIdPair> allActions) {
     return event -> {
       try {
@@ -170,6 +170,8 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
       }
     }
   }
+
+
 
   @Override
   public void setup() {

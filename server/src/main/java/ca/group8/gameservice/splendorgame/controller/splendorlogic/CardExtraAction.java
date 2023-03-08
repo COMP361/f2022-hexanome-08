@@ -1,6 +1,15 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.*;
+import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
+import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
+import ca.group8.gameservice.splendorgame.model.splendormodel.NobleCard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
+import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import java.util.List;
 
 /**
@@ -8,10 +17,9 @@ import java.util.List;
  */
 public class CardExtraAction extends Action {
 
-  private Card curCard;
   private final CardEffect cardEffect;
-
   private final Position position;
+  private final Card curCard;
 
   /**
    * Constructor.
@@ -33,13 +41,13 @@ public class CardExtraAction extends Action {
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
                       ActionGenerator actionListGenerator, ActionInterpreter actionInterpreter) {
     //based on the cardEffect, execute the associated helper
-    if(this.cardEffect == CardEffect.BURN_CARD){
-      burnActionHelper( playerInGame, actionInterpreter);
-    }else if(this.cardEffect == CardEffect.SATCHEL){
+    if (this.cardEffect == CardEffect.BURN_CARD) {
+      burnActionHelper(playerInGame, actionInterpreter);
+    } else if (this.cardEffect == CardEffect.SATCHEL) {
       satchelActionHelper(playerInGame, actionInterpreter);
-    }else if(this.cardEffect == CardEffect.RESERVE_NOBLE){
+    } else if (this.cardEffect == CardEffect.RESERVE_NOBLE) {
       reserveNobleActionHelper(curTableTop, playerInGame);
-    }else if(this.cardEffect == CardEffect.FREE_CARD){
+    } else if (this.cardEffect == CardEffect.FREE_CARD) {
       //Don't know which card is the freeCard
       freeCardActionHelper(curTableTop, playerInGame, actionInterpreter);
     }
@@ -68,6 +76,12 @@ public class CardExtraAction extends Action {
   }
    */
 
+  /**
+   * Helper for reserve action.
+   *
+   * @param curTableTop curTableTop
+   * @param curPlayer curPlayer
+   */
   public void reserveNobleActionHelper(TableTop curTableTop,
                                        PlayerInGame curPlayer) {
 
@@ -84,6 +98,12 @@ public class CardExtraAction extends Action {
     curPlayer.getReservedHand().addNobleCard(noble);
   }
 
+  /**
+   * Helper to satchelAction.
+   *
+   * @param curPlayer curPlayer
+   * @param associatedActionInterpreter associatedActionInterpreter
+   */
   public void satchelActionHelper(PlayerInGame curPlayer,
                                   ActionInterpreter associatedActionInterpreter) {
 
@@ -121,6 +141,13 @@ public class CardExtraAction extends Action {
      */
   }
 
+  /**
+   * Helper for free card action.
+   *
+   * @param curTableTop curTableTop
+   * @param curPlayer curPlayer
+   * @param associatedActionInterpreter associatedActionInterpreter
+   */
   //TODO
   public void freeCardActionHelper(TableTop curTableTop,
                                    PlayerInGame curPlayer,
@@ -132,7 +159,7 @@ public class CardExtraAction extends Action {
     int prestigePoints = freeCard.getPrestigePoints();
 
     //if it is a base card
-    if( effectNum == 0 ) {
+    if (effectNum == 0) {
       BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
       //remove freeCard from Board, replace
       baseBoard.removeCard(this.position);
@@ -141,45 +168,51 @@ public class CardExtraAction extends Action {
       curPlayer.changePrestigePoints(prestigePoints);
 
       //if it is an orient card
-    }else {
+    } else {
       ActionGenerator actionGenerator = associatedActionInterpreter.getActionGenerator();
       CardEffect currentEffect = cardEffects.get(0);
 
       // Case for most orient cards
-      if ( effectNum == 1 ) {
+      if (effectNum == 1) {
         OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
         //remove freeCard from Board, replace.
         orientBoard.removeCard(this.position);
         orientBoard.update();
 
-        if ( currentEffect == CardEffect.SATCHEL ) {
+        if (currentEffect == CardEffect.SATCHEL) {
           associatedActionInterpreter.setStashedCard(freeCard);
         } else {
           curPlayer.getPurchasedHand().addDevelopmentCard(freeCard);
           curPlayer.changePrestigePoints(prestigePoints);
         }
-        if ( currentEffect != CardEffect.BURN_CARD) {
-          actionGenerator.updateCascadeActions(curPlayer,freeCard,currentEffect);
+        if (currentEffect != CardEffect.BURN_CARD) {
+          actionGenerator.updateCascadeActions(curPlayer, freeCard, currentEffect);
         }
 
-      // Special case where an orient card has satchel and free card.
-      } else if ( effectNum == 2 ) {
+        // Special case where an orient card has satchel and free card.
+      } else if (effectNum == 2) {
         associatedActionInterpreter.setStashedCard(freeCard);
-        associatedActionInterpreter.setFreeCardLevel( freeCard.getLevel() - 1 );
+        associatedActionInterpreter.setFreeCardLevel(freeCard.getLevel() - 1);
 
-        actionGenerator.updateCascadeActions(curPlayer,freeCard,CardEffect.SATCHEL);
-      //Should never reach here.
+        actionGenerator.updateCascadeActions(curPlayer, freeCard, CardEffect.SATCHEL);
+        //Should never reach here.
       } else {
         System.out.println("FreeCard: Error, size of CardEffect List is not 0,1,2");
       }
     }
   }
 
-  public void burnActionHelper (PlayerInGame curPlayer,
+  /**
+   * Helper for burnAction.
+   *
+   * @param curPlayer curPlayer
+   * @param associatedActionInterpreter associatedActionInterpreter
+   */
+  public void burnActionHelper(PlayerInGame curPlayer,
                                ActionInterpreter associatedActionInterpreter) {
 
     DevelopmentCard cardToBurn = (DevelopmentCard) this.curCard;
-    int burnNumber = associatedActionInterpreter.getBurnCardCount();
+    final int burnNumber = associatedActionInterpreter.getBurnCardCount();
     int gemNumber = cardToBurn.getGemNumber();
     //make it negative since you're taking away points
     int prestigePoints = -1 * cardToBurn.getPrestigePoints();
@@ -192,7 +225,7 @@ public class CardExtraAction extends Action {
     associatedActionInterpreter.removeBurnCardCount(gemNumber);
 
     //if you have finished burning cards
-    if(burnNumber - gemNumber <= 0){
+    if (burnNumber - gemNumber <= 0) {
       //take stashed card and add to player's hand
       DevelopmentCard newCard = associatedActionInterpreter.getStashedCard();
       curPlayer.getPurchasedHand().addDevelopmentCard(newCard);

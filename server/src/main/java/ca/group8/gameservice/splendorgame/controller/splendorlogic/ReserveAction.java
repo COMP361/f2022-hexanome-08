@@ -19,9 +19,15 @@ import java.util.List;
  */
 public class ReserveAction extends Action {
 
-  private DevelopmentCard curCard;
-  private Position cardPosition;
+  private final DevelopmentCard curCard;
+  private final Position cardPosition;
 
+  /**
+   * ReserveAction.
+   *
+   * @param position position
+   * @param curCard curCard
+   */
   public ReserveAction(Position position, DevelopmentCard curCard) {
     super.type = this.getClass().getSimpleName();
     this.cardPosition = position;
@@ -31,10 +37,10 @@ public class ReserveAction extends Action {
   /**
    * Execution of reserve action.
    *
-   * @param curTableTop
-   * @param playerInGame
-   * @param actionGenerator
-   * @param actionInterpreter
+   * @param curTableTop curTableTop
+   * @param playerInGame playerInGame
+   * @param actionGenerator actionGenerator
+   * @param actionInterpreter actionInterpreter
    */
   @Override
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,

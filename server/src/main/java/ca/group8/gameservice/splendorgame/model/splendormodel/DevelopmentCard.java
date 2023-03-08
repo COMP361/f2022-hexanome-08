@@ -14,12 +14,11 @@ import java.util.stream.Collectors;
 public class DevelopmentCard extends Card {
 
   private final int level;
+  private final Colour gemColour;
+  private final List<CardEffect> purchaseEffects;
   private int gemNumber;
   private boolean isPaired;
-  private final Colour gemColour;
   private DevelopmentCard pairedCard;
-
-  private final List<CardEffect> purchaseEffects;
 
   /**
    * prestige points, price, name, level, colour, isPaired, pairID, gem number.
@@ -62,6 +61,10 @@ public class DevelopmentCard extends Card {
     return pairedCard;
   }
 
+  public void setPairedCard(DevelopmentCard card) {
+    pairedCard = card;
+  }
+
   /**
    * Return the gem number of this dev card.
    *
@@ -71,9 +74,9 @@ public class DevelopmentCard extends Card {
     return gemNumber;
   }
 
-  public void setIsPaired(boolean value) { isPaired = value; }
-
-  public void setPairedCard(DevelopmentCard card) { pairedCard = card; }
+  public void setIsPaired(boolean value) {
+    isPaired = value;
+  }
 
   /**
    * get the purchase effects of this card, if empty, then it's base card, otherwise.
@@ -122,8 +125,10 @@ public class DevelopmentCard extends Card {
 
 
   /**
-   * @param hasDoubleGoldPower
-   * @param wealth
+   * canBeBought.
+   *
+   * @param hasDoubleGoldPower hasDoubleGoldPower
+   * @param wealth wealth
    * @return -1 if can not afford, 0 or >0 as a number of gold token needed
    */
   public int canBeBought(boolean hasDoubleGoldPower, EnumMap<Colour, Integer> wealth) {
@@ -200,12 +205,12 @@ public class DevelopmentCard extends Card {
 
     DevelopmentCard other = (DevelopmentCard) obj;
 
-    return super.equals(other) &&
-        this.level == other.level &&
-        this.gemNumber == other.gemNumber &&
-        this.isPaired == other.isPaired &&
-        this.gemColour.equals(other.gemColour) &&
-        this.purchaseEffects.equals(other.purchaseEffects);
+    return super.equals(other)
+            && this.level == other.level
+            && this.gemNumber == other.gemNumber
+            && this.isPaired == other.isPaired
+            && this.gemColour.equals(other.gemColour)
+            && this.purchaseEffects.equals(other.purchaseEffects);
   }
 
   @Override

@@ -8,18 +8,17 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.isharipov.gson.adapters.PolymorphDeserializer;
-import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.List;
 
 /**
  * A helper singleton class that helps to resolve all abstract.
  * serializing & deserializing json problems for splendor game.
- * <p>
- * Every abstract class was serialized/deserialized using the repository from:
- * * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
- * * Thank him so much!!!!!!!!!!!!!!!
+ *
+ * <p>Every abstract class was serialized/deserialized using the repository from:
+ * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
+ * Thank him so much!!!!!!!!!!!!!!!
  */
+
 public class SplendorDevHelper {
   private static SplendorDevHelper instance = null;
 
@@ -35,15 +34,20 @@ public class SplendorDevHelper {
         .registerTypeAdapter(Card.class, new PolymorphDeserializer<Card>())
         .create();
     rawTokenColoursMap = new EnumMap<>(Colour.class) {{
-      put(Colour.BLUE, 0);
-      put(Colour.RED, 0);
-      put(Colour.BLACK, 0);
-      put(Colour.GREEN, 0);
-      put(Colour.WHITE, 0);
-      put(Colour.GOLD, 0);
-    }};
+        put(Colour.BLUE, 0);
+        put(Colour.RED, 0);
+        put(Colour.BLACK, 0);
+        put(Colour.GREEN, 0);
+        put(Colour.WHITE, 0);
+        put(Colour.GOLD, 0);
+      }};
   }
 
+  /**
+   * getInstance.
+   *
+   * @return return a SplendorDevHelper
+   */
   public static SplendorDevHelper getInstance() {
     if (instance == null) {
       instance = new SplendorDevHelper();
@@ -66,7 +70,7 @@ public class SplendorDevHelper {
    *
    * @return a list of token colours
    */
-  public EnumMap<Colour, Integer>getRawTokenColoursMap() {
+  public EnumMap<Colour, Integer> getRawTokenColoursMap() {
     return new EnumMap<>(rawTokenColoursMap);
   }
 

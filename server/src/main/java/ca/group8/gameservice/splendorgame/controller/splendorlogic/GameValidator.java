@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * GameValidator.
+ */
 @Component
 public class GameValidator {
 
@@ -31,7 +34,13 @@ public class GameValidator {
   // Debug logger
   private final Logger logger;
 
-
+  /**
+   * GameValidator.
+   *
+   * @param gameManager gameManager
+   * @param lobbyCommunicator lobbyCommunicator
+   * @param gameServiceNames gameServiceNames
+   */
   public GameValidator(
       @Autowired GameManager gameManager,
       @Autowired LobbyCommunicator lobbyCommunicator,
