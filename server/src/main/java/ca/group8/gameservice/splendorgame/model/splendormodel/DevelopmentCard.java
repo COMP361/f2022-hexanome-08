@@ -101,11 +101,14 @@ public class DevelopmentCard extends Card {
 
   /**
    * If a development card has no purchase effect, then it's a base card, otherwise it's orient
+   * A card is a base card if it meets the following conditions: It has no purchase effects AND...
+   * It has only 1 gem associated with it
+   * OR it is a normal card, but its paired (so isPaired is true, plus gemNumber is 2).
    *
    * @return whether this dev card is base card or not
    */
   public boolean isBaseCard() {
-    return purchaseEffects.isEmpty() && gemNumber == 1;
+    return purchaseEffects.isEmpty() && (gemNumber == 1 || (isPaired && gemNumber == 2));
   }
 
   /**
