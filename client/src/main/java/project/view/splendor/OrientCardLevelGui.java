@@ -161,6 +161,9 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
         deck.setOnMouseClicked(createClickOnDeckHandler(gameId, actionId));
       } else {
         List<ActionIdPair> allActions = curLevelMap.get(position);
+        System.out.println("Orient board position: " + level + " " + position.getY());
+        System.out.println(allActions);
+        System.out.println();
         allCards.get(position.getY()).setOnMouseClicked(createClickOnCardHandler(gameId, allActions));
       }
     }

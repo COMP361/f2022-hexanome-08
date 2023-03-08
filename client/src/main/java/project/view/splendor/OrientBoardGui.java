@@ -86,8 +86,8 @@ public class OrientBoardGui implements BoardGui{
         cardPosition = reserveAction.getCardPosition();
         card = reserveAction.getCurCard();
       }
-      // only card with purchase effects size > 0 is orient card
-      if (card.getPurchaseEffects().size() > 0) {
+      // only card with purchase effects size >= 0 is orient card
+      if (card.getPurchaseEffects().size() > 0 || card.getGemNumber()==2) {
         List<ActionIdPair> actions;
         if (!positionToActionMap.containsKey(cardPosition)) {
           actions = new ArrayList<>();
@@ -99,6 +99,11 @@ public class OrientBoardGui implements BoardGui{
       }
 
     }
+    for (Position position : positionToActionMap.keySet()) {
+      List<ActionIdPair> pairs = positionToActionMap.get(position);
+      System.out.println("All actions for" + pairs.size());
+    }
+
     return positionToActionMap;
   }
 

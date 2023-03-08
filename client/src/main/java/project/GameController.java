@@ -2,6 +2,7 @@ package project;
 
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
+import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import com.google.gson.Gson;
@@ -454,6 +455,15 @@ public class GameController implements Initializable {
             // clear up all children in playerBoardAnchorPane
             for (BoardGui boardGui : extensionBoardGuiMap.values()) {
               Platform.runLater(boardGui::clearContent);
+            }
+            System.out.println("Current player " + playerName + " actions: ");
+            for (Action action : playerActionMap.values()) {
+              if (action instanceof PurchaseAction) {
+                PurchaseAction purchaseAction = (PurchaseAction) action;
+                Position position = purchaseAction.getCardPosition();
+                System.out.println("Card is at level: " + position.getX()
+                    + " and index " +  position.getY());
+              }
             }
 
             // generate BoardGui based on extension type

@@ -126,7 +126,9 @@ public class BaseBoardGui implements BoardGui {
         card = reserveAction.getCurCard();
       }
       // only take the positions of the card with no effect
-      if (card.getPurchaseEffects().size() == 0) {
+      if (card.getPurchaseEffects().size() == 0
+          && (card.getGemNumber() == 1
+          || (card.isPaired() && card.getGemNumber() == 2))) {
         List<ActionIdPair> actions;
         if (!positionToActionMap.containsKey(cardPosition)) {
           actions = new ArrayList<>();

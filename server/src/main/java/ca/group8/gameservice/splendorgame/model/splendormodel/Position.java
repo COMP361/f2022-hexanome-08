@@ -1,5 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import java.util.Objects;
+
 /**
  * X and Y coordinates on board.
  */
@@ -31,8 +33,24 @@ public class Position {
   }
 
   @Override
-  public boolean equals(Object o) {
-    Position position = (Position) o;
-    return (position.getX() == this.getX() && position.getY() == this.getY());
+  public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
+
+    if (!(obj instanceof Position)) {
+      return false;
+    }
+
+    Position otherPosition = (Position) obj;
+
+    return super.equals(otherPosition) &&
+        this.coordinateX == otherPosition.coordinateX &&
+        this.coordinateY == otherPosition.coordinateY;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), coordinateX, coordinateY);
   }
 }
