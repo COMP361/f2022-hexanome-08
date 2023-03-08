@@ -13,6 +13,13 @@ public class SavedGameState {
   private final PlayerStates playerStates;
   private final ActionInterpreter actionInterpreter;
 
+  /**
+   * SavedGameState.
+   *
+   * @param gameInfo gameInfo
+   * @param playerStates playerStates
+   * @param actionInterpreter actionInterpreter
+   */
   public SavedGameState(GameInfo gameInfo, PlayerStates playerStates,
                         ActionInterpreter actionInterpreter) {
     this.gameInfo = gameInfo;

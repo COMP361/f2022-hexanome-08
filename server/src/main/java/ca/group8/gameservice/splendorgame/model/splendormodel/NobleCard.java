@@ -10,6 +10,13 @@ import java.util.stream.Collectors;
  */
 public class NobleCard extends Card {
 
+  /**
+   * NobleCard infos.
+   *
+   * @param paramPrestigePoints paramPrestigePoints
+   * @param paramPrice paramPrice
+   * @param paramCardName paramCardName
+   */
   public NobleCard(int paramPrestigePoints,
                    EnumMap<Colour, Integer> paramPrice, String paramCardName) {
     super(paramPrestigePoints, paramPrice, paramCardName);

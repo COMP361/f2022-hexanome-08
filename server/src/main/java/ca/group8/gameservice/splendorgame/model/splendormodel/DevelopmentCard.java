@@ -125,8 +125,10 @@ public class DevelopmentCard extends Card {
 
 
   /**
-   * @param hasDoubleGoldPower
-   * @param wealth
+   * canBeBought.
+   *
+   * @param hasDoubleGoldPower hasDoubleGoldPower
+   * @param wealth wealth
    * @return -1 if can not afford, 0 or >0 as a number of gold token needed
    */
   public int canBeBought(boolean hasDoubleGoldPower, EnumMap<Colour, Integer> wealth) {
@@ -203,12 +205,12 @@ public class DevelopmentCard extends Card {
 
     DevelopmentCard other = (DevelopmentCard) obj;
 
-    return super.equals(other) &&
-        this.level == other.level &&
-        this.gemNumber == other.gemNumber &&
-        this.isPaired == other.isPaired &&
-        this.gemColour.equals(other.gemColour) &&
-        this.purchaseEffects.equals(other.purchaseEffects);
+    return super.equals(other)
+            && this.level == other.level
+            && this.gemNumber == other.gemNumber
+            && this.isPaired == other.isPaired
+            && this.gemColour.equals(other.gemColour)
+            && this.purchaseEffects.equals(other.purchaseEffects);
   }
 
   @Override

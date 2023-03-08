@@ -59,6 +59,11 @@ public class TokenHand {
     return allTokens;
   }
 
+  /**
+   *getTokenTotalCount.
+   *
+   * @return int
+   */
   public int getTokenTotalCount() {
     int sum = 0;
     for (Colour c : allTokens.keySet()) {

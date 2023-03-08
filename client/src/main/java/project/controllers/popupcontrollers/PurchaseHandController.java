@@ -106,7 +106,7 @@ public class PurchaseHandController implements Initializable {
       }
       Image img;
       // has some effect -> orient
-      if (card.getPurchaseEffects().size() > 0) {
+      if (!card.isBaseCard()) {
         img = new Image(App.getOrientCardPath(card.getCardName(), card.getLevel()));
       } else { // otherwise, base
         img = new Image(App.getBaseCardPath(card.getCardName(), card.getLevel()));
@@ -157,6 +157,8 @@ public class PurchaseHandController implements Initializable {
       String noblePath = App.getNoblePath(nobleCard.getCardName());
       ImageView imageView = new ImageView(new Image(noblePath));
       // add the image view to vbox
+      imageView.setFitWidth(100);
+      imageView.setFitHeight(150);
       noblesUnLocked.getChildren().add(imageView);
     }
   }
@@ -188,6 +190,9 @@ public class PurchaseHandController implements Initializable {
         // only for normal
         // cards with RED, WHITE, BLUE, GREEN, BLACK colours)
         // Bind actions to image view during generateCardSatchelPair(...) method
+        for(DevelopmentCard card:cardsOfOneColour){
+          System.out.println(card.getCardName());
+        }
         List<HBox> allPairs = generateCardSatchelPair(cardsOfOneColour);
         addCardSatchelPairToColourGroup(allPairs, colourGroupMap.get(c));
       }

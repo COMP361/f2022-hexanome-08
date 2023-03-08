@@ -15,7 +15,11 @@ public class BaseBoard extends Board {
   private final Map<Integer, DevelopmentCard[]> cardsOnBoard = new HashMap<>();
   private final List<NobleCard> nobles;
 
-
+  /**
+   * BaseBoard.
+   *
+   * @param playerNames playerNames
+   */
   public BaseBoard(List<String> playerNames) {
     super.type = this.getClass().getSimpleName();
     // set up decks and cards on board
