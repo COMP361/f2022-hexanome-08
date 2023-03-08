@@ -1,13 +1,8 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
-import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
-import ca.group8.gameservice.splendorgame.model.splendormodel.SplendorGameException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
-import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
 import java.util.EnumMap;
 
 /**
@@ -17,7 +12,7 @@ import java.util.EnumMap;
 public class ReturnTokenAction extends Action {
 
   private final EnumMap<Colour, Integer> tokensToReturn;
-  private int extraTokenCount;
+  private final int extraTokenCount;
 
   public ReturnTokenAction(EnumMap<Colour, Integer> tokensToReturn, int extraTokens) {
     super.type = this.getClass().getSimpleName();

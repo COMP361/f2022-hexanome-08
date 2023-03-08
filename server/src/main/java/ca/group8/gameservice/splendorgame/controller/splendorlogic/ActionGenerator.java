@@ -137,10 +137,10 @@ public class ActionGenerator {
           //if price is negative, meaning you have more gems than required, just set tokens paid to 0.
           if (priceAfterDiscount <= 0) {
             tokensPaid.put(c, 0);
-          }else if (priceAfterDiscount > totalTokens.get(c)){
-            tokensPaid.put(c,totalTokens.get(c));
+          } else if (priceAfterDiscount > totalTokens.get(c)) {
+            tokensPaid.put(c, totalTokens.get(c));
           } else {
-            tokensPaid.put(c,priceAfterDiscount);
+            tokensPaid.put(c, priceAfterDiscount);
           }
         }
 
@@ -150,7 +150,7 @@ public class ActionGenerator {
             tokensPaid.put(Colour.GOLD, goldTokenNeeded);
           } else {
             tokensPaid.put(Colour.GOLD, goldTokensInHand);
-            goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand)/2);
+            goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
           }
         } else {
           tokensPaid.put(Colour.GOLD, 0);
@@ -178,10 +178,10 @@ public class ActionGenerator {
           //if price is negative, meaning you have more gems than required, just set tokens paid to 0.
           if (priceAfterDiscount <= 0) {
             tokensPaid.put(c, 0);
-          }else if (priceAfterDiscount > totalTokens.get(c)){
-            tokensPaid.put(c,totalTokens.get(c));
+          } else if (priceAfterDiscount > totalTokens.get(c)) {
+            tokensPaid.put(c, totalTokens.get(c));
           } else {
-            tokensPaid.put(c,priceAfterDiscount);
+            tokensPaid.put(c, priceAfterDiscount);
           }
         }
 
@@ -191,10 +191,10 @@ public class ActionGenerator {
             tokensPaid.put(Colour.GOLD, goldTokenNeeded);
           } else {
             tokensPaid.put(Colour.GOLD, goldTokensInHand);
-            goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand)/2);
+            goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
           }
-        } else{
-            tokensPaid.put(Colour.GOLD, 0);
+        } else {
+          tokensPaid.put(Colour.GOLD, 0);
         }
         result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
       }
@@ -203,7 +203,7 @@ public class ActionGenerator {
     //get list of cards in player's reserve card hand
     DevelopmentCard[] reservedCards = curPlayerInfo.getReservedHand().getDevelopmentCards()
         .toArray(DevelopmentCard[]::new);
-    if(reservedCards.length>0) { //only iterate
+    if (reservedCards.length > 0) { //only iterate
       for (int cardIndex = 0; cardIndex < reservedCards.length; cardIndex++) {
         int goldCardsNeeded = 0;
         //x coordinate = 0, means this is a card in the reserve hand!
@@ -451,9 +451,9 @@ public class ActionGenerator {
   public void updateBonusTokenPowerActions(PlayerInGame player) {
     List<Action> actions = new ArrayList<>();
     EnumMap<Colour, Integer> rawMap = SplendorDevHelper.getInstance().getRawTokenColoursMap();
-    EnumMap<Colour,Integer> bankTokens = tableTop.getBank().getAllTokens();
-    for(Colour colour: rawMap.keySet()){
-      if(bankTokens.get(colour)>0){
+    EnumMap<Colour, Integer> bankTokens = tableTop.getBank().getAllTokens();
+    for (Colour colour : rawMap.keySet()) {
+      if (bankTokens.get(colour) > 0) {
         actions.add(new BonusTokenPowerAction(player, colour));
       }
     }
@@ -578,8 +578,8 @@ public class ActionGenerator {
         }
         // if the return went over the initial value, we do not allow it as well
         int upperBound = tableTop.getBank().getInitialValue();
-        EnumMap<Colour,Integer> bankBalance = tableTop.getBank().getAllTokens();
-        if(bankBalance.get(colour) + combo.get(colour) > upperBound) {
+        EnumMap<Colour, Integer> bankBalance = tableTop.getBank().getAllTokens();
+        if (bankBalance.get(colour) + combo.get(colour) > upperBound) {
           isValid = false;
         }
       }

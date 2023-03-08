@@ -21,11 +21,10 @@ import java.util.List;
  */
 public class PurchaseAction extends Action {
 
-  private DevelopmentCard curCard;
-  private int goldCardsRequired;
-  private Position cardPosition;
-
   private final EnumMap<Colour, Integer> tokensToBePaid;
+  private final DevelopmentCard curCard;
+  private final int goldCardsRequired;
+  private final Position cardPosition;
 
 
   /**
@@ -34,7 +33,7 @@ public class PurchaseAction extends Action {
    * @param cardPosition      position on board
    * @param DevelopmentCard   DevelopmentCard associated with action
    * @param goldCardsRequired number of gold card required
-   * @param tokensToBePaid a enum map of tokens to be paid
+   * @param tokensToBePaid    a enum map of tokens to be paid
    */
   public PurchaseAction(Position cardPosition, DevelopmentCard DevelopmentCard,
                         int goldCardsRequired, EnumMap<Colour, Integer> tokensToBePaid) {
@@ -70,8 +69,8 @@ public class PurchaseAction extends Action {
 
       //if cardPosition.getX()==0, it would mean this is from reservedHand. Therefore
       //we would skip the steps to remove & replace card on board.
-      if(cardPosition.getX()!=0) {
-        if(curCard.isBaseCard()) {
+      if (cardPosition.getX() != 0) {
+        if (curCard.isBaseCard()) {
           // remove card from board
           BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
           baseBoard.removeCard(cardPosition);
@@ -98,7 +97,7 @@ public class PurchaseAction extends Action {
       //String playerName = playerInGame.getName();
       if (curEffect.equals(CardEffect.BURN_CARD)) {
         actionInterpreter.setStashedCard(curCard);
-        EnumMap<Colour,Integer> priceOfBurnCard = curCard.getPrice();
+        EnumMap<Colour, Integer> priceOfBurnCard = curCard.getPrice();
         actionInterpreter.setBurnCardInfo(priceOfBurnCard);
         actionGenerator.updateCascadeActions(playerInGame, curCard, curEffect);
       } else {
@@ -109,7 +108,7 @@ public class PurchaseAction extends Action {
 
         //if cardPosition.getX()==0, it would mean this is from reservedHand. Therefore
         //we would skip the steps to remove & replace card on board.
-        if(cardPosition.getX()!=0) {
+        if (cardPosition.getX() != 0) {
 
           // remove card from board
           OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
@@ -155,7 +154,7 @@ public class PurchaseAction extends Action {
       //we would skip the steps to remove & replace card on board.
       //if cardPosition.getX()==0, it would mean this is from reservedHand. Therefore
       //we would skip the steps to remove & replace card on board.
-      if(cardPosition.getX()!=0) {
+      if (cardPosition.getX() != 0) {
 
         // remove card from board
         OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
@@ -171,7 +170,6 @@ public class PurchaseAction extends Action {
       // but no cascade is happening
       actionGenerator.updateCascadeActions(playerInGame, curCard, CardEffect.SATCHEL);
     }
-
 
 
   }

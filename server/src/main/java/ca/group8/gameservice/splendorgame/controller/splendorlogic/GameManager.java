@@ -39,16 +39,15 @@ public class GameManager {
 
   private final File saveGameInfoFile = new File("src/saved_games_data.json");
   private final File saveGameMetaFile = new File("src/saved_games_meta.json");
-  //private final String saveGameInfoFileName = "saved_games_data.json";
-  //private final String saveGameMetaFileName = "saved_games_meta.json";
-  private List<String> savedGameIds = new ArrayList<>();
   private final Map<Long, PlayerStates> activePlayers;
   private final Map<Long, GameInfo> activeGames;
   private final Map<Long, ActionInterpreter> gameActionInterpreters;
-
   private final Map<Long, LauncherInfo> gameLauncherInfos;
   private final LobbyCommunicator lobbyCommunicator;
   private final Logger logger;
+  //private final String saveGameInfoFileName = "saved_games_data.json";
+  //private final String saveGameMetaFileName = "saved_games_meta.json";
+  private List<String> savedGameIds = new ArrayList<>();
 
   /**
    * Construct a new GameManager instance (initialize all maps to empty HashMaps).
@@ -220,7 +219,7 @@ public class GameManager {
           actionGenerator.setInitialActions(playerInGame, currentPlayerName);
         }
         return savedGame;
-      }catch (IOException e) {
+      } catch (IOException e) {
         e.printStackTrace();
         throw new ModelAccessException(e.getMessage());
       }
@@ -347,7 +346,8 @@ public class GameManager {
     synchronized (saveGameInfoFile) {
       try {
         FileReader fileReader = new FileReader(saveGameInfoFile, StandardCharsets.UTF_8);
-        Type mapOfSaveGameStates = new TypeToken<Map<String, SavedGameState>>() {}.getType();
+        Type mapOfSaveGameStates = new TypeToken<Map<String, SavedGameState>>() {
+        }.getType();
         return SplendorDevHelper.getInstance().getGson().fromJson(fileReader, mapOfSaveGameStates);
       } catch (IOException e) {
         //throw new IOException("file: server/saved_games_data.json not found, please create one!");
@@ -366,7 +366,7 @@ public class GameManager {
    */
   private void writeSavedGameDataToFile(String saveGameId,
                                         SavedGameState savedGameState, boolean addToFile) {
-    synchronized (saveGameInfoFile){
+    synchronized (saveGameInfoFile) {
       try {
         Map<String, SavedGameState> allSaveGames = readSavedGameDataFromFile();
         if (allSaveGames == null || (allSaveGames.isEmpty() && addToFile)) {
@@ -407,11 +407,12 @@ public class GameManager {
   public List<Savegame> readSavedGameMetaDataFromFile() throws IOException {
     synchronized (saveGameMetaFile) {
       try {
-        if(!saveGameMetaFile.exists()){
+        if (!saveGameMetaFile.exists()) {
           System.err.println("File not found: " + saveGameMetaFile.getPath());
         }
         FileReader fileReader = new FileReader(saveGameMetaFile, StandardCharsets.UTF_8);
-        Type listOfSavegame = new TypeToken<List<Savegame>>() {}.getType();
+        Type listOfSavegame = new TypeToken<List<Savegame>>() {
+        }.getType();
         return SplendorDevHelper.getInstance().getGson().fromJson(fileReader, listOfSavegame);
       } catch (IOException e) {
         //throw new IOException("file: server/saved_games_meta.json not found, please create one!");
@@ -445,12 +446,14 @@ public class GameManager {
             }
             allSaveGamesMeta.add(savegame);
           } else {
-            allSaveGamesMeta.removeIf(game -> game.getSavegameid().equals(savegame.getSavegameid()));
+            allSaveGamesMeta.removeIf(
+                game -> game.getSavegameid().equals(savegame.getSavegameid()));
           }
         }
 
         FileWriter metaDataWriter = new FileWriter(saveGameMetaFile, StandardCharsets.UTF_8);
-        Type listOfSavegame = new TypeToken<List<Savegame>>() {}.getType();
+        Type listOfSavegame = new TypeToken<List<Savegame>>() {
+        }.getType();
         String newSaveGamesMetaJson = SplendorDevHelper
             .getInstance().getGson()
             .toJson(allSaveGamesMeta, listOfSavegame);

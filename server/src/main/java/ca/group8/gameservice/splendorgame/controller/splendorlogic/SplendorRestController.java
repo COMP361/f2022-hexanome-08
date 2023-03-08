@@ -6,14 +6,12 @@ import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGam
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
-import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -257,7 +255,8 @@ public class SplendorRestController {
       GameInfo game = gameManager.getGameById(gameId);
       // if we can find the game, print the list of player names
       Gson gsonParser = SplendorDevHelper.getInstance().getGson();
-      Type listOfNames = new TypeToken<List<String>>(){}.getType();
+      Type listOfNames = new TypeToken<List<String>>() {
+      }.getType();
       String allPlayersInGame = gsonParser.toJson(game.getPlayerNames(), listOfNames);
       return ResponseEntity.status(HttpStatus.OK).body(allPlayersInGame);
     } catch (ModelAccessException e) {

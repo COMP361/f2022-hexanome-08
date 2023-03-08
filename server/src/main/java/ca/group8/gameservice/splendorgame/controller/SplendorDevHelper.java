@@ -8,9 +8,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.github.isharipov.gson.adapters.PolymorphDeserializer;
-import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.List;
 
 /**
  * A helper singleton class that helps to resolve all abstract.
@@ -66,7 +64,7 @@ public class SplendorDevHelper {
    *
    * @return a list of token colours
    */
-  public EnumMap<Colour, Integer>getRawTokenColoursMap() {
+  public EnumMap<Colour, Integer> getRawTokenColoursMap() {
     return new EnumMap<>(rawTokenColoursMap);
   }
 

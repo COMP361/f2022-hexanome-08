@@ -54,7 +54,7 @@ public class Bank {
     //  assert (allTokens.get(colour) + paramTokens.get(colour)) <= initialValue;
     //}
     //add Tokens
-    Logger logger  = LoggerFactory.getLogger(Bank.class);
+    Logger logger = LoggerFactory.getLogger(Bank.class);
     logger.warn("bank balance: " + allTokens);
     logger.warn("tokens return: " + paramTokens);
     for (Colour colour : SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet()) {
