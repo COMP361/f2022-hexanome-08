@@ -42,7 +42,7 @@ public class SavedGameState {
   public void renamePlayers(List<String> playerNames, String creator) {
     // since we relinked the references, the name changing happen in
     // the gameInfo and player states will happen synchronously in interpreter
-    actionInterpreter.relinkReferences(gameInfo, playerStates);
+    //actionInterpreter.relinkReferences(gameInfo, playerStates);
     gameInfo.renamePlayers(playerNames, creator);
     playerStates.renamePlayers(playerNames);
   }
