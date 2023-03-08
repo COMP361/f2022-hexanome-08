@@ -1,6 +1,8 @@
+import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.Position;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +68,12 @@ public class TestBoardGui {
 
     System.out.println(map);
 
+  }
+
+  @Test
+  public void testEnum() {
+    EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
+    System.out.println(totalGems);
   }
 }
 

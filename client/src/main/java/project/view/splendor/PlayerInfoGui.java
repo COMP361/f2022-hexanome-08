@@ -18,5 +18,5 @@ public interface PlayerInfoGui {
 
   void setNewTokenInHand(EnumMap<Colour, Integer> newTokens);
 
-  void setGemsInHand(List<DevelopmentCard> allDevCardsInHand);
+  void setGemsInHand(EnumMap<Colour, Integer> gemsInHand);
 }

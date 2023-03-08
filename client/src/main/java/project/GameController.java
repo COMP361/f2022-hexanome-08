@@ -221,8 +221,8 @@ public class GameController implements Initializable {
     String playerName = curPlayerInGame.getName();
     int newPoints = curPlayerInGame.getPrestigePoints();
     EnumMap<Colour, Integer> newTokenInHand = curPlayerInGame.getTokenHand().getAllTokens();
-    List<DevelopmentCard> allDevCards =
-        curPlayerInGame.getPurchasedHand().getDevelopmentCards();
+    // this gems contain gold colour orient card count!!!!
+    EnumMap<Colour, Integer> gemsInHand = curPlayerInGame.getTotalGems();
     // Get the player gui
     PlayerInfoGui playerInfoGui = nameToPlayerInfoGuiMap.get(playerName);
     // updating the GUI based on the new info from server
@@ -231,13 +231,9 @@ public class GameController implements Initializable {
       // TODO: Add updating number of noble reserved and number of dev cards reserved
       playerInfoGui.setNewPrestigePoints(newPoints);
       playerInfoGui.setNewTokenInHand(newTokenInHand);
-      playerInfoGui.setGemsInHand(allDevCards);
-      //System.out.println("Current player info: "+ curPlayerInGame.getName());
-      //System.out.println("Tokens in hand: " + newTokenInHand);
-      //System.out.println("Development cards: "+ allDevCards);
-      //System.out.println("Player wealth: " + curPlayerInGame.getWealth());
-      //System.out.println();
-      //System.out.println();
+      System.out.println(App.getUser().getUsername() + " has tokens in hand: " + newTokenInHand);
+      System.out.println(App.getUser().getUsername() + " has gems in hand: " + gemsInHand);
+      playerInfoGui.setGemsInHand(gemsInHand);
     });
   }
 
@@ -451,7 +447,9 @@ public class GameController implements Initializable {
             // always get the action map from game info
             String playerName = curUser.getUsername();
             Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
-            //System.out.println("Player: " + playerName + playerActionMap.values());
+            // TODO: After one purchase, the server side did not set next player properly
+            System.out.println("Current turn: " + curGameInfo.getCurrentPlayer());
+            System.out.println("Player: " + playerName + playerActionMap.values());
             // clear up all children in playerBoardAnchorPane
             for (BoardGui boardGui : extensionBoardGuiMap.values()) {
               Platform.runLater(boardGui::clearContent);
@@ -520,14 +518,8 @@ public class GameController implements Initializable {
     // the shaded shape that is used to prevent player to mess around with
     // actions when we do not allow them to click on things that are
     // not in pop up window
-    playerBoardAnchorPane.getChildren().add(coverRectangle);
-    coverRectangle.setVisible(false);
-    coverRectangle.widthProperty().bind(playerBoardAnchorPane.widthProperty());
-    coverRectangle.heightProperty().bind(playerBoardAnchorPane.heightProperty());
-    GameRequestSender gameRequestSender = App.getGameRequestSender();
-    //System.out.println("Current user: " + App.getUser().getUsername());
-    //System.out.println(gameRequestSender.getGameServiceName());
 
+    GameRequestSender gameRequestSender = App.getGameRequestSender();
     HttpResponse<String> firstGameInfoResponse = null;
     try {
       firstGameInfoResponse = gameRequestSender.sendGetGameInfoRequest(gameId, "");

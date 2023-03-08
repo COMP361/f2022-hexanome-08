@@ -2,11 +2,13 @@ package project.view.splendor;
 
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
+import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -145,22 +147,21 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
   }
 
   @Override
-  public void setGemsInHand(List<DevelopmentCard> allDevCardsInHand) {
-    EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
-    Colour[] baseColours = App.getBaseColours();
-    for (Colour c : baseColours) {
-      totalGems.put(c, 0);
-    }
-    for (DevelopmentCard card : allDevCardsInHand) {
-      Colour colour = card.getGemColour();
-      int oldValue = totalGems.get(colour);
-      totalGems.put(colour, oldValue + card.getGemNumber());
-    }
-    Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo =
-        this.getPlayerColourWealthMap(this.playerPosition);
-    for (Colour colour : baseColours) {
-      wealthInfo.get(colour).get(PlayerWealthInfo.GEM)
-          .setText(Integer.toString(totalGems.get(colour)));
+  public void setGemsInHand(EnumMap<Colour, Integer> gemsInHand) {
+    // the map to GUI display
+    Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo = getPlayerColourWealthMap(playerPosition);
+    Set<Colour> regularColours = SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet();
+    for (Colour colour : regularColours) {
+      Map<PlayerWealthInfo, Text> perColourWealth = wealthInfo.get(colour);
+      if (colour.equals(Colour.GOLD)) {
+        perColourWealth
+            .get(PlayerWealthInfo.TOKEN)
+            .setText(Integer.toString(gemsInHand.get(colour)));
+      } else {
+        perColourWealth
+            .get(PlayerWealthInfo.GEM)
+            .setText(Integer.toString(gemsInHand.get(colour)));
+      }
     }
   }
 
