@@ -30,17 +30,16 @@ import project.controllers.popupcontrollers.DeckActionController;
 public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
   private final int level;
+  private final Rectangle coverRectangle;
   private DevelopmentCard[] cards;
   private List<DevelopmentCard> deck;
-
-  private final Rectangle coverRectangle;
 
   /**
    * Constructor of BaseCardLevelGui class.
    *
    * @param level level of the cards (1,2,3)
    * @param cards a list of cards (fixed length of 4)
-   * @param deck a list of cards (change length based on level)
+   * @param deck  a list of cards (change length based on level)
    */
   public BaseCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck,
                           Rectangle coverRectangle) {
@@ -89,12 +88,13 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     }
   }
 
-  private EventHandler<MouseEvent> createClickOnCardHandler(long gameId, List<ActionIdPair> allActions) {
+  private EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
+                                                            List<ActionIdPair> allActions) {
     return event -> {
       try {
         App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(gameId,  allActions, coverRectangle),
-            coverRectangle,360, 170);
+            new CardActionController(gameId, allActions, coverRectangle),
+            coverRectangle, 360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -105,7 +105,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     return event -> {
       try {
         App.loadPopUpWithController("deck_action.fxml",
-            new DeckActionController(gameId, actionId, coverRectangle), coverRectangle,360, 170);
+            new DeckActionController(gameId, actionId, coverRectangle), coverRectangle, 360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -150,10 +150,11 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
   @Override
   // set up actions to this level gui
-  public void bindActionToCardAndDeck(Map<Position, List<ActionIdPair>> positionToActionMap, long gameId) {
+  public void bindActionToCardAndDeck(Map<Position, List<ActionIdPair>> positionToActionMap,
+                                      long gameId) {
     Map<Position, List<ActionIdPair>> curLevelMap = positionToActionMap.entrySet()
         .stream().filter(e -> e.getKey().getX() == level)
-        .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     List<ImageView> allCards = getAllCardsGui();
     for (Position position : curLevelMap.keySet()) {
       if (position.getY() == -1) {
@@ -164,7 +165,8 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
         deck.setOnMouseClicked(createClickOnDeckHandler(gameId, actionId));
       } else {
         List<ActionIdPair> allActions = curLevelMap.get(position);
-        allCards.get(position.getY()).setOnMouseClicked(createClickOnCardHandler(gameId, allActions));
+        allCards.get(position.getY())
+            .setOnMouseClicked(createClickOnCardHandler(gameId, allActions));
       }
     }
   }

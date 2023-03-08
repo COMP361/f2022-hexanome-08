@@ -11,51 +11,51 @@ public class GameParameters {
   private String location;
   private String webSupport;
 
-  public void setMaxSessionPlayers(int maxSessionPlayers) {
-    this.maxSessionPlayers = maxSessionPlayers;
-  }
-
   public int getMaxSessionPlayers() {
     return maxSessionPlayers;
   }
 
-  public void setMinSessionPlayers(int minSessionPlayers) {
-    this.minSessionPlayers = minSessionPlayers;
+  public void setMaxSessionPlayers(int maxSessionPlayers) {
+    this.maxSessionPlayers = maxSessionPlayers;
   }
 
   public int getMinSessionPlayers() {
     return minSessionPlayers;
   }
 
-  public void setDisplayName(String displayName) {
-    this.displayName = displayName;
+  public void setMinSessionPlayers(int minSessionPlayers) {
+    this.minSessionPlayers = minSessionPlayers;
   }
 
   public String getDisplayName() {
     return displayName;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
   }
 
   public String getName() {
     return name;
   }
 
-  public void setLocation(String location) {
-    this.location = location;
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getLocation() {
     return location;
   }
 
-  public void setWebSupport(String webSupport) {
-    this.webSupport = webSupport;
+  public void setLocation(String location) {
+    this.location = location;
   }
 
   public String getWebSupport() {
     return webSupport;
+  }
+
+  public void setWebSupport(String webSupport) {
+    this.webSupport = webSupport;
   }
 }

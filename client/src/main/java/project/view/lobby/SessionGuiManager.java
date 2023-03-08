@@ -1,8 +1,6 @@
 package project.view.lobby;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javafx.application.Platform;
 import javafx.scene.layout.VBox;
@@ -12,11 +10,12 @@ import javafx.scene.layout.VBox;
  */
 public class SessionGuiManager extends VBox {
 
-  private static SessionGuiManager sessionsVbox = null;
   private static final Map<Long, SessionGui> sessionIdGuiMap = new HashMap<>();
+  private static SessionGuiManager sessionsVbox = null;
 
 
-  private SessionGuiManager() {}
+  private SessionGuiManager() {
+  }
 
 
   /**

@@ -34,82 +34,39 @@ import project.view.lobby.communication.User;
 public class App extends Application {
 
 
-  private static Stage primaryStage;
-
-
   // One and the only one requestSender
   private static final LobbyRequestSender lobbyRequestSender =
       new LobbyRequestSender("http://76.66.139.161:4242");
-
   // TODO: Change this to singleton later LobbyServiceRequestSender
   //private static final LobbyRequestSender lobbyRequestSender =
   //    new LobbyRequestSender("http://127.0.0.1:4242");
-/**/
-   //http://127.0.0.1:4246/splendor
-   //http://76.66.139.161:4246/splendorbvb
+  /**/
+  //http://127.0.0.1:4246/splendor
+  //http://76.66.139.161:4246/splendorbvb
   private static final GameRequestSender gameRequestSender =
       new GameRequestSender("http://76.66.139.161:4246/", "splendorbase");
+  private static final Colour[] allColours = new Colour[] {
+      Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
+  };
   // TODO: This should not be a global variable in App!!!
   //private static final GameRequestSender gameRequestSender =
   //    new GameRequestSender(
   //        "http://127.0.0.1:4246/", "splendorbase");
-
-
-  private static final Colour[] allColours = new Colour[] {
-      Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
-  };
   private static final Colour[] baseColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
   };
-
-  private static User user;
-
-  private static GameBoardLayoutConfig guiLayouts;
-
-  private static Thread lobbyGuiThread = null;
-
   private final static List<Thread> gameGuiThread = new ArrayList<>();
-
-  private static LobbyController lobbyController = null;
-
   private static final Map<Long, GameController> gameControllerMap = new HashMap<>();
-
-
-  /**
-   * Override the start() method to launch the whole project.
-   *
-   * @param stage The default stage to display
-   * @throws IOException when fxml not found
-   */
-  @Override
-  public void start(Stage stage) throws IOException {
-    System.setProperty("com.apple.macos.useScreenMenuBar", "true");
-    primaryStage = stage;
-    try {
-      FileReader f = new FileReader(Objects.requireNonNull(
-          App.class.getClassLoader().getResource("appConfig.json")).getFile());
-      JsonReader jfReader = new JsonReader(f);
-      guiLayouts = new Gson().fromJson(jfReader, GameBoardLayoutConfig.class);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    FXMLLoader startPageLoader = new FXMLLoader(App.class.getResource( "start_page.fxml"));
-    SessionGuiManager.getInstance();
-    Scene scene = new Scene(startPageLoader.load(),
-        guiLayouts.getAppWidth(),
-        guiLayouts.getAppHeight());
-    primaryStage.setTitle("Welcome to Splendor!");
-    primaryStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
-    primaryStage.setFullScreenExitHint("");
-    primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-    primaryStage.setFullScreen(true);
-    primaryStage.setScene(scene);
-    primaryStage.show();
-  }
+  private static Stage primaryStage;
+  private static User user;
+  private static GameBoardLayoutConfig guiLayouts;
+  private static Thread lobbyGuiThread = null;
+  private static LobbyController lobbyController = null;
 
   public static void main(String[] args) {
     launch();
   }
+
   public static LobbyRequestSender getLobbyServiceRequestSender() {
     return lobbyRequestSender;
   }
@@ -144,7 +101,7 @@ public class App extends Application {
 
   // Note that arm code can only be 1,2,3,4
   public static String getArmPath(int armCode) {
-    assert armCode >= 1 && armCode <=4;
+    assert armCode >= 1 && armCode <= 4;
     return String.format("project/pictures/power/arm%s.png", armCode);
   }
 
@@ -161,9 +118,9 @@ public class App extends Application {
   /**
    * Show a popup Stage with the corresponding fxml file, controller class, and the width/height.
    *
-   * @param fxmlName fxml file name
-   * @param controller controller class of the popup
-   * @param popUpStageWidth window width
+   * @param fxmlName         fxml file name
+   * @param controller       controller class of the popup
+   * @param popUpStageWidth  window width
    * @param popUpStageHeight window height
    * @throws IOException in case fxml is not found
    */
@@ -199,7 +156,7 @@ public class App extends Application {
   /**
    * Show a popup Stage with the corresponding fxml file, controller class, and the width/height.
    *
-   * @param fxmlName fxml file name
+   * @param fxmlName   fxml file name
    * @param controller controller class of the popup
    * @throws IOException in case fxml is not found
    */
@@ -213,9 +170,6 @@ public class App extends Application {
     primaryStage.setScene(new Scene(fxmlLoader.load(), width, height));
     primaryStage.setFullScreen(true);
   }
-
-
-
 
   /**
    * A static method to refresh the user's access token.
@@ -238,26 +192,56 @@ public class App extends Application {
     gameGuiThread.clear();
   }
 
-  public static void setAppLobbyGuiThread(Thread thread) {
-    App.lobbyGuiThread = thread;
-  }
-
   public static Thread getAppLobbyGuiThread() {
     return App.lobbyGuiThread;
+  }
+
+  public static void setAppLobbyGuiThread(Thread thread) {
+    App.lobbyGuiThread = thread;
   }
 
   public static List<Thread> getGameGuiThreads() {
     return gameGuiThread;
   }
 
-
+  public static LobbyController getLobbyController() {
+    return lobbyController;
+  }
 
   public static void setLobbyController(LobbyController lobbyController) {
     App.lobbyController = lobbyController;
   }
 
-  public static LobbyController getLobbyController() {
-    return lobbyController;
+  /**
+   * Override the start() method to launch the whole project.
+   *
+   * @param stage The default stage to display
+   * @throws IOException when fxml not found
+   */
+  @Override
+  public void start(Stage stage) throws IOException {
+    System.setProperty("com.apple.macos.useScreenMenuBar", "true");
+    primaryStage = stage;
+    try {
+      FileReader f = new FileReader(Objects.requireNonNull(
+          App.class.getClassLoader().getResource("appConfig.json")).getFile());
+      JsonReader jfReader = new JsonReader(f);
+      guiLayouts = new Gson().fromJson(jfReader, GameBoardLayoutConfig.class);
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    FXMLLoader startPageLoader = new FXMLLoader(App.class.getResource("start_page.fxml"));
+    SessionGuiManager.getInstance();
+    Scene scene = new Scene(startPageLoader.load(),
+        guiLayouts.getAppWidth(),
+        guiLayouts.getAppHeight());
+    primaryStage.setTitle("Welcome to Splendor!");
+    primaryStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+    primaryStage.setFullScreenExitHint("");
+    primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+    primaryStage.setFullScreen(true);
+    primaryStage.setScene(scene);
+    primaryStage.show();
   }
 
 }

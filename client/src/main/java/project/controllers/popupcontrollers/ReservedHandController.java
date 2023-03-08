@@ -22,17 +22,14 @@ import project.App;
  */
 public class ReservedHandController implements Initializable {
 
-  @FXML
-  private HBox reservedDevCardsHbox;
-
-  @FXML
-  private HBox reservedNoblesHbox;
-
   private final List<ImageView> playerCards = new ArrayList<>();
   private final List<ImageView> playerNobles = new ArrayList<>();
-
   private final Map<String, Action> playerActions;
   private final Rectangle coverRectangle;
+  @FXML
+  private HBox reservedDevCardsHbox;
+  @FXML
+  private HBox reservedNoblesHbox;
 
   public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions,
                                 Rectangle coverRectangle) {

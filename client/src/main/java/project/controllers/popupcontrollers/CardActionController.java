@@ -2,8 +2,6 @@ package project.controllers.popupcontrollers;
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
-import ca.mcgill.comp361.splendormodel.actions.ReserveAction;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -25,19 +23,17 @@ public class CardActionController implements Initializable {
   private final List<ActionIdPair> allActionsPair;
 
   private final long gameId;
-
-  @FXML
-  private Button purchaseButton;
-
-  @FXML
-  private Button reserveButton;
-
   //@FXML
   //private Button goBackButton;
   private final Rectangle coverRectangle;
+  @FXML
+  private Button purchaseButton;
+  @FXML
+  private Button reserveButton;
 
 
-  public CardActionController(long gameId, List<ActionIdPair> allActionsPair, Rectangle coverRectangle) {
+  public CardActionController(long gameId, List<ActionIdPair> allActionsPair,
+                              Rectangle coverRectangle) {
     this.gameId = gameId;
     this.allActionsPair = allActionsPair;
     this.coverRectangle = coverRectangle;

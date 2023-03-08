@@ -3,16 +3,12 @@ package project.controllers.stagecontrollers;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,11 +22,11 @@ import javafx.scene.control.ScrollPane;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.connection.LobbyRequestSender;
+import project.view.lobby.SessionGui;
+import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.GameParameters;
 import project.view.lobby.communication.Savegame;
 import project.view.lobby.communication.Session;
-import project.view.lobby.SessionGui;
-import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.SessionList;
 import project.view.lobby.communication.User;
 
@@ -39,16 +35,13 @@ import project.view.lobby.communication.User;
  */
 public class LobbyController implements Initializable {
 
+  private final Map<String, Savegame> allSaveGamesMap = new HashMap<>();
   @FXML
   private ChoiceBox<String> gameChoices;
-
   @FXML
   private ScrollPane allSessionScrollPane;
-
   @FXML
   private Button createSessionButton;
-
-  private final Map<String, Savegame> allSaveGamesMap = new HashMap<>();
 
   private EventHandler<ActionEvent> createClickOnCreateButton() {
     return event -> {
@@ -93,7 +86,6 @@ public class LobbyController implements Initializable {
   //}
 
 
-
   private void createAndAddSessionGui(Session curSession, Long sessionId, User user) {
     // create the new GUI
     SessionGui curSessionGui = new SessionGui(curSession, sessionId, user);
@@ -107,54 +99,56 @@ public class LobbyController implements Initializable {
   private Thread createUpdateGuiThread() {
     return new Thread(() -> {
 
-        LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
-        String hashedResponse = "";
-        HttpResponse<String> longPullResponse = null;
+      LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+      String hashedResponse = "";
+      HttpResponse<String> longPullResponse = null;
 
-        try{
-          while (!Thread.currentThread().isInterrupted()) {
-            int responseCode = 408;
-            User user = App.getUser();
-            // if there is no user logged in, do not do anything
-            if (user == null) {
-              continue;
-            }
-            while (responseCode == 408) {
-              try {
-                longPullResponse = lobbyRequestSender.sendGetAllSessionDetailRequest(hashedResponse);
-              } catch (UnirestException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-              }
-              responseCode = longPullResponse.getStatus();
-            }
-
-            if (Thread.currentThread().isInterrupted()){
-              throw new InterruptedException("Interrupted Lobby Thread");
-            }
-
-            if (responseCode == 200) {
-              // long pulling ends in success, we obtain the list of new sessions
-              hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
-              // try doing things without first check
-              SessionList sessionList = new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
-              Map<Long, Session> sessionMap = sessionList.getSessions();
-              System.out.println("Session lists updated, we have sessions ids: " + sessionList.getSessionIds());
-              // clear all old sessions and add the new ones
-              SessionGuiManager.clearSessionsRecorded();
-              for (long sessionId : sessionMap.keySet()) {
-                Session curSession = sessionMap.get(sessionId);
-                createAndAddSessionGui(curSession, sessionId, App.getUser());
-              }
-            }
-            // update the content in scroll pane
-            Platform.runLater(() -> {
-              allSessionScrollPane.setContent(SessionGuiManager.getInstance());
-            });
+      try {
+        while (!Thread.currentThread().isInterrupted()) {
+          int responseCode = 408;
+          User user = App.getUser();
+          // if there is no user logged in, do not do anything
+          if (user == null) {
+            continue;
           }
-        } catch (InterruptedException e){
-          System.out.println(e.getMessage());
+          while (responseCode == 408) {
+            try {
+              longPullResponse = lobbyRequestSender.sendGetAllSessionDetailRequest(hashedResponse);
+            } catch (UnirestException e) {
+              e.printStackTrace();
+              throw new RuntimeException(e);
+            }
+            responseCode = longPullResponse.getStatus();
+          }
+
+          if (Thread.currentThread().isInterrupted()) {
+            throw new InterruptedException("Interrupted Lobby Thread");
+          }
+
+          if (responseCode == 200) {
+            // long pulling ends in success, we obtain the list of new sessions
+            hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
+            // try doing things without first check
+            SessionList sessionList =
+                new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
+            Map<Long, Session> sessionMap = sessionList.getSessions();
+            System.out.println(
+                "Session lists updated, we have sessions ids: " + sessionList.getSessionIds());
+            // clear all old sessions and add the new ones
+            SessionGuiManager.clearSessionsRecorded();
+            for (long sessionId : sessionMap.keySet()) {
+              Session curSession = sessionMap.get(sessionId);
+              createAndAddSessionGui(curSession, sessionId, App.getUser());
+            }
+          }
+          // update the content in scroll pane
+          Platform.runLater(() -> {
+            allSessionScrollPane.setContent(SessionGuiManager.getInstance());
+          });
         }
+      } catch (InterruptedException e) {
+        System.out.println(e.getMessage());
+      }
 
     });
   }

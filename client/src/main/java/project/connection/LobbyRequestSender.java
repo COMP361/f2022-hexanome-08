@@ -275,7 +275,7 @@ public class LobbyRequestSender {
   public void sendRemovePlayerRequest(String accessToken, Long sessionId, String playerName)
       throws UnirestException {
     Unirest.delete(String.format("%s/api/sessions/%s/players/%s", lobbyUrl,
-                    sessionId.toString(), playerName))
+            sessionId.toString(), playerName))
         .queryString("access_token", accessToken).asString();
 
   }

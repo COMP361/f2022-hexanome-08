@@ -1,13 +1,11 @@
 package project.view.splendor;
+
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.model.TableTop;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import project.view.InvalidDataException;
-
 import java.util.Map;
+import javafx.scene.layout.AnchorPane;
 
-public class TraderBoardGui implements BoardGui{
+public class TraderBoardGui implements BoardGui {
 
 
   private final long gameId;

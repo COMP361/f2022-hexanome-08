@@ -12,8 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import project.App;
 import project.GameBoardLayoutConfig;
-import project.controllers.stagecontrollers.GameController;
 import project.connection.LobbyRequestSender;
+import project.controllers.stagecontrollers.GameController;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 
@@ -22,15 +22,14 @@ import project.view.lobby.communication.User;
  */
 public class SessionGui extends HBox {
 
-  private Session curSession;
-
   private final Long curSessionId;
-
   private final User curUser;
+  private Session curSession;
 
 
   // TODO: Needs to add a field -> String saveGameId, constructed in constructor
   //private final String saveGameId;
+
   /**
    * This constructs a new SessionGUI.
    *
@@ -77,16 +76,16 @@ public class SessionGui extends HBox {
     return curSession;
   }
 
+  public void setCurSession(Session newSession) {
+    this.curSession = newSession;
+  }
+
   public Long getCurSessionId() {
     return curSessionId;
   }
 
   public User getCurUser() {
     return curUser;
-  }
-
-  public void setCurSession(Session newSession) {
-    this.curSession = newSession;
   }
 
   /**

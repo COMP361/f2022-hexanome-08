@@ -27,9 +27,9 @@ import project.connection.GameRequestSender;
  */
 public class TokenBankGui extends HBox {
 
-  private Map<String, TakeTokenAction> takeTokenActionMap = new HashMap<>();
-  private Map<String, ReturnTokenAction> returnTokenActionMap = new HashMap<>();
   private final long gameId;
+  private Map<String, TakeTokenAction> takeTokenActionMap = new HashMap<>();
+  private final Map<String, ReturnTokenAction> returnTokenActionMap = new HashMap<>();
 
   /**
    * Construct the Token Bank GUI.
@@ -280,6 +280,7 @@ public class TokenBankGui extends HBox {
       }
     };
   }
+
   private EventHandler<ActionEvent> createTakeTokenHandler(Label displayZone) {
     return event -> {
 
@@ -337,12 +338,13 @@ public class TokenBankGui extends HBox {
   /**
    * Set up the TokenBank GUI object.
    *
-   * @param bankMap the enum map of price
-   * @param layoutX layout x
-   * @param layoutY layout y
+   * @param bankMap    the enum map of price
+   * @param layoutX    layout x
+   * @param layoutY    layout y
    * @param firstSetup whether it's first set up or not
    */
-  public void setup(Map<String, TakeTokenAction> takeTokenActionMap, EnumMap<Colour, Integer> bankMap,
+  public void setup(Map<String, TakeTokenAction> takeTokenActionMap,
+                    EnumMap<Colour, Integer> bankMap,
                     double layoutX, double layoutY, boolean firstSetup) {
     this.takeTokenActionMap = takeTokenActionMap;
     // set the layout of the GUI

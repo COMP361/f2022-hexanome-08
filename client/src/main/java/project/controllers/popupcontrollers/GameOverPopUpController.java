@@ -16,8 +16,9 @@ public class GameOverPopUpController implements Initializable {
   @FXML
   private Button byeButton;
 
-  private Thread mainGameUpdateThread;
-  private Thread playerInfoThread;
+  private final Thread mainGameUpdateThread;
+  private final Thread playerInfoThread;
+
   public GameOverPopUpController(Thread mainGameUpdateThread, Thread playerInfoThread) {
     this.mainGameUpdateThread = mainGameUpdateThread;
     this.playerInfoThread = playerInfoThread;

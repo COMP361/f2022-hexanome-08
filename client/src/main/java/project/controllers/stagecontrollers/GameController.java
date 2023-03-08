@@ -3,6 +3,14 @@ package project.controllers.stagecontrollers;
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.model.Colour;
+import ca.mcgill.comp361.splendormodel.model.Extension;
+import ca.mcgill.comp361.splendormodel.model.GameInfo;
+import ca.mcgill.comp361.splendormodel.model.PlayerInGame;
+import ca.mcgill.comp361.splendormodel.model.PlayerStates;
+import ca.mcgill.comp361.splendormodel.model.PurchasedHand;
+import ca.mcgill.comp361.splendormodel.model.ReservedHand;
+import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
+import ca.mcgill.comp361.splendormodel.model.TableTop;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -26,11 +34,11 @@ import javafx.scene.shape.Rectangle;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.GameBoardLayoutConfig;
+import project.connection.GameRequestSender;
 import project.controllers.popupcontrollers.GameOverPopUpController;
 import project.controllers.popupcontrollers.PurchaseHandController;
 import project.controllers.popupcontrollers.ReservedHandController;
 import project.controllers.popupcontrollers.SaveGamePopUpController;
-import project.connection.GameRequestSender;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 import project.view.splendor.BaseBoardGui;
@@ -45,7 +53,6 @@ import project.view.splendor.PlayerPosition;
 import project.view.splendor.TokenBankGui;
 import project.view.splendor.TraderBoardGui;
 import project.view.splendor.VerticalPlayerInfoGui;
-import ca.mcgill.comp361.splendormodel.model.*;
 
 /**
  * Game controller for game GUI.
@@ -53,52 +60,37 @@ import ca.mcgill.comp361.splendormodel.model.*;
 public class GameController implements Initializable {
 
 
-  @FXML
-  private AnchorPane playerBoardAnchorPane;
-
-  @FXML
-  // the VBox that we want to update on to store the base cards (cards only)
-  private VBox baseCardBoard;
-
-  @FXML
-  private VBox orientCardBoard;
-
-  @FXML
-  private Button myCardButton;
-
-  @FXML
-  private Button saveButton;
-
   private final Rectangle coverRectangle = new Rectangle(
       App.getGuiLayouts().getAppWidth(),
       App.getGuiLayouts().getAppHeight());
-
+  private final long gameId;
+  private final Session curSession;
+  private final Map<Integer, BaseCardLevelGui> baseCardGuiMap = new HashMap<>();
+  private final Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap = new HashMap<>();
+  private final Map<String, Integer> nameToArmCodeMap = new HashMap<>();
+  private final Map<Extension, BoardGui> extensionBoardGuiMap = new HashMap<>();
+  @FXML
+  private AnchorPane playerBoardAnchorPane;
+  @FXML
+  // the VBox that we want to update on to store the base cards (cards only)
+  private VBox baseCardBoard;
+  @FXML
+  private VBox orientCardBoard;
+  @FXML
+  private Button myCardButton;
+  @FXML
+  private Button saveButton;
   @FXML
   private Button myReservedCardsButton;
   @FXML
   private Button quitButton;
-
-  private final long gameId;
-
   private String lastTurnPlayerName;
-
-  private final Session curSession;
-
   private NobleBoardGui nobleBoard;
-
   private TokenBankGui tokenBankGui;
-
-  private final Map<Integer, BaseCardLevelGui> baseCardGuiMap = new HashMap<>();
-
-  private final Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap = new HashMap<>();
-
-  private final Map<String, Integer> nameToArmCodeMap = new HashMap<>();
-
-  private final Map<Extension, BoardGui> extensionBoardGuiMap = new HashMap<>();
-
   private List<String> sortedPlayerNames = new ArrayList<>();
   private Thread playerInfoThread;
   private Thread mainGameUpdateThread;
+
   public GameController(long gameId, Session curSession) {
     this.gameId = gameId;
     this.curSession = curSession;
@@ -115,8 +107,6 @@ public class GameController implements Initializable {
   //protected void onExitGameClick() throws IOException {
   //  App.setRoot("admin_lobby_page");
   //}
-
-
   private EventHandler<ActionEvent> createOpenMyReserveCardClick() {
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
@@ -140,7 +130,7 @@ public class GameController implements Initializable {
       try {
         App.loadPopUpWithController("my_reserved_cards.fxml",
             new ReservedHandController(reservedHand, playerActions, coverRectangle),
-            coverRectangle,800, 600);
+            coverRectangle, 800, 600);
 
       } catch (IOException e) {
         throw new RuntimeException(e);
@@ -244,7 +234,8 @@ public class GameController implements Initializable {
         while (!Thread.currentThread().isInterrupted()) {
           int responseCode = 408;
           while (responseCode == 408) {
-            longPullResponse = gameRequestSender.sendGetAllPlayerInfoRequest(gameId, hashedResponse);
+            longPullResponse =
+                gameRequestSender.sendGetAllPlayerInfoRequest(gameId, hashedResponse);
             responseCode = longPullResponse.getStatus();
           }
 
@@ -257,7 +248,8 @@ public class GameController implements Initializable {
             // decode this response into PlayerInGame class with Gson
             String responseInJsonString = longPullResponse.getBody();
             Gson splendorParser = SplendorDevHelper.getInstance().getGson();
-            PlayerStates playerStates = splendorParser.fromJson(responseInJsonString, PlayerStates.class);
+            PlayerStates playerStates =
+                splendorParser.fromJson(responseInJsonString, PlayerStates.class);
             // set up GUI
             setupAllPlayerInfoGui(0);
 
@@ -410,7 +402,7 @@ public class GameController implements Initializable {
                 try {
                   App.loadPopUpWithController("game_over.fxml",
                       new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
-                      coverRectangle,360, 170);
+                      coverRectangle, 360, 170);
                 } catch (IOException e) {
                   throw new RuntimeException(e);
                 }
@@ -461,18 +453,19 @@ public class GameController implements Initializable {
                   break;
                 case TRADING_POST:
                   TraderBoardGui traderBoardGui = new TraderBoardGui(playerBoardAnchorPane, gameId);
-                  traderBoardGui.initialGuiActionSetup(tableTop,playerActionMap);
+                  traderBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
                   extensionBoardGuiMap.put(extension, traderBoardGui);
                   break;
                 case CITY:
                   System.out.println("\nThis is city DLC\n");
                   CityBoardGui cityBoardGui = new CityBoardGui(playerBoardAnchorPane,
-                          gameId,coverRectangle);
-                  cityBoardGui.initialGuiActionSetup(tableTop,playerActionMap);
+                      gameId, coverRectangle);
+                  cityBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
                   extensionBoardGuiMap.put(extension, cityBoardGui);
 
                   break;
-                default: break;
+                default:
+                  break;
               }
             }
 
@@ -494,17 +487,17 @@ public class GameController implements Initializable {
 
   // interrupt the game update thread to save resources
   private EventHandler<ActionEvent> createClickOnSaveButtonEvent(GameInfo gameInfo, long gameId) {
-      return event -> {
-        try {
-          App.loadPopUpWithController("save_game.fxml",
-              new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
-              coverRectangle,
-              360,
-              170);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
-      };
+    return event -> {
+      try {
+        App.loadPopUpWithController("save_game.fxml",
+            new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
+            coverRectangle,
+            360,
+            170);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    };
   }
 
   // interrupt the game update thread to save resources
@@ -557,7 +550,7 @@ public class GameController implements Initializable {
     List<Extension> extensionsPlaying = curGameInfo.getExtensions();
     if (extensionsPlaying.contains(Extension.TRADING_POST)) {
       for (int i = 1; i <= playerNames.size(); i++) {
-        nameToArmCodeMap.put(playerNames.get(i-1), i);
+        nameToArmCodeMap.put(playerNames.get(i - 1), i);
       }
     }
 

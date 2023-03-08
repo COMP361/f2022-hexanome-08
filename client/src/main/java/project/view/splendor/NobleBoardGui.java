@@ -2,7 +2,6 @@ package project.view.splendor;
 
 import ca.mcgill.comp361.splendormodel.model.NobleCard;
 import java.util.List;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -44,9 +43,9 @@ public class NobleBoardGui extends VBox {
   /**
    * Set up the NobleBoardGui with a list of NobleCard.
    *
-   * @param allNobles a list of noble cards
-   * @param layoutX layout x
-   * @param layoutY layout y
+   * @param allNobles  a list of noble cards
+   * @param layoutX    layout x
+   * @param layoutY    layout y
    * @param firstSetup whether it's first setup or not
    */
   public void setup(List<NobleCard> allNobles, double layoutX, double layoutY, boolean firstSetup) {
@@ -65,7 +64,6 @@ public class NobleBoardGui extends VBox {
       imgv.setFitHeight(nobleImageHeight);
       this.getChildren().add(imgv);
     }
-
 
 
   }

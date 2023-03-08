@@ -1,7 +1,6 @@
 package project.controllers.popupcontrollers;
 
 import ca.mcgill.comp361.splendormodel.model.GameInfo;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -14,23 +13,21 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import project.App;
 import project.connection.GameRequestSender;
-import project.connection.LobbyRequestSender;
 import project.view.lobby.communication.Savegame;
 
 public class SaveGamePopUpController implements Initializable {
-  @FXML
-  private TextField saveGameIdTextField;
-
-  @FXML
-  private Button saveButton;
+  private final GameInfo gameInfo;
+  private final long gameId;
 
   //@FXML
   //private Button cancelButton;
+  @FXML
+  private TextField saveGameIdTextField;
+  @FXML
+  private Button saveButton;
+  private final Thread playerInfoThread;
+  private final Thread mainGameUpdateThread;
 
-  private final GameInfo gameInfo;
-  private final long gameId;
-  private Thread playerInfoThread;
-  private Thread mainGameUpdateThread;
   public SaveGamePopUpController(GameInfo gameInfo, long gameId,
                                  Thread playerInfoThread, Thread mainGameUpdateThread) {
     this.gameInfo = gameInfo;
@@ -44,7 +41,7 @@ public class SaveGamePopUpController implements Initializable {
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
       // first save it, and then delete the current session to LS
-      sender.sendSaveGameRequest(gameId,savegame,accessToken);
+      sender.sendSaveGameRequest(gameId, savegame, accessToken);
       // interrupt the threads when creator choose to save the game.
       //playerInfoThread.interrupt();
       //mainGameUpdateThread.interrupt();
@@ -67,7 +64,7 @@ public class SaveGamePopUpController implements Initializable {
     String[] playerNames = playerNamesList.toArray(new String[playerNamesList.size()]);
     String gameName = App.getGameRequestSender().getGameServiceName();
     //cancelButton.setOnAction(createOnClickCancelButton());
-    Thread saveGameFiledThread = new Thread(()->{
+    Thread saveGameFiledThread = new Thread(() -> {
       while (true) {
         // keep looping until user input something
         String saveGameId = saveGameIdTextField.getText();
@@ -77,7 +74,7 @@ public class SaveGamePopUpController implements Initializable {
           saveButton.setDisable(false);
           Savegame savegame = new Savegame(playerNames, gameName, saveGameId);
           String accessToken = App.getUser().getAccessToken();
-          saveButton.setOnAction(createOnClickSaveButton(savegame,accessToken));
+          saveButton.setOnAction(createOnClickSaveButton(savegame, accessToken));
         }
       }
     });
