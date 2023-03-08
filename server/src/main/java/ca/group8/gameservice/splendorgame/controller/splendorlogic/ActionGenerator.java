@@ -103,8 +103,8 @@ public class ActionGenerator {
     String playerName = curPlayerInfo.getName();
     if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
       TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
-      hasDoubleGoldPower = traderBoard.
-          getPlayerOnePower(playerName, PowerEffect.DOUBLE_GOLD).isUnlocked();
+      hasDoubleGoldPower = traderBoard
+              .getPlayerOnePower(playerName, PowerEffect.DOUBLE_GOLD).isUnlocked();
     }
 
     EnumMap<Colour, Integer> totalGems = curPlayerInfo.getTotalGems(); // discount (dev cards)
@@ -120,7 +120,7 @@ public class ActionGenerator {
 
       for (int cardIndex = 0; cardIndex < baseLevelCards.length; cardIndex++) {
         int goldCardsNeeded = 0;
-        Position cardPosition = new Position(level, cardIndex);
+        final Position cardPosition = new Position(level, cardIndex);
         DevelopmentCard card = baseLevelCards[cardIndex];
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
         if (goldTokenNeeded == -1) {
@@ -134,7 +134,8 @@ public class ActionGenerator {
           }
           //calculate price after discount
           int priceAfterDiscount = tokensPaid.get(c) - totalGems.get(c);
-          //if price is negative, meaning you have more gems than required, just set tokens paid to 0.
+          //if price is negative, meaning you have more gems than required,
+          //just set tokens paid to 0.
           if (priceAfterDiscount <= 0) {
             tokensPaid.put(c, 0);
           } else if (priceAfterDiscount > totalTokens.get(c)) {
@@ -161,7 +162,7 @@ public class ActionGenerator {
       for (int cardIndex = 0; cardIndex < orientLevelCards.length; cardIndex++) {
         // if index = 0 or 1, generate reserve action for orient cards
         int goldCardsNeeded = 0;
-        Position cardPosition = new Position(level, cardIndex);
+        final Position cardPosition = new Position(level, cardIndex);
         DevelopmentCard card = orientLevelCards[cardIndex];
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
         if (goldTokenNeeded == -1) {
@@ -175,7 +176,8 @@ public class ActionGenerator {
           }
           //calculate price after discount
           int priceAfterDiscount = tokensPaid.get(c) - totalGems.get(c);
-          //if price is negative, meaning you have more gems than required, just set tokens paid to 0.
+          //if price is negative, meaning you have more gems than required,
+          // just set tokens paid to 0.
           if (priceAfterDiscount <= 0) {
             tokensPaid.put(c, 0);
           } else if (priceAfterDiscount > totalTokens.get(c)) {
@@ -207,7 +209,7 @@ public class ActionGenerator {
       for (int cardIndex = 0; cardIndex < reservedCards.length; cardIndex++) {
         int goldCardsNeeded = 0;
         //x coordinate = 0, means this is a card in the reserve hand!
-        Position cardPosition = new Position(0, cardIndex);
+        final Position cardPosition = new Position(0, cardIndex);
         DevelopmentCard card = reservedCards[cardIndex];
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
         if (goldTokenNeeded == -1) {
@@ -221,7 +223,8 @@ public class ActionGenerator {
           }
           //calculate price after discount
           int priceAfterDiscount = tokensPaid.get(c) - totalGems.get(c);
-          //if price is negative, meaning you have more gems than required, just set tokens paid to 0.
+          //if price is negative, meaning you have more gems than required,
+          // just set tokens paid to 0.
           if (priceAfterDiscount <= 0) {
             tokensPaid.put(c, 0);
           } else if (priceAfterDiscount > totalTokens.get(c)) {
@@ -256,9 +259,11 @@ public class ActionGenerator {
     boolean hasTwoPlusOnePower = false;
     String playerName = curPlayerInfo.getName();
     if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
-      TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
-      hasTwoPlusOnePower = traderBoard.
-          getPlayerOnePower(playerName, PowerEffect.TWO_PLUS_ONE).isUnlocked();
+      TraderBoard traderBoard = (TraderBoard) tableTop
+              .getBoard(Extension.TRADING_POST);
+      hasTwoPlusOnePower = traderBoard
+              .getPlayerOnePower(playerName, PowerEffect.TWO_PLUS_ONE)
+              .isUnlocked();
     }
     // if bank has only 2 token or less left to be taken
     int regularTokenCount = bank.getRegularTokenCount();
@@ -347,6 +352,13 @@ public class ActionGenerator {
 
   }
 
+  /**
+   * updateCascadeActions.
+   *
+   * @param playerInGame playerInGame
+   * @param purchasedCard purchasedCard
+   * @param cardEffect cardEffect
+   */
   //TODO
   public void updateCascadeActions(PlayerInGame playerInGame, DevelopmentCard purchasedCard,
                                    CardEffect cardEffect) {
@@ -447,7 +459,11 @@ public class ActionGenerator {
     playerActionMaps.put(playerName, actionMap);
   }
 
-
+  /**
+   * updateBonusTokenPowerActions.
+   *
+   * @param player player
+   */
   public void updateBonusTokenPowerActions(PlayerInGame player) {
     List<Action> actions = new ArrayList<>();
     EnumMap<Colour, Integer> rawMap = SplendorDevHelper.getInstance().getRawTokenColoursMap();
@@ -471,8 +487,8 @@ public class ActionGenerator {
   /**
    * Update the actions of which noble to claim.
    *
-   * @param nobleIndices
-   * @param playerInGame
+   * @param nobleIndices nobleIndices
+   * @param playerInGame playerInGame
    */
   public void updateClaimNobleActions(List<Integer> nobleIndices, PlayerInGame playerInGame) {
     BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
@@ -497,18 +513,18 @@ public class ActionGenerator {
   /**
    * Update the player's action map to contain only ReturnTokenActions.
    *
-   * @param extraTokenCount
-   * @param playerInGame
+   * @param extraTokenCount extraTokenCount
+   * @param playerInGame playerInGame
    */
   public void updateReturnTokenActions(int extraTokenCount, PlayerInGame playerInGame) {
     List<EnumMap<Colour, Integer>> allCombos = new ArrayList<>();
     EnumMap<Colour, Integer> rawMap = new EnumMap<>(Colour.class) {{
-      put(Colour.BLUE, 0);
-      put(Colour.RED, 0);
-      put(Colour.BLACK, 0);
-      put(Colour.GREEN, 0);
-      put(Colour.WHITE, 0);
-    }};
+        put(Colour.BLUE, 0);
+        put(Colour.RED, 0);
+        put(Colour.BLACK, 0);
+        put(Colour.GREEN, 0);
+        put(Colour.WHITE, 0);
+      }};
 
     // generate all combinations based extra token count
     if (extraTokenCount == 1) {

@@ -326,7 +326,11 @@ public class ActionInterpreter {
     return playerStates;
   }
 
-  //todo
+  /**
+   * setBurnCardInfo.
+   *
+   * @param cardPrice cardPrice
+   */
   public void setBurnCardInfo(EnumMap<Colour, Integer> cardPrice) {
     //set colour and cards to burn
     burnCardCount = 2;
