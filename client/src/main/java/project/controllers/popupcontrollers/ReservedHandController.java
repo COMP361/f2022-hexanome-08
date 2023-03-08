@@ -31,6 +31,13 @@ public class ReservedHandController implements Initializable {
   @FXML
   private HBox reservedNoblesHbox;
 
+  /**
+   * Controller for the ReservedHand.
+   *
+   * @param reservedHand reservedHand
+   * @param playerActions playerActions
+   * @param coverRectangle coverRectangle
+   */
   public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions,
                                 Rectangle coverRectangle) {
 

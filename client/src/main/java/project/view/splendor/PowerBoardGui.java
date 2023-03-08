@@ -3,28 +3,31 @@ package project.view.splendor;
 
 import javafx.scene.layout.VBox;
 
+/**
+ * Details the PowerBoardGUI.
+ */
 public class PowerBoardGui extends VBox {
 
-  private final double PowerBoardWidth;
-  private final double PowerBoardHeight;
+  private final double powerBoardWidth;
+  private final double powerBoardHeight;
 
   /**
-   * Construct Power board
+   * Construct Power board.
    *
    * @param powerBoardWidth  provide width of the board
    * @param powerBoardHeight provide height of the board
    */
   public PowerBoardGui(double powerBoardWidth, double powerBoardHeight) {
-    PowerBoardWidth = powerBoardWidth;
-    PowerBoardHeight = powerBoardHeight;
+    this.powerBoardWidth = powerBoardWidth;
+    this.powerBoardHeight = powerBoardHeight;
   }
 
   public double getPowerBoardWidth() {
-    return PowerBoardWidth;
+    return powerBoardWidth;
   }
 
   public double getPowerBoardHeight() {
-    return PowerBoardHeight;
+    return powerBoardHeight;
   }
 
   public void setup() {

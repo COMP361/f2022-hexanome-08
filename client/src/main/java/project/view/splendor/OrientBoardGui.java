@@ -20,6 +20,9 @@ import javafx.scene.shape.Rectangle;
 import project.App;
 import project.GameBoardLayoutConfig;
 
+/**
+ * It displays the OrientBoardGui.
+ */
 public class OrientBoardGui implements BoardGui {
 
   private final AnchorPane playerBoardAnchorPane;
@@ -28,6 +31,13 @@ public class OrientBoardGui implements BoardGui {
   private final Map<Integer, OrientCardLevelGui> orientCardLevelGuiMap = new HashMap<>();
   private final VBox orientCardsBoard;
 
+  /**
+   * It displays the OrinetBoardGui.
+   *
+   * @param playerBoardAnchorPane playerBoardAnchorPane
+   * @param gameId gameID
+   * @param coverRectangle coverRectangle
+   */
   public OrientBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
     this.gameId = gameId;
     this.playerBoardAnchorPane = playerBoardAnchorPane;
@@ -42,7 +52,8 @@ public class OrientBoardGui implements BoardGui {
     // set up and add base card GUI, only purchase and reserve actions are
     // there in the action map at this point (or empty)
     Map<String, Action> reservePurchaseActions = playerActionMap.entrySet().stream()
-        .filter(e -> e.getValue() instanceof ReserveAction ||
+        .filter(e -> e.getValue() instanceof ReserveAction
+                ||
             e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 

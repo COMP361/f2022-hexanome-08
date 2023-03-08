@@ -31,7 +31,7 @@ public class SessionGuiManager extends VBox {
   }
 
   /**
-   * Clean up everything after loading into another page
+   * Clean up everything after loading into another page.
    */
   public static void clearSessionsRecorded() {
     Platform.runLater(() -> {
@@ -48,7 +48,11 @@ public class SessionGuiManager extends VBox {
     sessionIdGuiMap.remove(sessionId);
   }
 
-
+  /**
+   * add a Session GUI.
+   *
+   * @param newSessionGui newSessionGui
+   */
   public static void addSessionGui(SessionGui newSessionGui) {
     Platform.runLater(() -> {
       sessionsVbox.getChildren().add(newSessionGui);

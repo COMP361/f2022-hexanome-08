@@ -23,6 +23,13 @@ public class DeckActionController implements Initializable {
   @FXML
   private Button reserveButton;
 
+  /**
+   * DeckActionController.
+   *
+   * @param gameId gameId
+   * @param actionId actionId
+   * @param coverRectangle coverRectangle
+   */
   public DeckActionController(long gameId, String actionId, Rectangle coverRectangle) {
     this.gameId = gameId;
     this.actionId = actionId;

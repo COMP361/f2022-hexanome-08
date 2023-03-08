@@ -26,6 +26,9 @@ import javafx.scene.shape.Rectangle;
 import project.App;
 import project.GameBoardLayoutConfig;
 
+/**
+ * Display the baseboardGUI.
+ */
 public class BaseBoardGui implements BoardGui {
 
   private final NobleBoardGui nobleBoardGui;
@@ -37,6 +40,13 @@ public class BaseBoardGui implements BoardGui {
   private final long gameId;
   private final Rectangle coverRectangle;
 
+  /**
+   * What the baseBoardGUI has.
+   *
+   * @param playerBoardAnchorPane playerBoardAnchorPane
+   * @param gameId gameId
+   * @param coverRectangle coverRectangle
+   */
   public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
     this.gameId = gameId;
     nobleBoardGui = new NobleBoardGui(100, 100, 5);
@@ -82,7 +92,8 @@ public class BaseBoardGui implements BoardGui {
     // set up and add base card GUI, only purchase and reserve actions are
     // there in the action map at this point (or empty)
     Map<String, Action> reservePurchaseActions = playerActionMap.entrySet()
-        .stream().filter(e -> e.getValue() instanceof ReserveAction ||
+        .stream().filter(e -> e.getValue() instanceof ReserveAction
+                    ||
             e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 

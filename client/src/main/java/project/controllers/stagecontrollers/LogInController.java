@@ -58,7 +58,8 @@ public class LogInController implements Initializable {
 
       // if user is player, display admin_lobby_page
       GameBoardLayoutConfig config = App.getGuiLayouts();
-      if (App.getUser().getAuthority().equals("ROLE_ADMIN") ||
+      if (App.getUser().getAuthority().equals("ROLE_ADMIN")
+              ||
           App.getUser().getAuthority().equals("ROLE_PLAYER")) {
         if (App.getLobbyController() == null) {
           App.setLobbyController(new LobbyController());

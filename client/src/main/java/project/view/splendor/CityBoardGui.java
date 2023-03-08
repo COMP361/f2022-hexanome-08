@@ -13,6 +13,9 @@ import javafx.scene.shape.Rectangle;
 import project.App;
 import project.GameBoardLayoutConfig;
 
+/**
+ * it displays the city board GUI.
+ */
 public class CityBoardGui implements BoardGui {
 
   private final AnchorPane playerBoardAnchorPane;
@@ -25,6 +28,13 @@ public class CityBoardGui implements BoardGui {
 
   private final VBox cityCardBoard;
 
+  /**
+   * it shows how the City Board GUI functions.
+   *
+   * @param playerBoardAnchorPane playerBoardAnchorPane
+   * @param gameId gameId
+   * @param coverRectangle coverRectangle
+   */
   public CityBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
     this.gameId = gameId;
     citiesGui = new CitiesGui(200, 100, 10);

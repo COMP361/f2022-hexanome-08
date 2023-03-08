@@ -161,7 +161,8 @@
 //  }
 //
 //  /**
-//   * Displays the options of actions the player can do once they click on a regular development card
+//   * Displays the options of actions the player can do
+//   * once they click on a regular development card
 //   * (not orient).
 //   *
 //   * @throws IOException IOException if fxml file not found
