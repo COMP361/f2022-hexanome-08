@@ -12,6 +12,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -98,6 +99,7 @@ public class PurchaseAction extends Action {
       baseBoard.removeCard(cardPosition);
       // fill up the board
       baseBoard.update();
+      actionGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
     }
 
     if (effectNum == 1) {
@@ -131,6 +133,8 @@ public class PurchaseAction extends Action {
         // only update action map if it's not double gold
         if (!curEffect.equals(CardEffect.DOUBLE_GOLD)) {
           actionGenerator.updateCascadeActions(playerInGame, curCard, curEffect);
+        }else{
+          actionGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
         }
       }
 
