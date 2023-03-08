@@ -64,9 +64,9 @@ public class PurchasedHand {
 
 
   /**
-   * Get the total number of dev cards in hand (paired cards count as 2)
+   * Get the total number of dev cards in hand (paired cards count as 2).
    *
-   * @return
+   * @return int
    */
   public int getTotalCardCount() {
     List<DevelopmentCard> pairedCards = developmentCards.stream()

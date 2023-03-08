@@ -36,9 +36,8 @@ public class PlayerInGame {
    * This method calculates what tokens the player must use to buy the card. It then removes the
    * required tokens from the player's tokenHand.
    *
-   * @param goldCardsRequired The number of gold tokens required to complete this purchase.
+   * @param goldCardsRequired The number of gold tokens required to complete this purchase
    * @param paidTokens        tokens paid to buy the card
-   * @return A list of the tokens used up to buy a card (the ones removed from tokenHand).
    */
   public void payTokensToBuy(int goldCardsRequired, EnumMap<Colour, Integer> paidTokens) {
 
@@ -84,7 +83,7 @@ public class PlayerInGame {
   /**
    * Amount can be negative, as to minus.
    *
-   * @param amount
+   * @param amount amount
    */
   public void changePrestigePoints(int amount) {
     prestigePoints += amount;
