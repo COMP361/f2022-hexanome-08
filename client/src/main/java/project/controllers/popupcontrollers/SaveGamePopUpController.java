@@ -15,6 +15,9 @@ import project.App;
 import project.connection.GameRequestSender;
 import project.view.lobby.communication.Savegame;
 
+/**
+ * Controller for save game pop up.
+ */
 public class SaveGamePopUpController implements Initializable {
   private final GameInfo gameInfo;
   private final long gameId;
@@ -28,6 +31,14 @@ public class SaveGamePopUpController implements Initializable {
   private final Thread playerInfoThread;
   private final Thread mainGameUpdateThread;
 
+  /**
+   * Controller ofr save game pop up.
+   *
+   * @param gameInfo gameInfo
+   * @param gameId gameId
+   * @param playerInfoThread playerInfoThread
+   * @param mainGameUpdateThread mainGameUpdateThread
+   */
   public SaveGamePopUpController(GameInfo gameInfo, long gameId,
                                  Thread playerInfoThread, Thread mainGameUpdateThread) {
     this.gameInfo = gameInfo;

@@ -4,6 +4,9 @@ import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.model.TableTop;
 import java.util.Map;
 
+/**
+ * Interface of BoardGui.
+ */
 public interface BoardGui {
 
   // set up the board in terms of Gui pictures

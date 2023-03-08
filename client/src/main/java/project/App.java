@@ -55,7 +55,7 @@ public class App extends Application {
   private static final Colour[] baseColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
   };
-  private final static List<Thread> gameGuiThread = new ArrayList<>();
+  private static final List<Thread> gameGuiThread = new ArrayList<>();
   private static final Map<Long, GameController> gameControllerMap = new HashMap<>();
   private static Stage primaryStage;
   private static User user;
@@ -185,6 +185,9 @@ public class App extends Application {
     gameGuiThread.add(thread);
   }
 
+  /**
+   * killGameThread.
+   */
   public static void killGameThread() {
     for (Thread thread : gameGuiThread) {
       thread.interrupt();
@@ -232,7 +235,7 @@ public class App extends Application {
     }
     FXMLLoader startPageLoader = new FXMLLoader(App.class.getResource("start_page.fxml"));
     SessionGuiManager.getInstance();
-    Scene scene = new Scene(startPageLoader.load(),
+    final Scene scene = new Scene(startPageLoader.load(),
         guiLayouts.getAppWidth(),
         guiLayouts.getAppHeight());
     primaryStage.setTitle("Welcome to Splendor!");

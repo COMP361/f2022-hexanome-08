@@ -5,6 +5,9 @@ import ca.mcgill.comp361.splendormodel.model.TableTop;
 import java.util.Map;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * Details the traderBoardGui.
+ */
 public class TraderBoardGui implements BoardGui {
 
 

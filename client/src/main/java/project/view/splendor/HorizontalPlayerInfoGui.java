@@ -68,6 +68,12 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     return playerName;
   }
 
+  /**
+   * Display the wealth map of the player.
+   *
+   * @param playerPosition playerPosition
+   * @return return a map
+   */
   public Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(
       PlayerPosition playerPosition) {
     Map<Colour, Map<PlayerWealthInfo, Text>> result = new HashMap<>();
@@ -103,6 +109,12 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     return result;
   }
 
+  /**
+   * get the player info.
+   *
+   * @param playerPosition playerPosition
+   * @return return the map
+   */
   public Map<PlayerVisibleInfo, Text> getPlayerVisibleInfoMap(PlayerPosition playerPosition) {
     Map<PlayerVisibleInfo, Text> resultMap = new HashMap<>();
     if (playerPosition.equals(PlayerPosition.TOP)) {

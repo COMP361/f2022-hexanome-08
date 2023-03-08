@@ -31,7 +31,13 @@ public class CardActionController implements Initializable {
   @FXML
   private Button reserveButton;
 
-
+  /**
+   * CardActionController.
+   *
+   * @param gameId gameId
+   * @param allActionsPair allActionsPair
+   * @param coverRectangle coverRectangle
+   */
   public CardActionController(long gameId, List<ActionIdPair> allActionsPair,
                               Rectangle coverRectangle) {
     this.gameId = gameId;

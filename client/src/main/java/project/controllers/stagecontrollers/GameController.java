@@ -91,6 +91,12 @@ public class GameController implements Initializable {
   private Thread playerInfoThread;
   private Thread mainGameUpdateThread;
 
+  /**
+   * GameController for the main page.
+   *
+   * @param gameId gameId
+   * @param curSession curSession
+   */
   public GameController(long gameId, Session curSession) {
     this.gameId = gameId;
     this.curSession = curSession;
@@ -201,7 +207,7 @@ public class GameController implements Initializable {
   /**
    * Update one PlayerInfoGui based on one PlayerInGame object.
    *
-   * @param curPlayerInGame
+   * @param curPlayerInGame curPlayerInGame
    */
   private void updatePlayerInfoGui(PlayerInGame curPlayerInGame) {
 
@@ -423,7 +429,7 @@ public class GameController implements Initializable {
 
 
             // First, check what extensions are we playing
-            List<Extension> extensions = curGameInfo.getExtensions();
+            final List<Extension> extensions = curGameInfo.getExtensions();
             TableTop tableTop = curGameInfo.getTableTop();
             // always get the action map from game info
             String playerName = curUser.getUsername();

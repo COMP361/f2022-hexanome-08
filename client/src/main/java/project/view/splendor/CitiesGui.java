@@ -5,7 +5,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
-
+/**
+ * It shows the CitiesGui display.
+ */
 public class CitiesGui extends VBox {
 
   private final double cityWidth;
@@ -13,7 +15,7 @@ public class CitiesGui extends VBox {
   private final double citySpace;
 
   /**
-   * Constructor for the city board
+   * Constructor for the city board.
    *
    * @param cityWidth  provide the width of the city image
    * @param cityHeight provide the height of the city image
@@ -38,7 +40,7 @@ public class CitiesGui extends VBox {
 
 
   /**
-   * Set up the CityBoard GUI object
+   * Set up the CityBoard GUI object.
    *
    * @param allCities a list of city cards
    * @param layoutX   layout X

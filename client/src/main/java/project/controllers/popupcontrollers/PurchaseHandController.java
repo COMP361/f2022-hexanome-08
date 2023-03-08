@@ -47,6 +47,13 @@ public class PurchaseHandController implements Initializable {
   // hold List<NobleCard>
   private VBox noblesUnLocked;
 
+  /**
+   * PurchaseHandController.
+   *
+   * @param purchasedHand purchasedHand
+   * @param playerActions playerActions
+   * @param coverRectangle coverRectangle
+   */
   public PurchaseHandController(PurchasedHand purchasedHand, Map<String, Action> playerActions,
                                 Rectangle coverRectangle) {
     // organize all dev cards (including gold colour ones) into colour map
@@ -63,8 +70,8 @@ public class PurchaseHandController implements Initializable {
    * Put cards in different groups based on colour type.
    * The colour can be gold.
    *
-   * @param allDevCards
-   * @return
+   * @param allDevCards allDevCards
+   * @return return a map
    */
   private Map<Colour, List<DevelopmentCard>> reorganizeCardsInHand(
       List<DevelopmentCard> allDevCards) {
@@ -177,7 +184,8 @@ public class PurchaseHandController implements Initializable {
       if (colourCardsMap.containsKey(c)) {
         List<DevelopmentCard> cardsOfOneColour = colourCardsMap.get(c);
         //TODO: assign actions to image views with playerActions, depending on what kind of
-        // actions (only CardExtraAction of Satchel can happen in this purchase hand, only for normal
+        // actions (only CardExtraAction of Satchel can happen in this purchase hand,
+        // only for normal
         // cards with RED, WHITE, BLUE, GREEN, BLACK colours)
         // Bind actions to image view during generateCardSatchelPair(...) method
         List<HBox> allPairs = generateCardSatchelPair(cardsOfOneColour);

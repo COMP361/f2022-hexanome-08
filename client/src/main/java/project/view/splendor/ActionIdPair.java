@@ -2,6 +2,9 @@ package project.view.splendor;
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
 
+/**
+ * Function of ActionIdPair.
+ */
 public class ActionIdPair {
   private final String actionId;
   private final Action action;

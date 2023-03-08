@@ -135,6 +135,11 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
     visibleInfoTextMap.get(PlayerVisibleInfo.POINT).setText(Integer.toString(newPoints));
   }
 
+  /**
+   * restore the token in hand for the player.
+   *
+   * @param newTokens newTokens
+   */
   public void setNewTokenInHand(EnumMap<Colour, Integer> newTokens) {
     Map<Colour, Map<PlayerWealthInfo, Text>> wealthInfo =
         this.getPlayerColourWealthMap(this.playerPosition);

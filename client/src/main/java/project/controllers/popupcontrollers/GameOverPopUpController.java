@@ -11,6 +11,9 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import project.App;
 
+/**
+ * The buttons aside the player.
+ */
 public class GameOverPopUpController implements Initializable {
 
   @FXML
@@ -24,7 +27,13 @@ public class GameOverPopUpController implements Initializable {
     this.playerInfoThread = playerInfoThread;
   }
 
-
+  /**
+   * It shows what happens after clicking the quit button.
+   *
+   * @param mainGameUpdateThread mainGameUpdateThread
+   * @param playerInfoThread playerInfoThread
+   * @return return the eventHandler
+   */
   public EventHandler<ActionEvent> clickOnQuitGameButton(Thread mainGameUpdateThread,
                                                          Thread playerInfoThread) {
     return event -> {
