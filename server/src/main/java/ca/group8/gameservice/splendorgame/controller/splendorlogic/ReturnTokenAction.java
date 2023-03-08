@@ -45,13 +45,4 @@ public class ReturnTokenAction extends Action {
 
   }
 
-  @Override
-  public Card getCurCard() throws NullPointerException {
-    throw new NullPointerException("There is no card associated with this action.");
-  }
-
-  @Override
-  public Position getCardPosition() throws NullPointerException {
-    throw new NullPointerException("There is no card position associated with this action.");
-  }
 }

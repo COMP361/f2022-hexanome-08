@@ -33,13 +33,11 @@ public class BonusTokenPowerAction extends Action {
     bankTokens.put(colour,oldBankTokenCount-1);
   }
 
-  @Override
-  Card getCurCard() {
+  public Card getCurCard() {
     return null;
   }
 
-  @Override
-  Position getCardPosition() throws NullPointerException {
+  public Position getCardPosition() throws NullPointerException {
     return null;
   }
 
@@ -51,43 +49,4 @@ public class BonusTokenPowerAction extends Action {
     return player;
   }
 
-//  @Override
-//    // TODO
-//  public void execute(TableTop curTableTop, PlayerInGame playerInGame,
-//               ActionGenerator actionListGenerator,
-//               ActionInterpreter actionInterpreter) {
-//
-//    switch (powerEffect) {
-//      //TODO: no default case... added for checkstyle purposes
-//      default:
-//      case FIVE_POINTS:
-//        playerInGame.changePrestigePoints(5);
-//        break;
-//      case ARM_POINTS:
-//        int pointsToAdd = 0;
-//        TraderBoard traderBoard = (TraderBoard) curTableTop.getBoard(Extension.TRADING_POST);
-//        Map<PowerEffect, Power> playerPowers =
-//            traderBoard.getAllPlayerPowers().get(playerInGame.getName());
-//        //Loop through all of this Player's powers. If power is unlocked, increment count by 1.
-//        for (PowerEffect power : PowerEffect.values()) {
-//          if (playerPowers.get(power).isUnlocked()) {
-//            pointsToAdd += 1;
-//          }
-//        }
-//        playerInGame.changePrestigePoints(pointsToAdd);
-//        //TODO: Add cases for creating cascading actions for other 3 powers.
-//    }
-//
-//  }
-//
-//  @Override
-//  Card getCurCard() throws NullPointerException {
-//    throw new NullPointerException("There is no card associated with this action.");
-//  }
-//
-//  @Override
-//    //TODO: Should this have a curCard position associated with it??
-//  Position getCardPosition() throws NullPointerException {
-//    throw new NullPointerException("There is no card position associated with this action.");
-//  }
 }

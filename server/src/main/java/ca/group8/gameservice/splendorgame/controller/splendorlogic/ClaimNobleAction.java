@@ -54,14 +54,11 @@ public class ClaimNobleAction extends Action {
 
 
   }
-
-  @Override
   public NobleCard getCurCard() {
     assert curCard != null;
     return curCard;
   }
 
-  @Override
   public Position getCardPosition() {
     assert curPosition != null;
     return curPosition;

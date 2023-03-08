@@ -19,7 +19,7 @@ import project.App;
 import project.GameBoardLayoutConfig;
 import project.view.InvalidDataException;
 
-public class OrientBoardGui implements BoardGui{
+public class OrientBoardGui extends AbstractCardBoardGui implements BoardGui {
 
   private Map<Integer, OrientCardLevelGui> orientCardLevelGuiMap = new HashMap<>();
   private VBox orientCardsBoard;
@@ -98,10 +98,6 @@ public class OrientBoardGui implements BoardGui{
         positionToActionMap.put(cardPosition, actions);
       }
 
-    }
-    for (Position position : positionToActionMap.keySet()) {
-      List<ActionIdPair> pairs = positionToActionMap.get(position);
-      System.out.println("All actions for" + pairs.size());
     }
 
     return positionToActionMap;

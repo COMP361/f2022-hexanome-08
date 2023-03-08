@@ -22,19 +22,6 @@ public class ReserveAction extends Action {
   private DevelopmentCard curCard;
   private Position cardPosition;
 
-
-  @Override
-  public Position getCardPosition() {
-    assert cardPosition != null;
-    return cardPosition;
-  }
-
-  @Override
-  public DevelopmentCard getCurCard() {
-    assert curCard != null;
-    return curCard;
-  }
-
   public ReserveAction(Position position, DevelopmentCard curCard) {
     super.type = this.getClass().getSimpleName();
     this.cardPosition = position;
@@ -84,9 +71,14 @@ public class ReserveAction extends Action {
     actionGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
   }
 
-  @Override
-  public boolean checkIsCardAction() {
-    return true;
+  public Position getCardPosition() {
+    assert cardPosition != null;
+    return cardPosition;
+  }
+
+  public DevelopmentCard getCurCard() {
+    assert curCard != null;
+    return curCard;
   }
 }
 
