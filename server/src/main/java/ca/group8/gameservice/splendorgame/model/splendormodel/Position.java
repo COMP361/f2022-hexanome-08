@@ -44,8 +44,7 @@ public class Position {
 
     Position otherPosition = (Position) obj;
 
-    return super.equals(otherPosition) &&
-        this.coordinateX == otherPosition.coordinateX &&
+    return this.coordinateX == otherPosition.coordinateX &&
         this.coordinateY == otherPosition.coordinateY;
   }
 

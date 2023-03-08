@@ -112,8 +112,7 @@ public class CardActionController implements Initializable {
       if (action instanceof PurchaseAction) {
         purchaseButton.setDisable(false);
         purchaseButton.setOnAction(createOnClickButtonHandler(actionIdPair.getActionId()));
-      }
-      if (action instanceof ReserveAction) {
+      } else {
         reserveButton.setDisable(false);
         reserveButton.setOnAction(createOnClickButtonHandler(actionIdPair.getActionId()));
       }
