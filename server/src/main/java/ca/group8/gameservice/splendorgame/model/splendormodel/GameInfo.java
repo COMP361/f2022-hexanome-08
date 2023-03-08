@@ -118,22 +118,19 @@ public class GameInfo implements BroadcastContent {
    */
   public void renamePlayers(List<String> playerNames, String creator) {
     if (!playerNames.equals(this.playerNames)) {
-      Collections.shuffle(playerNames);
+      //Collections.shuffle(playerNames);
       this.playerNames = playerNames;
       this.creator = creator;
       this.firstPlayerName = playerNames.get(0);
+      this.currentPlayer = this.firstPlayerName;
       // rename all boards if necessary (base and orient do not need updates)
       for (Extension extension : tableTop.getGameBoards().keySet()) {
         tableTop.getBoard(extension).renamePlayers(playerNames);
       }
       // rename action map names
-      int nameIndex = 0;
       Map<String, Map<String, Action>> newActionMap = new HashMap<>();
-      for (String curName : playerActionMaps.keySet()) {
-        Map<String, Action> curActionMap = playerActionMaps.get(curName);
-        String newName = playerNames.get(nameIndex);
-        nameIndex += 1;
-        newActionMap.put(newName, curActionMap);
+      for (String newName : playerNames) {
+        newActionMap.put(newName, new HashMap<>());
       }
       playerActionMaps = newActionMap;
     }

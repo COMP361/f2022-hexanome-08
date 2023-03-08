@@ -201,14 +201,10 @@ public class GameManager {
         SavedGameState savedGame = savedGames.get(saveGameId);
         // rename the player names in this savedGameState
         savedGame.renamePlayers(playerNames, creator);
-        // put the renamed objects to manager
         GameInfo newGameInfo = savedGame.getGameInfo();
-        // reset the action map since those actions are old
-        for (String name : newGameInfo.getPlayerActionMaps().keySet()) {
-          newGameInfo.getPlayerActionMaps().get(name).clear();
-        }
-
         PlayerStates newPlayerStates = savedGame.getPlayerStates();
+
+        // put the renamed objects to manager
         activeGames.put(gameId, newGameInfo);
         activePlayers.put(gameId, newPlayerStates);
         // rather than loading from file, we create a new action interpreter based on

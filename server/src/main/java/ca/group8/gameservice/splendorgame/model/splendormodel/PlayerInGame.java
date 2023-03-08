@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 public class PlayerInGame {
 
 
-  private final String name;
+  private String name;
   private int prestigePoints;
   private final EnumMap<Colour, Integer> wealth;
   private final TokenHand tokenHand;
@@ -71,6 +71,9 @@ public class PlayerInGame {
 
   public String getName() {
     return name;
+  }
+  public void setName(String name) {
+    this.name = name;
   }
 
   public int getPrestigePoints() {
