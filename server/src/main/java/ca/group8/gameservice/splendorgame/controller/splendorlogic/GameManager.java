@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +44,8 @@ public class GameManager {
   private final Map<Long, PlayerStates> activePlayers;
   private final Map<Long, GameInfo> activeGames;
   private final Map<Long, ActionInterpreter> gameActionInterpreters;
+
+  private final Map<Long, LauncherInfo> gameLauncherInfos;
   private final LobbyCommunicator lobbyCommunicator;
   private final Logger logger;
 
@@ -56,6 +57,7 @@ public class GameManager {
     this.activePlayers = new HashMap<>();
     this.activeGames = new HashMap<>();
     this.gameActionInterpreters = new HashMap<>();
+    this.gameLauncherInfos = new HashMap<>();
     this.logger = LoggerFactory.getLogger(GameManager.class);
   }
 
@@ -100,7 +102,7 @@ public class GameManager {
           // iterate through the ids that shouldn't be in lobby and delete them
           for (Savegame game : savedMetaData) {
             if (idsInLobbyNotInServer.contains(game.getSavegameid())) {
-              lobbyCommunicator.deleteSavedGame(game.getGamename(), game.getSavegameid());
+              lobbyCommunicator.deleteSaveGame(game);
             }
           }
           // obtain an updated lobby ids (now server might have ids that lobby doesn't have)
@@ -178,6 +180,7 @@ public class GameManager {
     // if we have a non-empty savegame id, then we load
     // the game content rather than creating new objects.
     logger.info("Trying to launch a game");
+    gameLauncherInfos.put(gameId, launcherInfo);
     if (!launcherInfo.getSavegame().isEmpty()) {
       String saveGameId = launcherInfo.getSavegame();
       List<String> curPlayerNames = launcherInfo.getPlayers().stream()
@@ -244,14 +247,17 @@ public class GameManager {
 
 
   /**
-   * The game with this gameId is finished, remove it from manager.
+   * Delete the game at game manager, implicitly at lobby service as well.
    *
-   * @param gameId
+   * @param gameId session id (game id) to delete.
    */
   public void deleteGame(long gameId) {
+    LauncherInfo launcherInfo = gameLauncherInfos.get(gameId);
+    lobbyCommunicator.deleteGameSession(gameId, launcherInfo);
     activeGames.remove(gameId);
     activePlayers.remove(gameId);
     gameActionInterpreters.remove(gameId);
+    gameLauncherInfos.remove(gameId);
   }
 
   /**
