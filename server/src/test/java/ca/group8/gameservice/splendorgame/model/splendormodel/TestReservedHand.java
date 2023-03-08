@@ -22,6 +22,13 @@ public class TestReservedHand {
 
 
 
+    @Test
+    void testPosition() {
+        Position p1 = new Position(0,0);
+        Position p2 = new Position(0,0);
+        assertEquals(p1,p2);
+    }
+
     @BeforeEach
     void setup() {
         r1 = new ReservedHand();
