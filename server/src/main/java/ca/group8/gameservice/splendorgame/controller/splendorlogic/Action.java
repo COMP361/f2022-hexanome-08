@@ -40,16 +40,4 @@ public abstract class Action {
   abstract void execute(TableTop curTableTop, PlayerInGame playerInGame,
                         ActionGenerator actionListGenerator,
                         ActionInterpreter actionInterpreter);
-
-  boolean checkIsExtraAction() {
-    return false;
-  }
-
-  boolean checkIsCardAction() {
-    return false;
-  }
-
-  abstract Card getCurCard();
-
-  abstract Position getCardPosition() throws NullPointerException;
 }

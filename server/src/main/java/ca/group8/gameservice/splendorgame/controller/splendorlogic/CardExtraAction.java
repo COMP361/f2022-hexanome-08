@@ -9,12 +9,9 @@ import java.util.List;
 public class CardExtraAction extends Action {
 
   private Card curCard;
-  //TODO: Check this works after code is merged
   private final CardEffect cardEffect;
 
   private final Position position;
-
-  //TODO: Check this works after code is merged
 
   /**
    * Constructor.
@@ -48,22 +45,10 @@ public class CardExtraAction extends Action {
     }
   }
 
-  @Override
-  public boolean checkIsExtraAction() {
-    return false;
-  }
-
-  @Override
-  public boolean checkIsCardAction() {
-    return false;
-  }
-
-  @Override
   public Card getCurCard() {
     return curCard;
   }
 
-  @Override
   public Position getCardPosition() {
     return position;
   }

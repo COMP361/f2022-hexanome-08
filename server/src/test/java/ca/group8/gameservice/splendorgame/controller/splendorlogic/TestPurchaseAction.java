@@ -19,10 +19,4 @@ public class TestPurchaseAction {
       1, Colour.BLUE, 1, new ArrayList<>());
   PurchaseAction action = new PurchaseAction(new Position(1, 1),
       card, 0, price);
-
-  @Test
-  void testIsCardAction() {
-    assertTrue(action.checkIsCardAction());
-  }
-
 }

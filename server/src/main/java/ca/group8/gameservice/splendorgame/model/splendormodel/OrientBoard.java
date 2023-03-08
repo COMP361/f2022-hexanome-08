@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class OrientBoard extends Board {
           .filter(c -> !c.isBaseCard())
           .collect(Collectors.toList());
       // TODO: Commented out shuffle for JUnit testing
-      //Collections.shuffle(levelDeck);
+      Collections.shuffle(levelDeck);
       decks.put(curLevel, levelDeck);
     }
   }
