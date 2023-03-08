@@ -135,7 +135,7 @@ public class GameController implements Initializable {
 
       try {
         App.loadPopUpWithController("my_reserved_cards.fxml",
-            new ReservedHandController(reservedHand, playerActions, coverRectangle),
+            new ReservedHandController(reservedHand, playerActions, coverRectangle, gameId),
             coverRectangle, 800, 600);
 
       } catch (IOException e) {
