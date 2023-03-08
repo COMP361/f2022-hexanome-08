@@ -19,9 +19,31 @@ public class GameRequestSender {
     this.gameServiceName = gameServiceName;
   }
 
-  public void setGameServiceName(String gameServiceName) {
-    assert gameServiceName != null && !gameServiceName.equals("");
-    this.gameServiceName = gameServiceName;
+  /**
+   * Send a long polling request for GameInfo updates.
+   *
+   * @param gameId               game id
+   * @param hashPreviousResponse hashed Previous Response
+   * @return A http response with JSON string as the body
+   * @throws UnirestException in case of a failed request
+   */
+  public HttpResponse<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse)
+      throws UnirestException {
+    HttpResponse<String> response;
+    try {
+      if (hashPreviousResponse.equals("")) {
+        // instant request
+        response = Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId).asString();
+      } else {
+        // long polling request
+        response = Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId)
+            .queryString("hash", hashPreviousResponse)
+            .asString();
+      }
+    } catch (UnirestException e) {
+      throw new UnirestException("Connection failed, session no longer exist");
+    }
+    return response;
   }
 
 
@@ -43,35 +65,6 @@ public class GameRequestSender {
   //  // TODO: Parse this raw string using Gson to an Array
   //  return new Gson().fromJson(responseEntity.getBody(), String[].class);
   //}
-
-
-  /**
-   * Send a long polling request for GameInfo updates.
-   *
-   * @param gameId game id
-   * @param hashPreviousResponse hashed Previous Response
-   * @return A http response with JSON string as the body
-   * @throws UnirestException in case of a failed request
-   */
-  public HttpResponse<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse)
-  throws UnirestException {
-    HttpResponse<String> response;
-    try {
-      if (hashPreviousResponse.equals("")) {
-        // instant request
-        response = Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId).asString();
-      } else {
-        // long polling request
-        response = Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId)
-            .queryString("hash", hashPreviousResponse)
-            .asString();
-      }
-    } catch (UnirestException e) {
-      throw new UnirestException("Connection failed, session no longer exist");
-    }
-    return response;
-  }
-
 
   /**
    * Send a save game request to our game service backend.
@@ -99,7 +92,7 @@ public class GameRequestSender {
   /**
    * Send a long polling request for all player info updates.
    *
-   * @param gameId game id
+   * @param gameId               game id
    * @param hashPreviousResponse hashed Previous Response
    * @return A http response with JSON string as the body
    */
@@ -111,7 +104,7 @@ public class GameRequestSender {
       if (hashPreviousResponse.equals("")) {
         response = Unirest.get(
             String.format("%s/api/games/%s/playerStates",
-            gameUrl + gameServiceName, gameId)).asString();
+                gameUrl + gameServiceName, gameId)).asString();
       } else {
         response = Unirest.get(String.format("%s/api/games/%s/playerStates",
                 gameUrl + gameServiceName, gameId))
@@ -130,14 +123,14 @@ public class GameRequestSender {
    * Send an instant response request to get all.
    * initial actions map for current player. (reserve, purchase, take token actions OR empty).
    *
-   * @param gameId game id
-   * @param playerName current player name
+   * @param gameId      game id
+   * @param playerName  current player name
    * @param accessToken current player's access token
    * @return A http response with JSON string as the body
    */
   public HttpResponse<String> sendGetInitialPlayerActions(long gameId, String playerName,
                                                           String accessToken) {
-    String url =  String.format("%s/api/games/%s/players/%s/actions",
+    String url = String.format("%s/api/games/%s/players/%s/actions",
         gameUrl + gameServiceName,
         gameId, playerName);
 
@@ -156,10 +149,10 @@ public class GameRequestSender {
   /**
    * Send a instant POST request to inform server which action did the user choose.
    *
-   * @param gameId game id
-   * @param playerName player name
+   * @param gameId      game id
+   * @param playerName  player name
    * @param accessToken access token
-   * @param actionId the MD5 hashed id of the chosen action
+   * @param actionId    the MD5 hashed id of the chosen action
    */
   public void sendPlayerActionChoiceRequest(long gameId, String playerName,
                                             String accessToken, String actionId) {
@@ -178,13 +171,20 @@ public class GameRequestSender {
 
   }
 
-
-  // TODO: Delete Request (later)
-
-
   public String getGameUrl() {
     return gameUrl;
   }
-  public String getGameServiceName() {return gameServiceName;}
+
+
+  // TODO: Delete Request (later)
+
+  public String getGameServiceName() {
+    return gameServiceName;
+  }
+
+  public void setGameServiceName(String gameServiceName) {
+    assert gameServiceName != null && !gameServiceName.equals("");
+    this.gameServiceName = gameServiceName;
+  }
 
 }

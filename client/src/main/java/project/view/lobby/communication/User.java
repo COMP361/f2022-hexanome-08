@@ -6,10 +6,9 @@ package project.view.lobby.communication;
 public class User {
 
   private final String username;
-  private String accessToken;
-
   private final String refreshToken;
   private final String authority;
+  private String accessToken;
 
   /**
    * Constructor of a user instance.
@@ -33,16 +32,16 @@ public class User {
     return accessToken;
   }
 
+  public void setAccessToken(String newAccessToken) {
+    accessToken = newAccessToken;
+  }
+
   public String getAuthority() {
     return authority;
   }
 
   public String getRefreshToken() {
     return refreshToken;
-  }
-
-  public void setAccessToken(String newAccessToken) {
-    accessToken = newAccessToken;
   }
 
 

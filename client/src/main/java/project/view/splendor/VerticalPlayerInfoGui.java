@@ -1,12 +1,10 @@
 package project.view.splendor;
 
 import ca.mcgill.comp361.splendormodel.model.Colour;
-import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javafx.collections.ObservableList;

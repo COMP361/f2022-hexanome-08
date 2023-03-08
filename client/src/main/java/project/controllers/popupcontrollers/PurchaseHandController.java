@@ -4,13 +4,14 @@ package project.controllers.popupcontrollers;
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
+import ca.mcgill.comp361.splendormodel.model.NobleCard;
+import ca.mcgill.comp361.splendormodel.model.PurchasedHand;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -21,40 +22,33 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import ca.mcgill.comp361.splendormodel.model.*;
 import project.App;
 
 /**
  * Purchase controller class, controls the visual updates happening in purchase hand.
  * associated with "my_development_cards.fxml"
- *
  */
 public class PurchaseHandController implements Initializable {
 
+  private final Map<Colour, Group> colourGroupMap;
+  private final Map<Colour, List<DevelopmentCard>> colourCardsMap;
+  private final List<NobleCard> nobleCards;
+  private final Map<String, Action> playerActions;
+  private final Rectangle coverRectangle;
   @FXML
   // each index represent the group of displaying all cards of one colour
   // there are 6 colours to display (hold the Groups)
   private HBox cardStackHbox;
-
   @FXML
   // place to store the gold token cards.
   // hold the Gold->List<DevCards>
   private VBox goldTokenCardsVbox;
-
   @FXML
   // hold List<NobleCard>
   private VBox noblesUnLocked;
 
-  private final Map<Colour, Group> colourGroupMap;
-
-  private final Map<Colour, List<DevelopmentCard>> colourCardsMap;
-
-  private final List<NobleCard> nobleCards;
-
-  private final Map<String, Action> playerActions;
-
-  private final Rectangle coverRectangle;
-  public PurchaseHandController(PurchasedHand purchasedHand, Map<String, Action> playerActions, Rectangle coverRectangle) {
+  public PurchaseHandController(PurchasedHand purchasedHand, Map<String, Action> playerActions,
+                                Rectangle coverRectangle) {
     // organize all dev cards (including gold colour ones) into colour map
     List<DevelopmentCard> allCardsInHand = purchasedHand.getDevelopmentCards();
     this.colourCardsMap = reorganizeCardsInHand(allCardsInHand);
@@ -90,8 +84,6 @@ public class PurchaseHandController implements Initializable {
     }
     return result;
   }
-
-
 
 
   // Add the satchel mark display to every dev card (exclude the orient gold card)
@@ -161,7 +153,6 @@ public class PurchaseHandController implements Initializable {
       noblesUnLocked.getChildren().add(imageView);
     }
   }
-
 
 
   @Override

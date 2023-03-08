@@ -60,7 +60,7 @@ public class LogInController implements Initializable {
       GameBoardLayoutConfig config = App.getGuiLayouts();
       if (App.getUser().getAuthority().equals("ROLE_ADMIN") ||
           App.getUser().getAuthority().equals("ROLE_PLAYER")) {
-        if(App.getLobbyController() == null) {
+        if (App.getLobbyController() == null) {
           App.setLobbyController(new LobbyController());
         }
 

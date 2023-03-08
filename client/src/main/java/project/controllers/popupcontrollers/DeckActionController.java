@@ -17,13 +17,11 @@ import project.connection.GameRequestSender;
  */
 public class DeckActionController implements Initializable {
 
-  @FXML
-  private Button reserveButton;
-
   private final long gameId;
   private final String actionId;
-
   private final Rectangle coverRectangle;
+  @FXML
+  private Button reserveButton;
 
   public DeckActionController(long gameId, String actionId, Rectangle coverRectangle) {
     this.gameId = gameId;

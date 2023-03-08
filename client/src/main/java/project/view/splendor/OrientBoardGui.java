@@ -3,30 +3,30 @@ package project.view.splendor;
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
 import ca.mcgill.comp361.splendormodel.actions.ReserveAction;
-import ca.mcgill.comp361.splendormodel.actions.TakeTokenAction;
-import ca.mcgill.comp361.splendormodel.model.*;
-
-import java.util.*;
+import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
+import ca.mcgill.comp361.splendormodel.model.Extension;
+import ca.mcgill.comp361.splendormodel.model.OrientBoard;
+import ca.mcgill.comp361.splendormodel.model.Position;
+import ca.mcgill.comp361.splendormodel.model.TableTop;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import project.App;
 import project.GameBoardLayoutConfig;
-import project.view.InvalidDataException;
 
 public class OrientBoardGui implements BoardGui {
 
-  private Map<Integer, OrientCardLevelGui> orientCardLevelGuiMap = new HashMap<>();
-  private VBox orientCardsBoard;
   private final AnchorPane playerBoardAnchorPane;
-
   private final Rectangle coverRectangle;
   private final long gameId;
+  private final Map<Integer, OrientCardLevelGui> orientCardLevelGuiMap = new HashMap<>();
+  private final VBox orientCardsBoard;
 
   public OrientBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
     this.gameId = gameId;
@@ -47,13 +47,14 @@ public class OrientBoardGui implements BoardGui {
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
     Map<Position, List<ActionIdPair>> positionToActionMap =
-            getPositionActions(reservePurchaseActions);
+        getPositionActions(reservePurchaseActions);
 
     // add from level 3 to level 1
-    for (int i = 3; i >=1; i--) {
+    for (int i = 3; i >= 1; i--) {
       DevelopmentCard[] cardsOnBoard = orientBoard.getLevelCardsOnBoard(i);
       List<DevelopmentCard> deck = orientBoard.getDecks().get(i);
-      OrientCardLevelGui orientBoardGui  = new OrientCardLevelGui(i, cardsOnBoard, deck, coverRectangle);
+      OrientCardLevelGui orientBoardGui =
+          new OrientCardLevelGui(i, cardsOnBoard, deck, coverRectangle);
       orientBoardGui.setup();
       orientBoardGui.bindActionToCardAndDeck(positionToActionMap, gameId);
       orientCardLevelGuiMap.put(i, orientBoardGui);
@@ -68,8 +69,8 @@ public class OrientBoardGui implements BoardGui {
   }
 
 
-  private Map<Position, List<ActionIdPair>> getPositionActions (
-          Map<String, Action> reservePurchaseActions) {
+  private Map<Position, List<ActionIdPair>> getPositionActions(
+      Map<String, Action> reservePurchaseActions) {
     Map<Position, List<ActionIdPair>> positionToActionMap = new HashMap<>();
     // assign actions to positions (each position can have a list of action pair associated)
     for (String actionId : reservePurchaseActions.keySet()) {
@@ -80,8 +81,7 @@ public class OrientBoardGui implements BoardGui {
         PurchaseAction purchaseAction = (PurchaseAction) action;
         cardPosition = purchaseAction.getCardPosition();
         card = purchaseAction.getCurCard();
-      }
-      else {
+      } else {
         ReserveAction reserveAction = (ReserveAction) action;
         cardPosition = reserveAction.getCardPosition();
         card = reserveAction.getCurCard();
@@ -107,7 +107,6 @@ public class OrientBoardGui implements BoardGui {
   public void clearContent() {
     orientCardsBoard.getChildren().clear();
   }
-
 
 
 }

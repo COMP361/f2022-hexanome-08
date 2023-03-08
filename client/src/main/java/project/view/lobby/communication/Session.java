@@ -1,6 +1,5 @@
 package project.view.lobby.communication;
 
-import ca.mcgill.comp361.splendormodel.model.BaseBoard;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +13,9 @@ public class Session {
   private final String creator;
   private final boolean launched;
   private final ArrayList<String> players;
-
+  private final Map<String, String> playerLocations;
   // Optional fields
   private String savegameid;
-  private final Map<String, String> playerLocations;
 
   /**
    * Session constructor.

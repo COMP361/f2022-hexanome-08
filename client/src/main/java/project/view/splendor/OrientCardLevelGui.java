@@ -5,10 +5,8 @@ import ca.mcgill.comp361.splendormodel.model.Position;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -30,11 +28,9 @@ import project.controllers.popupcontrollers.DeckActionController;
  */
 public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui {
   private final int level;
-  private DevelopmentCard[] cards;
-
-  private List<DevelopmentCard> deck;
-
   private final Rectangle coverRectangle;
+  private DevelopmentCard[] cards;
+  private List<DevelopmentCard> deck;
 
   /**
    * Constructs the Orient Card GUI.
@@ -61,6 +57,7 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
   public double getLevel() {
     return level;
   }
+
   @Override
   public List<ImageView> getAllCardsGui() {
     List<ImageView> allCards = new ArrayList<>();
@@ -86,11 +83,13 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
       getOneCardGui(i).setImage(cardImg);
     }
   }
-  private EventHandler<MouseEvent> createClickOnCardHandler(long gameId, List<ActionIdPair> allActions) {
+
+  private EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
+                                                            List<ActionIdPair> allActions) {
     return event -> {
       try {
         App.loadPopUpWithController("card_action.fxml",
-                new CardActionController(gameId,  allActions, coverRectangle),
+            new CardActionController(gameId, allActions, coverRectangle),
             coverRectangle, 360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
@@ -102,7 +101,7 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
     return event -> {
       try {
         App.loadPopUpWithController("deck_action.fxml",
-                new DeckActionController(gameId, actionId, coverRectangle),
+            new DeckActionController(gameId, actionId, coverRectangle),
             coverRectangle, 360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
@@ -147,10 +146,11 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
 
 
   @Override
-  public void bindActionToCardAndDeck(Map<Position, List<ActionIdPair>> positionToActionMap, long gameId) {
+  public void bindActionToCardAndDeck(Map<Position, List<ActionIdPair>> positionToActionMap,
+                                      long gameId) {
     Map<Position, List<ActionIdPair>> curLevelMap = positionToActionMap.entrySet()
-            .stream().filter(e -> e.getKey().getX() == level)
-            .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
+        .stream().filter(e -> e.getKey().getX() == level)
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     List<ImageView> allCards = getAllCardsGui();
     for (Position position : curLevelMap.keySet()) {
       if (position.getY() == -1) {
@@ -161,7 +161,8 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
         deck.setOnMouseClicked(createClickOnDeckHandler(gameId, actionId));
       } else {
         List<ActionIdPair> allActions = curLevelMap.get(position);
-        allCards.get(position.getY()).setOnMouseClicked(createClickOnCardHandler(gameId, allActions));
+        allCards.get(position.getY())
+            .setOnMouseClicked(createClickOnCardHandler(gameId, allActions));
       }
     }
   }

@@ -5,17 +5,13 @@ import ca.mcgill.comp361.splendormodel.model.CityBoard;
 import ca.mcgill.comp361.splendormodel.model.CityCard;
 import ca.mcgill.comp361.splendormodel.model.Extension;
 import ca.mcgill.comp361.splendormodel.model.TableTop;
-
-import java.util.List;
 import java.util.Map;
-
 import javafx.application.Platform;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import project.App;
 import project.GameBoardLayoutConfig;
-import project.view.InvalidDataException;
 
 public class CityBoardGui implements BoardGui {
 
@@ -27,11 +23,11 @@ public class CityBoardGui implements BoardGui {
 
   private final CitiesGui citiesGui;
 
-  private VBox cityCardBoard;
+  private final VBox cityCardBoard;
 
   public CityBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
     this.gameId = gameId;
-    citiesGui = new CitiesGui(200,100,10);
+    citiesGui = new CitiesGui(200, 100, 10);
     this.playerBoardAnchorPane = playerBoardAnchorPane;
     this.coverRectangle = coverRectangle;
     this.cityCardBoard = new VBox();
@@ -42,7 +38,7 @@ public class CityBoardGui implements BoardGui {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     CityBoard cityBoard = (CityBoard) tableTop.getBoard(Extension.CITY);
     CityCard[] cityCards = cityBoard.getAllCityCards();
-    citiesGui.setup(cityCards,config.getPacBoardLayoutX(),config.getPacBoardLayoutY());
+    citiesGui.setup(cityCards, config.getPacBoardLayoutX(), config.getPacBoardLayoutY());
     cityCardBoard.getChildren().add(citiesGui);
     Platform.runLater(() -> {
       cityCardBoard.setLayoutX(config.getPacBoardLayoutX());
