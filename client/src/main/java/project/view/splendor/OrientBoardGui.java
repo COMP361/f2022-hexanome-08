@@ -1,26 +1,109 @@
 package project.view.splendor;
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
-import ca.mcgill.comp361.splendormodel.model.TableTop;
-import java.util.Map;
+import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
+import ca.mcgill.comp361.splendormodel.actions.ReserveAction;
+import ca.mcgill.comp361.splendormodel.actions.TakeTokenAction;
+import ca.mcgill.comp361.splendormodel.model.*;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
+import project.App;
+import project.GameBoardLayoutConfig;
 import project.view.InvalidDataException;
 
 public class OrientBoardGui implements BoardGui{
 
-  private Map<Integer, OrientCardLevelGui> orientCardLevelGuiMap;
-  private VBox orientCardsContainer;
-  //private final OrientBoard orientBoard;
-  //private final Extension extension = Extension.ORIENT;
+  private Map<Integer, OrientCardLevelGui> orientCardLevelGuiMap = new HashMap<>();
+  private VBox orientCardsBoard;
+  private final AnchorPane playerBoardAnchorPane;
+
+  private final Rectangle coverRectangle;
+  private final long gameId;
+
+  public OrientBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
+    this.gameId = gameId;
+    this.playerBoardAnchorPane = playerBoardAnchorPane;
+    this.orientCardsBoard = new VBox();
+    this.coverRectangle = coverRectangle;
+  }
+
   @Override
   public void initialGuiActionSetup(TableTop tableTop, Map<String, Action> playerActionMap) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
+    OrientBoard orientBoard = (OrientBoard) tableTop.getBoard(Extension.ORIENT);
+    // set up and add base card GUI, only purchase and reserve actions are
+    // there in the action map at this point (or empty)
+    Map<String, Action> reservePurchaseActions = playerActionMap.entrySet()
+            .stream().filter(e -> e.getValue() instanceof ReserveAction ||
+                    e.getValue() instanceof PurchaseAction)
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+    Map<Position, List<ActionIdPair>> positionToActionMap =
+            getPositionActions(reservePurchaseActions);
+    // add from level 3 to level 1
+    for (int i = 3; i >=1; i--) {
+      DevelopmentCard[] cardsOnBoard = orientBoard.getLevelCardsOnBoard(i);
+      List<DevelopmentCard> deck = orientBoard.getDecks().get(i);
+      OrientCardLevelGui orientBoardGui  = new OrientCardLevelGui(i, cardsOnBoard, deck, coverRectangle);
+      orientBoardGui.setup();
+      orientBoardGui.bindActionToCardAndDeck(positionToActionMap, gameId);
+      orientCardLevelGuiMap.put(i, orientBoardGui);
+      orientCardsBoard.getChildren().add(orientBoardGui);
+    }
+    // display it to main game GUI
+    Platform.runLater(() -> {
+      orientCardsBoard.setLayoutX(config.getOrientCardBoardLayoutX());
+      orientCardsBoard.setLayoutY(config.getOrientCardBoardLayoutY());
+      playerBoardAnchorPane.getChildren().add(orientCardsBoard);
+    });
+  }
+
+
+
+  private Map<Position, List<ActionIdPair>> getPositionActions (
+          Map<String, Action> reservePurchaseActions) {
+    Map<Position, List<ActionIdPair>> positionToActionMap = new HashMap<>();
+    // assign actions to positions (each position can have a list of action pair associated)
+    for (String actionId : reservePurchaseActions.keySet()) {
+      Action action = reservePurchaseActions.get(actionId);
+      Position cardPosition;
+      DevelopmentCard card;
+      if (action instanceof PurchaseAction) {
+        PurchaseAction purchaseAction = (PurchaseAction) action;
+        cardPosition = purchaseAction.getCardPosition();
+        card = purchaseAction.getCurCard();
+      }
+      else {
+        ReserveAction reserveAction = (ReserveAction) action;
+        cardPosition = reserveAction.getCardPosition();
+        card = reserveAction.getCurCard();
+      }
+      // only card with purchase effects size > 0 is orient card
+      if (card.getPurchaseEffects().size() > 0) {
+        List<ActionIdPair> actions;
+        if (!positionToActionMap.containsKey(cardPosition)) {
+          actions = new ArrayList<>();
+        } else {
+          actions = positionToActionMap.get(cardPosition);
+        }
+        actions.add(new ActionIdPair(actionId, action));
+        positionToActionMap.put(cardPosition, actions);
+      }
+
+    }
+    return positionToActionMap;
   }
 
   @Override
   public void clearContent() {
-
+    orientCardsBoard.getChildren().clear();
   }
-
 }

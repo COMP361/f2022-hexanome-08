@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import project.connection.GameRequestSender;
 
@@ -18,16 +19,15 @@ public class DeckActionController implements Initializable {
   @FXML
   private Button reserveButton;
 
-  @FXML
-  private Button goBackButton;
-
-
   private final long gameId;
   private final String actionId;
 
-  public DeckActionController(long gameId, String actionId) {
+  private final Rectangle coverRectangle;
+
+  public DeckActionController(long gameId, String actionId, Rectangle coverRectangle) {
     this.gameId = gameId;
     this.actionId = actionId;
+    this.coverRectangle = coverRectangle;
   }
 
 
@@ -38,22 +38,22 @@ public class DeckActionController implements Initializable {
       String playerName = App.getUser().getUsername();
       String accessToken = App.getUser().getAccessToken();
       sender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
-      System.out.println("Reserved From the Deck");
-      Stage curWindow = (Stage) goBackButton.getScene().getWindow();
+      Stage curWindow = (Stage) reserveButton.getScene().getWindow();
+      coverRectangle.setVisible(false);
       curWindow.close();
     };
   }
 
-  private EventHandler<ActionEvent> createOnClickBackHandler() {
-    return event -> {
-      Stage curWindow = (Stage) goBackButton.getScene().getWindow();
-      curWindow.close();
-    };
-  }
+  //private EventHandler<ActionEvent> createOnClickBackHandler() {
+  //  return event -> {
+  //    Stage curWindow = (Stage) goBackButton.getScene().getWindow();
+  //    curWindow.close();
+  //  };
+  //}
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    goBackButton.setOnAction(createOnClickBackHandler());
+    //goBackButton.setOnAction(createOnClickBackHandler());
     reserveButton.setOnAction(createOnClickReserveHandler());
   }
 }

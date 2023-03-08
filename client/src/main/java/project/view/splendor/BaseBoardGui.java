@@ -23,6 +23,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.view.InvalidDataException;
@@ -36,13 +37,14 @@ public class BaseBoardGui implements BoardGui {
   private final AnchorPane playerBoardAnchorPane;
 
   private final long gameId;
-
-  public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId) {
+  private final Rectangle coverRectangle;
+  public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
       this.gameId = gameId;
       nobleBoardGui = new NobleBoardGui(100, 100, 5);
       tokenBankGui = new TokenBankGui(gameId);
       this.playerBoardAnchorPane = playerBoardAnchorPane;
       this.baseCardBoard = new VBox();
+      this.coverRectangle = coverRectangle;
   }
 
 
@@ -64,7 +66,7 @@ public class BaseBoardGui implements BoardGui {
       Action action = playerActionMap.get(actionId);
       if (action instanceof TakeTokenAction) {
         TakeTokenAction takeTokenAction = (TakeTokenAction) action;
-        System.out.println(takeTokenAction.getTokens());
+        //System.out.println(takeTokenAction.getTokens());
         takeTokenActionMap.put(actionId, takeTokenAction);
       }
     }
@@ -91,7 +93,7 @@ public class BaseBoardGui implements BoardGui {
     for (int i = 3; i >=1; i--) {
       DevelopmentCard[] cardsOnBoard = baseBoard.getLevelCardsOnBoard(i);
       List<DevelopmentCard> deck = baseBoard.getDecks().get(i);
-      BaseCardLevelGui baseCardLevelGui = new BaseCardLevelGui(i, cardsOnBoard, deck);
+      BaseCardLevelGui baseCardLevelGui = new BaseCardLevelGui(i, cardsOnBoard, deck, coverRectangle);
       baseCardLevelGui.setup();
       baseCardLevelGui.bindActionToCardAndDeck(positionToActionMap, gameId);
       baseCardLevelGuiMap.put(i, baseCardLevelGui);
@@ -106,7 +108,7 @@ public class BaseBoardGui implements BoardGui {
   }
 
   private Map<Position, List<ActionIdPair>> getPositionActions (
-      Map<String, Action> reservePurchaseActions) {
+          Map<String, Action> reservePurchaseActions) {
     Map<Position, List<ActionIdPair>> positionToActionMap = new HashMap<>();
     // assign actions to positions (each position can have a list of action pair associated)
     for (String actionId : reservePurchaseActions.keySet()) {

@@ -27,6 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.connection.GameRequestSender;
@@ -71,24 +72,24 @@ public class GameController implements Initializable {
   @FXML
   private Button saveButton;
 
+  private final Rectangle coverRectangle = new Rectangle(
+      App.getGuiLayouts().getAppWidth(),
+      App.getGuiLayouts().getAppHeight());
+
   @FXML
   private Button myReservedCardsButton;
-
-  // TODO: assign function to it later
   @FXML
   private Button quitButton;
 
   private final long gameId;
+
+  private String lastTurnPlayerName;
 
   private final Session curSession;
 
   private NobleBoardGui nobleBoard;
 
   private TokenBankGui tokenBankGui;
-
-  private List<BoardGui> allBoardGuis = new ArrayList<>();
-
-  private String prePlayerName;
 
   private final Map<Integer, BaseCardLevelGui> baseCardGuiMap = new HashMap<>();
 
@@ -99,10 +100,12 @@ public class GameController implements Initializable {
   private final Map<Extension, BoardGui> extensionBoardGuiMap = new HashMap<>();
 
   private List<String> sortedPlayerNames = new ArrayList<>();
+  private Thread playerInfoThread;
   private boolean gameIsFinished = false;
   public GameController(long gameId, Session curSession) {
     this.gameId = gameId;
     this.curSession = curSession;
+    this.playerInfoThread = null;
   }
 
 
@@ -110,10 +113,10 @@ public class GameController implements Initializable {
    * Opening the development cards pop up once "My Cards" button is pressed.
    */
 
-  @FXML
-  protected void onExitGameClick() throws IOException {
-    App.setRoot("admin_lobby_page");
-  }
+  //@FXML
+  //protected void onExitGameClick() throws IOException {
+  //  App.setRoot("admin_lobby_page");
+  //}
 
 
   private EventHandler<ActionEvent> createOpenMyReserveCardClick() {
@@ -138,9 +141,9 @@ public class GameController implements Initializable {
 
       try {
         App.loadPopUpWithController("my_reserved_cards.fxml",
-            new ReservedHandController(reservedHand, playerActions),
-            800,
-            600);
+            new ReservedHandController(reservedHand, playerActions, coverRectangle),
+            coverRectangle,800, 600);
+
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -176,9 +179,9 @@ public class GameController implements Initializable {
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
       try {
-        App.loadPopUpWithController(
-            "my_development_cards.fxml",
-            new PurchaseHandController(purchasedHand, playerActions),
+        App.loadPopUpWithController("my_development_cards.fxml",
+            new PurchaseHandController(purchasedHand, playerActions, coverRectangle),
+            coverRectangle,
             800,
             600);
       } catch (IOException e) {
@@ -196,15 +199,15 @@ public class GameController implements Initializable {
     return new ArrayList<>(allPlayerNames);
   }
 
-  private Map<PlayerPosition, String> setPlayerToPosition(String curPlayerName,
-                                                          List<String> allPlayerNames) {
-    Map<PlayerPosition, String> resultMap = new HashMap<>();
-    List<String> orderedNames = sortPlayerNames(curPlayerName, allPlayerNames);
-    for (int i = 0; i < orderedNames.size(); i++) {
-      resultMap.put(PlayerPosition.values()[i], orderedNames.get(i));
-    }
-    return resultMap;
-  }
+  //private Map<PlayerPosition, String> setPlayerToPosition(String curPlayerName,
+  //                                                        List<String> allPlayerNames) {
+  //  Map<PlayerPosition, String> resultMap = new HashMap<>();
+  //  List<String> orderedNames = sortPlayerNames(curPlayerName, allPlayerNames);
+  //  for (int i = 0; i < orderedNames.size(); i++) {
+  //    resultMap.put(PlayerPosition.values()[i], orderedNames.get(i));
+  //  }
+  //  return resultMap;
+  //}
 
 
   /**
@@ -232,48 +235,50 @@ public class GameController implements Initializable {
   }
 
 
-  private Thread generateAllPlayerInfoUpdateThread(String firstPlayerName) {
+  private Thread generateAllPlayerInfoUpdateThread() {
     return new Thread(() -> {
       GameRequestSender gameRequestSender = App.getGameRequestSender();
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
-      boolean isFirstCheck = true;
-      while (true) {
-        int responseCode = 408;
-        while (responseCode == 408) {
-          longPullResponse = gameRequestSender.sendGetAllPlayerInfoRequest(gameId, hashedResponse);
-          responseCode = longPullResponse.getStatus();
-        }
+      try {
+        while (!Thread.currentThread().isInterrupted()) {
+          int responseCode = 408;
+          while (responseCode == 408) {
+            longPullResponse = gameRequestSender.sendGetAllPlayerInfoRequest(gameId, hashedResponse);
+            responseCode = longPullResponse.getStatus();
+          }
 
-        if (responseCode == 200) {
-          hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
-          // decode this response into PlayerInGame class with Gson
-          String responseInJsonString = longPullResponse.getBody();
-          Gson splendorParser = SplendorDevHelper.getInstance().getGson();
-          PlayerStates playerStates = splendorParser
-              .fromJson(responseInJsonString, PlayerStates.class);
-          if (isFirstCheck) {
-            setupAllPlayerInfoGui(0, firstPlayerName);
-            isFirstCheck = false;
-          } else {
-            // not first check, updating the player info gui
+          if (Thread.currentThread().isInterrupted()) {
+            throw new InterruptedException("PlayerInfo update thread interrupted");
+          }
+
+          if (responseCode == 200) {
+            hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
+            // decode this response into PlayerInGame class with Gson
+            String responseInJsonString = longPullResponse.getBody();
+            Gson splendorParser = SplendorDevHelper.getInstance().getGson();
+            PlayerStates playerStates = splendorParser.fromJson(responseInJsonString, PlayerStates.class);
+            // set up GUI
+            setupAllPlayerInfoGui(0);
+
+            // update information on the GUI
             for (PlayerInGame playerInfo : playerStates.getPlayersInfo().values()) {
-              //// if we are updating the btm player info, buttons need to be re-assign actions
-              //if (playerInfo.getName().equals(App.getUser().getUsername())) {
-              //  myCardButton.setOnAction(createOpenMyPurchaseCardClick());
-              //  myReservedCardsButton.setOnAction(createOpenMyReserveCardClick());
-              //}
               updatePlayerInfoGui(playerInfo);
             }
+
           }
         }
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+        System.out.println(e.getMessage());
       }
+
     });
   }
 
 
   // For setup initial playerInfoGuis to display for the first time
-  private void setupAllPlayerInfoGui(int initTokenAmount, String firstPlayer) {
+  private void setupAllPlayerInfoGui(int initTokenAmount) {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     User curUser = App.getUser();
 
@@ -363,75 +368,18 @@ public class GameController implements Initializable {
         }
       }
     });
-    // since it's in the first check, curTurn and firstPlayer are same,
-    // highlight first player
-    prePlayerName = firstPlayer;
-    // at this point, the map can not be empty, safely get the playerGui
-    nameToPlayerInfoGuiMap.get(firstPlayer).setHighlight(true);
+    //// at this point, the map can not be empty, safely get the playerGui
+    //nameToPlayerInfoGuiMap.get(firstPlayer).setHighlight(true);
   }
-
-
-
-  //private void assignActionsToCardBoard() throws UnirestException {
-  //  SplendorServiceRequestSender gameRequestSender = App.getGameRequestSender();
-  //  User curUser = App.getUser();
-  //  HttpResponse<String> actionMapResponse =
-  //      gameRequestSender.sendGetPlayerActionsRequest(gameId, curUser.getUsername(),
-  //          curUser.getAccessToken());
-  //  Type actionMapType = new TypeToken<Map<String, Action>>() {
-  //  }.getType();
-  //  Gson actionGson = GameController.getActionGson();
-  //  Map<String, Action> resultActionsMap =
-  //      actionGson.fromJson(actionMapResponse.getBody(), actionMapType);
-  //
-  //  // if the action map is not empty, assign functions to the cards
-  //  String[][][] actionHashesLookUp = new String[3][4][2];
-  //  if (!resultActionsMap.isEmpty()) {
-  //    // if result action map is not empty, we need to assign hash values to it
-  //    for (String actionHash : resultActionsMap.keySet()) {
-  //      Action curAction = resultActionsMap.get(actionHash);
-  //      if (curAction.checkIsCardAction()) {
-  //        if (!(curAction.getCard() == null) && !(curAction.getPosition() == null)) {
-  //          Position curPosition = curAction.getPosition();
-  //          int level = curPosition.getCoordinateX();
-  //          int cardIndex = curPosition.getCoordinateY();
-  //          if (curAction instanceof PurchaseAction) {
-  //            actionHashesLookUp[3 - level][cardIndex][0] = actionHash;
-  //          } else {
-  //            actionHashesLookUp[3 - level][cardIndex][1] = actionHash;
-  //          }
-  //        }
-  //
-  //      } else {
-  //        // TODO: LATER, TAKE TOKEN ACTION OR SOMETHING ELSE
-  //      }
-  //    }
-  //  }
-  //  System.out.println("All actions: " + resultActionsMap);
-  //
-  //  // Since we now have all String[2] actionHashes, we can go and
-  //  // assign them to cards
-  //  for (int i = 0; i < 3; i++) {
-  //    if (resultActionsMap.isEmpty()) {
-  //      // if it's empty, reset the values
-  //      actionHashesLookUp[i] = new String[4][2];
-  //    }
-  //    baseCardGuiMap
-  //        .get(3 - i)
-  //        .bindActionToCardAndDeck(actionHashesLookUp[i], gameId);
-  //  }
-  //}
 
   //
   private Thread generateGameInfoUpdateThread() {
-    GameBoardLayoutConfig config = App.getGuiLayouts();
     GameRequestSender gameRequestSender = App.getGameRequestSender();
     User curUser = App.getUser(); // at this point, user will not be Null
     return new Thread(() -> {
       // basic stuff needed for a long pull
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
-      boolean isFirstCheck = true;
       try {
         while (!Thread.currentThread().isInterrupted()) {
           // always do one, just in case
@@ -464,36 +412,31 @@ public class GameController implements Initializable {
               // load the lobby page GUI again
               Platform.runLater(() -> {
                 try {
-                  App.loadPopUpWithController("admin_lobby_page.fxml",
-                      App.getLobbyController(),
-                      config.getAppWidth(),
-                      config.getAppHeight());
+                  App.loadNewSceneToPrimaryStage("admin_lobby_page.fxml",
+                      App.getLobbyController());
                 } catch (IOException e) {
                   throw new RuntimeException(e);
                 }
-                Stage gameWindow = (Stage) playerBoardAnchorPane.getScene().getWindow();
-                gameWindow.close();
               });
-              // saved the previous game, interrupt this thread.
+
+              // saved the previous game, interrupt the game update
+              // OR player info update thread
               Thread.currentThread().interrupt();
+              playerInfoThread.interrupt();
             }
             //TODO: For this game application, we always play BASE + ORIENT, thus
             // we do not worry about NOT having their GUI set up
 
-            // if isFirstCheck = True (setting up stage)
-            // Step 1. setup base board gui
+            // Step 0. who's turn is it update (highlight feature)
 
-            // Step 2. setup orient board gui
-
-            // Step 3. (optionally) setup extension board gui
-
-
-            // if isFirstCheck = False (update stage)
             // Step 1. update base board gui
 
             // Step 2. update orient board gui
 
             // Step 3. (optionally) update extension board gui
+
+            // TODO: Step 4. update MyPurchaseHand and MyReserveHand
+
 
             // First, check what extensions are we playing
             List<Extension> extensions = curGameInfo.getExtensions();
@@ -503,9 +446,7 @@ public class GameController implements Initializable {
             Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
             //System.out.println("Player: " + playerName + playerActionMap.values());
             // clear up all children in playerBoardAnchorPane
-
-
-            for (BoardGui boardGui : allBoardGuis) {
+            for (BoardGui boardGui : extensionBoardGuiMap.values()) {
               Platform.runLater(boardGui::clearContent);
             }
 
@@ -513,15 +454,21 @@ public class GameController implements Initializable {
             for (Extension extension : extensions) {
               switch (extension) {
                 case BASE:
-                  BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane, gameId);
+                  BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane,
+                      gameId, coverRectangle);
                   baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
                   extensionBoardGuiMap.put(extension, baseBoardGui);
                   break;
                 case ORIENT:
-                  extensionBoardGuiMap.put(extension, new OrientBoardGui());
+                  OrientBoardGui orientBoardGui = new OrientBoardGui(playerBoardAnchorPane,
+                      gameId, coverRectangle);
+                  orientBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+                  extensionBoardGuiMap.put(extension, orientBoardGui);
                   break;
                 case TRADING_POST:
-                  extensionBoardGuiMap.put(extension, new TraderBoardGui());
+                  TraderBoardGui traderBoardGui = new TraderBoardGui(playerBoardAnchorPane, gameId);
+                  traderBoardGui.initialGuiActionSetup(tableTop,playerActionMap);
+                  extensionBoardGuiMap.put(extension, traderBoardGui);
                   break;
                 case CITY:
                   extensionBoardGuiMap.put(extension, new CityBoardGui());
@@ -530,115 +477,13 @@ public class GameController implements Initializable {
               }
             }
 
-
-
-
-
-            //if (isFirstCheck) {
-            //
-            //
-            //
-            //
-            //} else {
-            //  // make use of extensionBoardGuiMap and do updates
-            //}
-
-
-
-
-
-
-            //if (isFirstCheck) {
-            //  // TODO: Potential nested clickable noble cards
-            //  // initialize noble area
-            //  nobleBoard = new NobleBoardGui(100, 100, 5);
-            //  List<NobleCard> nobles = curGameInfo.getTableTop().getNobles();
-            //  Platform.runLater(() -> {
-            //    nobleBoard.setup(nobles, config.getNobleLayoutX(), config.getNobleLayoutY(), true);
-            //    playerBoardAnchorPane.getChildren().add(nobleBoard);
-            //  });
-            //
-            //  // initialize token area
-            //  tokenBankGui = new TokenBankGui();
-            //  EnumMap<Colour, Integer> bankBalance =
-            //      curGameInfo.getTableTop().getBank().getAllTokens();
-            //  Platform.runLater(() -> {
-            //    tokenBankGui.setup(bankBalance,
-            //        config.getTokenBankLayoutX(),
-            //        config.getTokenBankLayoutY(), true);
-            //    playerBoardAnchorPane.getChildren().add(tokenBankGui);
-            //  });
-            //
-            //  // initialize the base board
-            //  for (int i = 3; i >= 1; i--) {
-            //    List<BaseCard> oneLevelCards =
-            //        curGameInfo.getTableTop().getBaseBoard().getBaseCardsOnBoard().get(i);
-            //    List<BaseCard> oneLevelDeck =
-            //        curGameInfo.getTableTop().getBaseBoard().getBaseDecks().get(i);
-            //    BaseCardLevelGui baseCardLevelGui =
-            //        new BaseCardLevelGui(i, oneLevelCards, oneLevelDeck);
-            //    baseCardLevelGui.setup();
-            //    Platform.runLater(() -> {
-            //      baseCardBoard.getChildren().add(baseCardLevelGui);
-            //    });
-            //    baseCardGuiMap.put(i, baseCardLevelGui);
-            //  }
-            //  try {
-            //    System.out.println(
-            //        "First time generate actions for player: " + curUser.getUsername());
-            //    assignActionsToCardBoard();
-            //  } catch (UnirestException e) {
-            //    throw new RuntimeException(e);
-            //  }
-            //  isFirstCheck = false;
-            //} else { // If it is not first check.....
-            //  // need to display
-            //  // TODO:
-            //  //  1. NEW Cards on board (and their actions)
-            //  //  2. New Nobles on board (and their actions) DONE
-            //  //  3. New token bank info (and action?) DONE
-            //
-            //  // First step, change the highlight (if prePlayer and curren player does not match)
-            //  String currentPlayerName = curGameInfo.getCurrentPlayer();
-            //  if (!prePlayerName.equals(currentPlayerName)) {
-            //    nameToPlayerInfoGuiMap.get(prePlayerName).setHighlight(false);
-            //    nameToPlayerInfoGuiMap.get(currentPlayerName).setHighlight(true);
-            //    prePlayerName = currentPlayerName;
-            //  } // if they are the same, no need to change the height colour
-            //
-            //  List<NobleCard> nobles = curGameInfo.getTableTop().getNobles();
-            //  Platform.runLater(() -> {
-            //    nobleBoard.setup(nobles,
-            //        config.getNobleLayoutX(),
-            //        config.getNobleLayoutY(), false);
-            //  });
-            //
-            //  EnumMap<Colour, Integer> bankBalance =
-            //      curGameInfo.getTableTop().getBank().getAllTokens();
-            //  Platform.runLater(() -> {
-            //    tokenBankGui.setup(bankBalance,
-            //        config.getTokenBankLayoutX(),
-            //        config.getTokenBankLayoutY(), false);
-            //  });
-            //
-            //  // update the cards GUI
-            //  for (int i = 3; i >= 1; i--) {
-            //    BaseCardLevelGui oneLevelCardsGui = baseCardGuiMap.get(i);
-            //    List<BaseCard> oneLevelCards =
-            //        curGameInfo.getTableTop().getBaseBoard().getBaseCardsOnBoard().get(i);
-            //    List<BaseCard> oneLevelDeck =
-            //        curGameInfo.getTableTop().getBaseBoard().getBaseDecks().get(i);
-            //    oneLevelCardsGui.setCards(oneLevelCards);
-            //    oneLevelCardsGui.setDeck(oneLevelDeck);
-            //    oneLevelCardsGui.setup();
-            //  }
-            //  try {
-            //    System.out.println("Updating actions for player: " + curUser.getUsername());
-            //    assignActionsToCardBoard();
-            //  } catch (UnirestException e) {
-            //    throw new RuntimeException(e);
-            //  }
-            //}
+            // highlight players accordingly
+            String curTurnPlayerName = curGameInfo.getCurrentPlayer();
+            if (!nameToPlayerInfoGuiMap.isEmpty()) {
+              for (String name : nameToPlayerInfoGuiMap.keySet()) {
+                nameToPlayerInfoGuiMap.get(name).setHighlight(name.equals(curTurnPlayerName));
+              }
+            }
           }
         }
       } catch (InterruptedException | UnirestException e) {
@@ -653,6 +498,7 @@ public class GameController implements Initializable {
         try {
           App.loadPopUpWithController("save_game.fxml",
               new SaveGamePopUpController(gameInfo, gameId),
+              coverRectangle,
               360,
               170);
         } catch (IOException e) {
@@ -664,23 +510,13 @@ public class GameController implements Initializable {
   @Override
   // TODO: This method contains what's gonna happen after clicking "play" on the board
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    //System.out.println("Starting game:" + gameId);
-    //System.out.println("At game controller" + this);
-    //System.out.println("We have game threads: " + App.getGameGuiThreads()
-    //    .stream()
-    //    .map(Thread::getName)
-    //    .collect(Collectors.toList()));
-    //
-    //System.out.println("Killing....");
-    //App.killGameThread();
-    ////App.killLobbyThread();
-    //System.out.println("After killing:");
-    //System.out.println("We now have game threads: " + App.getGameGuiThreads()
-    //    .stream()
-    //    .map(Thread::getName)
-    //    .collect(Collectors.toList()));
-
-
+    // the shaded shape that is used to prevent player to mess around with
+    // actions when we do not allow them to click on things that are
+    // not in pop up window
+    playerBoardAnchorPane.getChildren().add(coverRectangle);
+    coverRectangle.setVisible(false);
+    coverRectangle.widthProperty().bind(playerBoardAnchorPane.widthProperty());
+    coverRectangle.heightProperty().bind(playerBoardAnchorPane.heightProperty());
     GameRequestSender gameRequestSender = App.getGameRequestSender();
     //System.out.println("Current user: " + App.getUser().getUsername());
     //System.out.println(gameRequestSender.getGameServiceName());
@@ -693,7 +529,7 @@ public class GameController implements Initializable {
     }
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
-
+    //lastTurnPlayerName = curGameInfo.getFirstPlayerName();
     saveButton.setDisable(true);
     if (App.getUser().getUsername().equals(curGameInfo.getCreator())) {
       // if the current user is the creator, activate the save button, otherwise it
@@ -716,12 +552,12 @@ public class GameController implements Initializable {
         nameToArmCodeMap.put(playerNames.get(i-1), i);
       }
     }
-    String firstPlayerName = curGameInfo.getFirstPlayerName();
-    Thread playerInfoThread = generateAllPlayerInfoUpdateThread(firstPlayerName);
+
+    playerInfoThread = generateAllPlayerInfoUpdateThread();
     playerInfoThread.start();
+
     Thread mainGameUpdateThread = generateGameInfoUpdateThread();
     mainGameUpdateThread.start();
-    App.addGameThread(playerInfoThread);
-    App.addGameThread(mainGameUpdateThread);
+
   }
 }

@@ -8,13 +8,12 @@
 
 <Pane fx:id="purchaseContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="173.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Button fx:id="saveButton" layoutX="88.0" layoutY="108.0" mnemonicParsing="false" text="Save" />
+        <Button fx:id="saveButton" layoutX="157.0" layoutY="109.0" mnemonicParsing="false" text="Save" />
         <Text layoutX="46.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input the game id to save game" textAlignment="CENTER" wrappingWidth="268.015625">
             <font>
                 <Font name="System Bold" size="19.0" />
             </font>
         </Text>
-      <Button fx:id="cancelButton" layoutX="213.0" layoutY="108.0" mnemonicParsing="false" text="Cancel" />
       <TextField fx:id="saveGameIdTextField" layoutX="88.0" layoutY="62.0" prefHeight="25.0" prefWidth="182.0" />
     </children>
 </Pane>

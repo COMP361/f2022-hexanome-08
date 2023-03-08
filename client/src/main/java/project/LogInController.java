@@ -62,16 +62,14 @@ public class LogInController implements Initializable {
         if(App.getLobbyController() == null) {
           App.setLobbyController(new LobbyController());
         }
-        App.loadPopUpWithController("admin_lobby_page.fxml",
-            App.getLobbyController(),
-            config.getAppWidth(),
-            config.getAppHeight());
-        Stage logInWindow = (Stage) quitGameButton.getScene().getWindow();
-        logInWindow.close();
+
+        App.loadNewSceneToPrimaryStage(
+            "admin_lobby_page.fxml",
+            App.getLobbyController());
 
       } else { // otherwise, player_lobby_page
         // App.setRoot("player_lobby_page");
-        App.setRoot("LobbyService");
+        //App.setRoot("LobbyService");
       }
       //lobbyRequestSender.getRemoteSessions();
 

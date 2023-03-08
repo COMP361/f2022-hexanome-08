@@ -37,6 +37,8 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
   private DevelopmentCard[] cards;
   private List<DevelopmentCard> deck;
 
+  private final Rectangle coverRectangle;
+
   /**
    * Constructor of BaseCardLevelGui class.
    *
@@ -44,10 +46,12 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
    * @param cards a list of cards (fixed length of 4)
    * @param deck a list of cards (change length based on level)
    */
-  public BaseCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck) {
+  public BaseCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck,
+                          Rectangle coverRectangle) {
     this.level = level;
     this.cards = cards;
     this.deck = deck;
+    this.coverRectangle = coverRectangle;
     FXMLLoader fxmlLoader =
         new FXMLLoader(getClass().getResource("/project/base_card_template.fxml"));
     fxmlLoader.setRoot(this);
@@ -93,7 +97,8 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     return event -> {
       try {
         App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(gameId,  allActions), 360, 170);
+            new CardActionController(gameId,  allActions, coverRectangle),
+            coverRectangle,360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -102,56 +107,36 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
   private EventHandler<MouseEvent> createClickOnDeckHandler(long gameId, String actionId) {
     return event -> {
-
-
       try {
         App.loadPopUpWithController("deck_action.fxml",
-            new DeckActionController(gameId, actionId), 360, 170);
+            new DeckActionController(gameId, actionId, coverRectangle), coverRectangle,360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
     };
   }
 
-  //@Override
-  //public void bindActionToCardAndDeck(String[][] actionHashLookUp, long gameId) {
-  //  // get all cards first
-  //  List<ImageView> allCards = getAllCardsGui();
-  //  for (int i = 0; i < allCards.size(); i++) {
-  //    String[] actionHashOptions = actionHashLookUp[i];
-  //    allCards.get(i).setOnMouseClicked(createClickOnCardHandler(gameId, actionHashOptions));
-  //  }
-  //
-  //  Group deck = (Group) this.getChildren().get(0);
-  //  deck.setOnMouseClicked(createClickOnDeckHandler());
-  //}
-  //
-
 
   private void setDeckLevelText() {
     Group levelCard = (Group) this.getChildren().get(0);
     Rectangle rectangle = (Rectangle) levelCard.getChildren().get(0);
     int newRemainingCards = deck.size();
+    Text deck = (Text) levelCard.getChildren().get(1);
+    Text levelOfCard = (Text) levelCard.getChildren().get(2);
     if (level == 3) {
       rectangle.setFill(Color.DODGERBLUE);
-      Text deck = (Text) levelCard.getChildren().get(1);
-      Text levelOfCard = (Text) levelCard.getChildren().get(2);
       deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(". . .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));
     } else if (level == 2) {
       rectangle.setFill(Color.YELLOW);
-      Text deck = (Text) levelCard.getChildren().get(1);
-      Text levelOfCard = (Text) levelCard.getChildren().get(2);
       deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(" . .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));
     } else if (level == 1) {
       rectangle.setFill(Paint.valueOf("#30ff1f"));
-      Text deck = (Text) levelCard.getChildren().get(1);
-      Text levelOfCard = (Text) levelCard.getChildren().get(2);
       deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(" .");
