@@ -24,8 +24,8 @@
         <HBox fx:id="currentPlayer" alignment="TOP_RIGHT" layoutX="268.0" layoutY="775.0" maxHeight="125.0" maxWidth="665.0" prefHeight="125.0" prefWidth="665.0" />
         <Button fx:id="myCardButton" layoutX="1208.0" layoutY="720.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Cards" />
         <Button fx:id="myReservedCardsButton" layoutX="1208.0" layoutY="757.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Reserved Cards" />
-        <Button fx:id="quitButton" layoutX="1212.0" layoutY="796.0" mnemonicParsing="false" text="Quit" />
+        <Button fx:id="quitButton" layoutX="1208.0" layoutY="796.0" mnemonicParsing="false" text="Quit" />
       <HBox layoutX="190.0" layoutY="270.0" prefHeight="100.0" prefWidth="750.0" />
-      <Button fx:id="saveButton" layoutX="1292.0" layoutY="796.0" mnemonicParsing="false" text="Save" />
+      <Button fx:id="saveButton" layoutX="1301.0" layoutY="796.0" mnemonicParsing="false" text="Save" />
     </children>
 </AnchorPane>
