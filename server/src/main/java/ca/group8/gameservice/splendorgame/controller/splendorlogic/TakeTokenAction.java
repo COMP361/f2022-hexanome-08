@@ -1,10 +1,8 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
-import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
 import java.util.EnumMap;
@@ -15,7 +13,7 @@ import java.util.HashMap;
  */
 public class TakeTokenAction extends Action {
 
-  private EnumMap<Colour, Integer> tokensTaken;
+  private final EnumMap<Colour, Integer> tokensTaken;
 
   /**
    * Construct a new Take Tokens Action.
@@ -33,8 +31,8 @@ public class TakeTokenAction extends Action {
 
   @Override
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
-               ActionGenerator actionGenerator,
-               ActionInterpreter actionInterpreter) {
+                      ActionGenerator actionGenerator,
+                      ActionInterpreter actionInterpreter) {
     Bank bank = curTableTop.getBank();
     TokenHand tokenHand = playerInGame.getTokenHand();
     // remove the tokens from bank

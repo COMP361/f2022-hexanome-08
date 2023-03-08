@@ -2,7 +2,6 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import ca.group8.gameservice.splendorgame.controller.splendorlogic.SplendorLogicException;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContent;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +65,7 @@ public class PlayerStates implements BroadcastContent {
           String newName = newNamesCopy.get(randomNewNameIndex);
           PlayerInGame newPlayerInGame = playersInfo.get(oldName);
           newPlayerInGame.setName(newName);
-          newPlayerMap.put(newName,newPlayerInGame);
+          newPlayerMap.put(newName, newPlayerInGame);
           newNamesCopy.remove(newName);
         }
       }

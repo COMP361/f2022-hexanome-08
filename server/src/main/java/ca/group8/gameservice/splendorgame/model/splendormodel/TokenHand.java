@@ -2,7 +2,6 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import java.util.EnumMap;
-import java.util.stream.Collectors;
 
 /**
  * Represents the Tokens that a Player has in their hand.

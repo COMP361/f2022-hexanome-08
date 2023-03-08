@@ -15,8 +15,8 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
  */
 public class ClaimNobleAction extends Action {
 
-  private NobleCard curCard;
-  private Position curPosition;
+  private final NobleCard curCard;
+  private final Position curPosition;
 
   /**
    * Constructor.
@@ -54,6 +54,7 @@ public class ClaimNobleAction extends Action {
 
 
   }
+
   public NobleCard getCurCard() {
     assert curCard != null;
     return curCard;

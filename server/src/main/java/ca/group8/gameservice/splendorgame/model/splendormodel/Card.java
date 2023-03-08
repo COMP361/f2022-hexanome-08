@@ -23,10 +23,10 @@ import java.util.Objects;
 )
 public abstract class Card {
 
-  String type;
   private final int prestigePoints;
   private final EnumMap<Colour, Integer> price;
   private final String cardName;
+  String type;
 
   /**
    * * params include prestige points, price and name.

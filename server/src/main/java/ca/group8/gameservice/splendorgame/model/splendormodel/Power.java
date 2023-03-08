@@ -22,10 +22,9 @@ import java.util.Objects;
     }
 )
 public abstract class Power {
+  private final PowerEffect powerEffect;
   String type;
   private boolean unlocked;
-
-  private final PowerEffect powerEffect;
 
   /**
    * The constructs a new power object, which is tied to a specific Player.

@@ -19,8 +19,8 @@ import java.util.List;
  */
 public class ReserveAction extends Action {
 
-  private DevelopmentCard curCard;
-  private Position cardPosition;
+  private final DevelopmentCard curCard;
+  private final Position cardPosition;
 
   public ReserveAction(Position position, DevelopmentCard curCard) {
     super.type = this.getClass().getSimpleName();

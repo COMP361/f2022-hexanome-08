@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class CityBoard extends Board {
 
-  // keeps track of the ownership of any CityCard
-  private Map<String, CityCard> playerCities = new HashMap<>();
   // visible city cards on board
   private final CityCard[] allCityCards = new CityCard[3];
+  // keeps track of the ownership of any CityCard
+  private Map<String, CityCard> playerCities = new HashMap<>();
 
   public CityBoard(List<String> playerNames) {
     super.type = this.getClass().getSimpleName();
