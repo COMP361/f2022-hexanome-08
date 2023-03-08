@@ -193,6 +193,8 @@ public class ActionGenerator {
             tokensPaid.put(Colour.GOLD, goldTokensInHand);
             goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand)/2);
           }
+        } else{
+            tokensPaid.put(Colour.GOLD, 0);
         }
         result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
       }
@@ -237,6 +239,8 @@ public class ActionGenerator {
             tokensPaid.put(Colour.GOLD, goldTokensInHand);
             goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
           }
+        } else {
+          tokensPaid.put(Colour.GOLD, 0);
         }
         result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
       }
