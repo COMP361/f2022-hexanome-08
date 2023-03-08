@@ -2,8 +2,11 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGameState;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
+import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -81,6 +84,38 @@ public class TestGameManager{
     gameManager.deleteAllSavedGame();
     // after all saved game being deleted, all saved game ids remain empty
     assertEquals(new ArrayList<>(), gameManager.getSavedGameIds());
+  }
+
+
+  @Test
+  @Order(2)
+  public void testLaunchAndKeepPlaying() throws ModelAccessException {
+    String[] newPlayers = new String[] {"julia", "ruoyu"};
+    List<PlayerInfo> playerInfos = IntStream
+        .range(0, newPlayers.length)
+        .mapToObj(i -> new PlayerInfo(newPlayers[i], colours[i]))
+        .collect(Collectors.toList());
+    LauncherInfo launcherInfo = new LauncherInfo(gamename,
+        new LinkedList<>(playerInfos),
+        players[0]);
+    launcherInfo.setSavegame(savegameids[0]);
+    long newGameId = 12451517195L;
+    SavedGameState savedGameState = gameManager.launchGame(newGameId, launcherInfo);
+    //// there should be two new players whose game was loaded based on one previously saved game
+    //assertEquals(new HashSet<>(Arrays.asList(newPlayers)),
+    //    new HashSet<>(gameManager.getGameById(newGameId).getPlayerNames()));
+
+    // observe the player actions after loading the file
+    GameInfo gameInfo = savedGameState.getGameInfo();
+    PlayerStates playerStates = savedGameState.getPlayerStates();
+    ActionInterpreter actionInterpreter = savedGameState.getActionInterpreter();
+    System.out.println();
+
+  }
+
+  @Test
+  public void test() {
+    System.out.println(gameManager.getActiveGames().keySet());
   }
 
 }

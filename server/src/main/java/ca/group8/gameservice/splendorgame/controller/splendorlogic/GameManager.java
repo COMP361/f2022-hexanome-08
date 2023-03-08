@@ -201,16 +201,20 @@ public class GameManager {
         SavedGameState savedGame = savedGames.get(saveGameId);
         // rename the player names in this savedGameState
         savedGame.renamePlayers(playerNames, creator);
-
         // put the renamed objects to manager
-        activeGames.put(gameId, savedGame.getGameInfo());
-        activePlayers.put(gameId, savedGame.getPlayerStates());
-        gameActionInterpreters.put(gameId, savedGame.getActionInterpreter());
+        GameInfo newGameInfo = savedGame.getGameInfo();
+        PlayerStates newPlayerStates = savedGame.getPlayerStates();
+        activeGames.put(gameId, newGameInfo);
+        activePlayers.put(gameId, newPlayerStates);
+        // rather than loading from file, we create a new action interpreter based on
+        // saved game states
+        ActionInterpreter newInterpreter = new ActionInterpreter(newGameInfo, newPlayerStates);
+        gameActionInterpreters.put(gameId, newInterpreter);
 
         // generate default actions for every player, even it's a loaded game
-        ActionGenerator actionGenerator = savedGame.getActionInterpreter().getActionGenerator();
-        String currentPlayerName = savedGame.getGameInfo().getCurrentPlayer();
-        for (PlayerInGame playerInGame : savedGame.getPlayerStates().getPlayersInfo().values()) {
+        ActionGenerator actionGenerator = newInterpreter.getActionGenerator();
+        String currentPlayerName = newGameInfo.getCurrentPlayer();
+        for (PlayerInGame playerInGame : newPlayerStates.getPlayersInfo().values()) {
           // only set the initial actions for the first player, others' remain empty
           actionGenerator.setInitialActions(playerInGame, currentPlayerName);
         }
