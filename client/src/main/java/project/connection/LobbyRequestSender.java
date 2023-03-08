@@ -244,7 +244,6 @@ public class LobbyRequestSender {
     } catch (UnirestException e) {
       e.printStackTrace();
     }
-
   }
 
 

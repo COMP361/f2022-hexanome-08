@@ -2,15 +2,11 @@ package project;
 
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
-import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
 import ca.mcgill.comp361.splendormodel.model.Colour;
-import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -18,25 +14,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
-import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
-import project.view.splendor.ActionIdPair;
 import project.view.splendor.BaseBoardGui;
 import project.view.splendor.BaseCardLevelGui;
 import project.view.splendor.BoardGui;
@@ -102,11 +93,12 @@ public class GameController implements Initializable {
 
   private List<String> sortedPlayerNames = new ArrayList<>();
   private Thread playerInfoThread;
-  private boolean gameIsFinished = false;
+  private Thread mainGameUpdateThread;
   public GameController(long gameId, Session curSession) {
     this.gameId = gameId;
     this.curSession = curSession;
     this.playerInfoThread = null;
+    this.mainGameUpdateThread = null;
   }
 
 
@@ -404,28 +396,20 @@ public class GameController implements Initializable {
             String responseInJsonString = longPullResponse.getBody();
             Gson gsonParser = SplendorDevHelper.getInstance().getGson();
             GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
+
+            // the current game is finished (either done by Save OR GameOver)
             if (curGameInfo.isFinished()) {
-              gameIsFinished = true;
-              // if it's the creator's client, send a request to LS to remove the session
-              if(curUser.getUsername().equals(curGameInfo.getCreator())) {
-                LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
-                String creatorAccessToken = curUser.getAccessToken();
-                lobbyRequestSender.sendDeleteSessionRequest(creatorAccessToken, gameId);
-              }
-              // load the lobby page GUI again
+              // should load a game over page (jump back to lobby after they click the button)
+              // implicitly handle the threading stopping logic and loading back to lobby
               Platform.runLater(() -> {
                 try {
-                  App.loadNewSceneToPrimaryStage("admin_lobby_page.fxml",
-                      App.getLobbyController());
+                  App.loadPopUpWithController("game_over.fxml",
+                      new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
+                      coverRectangle,360, 170);
                 } catch (IOException e) {
                   throw new RuntimeException(e);
                 }
               });
-
-              // saved the previous game, interrupt the game update
-              // OR player info update thread
-              Thread.currentThread().interrupt();
-              playerInfoThread.interrupt();
             }
             //TODO: For this game application, we always play BASE + ORIENT, thus
             // we do not worry about NOT having their GUI set up
@@ -498,11 +482,12 @@ public class GameController implements Initializable {
     });
   }
 
+  // interrupt the game update thread to save resources
   private EventHandler<ActionEvent> createClickOnSaveButtonEvent(GameInfo gameInfo, long gameId) {
       return event -> {
         try {
           App.loadPopUpWithController("save_game.fxml",
-              new SaveGamePopUpController(gameInfo, gameId),
+              new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
               coverRectangle,
               360,
               170);
@@ -510,6 +495,19 @@ public class GameController implements Initializable {
           throw new RuntimeException(e);
         }
       };
+  }
+
+  // interrupt the game update thread to save resources
+  private EventHandler<ActionEvent> createClickOnQuitButtonEvent() {
+    return event -> {
+      try {
+        App.loadPopUpWithController("quit_game.fxml",
+            new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
+            coverRectangle, 360, 170);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    };
   }
 
   @Override
@@ -530,6 +528,7 @@ public class GameController implements Initializable {
     GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
     //lastTurnPlayerName = curGameInfo.getFirstPlayerName();
     saveButton.setDisable(true);
+    quitButton.setOnAction(createClickOnQuitButtonEvent());
     if (App.getUser().getUsername().equals(curGameInfo.getCreator())) {
       // if the current user is the creator, activate the save button, otherwise it
       // greyed out
@@ -555,7 +554,7 @@ public class GameController implements Initializable {
     playerInfoThread = generateAllPlayerInfoUpdateThread();
     playerInfoThread.start();
 
-    Thread mainGameUpdateThread = generateGameInfoUpdateThread();
+    mainGameUpdateThread = generateGameInfoUpdateThread();
     mainGameUpdateThread.start();
 
   }
