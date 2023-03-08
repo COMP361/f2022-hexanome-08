@@ -18,7 +18,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
 import project.view.lobby.SessionGuiManager;
@@ -99,7 +101,7 @@ public class App extends Application {
     primaryStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     primaryStage.setFullScreenExitHint("");
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-    //primaryStage.setFullScreen(true);
+    primaryStage.setFullScreen(true);
     primaryStage.setScene(scene);
     primaryStage.show();
   }
@@ -223,20 +225,28 @@ public class App extends Application {
       throws IOException {
 
     // the new stage is shown, make the rectangle visible
-    cover.setVisible(true);
-    cover.setOpacity(0.2);
-    cover.toFront();
+    //cover.setVisible(true);
+    //cover.setOpacity(0.2);
+    //cover.toFront();
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
     fxmlLoader.setController(controller);
     Stage newStage = new Stage();
     newStage.setScene(new Scene(fxmlLoader.load(), popUpStageWidth, popUpStageHeight));
     newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
-    //newStage.setFullScreen(false);
+    // make the new popup window always stay on top level
     newStage.setAlwaysOnTop(true);
+    // establish a relationship between two window (popup and primary)
+    newStage.initOwner(primaryStage);
+    // block user from clicking on the main stage
+    newStage.initModality(Modality.WINDOW_MODAL);
+    // disable the full screen (green one) button for mac
+    newStage.initStyle(StageStyle.UTILITY);
+    //newStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+    // show the popup window
     newStage.show();
-    newStage.setOnCloseRequest(closeEvent -> {
-      cover.setVisible(false);
-    });
+    //newStage.setOnCloseRequest(closeEvent -> {
+    //  cover.setVisible(false);
+    //});
   }
 
   /**
@@ -254,7 +264,7 @@ public class App extends Application {
     double height = primaryStage.getScene().getHeight();
     // setting the scene might turn off full screen mode, must reset to full again immediately
     primaryStage.setScene(new Scene(fxmlLoader.load(), width, height));
-    //primaryStage.setFullScreen(true);
+    primaryStage.setFullScreen(true);
   }
 
 
