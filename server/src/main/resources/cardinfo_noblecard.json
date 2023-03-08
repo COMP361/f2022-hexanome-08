@@ -1,112 +1,123 @@
 [
-  {
-    "cardName": "noble1",
-    "prestigePoints": 3,
-    "price": {
-      "BLUE": 3,
-      "BLACK": 0,
-      "RED": 0,
-      "GREEN": 3,
-      "WHITE": 3
+    {
+        "cardName":"noble1",
+        "prestigePoints":3,
+        "price":{
+            "BLUE":3,
+            "BLACK":0,
+            "RED":0,
+            "GREEN":3,
+            "WHITE":3
+        }
+    },
+    {
+        "cardName":"noble2",
+        "prestigePoints":3,
+        "price":{
+            "BLUE":3,
+            "BLACK":0,
+            "RED":3,
+            "GREEN":3,
+            "WHITE":0
+        }
+    },
+    {
+        "cardName":"noble3",
+        "prestigePoints":3,
+        "price":{
+            "BLUE":0,
+            "BLACK":3,
+            "RED":3,
+            "GREEN":0,
+            "WHITE":3
+        }
+    },
+    {
+        "cardName":"noble4",
+        "prestigePoints":3,
+        "price":{
+            "BLUE":0,
+            "BLACK":4,
+            "RED":4,
+            "GREEN":0,
+            "WHITE":0
+        }
+    },
+    {
+        "cardName":"noble5",
+        "prestigePoints":3,
+        "price":{
+            "BLUE":0,
+            "BLACK":3,
+            "RED":3,
+            "GREEN":3,
+            "WHITE":0
+        }
+    },
+    {
+        "cardName":"noble6",
+        "prestigePoints":3,
+        "price":{
+            "BLUE":3,
+            "BLACK":3,
+            "RED":0,
+            "GREEN":0,
+            "WHITE":3
+        }
+    },
+    {
+        "cardName":"noble7",
+        "prestigePoints":3,
+        "price":{
+            "BLUE":0,
+            "BLACK":4,
+            "RED":0,
+            "GREEN":0,
+            "WHITE":4
+        }
+    },
+    {
+        "cardName":"noble8",
+        "prestigePoints":3,
+        "price":{
+            "BLUE":0,
+            "BLACK":0,
+            "RED":4,
+            "GREEN":4,
+            "WHITE":0
+        }
+    },
+    {
+        "cardName":"noble9",
+        "prestigePoints":3,
+        "price":{
+            "BLUE":4,
+            "BLACK":0,
+            "RED":0,
+            "GREEN":4,
+            "WHITE":0
+        }
+    },
+    {
+        "cardName":"noble10",
+        "prestigePoints":3,
+        "price":{
+            "BLUE":4,
+            "BLACK":0,
+            "RED":0,
+            "GREEN":0,
+            "WHITE":4
+        }
+    },
+    {
+        "cardName":"noble11",
+        "prestigePoints":1,
+        "price":{
+            "BLUE":1,
+            "BLACK":0,
+            "RED":0,
+            "GREEN":0,
+            "WHITE":1
+        }
     }
-  },
-  {
-    "cardName": "noble2",
-    "prestigePoints": 3,
-    "price": {
-      "BLUE": 3,
-      "BLACK": 0,
-      "RED": 3,
-      "GREEN": 3,
-      "WHITE": 0
-    }
-  },
-  {
-    "cardName": "noble3",
-    "prestigePoints": 3,
-    "price": {
-      "BLUE": 0,
-      "BLACK": 3,
-      "RED": 3,
-      "GREEN": 0,
-      "WHITE": 3
-    }
-  },
-  {
-    "cardName": "noble4",
-    "prestigePoints": 3,
-    "price": {
-      "BLUE": 0,
-      "BLACK": 4,
-      "RED": 4,
-      "GREEN": 0,
-      "WHITE": 0
-    }
-  },
-  {
-    "cardName": "noble5",
-    "prestigePoints": 3,
-    "price": {
-      "BLUE": 0,
-      "BLACK": 3,
-      "RED": 3,
-      "GREEN": 3,
-      "WHITE": 0
-    }
-  },
-  {
-    "cardName": "noble6",
-    "prestigePoints": 3,
-    "price": {
-      "BLUE": 3,
-      "BLACK": 3,
-      "RED": 0,
-      "GREEN": 0,
-      "WHITE": 3
-    }
-  },
-  {
-    "cardName": "noble7",
-    "prestigePoints": 3,
-    "price": {
-      "BLUE": 0,
-      "BLACK": 4,
-      "RED": 0,
-      "GREEN": 0,
-      "WHITE": 4
-    }
-  },
-  {
-    "cardName": "noble8",
-    "prestigePoints": 3,
-    "price": {
-      "BLUE": 0,
-      "BLACK": 0,
-      "RED": 4,
-      "GREEN": 4,
-      "WHITE": 0
-    }
-  },
-  {
-    "cardName": "noble9",
-    "prestigePoints": 3,
-    "price": {
-      "BLUE": 4,
-      "BLACK": 0,
-      "RED": 0,
-      "GREEN": 4,
-      "WHITE": 0
-    }
-  },
-  {
-    "cardName": "noble10",
-    "prestigePoints": 3,
-    "price": {
-      "BLUE": 4,
-      "BLACK": 0,
-      "RED": 0,
-      "GREEN": 0,
-      "WHITE": 4
-    }
-  }
 ]
