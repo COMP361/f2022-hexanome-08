@@ -6,14 +6,12 @@ import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGam
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import ca.group8.gameservice.splendorgame.model.ModelAccessException;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
-import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import eu.kartoffelquadrat.asyncrestlib.ResponseGenerator;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +116,14 @@ public class SplendorRestController {
 
   }
 
-
+  /**
+   * step to save the game.
+   *
+   * @param gameId gameId
+   * @param saveGameInfo saveGameInfo
+   * @param accessToken accessToken
+   * @return ResponseEntity
+   */
   @PutMapping(value = {
       "/splendorbase/api/games/{gameId}/savegame",
       "/splendortrade/api/games/{gameId}/savegame",
@@ -257,7 +262,8 @@ public class SplendorRestController {
       GameInfo game = gameManager.getGameById(gameId);
       // if we can find the game, print the list of player names
       Gson gsonParser = SplendorDevHelper.getInstance().getGson();
-      Type listOfNames = new TypeToken<List<String>>(){}.getType();
+      Type listOfNames = new TypeToken<List<String>>() {
+      }.getType();
       String allPlayersInGame = gsonParser.toJson(game.getPlayerNames(), listOfNames);
       return ResponseEntity.status(HttpStatus.OK).body(allPlayersInGame);
     } catch (ModelAccessException e) {
@@ -273,7 +279,8 @@ public class SplendorRestController {
   // *
   // * This end point is only used to get the initial actionMap (Purchase, Reserve, TakeToken)
   // * The cascade case will update the Map< String, Map< String, Action > > in GameInfo, which is
-  // * under long-polling control. Therefore user can get updated action map to handle cascade action
+  // * under long-polling control.
+  // * Therefore user can get updated action map to handle cascade action
   // * without calling to this end point again.
   // */
   //@GetMapping(value = {"/splendortrade/api/games/{gameId}/players/{playerName}/actions",

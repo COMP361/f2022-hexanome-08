@@ -6,8 +6,8 @@ import java.util.Objects;
 
 /**
  * This class represents the Power functionality in the Trading Post Extension.
- * <p>
- * Every abstract class was serialized/deserialized using the repository from:
+ *
+ * <p>Every abstract class was serialized/deserialized using the repository from:
  * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
  * Thank him so much!!!!!!!!!!!!!!!
  */
@@ -22,10 +22,9 @@ import java.util.Objects;
     }
 )
 public abstract class Power {
+  private final PowerEffect powerEffect;
   String type;
   private boolean unlocked;
-
-  private final PowerEffect powerEffect;
 
   /**
    * The constructs a new power object, which is tied to a specific Player.
@@ -74,8 +73,8 @@ public abstract class Power {
     }
 
     Power other = (Power) obj;
-    return this.unlocked == other.unlocked &&
-        this.powerEffect.equals(other.powerEffect);
+    return this.unlocked == other.unlocked
+            && this.powerEffect.equals(other.powerEffect);
   }
 
   @Override

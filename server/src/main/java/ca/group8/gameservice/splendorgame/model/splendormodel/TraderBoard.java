@@ -11,6 +11,11 @@ import java.util.Map;
 public class TraderBoard extends Board {
   private Map<String, Map<PowerEffect, Power>> allPlayerPowers = new HashMap<>();
 
+  /**
+   * TraderBoard.
+   *
+   * @param playerNames playerNames
+   */
   public TraderBoard(List<String> playerNames) {
     super.type = this.getClass().getSimpleName();
     for (String playerName : playerNames) {
@@ -50,9 +55,14 @@ public class TraderBoard extends Board {
     return allPlayerPowers;
   }
 
-
+  /**
+   * getUnlockedPowerCount.
+   *
+   * @param playerName playerName
+   * @return a int
+   */
   public int getUnlockedPowerCount(String playerName) {
-    Map<PowerEffect , Power> playerPowers = allPlayerPowers.get(playerName);
+    Map<PowerEffect, Power> playerPowers = allPlayerPowers.get(playerName);
     int count = 0;
     for (Power power : playerPowers.values()) {
       if (power.isUnlocked()) {
@@ -61,6 +71,7 @@ public class TraderBoard extends Board {
     }
     return count;
   }
+
   /**
    * Get one specific power instance of a given player.
    *

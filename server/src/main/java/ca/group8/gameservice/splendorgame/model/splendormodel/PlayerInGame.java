@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 public class PlayerInGame {
 
 
-  private String name;
-  private int prestigePoints;
   private final EnumMap<Colour, Integer> wealth;
   private final TokenHand tokenHand;
   private final ReservedHand reservedHand;
   private final PurchasedHand purchasedHand;
+  private String name;
+  private int prestigePoints;
 
 
   /**
@@ -36,9 +36,8 @@ public class PlayerInGame {
    * This method calculates what tokens the player must use to buy the card. It then removes the
    * required tokens from the player's tokenHand.
    *
-   * @param goldCardsRequired The number of gold tokens required to complete this purchase.
-   * @param paidTokens tokens paid to buy the card
-   * @return A list of the tokens used up to buy a card (the ones removed from tokenHand).
+   * @param goldCardsRequired The number of gold tokens required to complete this purchase
+   * @param paidTokens        tokens paid to buy the card
    */
   public void payTokensToBuy(int goldCardsRequired, EnumMap<Colour, Integer> paidTokens) {
 
@@ -48,7 +47,7 @@ public class PlayerInGame {
     List<DevelopmentCard> allDevCards = purchasedHand.getDevelopmentCards();
     while (goldCardsRequired > 0) {
       for (DevelopmentCard card : allDevCards) {
-        if(card.getGemColour().equals(Colour.GOLD)) {
+        if (card.getGemColour().equals(Colour.GOLD)) {
           goldCardsRequired -= 1;
           // remove the gold card that's used to pay
           purchasedHand.removeDevelopmentCard(card);
@@ -72,6 +71,7 @@ public class PlayerInGame {
   public String getName() {
     return name;
   }
+
   public void setName(String name) {
     this.name = name;
   }
@@ -83,7 +83,7 @@ public class PlayerInGame {
   /**
    * Amount can be negative, as to minus.
    *
-   * @param amount
+   * @param amount amount
    */
   public void changePrestigePoints(int amount) {
     prestigePoints += amount;

@@ -12,6 +12,14 @@ public class CityCard extends Card {
 
   private final int anyColourCount;
 
+  /**
+   * CityCard infos.
+   *
+   * @param paramPrestigePoints paramPrestigePoints
+   * @param paramPrice paramPrice
+   * @param paramCardName paramCardName
+   * @param anyColourCount anyColourCount
+   */
   public CityCard(int paramPrestigePoints, EnumMap<Colour, Integer> paramPrice,
                   String paramCardName, int anyColourCount) {
     super(paramPrestigePoints, paramPrice, paramCardName);

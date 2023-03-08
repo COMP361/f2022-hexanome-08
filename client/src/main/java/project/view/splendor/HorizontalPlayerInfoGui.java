@@ -77,7 +77,7 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
   public Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(
       PlayerPosition playerPosition) {
     Map<Colour, Map<PlayerWealthInfo, Text>> result = new HashMap<>();
-    Colour[] colours = App.getBaseColours();
+    Colour[] colours = App.getAllColours();
     if (playerPosition.equals(PlayerPosition.TOP)) {
       for (int i = 0; i < colours.length; i++) {
         Map<PlayerWealthInfo, Text> info = new HashMap<>();
@@ -86,12 +86,8 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
         info.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         result.put(colours[i], info);
       }
-      Map<PlayerWealthInfo, Text> goldInfo = new HashMap<>();
-      Group curGroup = (Group) this.getChildren().get(5);
-      goldInfo.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(1));
-      result.put(Colour.GOLD, goldInfo);
     } else if (playerPosition.equals(PlayerPosition.BOTTOM)) {
-      for (int i = 1; i < 6; i++) {
+      for (int i = 1; i < 7; i++) {
         Map<PlayerWealthInfo, Text> info = new HashMap<>();
         VBox currBox = (VBox) this.getChildren().get(i);
         Group curGroup = (Group) currBox.getChildren().get(1);
@@ -99,11 +95,6 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
         info.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         result.put(colours[i - 1], info);
       }
-      Map<PlayerWealthInfo, Text> goldInfo = new HashMap<>();
-      VBox currBox = (VBox) this.getChildren().get(6);
-      Group curGroup = (Group) currBox.getChildren().get(1);
-      goldInfo.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(1));
-      result.put(Colour.GOLD, goldInfo);
     }
 
     return result;
@@ -175,15 +166,9 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     Set<Colour> regularColours = SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet();
     for (Colour colour : regularColours) {
       Map<PlayerWealthInfo, Text> perColourWealth = wealthInfo.get(colour);
-      if (colour.equals(Colour.GOLD)) {
-        perColourWealth
-            .get(PlayerWealthInfo.TOKEN)
-            .setText(Integer.toString(gemsInHand.get(colour)));
-      } else {
-        perColourWealth
-            .get(PlayerWealthInfo.GEM)
-            .setText(Integer.toString(gemsInHand.get(colour)));
-      }
+      perColourWealth
+          .get(PlayerWealthInfo.GEM)
+          .setText(Integer.toString(gemsInHand.get(colour)));
     }
   }
 

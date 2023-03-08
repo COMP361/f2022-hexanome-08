@@ -12,11 +12,16 @@ import java.util.Map;
 
 public class CityBoard extends Board {
 
-  // keeps track of the ownership of any CityCard
-  private Map<String, CityCard> playerCities = new HashMap<>();
   // visible city cards on board
   private final CityCard[] allCityCards = new CityCard[3];
+  // keeps track of the ownership of any CityCard
+  private Map<String, CityCard> playerCities = new HashMap<>();
 
+  /**
+   * CityBoard.
+   *
+   * @param playerNames playerNames
+   */
   public CityBoard(List<String> playerNames) {
     super.type = this.getClass().getSimpleName();
     // initialize city to each player as null at the beginning
@@ -59,7 +64,7 @@ public class CityBoard extends Board {
   }
 
   /**
-   * Do nothing, as CityBoard needs no update
+   * Do nothing, as CityBoard needs no update.
    */
   @Override
   public void update() {

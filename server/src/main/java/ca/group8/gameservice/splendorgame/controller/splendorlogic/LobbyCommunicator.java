@@ -100,8 +100,12 @@ public class LobbyCommunicator {
 
   }
 
-
-
+  /**
+   * deleteGameSession.
+   *
+   * @param gameId deleteGameSession
+   * @param launcherInfo launcherInfo
+   */
   public void deleteGameSession(long gameId, LauncherInfo launcherInfo) {
     String gameServiceName = launcherInfo.getGameServer();
     String url = String.format("%s/api/sessions/%s", lobbyServiceAddress, gameId);

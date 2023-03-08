@@ -89,10 +89,10 @@ public class ActionInterpreter {
     TableTop tableTop = gameInfo.getTableTop();
     PlayerInGame playerInGame = playerStates.getOnePlayerInGame(playerName);
     actionChosen.execute(tableTop, playerInGame, actionGenerator, this);
-    if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)){
+    if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
       TraderBoard board = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
       Power power = board.getPlayerOnePower(playerName, PowerEffect.EXTRA_TOKEN);
-      if(actionChosen instanceof PurchaseAction && power.isUnlocked()){
+      if (actionChosen instanceof PurchaseAction && power.isUnlocked()) {
         bonusTokenStashed = true;
       }
     }
@@ -199,8 +199,8 @@ public class ActionInterpreter {
           }
         }
         //check if player still needs to take bonus token
-        if(traderBoard.getPlayerOnePower(playerName, PowerEffect.EXTRA_TOKEN).isUnlocked()){
-          if(bonusTokenStashed){
+        if (traderBoard.getPlayerOnePower(playerName, PowerEffect.EXTRA_TOKEN).isUnlocked()) {
+          if (bonusTokenStashed) {
             bonusTokenStashed = false;
             actionGenerator.updateBonusTokenPowerActions(playerInGame);
           }
@@ -208,7 +208,6 @@ public class ActionInterpreter {
         bonusTokenStashed = false;
 
       }
-
 
 
       // winners check (optionally with city extension)
@@ -262,7 +261,7 @@ public class ActionInterpreter {
       // set next turn
       // TODO: before changing to next player, reset everything
       // the flags to default values
-        nobleVisited = false;
+      nobleVisited = false;
 
       // if the game is not finished, set next player
       if (!gameInfo.isFinished()) {
@@ -327,7 +326,11 @@ public class ActionInterpreter {
     return playerStates;
   }
 
-  //todo
+  /**
+   * setBurnCardInfo.
+   *
+   * @param cardPrice cardPrice
+   */
   public void setBurnCardInfo(EnumMap<Colour, Integer> cardPrice) {
     //set colour and cards to burn
     burnCardCount = 2;
@@ -343,9 +346,9 @@ public class ActionInterpreter {
     return burnCardColour;
   }
 
-  public void setStashedCard(DevelopmentCard stashedCard) {
-    assert stashedCard != null;
-    this.stashedCard = stashedCard;
+  public void setBurnCardColour(
+      Colour burnCardColour) {
+    this.burnCardColour = burnCardColour;
   }
 
   public DevelopmentCard getStashedCard() {
@@ -353,13 +356,18 @@ public class ActionInterpreter {
     return stashedCard;
   }
 
-  public void setFreeCardLevel(int newLevel) {
-    assert newLevel < 3 && newLevel > 0; //Cannot have a free card that is level 3 or above.
-    freeCardLevel = newLevel;
+  public void setStashedCard(DevelopmentCard stashedCard) {
+    assert stashedCard != null;
+    this.stashedCard = stashedCard;
   }
 
   public int getFreeCardLevel() {
     return freeCardLevel;
+  }
+
+  public void setFreeCardLevel(int newLevel) {
+    assert newLevel < 3 && newLevel > 0; //Cannot have a free card that is level 3 or above.
+    freeCardLevel = newLevel;
   }
 
   public int getBurnCardCount() {
@@ -370,11 +378,8 @@ public class ActionInterpreter {
     burnCardCount += number;
   }
 
-  public void removeBurnCardCount(int number) { burnCardCount-= number;}
-
-  public void setBurnCardColour(
-      Colour burnCardColour) {
-    this.burnCardColour = burnCardColour;
+  public void removeBurnCardCount(int number) {
+    burnCardCount -= number;
   }
 
   public void setBonusToken(boolean bonusToken) {
