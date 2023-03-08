@@ -24,7 +24,7 @@
             "BLACK":0,
             "RED":0,
             "GREEN":3,
-            "WHITE":5
+            "WHITE":0
         },
         "purchaseEffects":[
 
@@ -90,7 +90,7 @@
         "price":{
             "BLUE":1,
             "BLACK":0,
-            "RED":1,
+            "RED":3,
             "GREEN":1,
             "WHITE":1
         },
