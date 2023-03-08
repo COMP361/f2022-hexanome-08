@@ -460,7 +460,12 @@ public class GameController implements Initializable {
                   extensionBoardGuiMap.put(extension, traderBoardGui);
                   break;
                 case CITY:
-                  extensionBoardGuiMap.put(extension, new CityBoardGui());
+                  System.out.println("\nThis is city DLC\n");
+                  CityBoardGui cityBoardGui = new CityBoardGui(playerBoardAnchorPane,
+                          gameId,coverRectangle);
+                  cityBoardGui.initialGuiActionSetup(tableTop,playerActionMap);
+                  extensionBoardGuiMap.put(extension, cityBoardGui);
+
                   break;
                 default: break;
               }
