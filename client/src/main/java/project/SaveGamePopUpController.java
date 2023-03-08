@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import project.connection.GameRequestSender;
+import project.connection.LobbyRequestSender;
 import project.view.lobby.communication.Savegame;
 
 public class SaveGamePopUpController implements Initializable {
@@ -27,28 +28,37 @@ public class SaveGamePopUpController implements Initializable {
 
   private final GameInfo gameInfo;
   private final long gameId;
-  public SaveGamePopUpController(GameInfo gameInfo, long gameId) {
+  private Thread playerInfoThread;
+  private Thread mainGameUpdateThread;
+  public SaveGamePopUpController(GameInfo gameInfo, long gameId,
+                                 Thread playerInfoThread, Thread mainGameUpdateThread) {
     this.gameInfo = gameInfo;
     this.gameId = gameId;
+    this.playerInfoThread = playerInfoThread;
+    this.mainGameUpdateThread = mainGameUpdateThread;
+
   }
 
   private EventHandler<ActionEvent> createOnClickSaveButton(Savegame savegame, String accessToken) {
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
+      // first save it, and then delete the current session to LS
       sender.sendSaveGameRequest(gameId,savegame,accessToken);
+      // interrupt the threads when creator choose to save the game.
+      playerInfoThread.interrupt();
+      mainGameUpdateThread.interrupt();
+      try {
+        App.loadNewSceneToPrimaryStage("admin_lobby_page.fxml",
+            App.getLobbyController());
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
       Button button = (Button) event.getSource();
       Stage curWindow = (Stage) button.getScene().getWindow();
       curWindow.close();
     };
   }
 
-  //private EventHandler<ActionEvent> createOnClickCancelButton() {
-  //  return event -> {
-  //    Button button = (Button) event.getSource();
-  //    Stage curWindow = (Stage) button.getScene().getWindow();
-  //    curWindow.close();
-  //  };
-  //}
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {

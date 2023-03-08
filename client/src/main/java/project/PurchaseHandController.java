@@ -144,6 +144,8 @@ public class PurchaseHandController implements Initializable {
         String cardPath = App.getOrientCardPath(card.getCardName(), card.getLevel());
         Image image = new Image(cardPath);
         ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(100);
+        imageView.setFitHeight(150);
         // add the image view to vbox
         goldTokenCardsVbox.getChildren().add(imageView);
       }
