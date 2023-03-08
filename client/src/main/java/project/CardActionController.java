@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import project.connection.GameRequestSender;
 import project.view.splendor.ActionIdPair;
@@ -30,12 +31,15 @@ public class CardActionController implements Initializable {
   @FXML
   private Button reserveButton;
 
-  @FXML
-  private Button goBackButton;
+  //@FXML
+  //private Button goBackButton;
+  private final Rectangle coverRectangle;
 
-  public CardActionController(long gameId, List<ActionIdPair> allActionsPair) {
+
+  public CardActionController(long gameId, List<ActionIdPair> allActionsPair, Rectangle coverRectangle) {
     this.gameId = gameId;
     this.allActionsPair = allActionsPair;
+    this.coverRectangle = coverRectangle;
   }
 
   //private EventHandler<ActionEvent> createOnClickPurchaseHandler(String actionId) {
@@ -82,18 +86,19 @@ public class CardActionController implements Initializable {
       gameRequestSender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
       Button button = (Button) event.getSource();
       Stage curWindow = (Stage) button.getScene().getWindow();
+      coverRectangle.setVisible(false);
       curWindow.close();
     };
   }
 
 
-
-  private EventHandler<ActionEvent> createOnClickBackHandler() {
-    return event -> {
-      Stage curWindow = (Stage) goBackButton.getScene().getWindow();
-      curWindow.close();
-    };
-  }
+  //
+  //private EventHandler<ActionEvent> createOnClickBackHandler() {
+  //  return event -> {
+  //    Stage curWindow = (Stage) goBackButton.getScene().getWindow();
+  //    curWindow.close();
+  //  };
+  //}
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -114,6 +119,6 @@ public class CardActionController implements Initializable {
       }
     }
 
-    goBackButton.setOnAction(createOnClickBackHandler());
+    //goBackButton.setOnAction(createOnClickBackHandler());
   }
 }

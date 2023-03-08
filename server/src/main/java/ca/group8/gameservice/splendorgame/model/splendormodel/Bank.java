@@ -3,6 +3,8 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import java.util.EnumMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represents the bank.
@@ -52,6 +54,9 @@ public class Bank {
     //  assert (allTokens.get(colour) + paramTokens.get(colour)) <= initialValue;
     //}
     //add Tokens
+    Logger logger  = LoggerFactory.getLogger(Bank.class);
+    logger.warn("bank balance: " + allTokens);
+    logger.warn("tokens return: " + paramTokens);
     for (Colour colour : SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet()) {
       int newVal = allTokens.get(colour) + paramTokens.get(colour);
       allTokens.replace(colour, newVal);

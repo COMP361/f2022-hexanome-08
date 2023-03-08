@@ -16,7 +16,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
 import project.view.lobby.SessionGuiManager;
@@ -28,31 +32,26 @@ import project.view.lobby.communication.User;
  */
 public class App extends Application {
 
-  // The default scene used to display the initial window
-  private static Scene scene;
-  private static Scene handCard;
 
-  private static Scene reservedCards;
+  private static Stage primaryStage;
 
-  private static Scene lobby;
 
   // One and the only one requestSender
-  //private static final LobbyServiceRequestSender lobbyRequestSender =
-  //    new LobbyServiceRequestSender("http://76.66.139.161:4242");
+  private static final LobbyRequestSender lobbyRequestSender =
+      new LobbyRequestSender("http://76.66.139.161:4242");
 
   // TODO: Change this to singleton later LobbyServiceRequestSender
-  private static final LobbyRequestSender lobbyRequestSender =
-      new LobbyRequestSender("http://127.0.0.1:4242");
-
-  // http://127.0.0.1:4246/splendor
-  // http://76.66.139.161:4246/splendor
-  //private static final SplendorServiceRequestSender gameRequestSender =
-  //    new SplendorServiceRequestSender(
-  //        "http://76.66.139.161:4246/", "splendorbase");
-  // TODO: This should not be a global variable in App!!!
+  //private static final LobbyRequestSender lobbyRequestSender =
+  //    new LobbyRequestSender("http://127.0.0.1:4242");
+/**/
+   //http://127.0.0.1:4246/splendor
+   //http://76.66.139.161:4246/splendorbvb
   private static final GameRequestSender gameRequestSender =
-      new GameRequestSender(
-          "http://127.0.0.1:4246/", "splendorbase");
+      new GameRequestSender("http://76.66.139.161:4246/", "splendorbase");
+  // TODO: This should not be a global variable in App!!!
+  //private static final GameRequestSender gameRequestSender =
+  //    new GameRequestSender(
+  //        "http://127.0.0.1:4246/", "splendorbase");
 
 
   private static final Colour[] allColours = new Colour[] {
@@ -83,6 +82,8 @@ public class App extends Application {
    */
   @Override
   public void start(Stage stage) throws IOException {
+    System.setProperty("com.apple.macos.useScreenMenuBar", "true");
+    primaryStage = stage;
     try {
       FileReader f = new FileReader(Objects.requireNonNull(
           App.class.getClassLoader().getResource("appConfig.json")).getFile());
@@ -91,98 +92,76 @@ public class App extends Application {
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
+    FXMLLoader startPageLoader = new FXMLLoader(App.class.getResource( "start_page.fxml"));
     SessionGuiManager.getInstance();
-    scene = new Scene(loadFxml("start_page"),
+    Scene scene = new Scene(startPageLoader.load(),
         guiLayouts.getAppWidth(),
         guiLayouts.getAppHeight());
-    // Every time we loadFxml("a_file"), the file corresponding
-    // controller's initialize method will get called
-    //lobby = new Scene(loadFxml("admin_lobby_page"), 1000, 800);
-    //handCard = new Scene(loadFxml("my_development_cards"), 789, 406);
-    //reservedCards = new Scene(loadFxml("my_reserved_cards"), 789, 406);
-    stage.setTitle("Welcome to Splendor!");
-    stage.setScene(scene);
-    stage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
-    stage.show();
+    primaryStage.setTitle("Welcome to Splendor!");
+    primaryStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+    primaryStage.setFullScreenExitHint("");
+    primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+    primaryStage.setFullScreen(true);
+    primaryStage.setScene(scene);
+    primaryStage.show();
   }
 
   public static void main(String[] args) {
     launch();
   }
 
-  /**
-   * Replace the current scene with the scene loaded from input fxml
-   * file with the same layout ([640,400] by default).
-   *
-   * @param fxml The fxml file where we read the GUI setup
-   * @throws IOException when fxml not found
-   */
-  public static void setRoot(String fxml) throws IOException {
-    scene.setRoot(loadFxml(fxml));
-  }
+  ///**
+  // * Replace the current scene with the scene loaded from input fxml
+  // * file with the same layout ([640,400] by default).
+  // *
+  // * @param fxml The fxml file where we read the GUI setup
+  // * @throws IOException when fxml not found
+  // */
+  //public static void setRoot(String fxml) throws IOException {
+  //  scene.setRoot(loadFxml(fxml));
+  //}
 
-  /**
-   * Load a Scene from the fxml file to a new Stage with input height and width and title.
-   *
-   * @param fxml   The fxml file where we read the GUI setup
-   * @param height Height of the new stage
-   * @param width  Width of the new stage
-   * @param title  Title of the new stage
-   * @throws IOException when fxml not found
-   */
-  public static void setRootWithSizeTitle(String fxml, int height, int width, String title)
-      throws IOException {
-    Stage newStage = new Stage();
-    newStage.setTitle(title);
-    newStage.setScene(new Scene(loadFxml(fxml), height, width));
-    newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
-    newStage.show();
-  }
+  ///**
+  // * Load a Scene from the fxml file to a new Stage with input height and width and title.
+  // *
+  // * @param fxml   The fxml file where we read the GUI setup
+  // * @param height Height of the new stage
+  // * @param width  Width of the new stage
+  // * @param title  Title of the new stage
+  // * @throws IOException when fxml not found
+  // */
+  //public static void setRootWithSizeTitle(String fxml, int height, int width, String title)
+  //    throws IOException {
+  //  Stage newStage = new Stage();
+  //  newStage.setTitle(title);
+  //  newStage.setScene(new Scene(loadFxml(fxml), height, width));
+  //  newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+  //  newStage.show();
+  //}
 
-  /**
-   * Set the scene of the pop-up stage into a new scene loaded from fxml.
-   *
-   * @param fxml     The fxml file where we read the GUI setup
-   * @param curScene The current scene of the pop-up
-   * @throws IOException when fxml not found
-   */
-  public static void setPopUpRoot(String fxml, Scene curScene) throws IOException {
-    curScene.setRoot(loadFxml(fxml));
-  }
+  ///**
+  // * Set the scene of the pop-up stage into a new scene loaded from fxml.
+  // *
+  // * @param fxml     The fxml file where we read the GUI setup
+  // * @param curScene The current scene of the pop-up
+  // * @throws IOException when fxml not found
+  // */
+  //public static void setPopUpRoot(String fxml, Scene curScene) throws IOException {
+  //  curScene.setRoot(loadFxml(fxml));
+  //}
 
-  /**
-   * Load a fxml file and return a Parent.
-   *
-   * @param fxml The fxml file where we read the GUI setup
-   * @return A Parent that was loaded from the fxml file
-   * @throws IOException when fxml not found
-   */
-  // Open another new stage as same size as the initial game stage
-  private static Parent loadFxml(String fxml) throws IOException {
-    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-    return fxmlLoader.load();
-  }
-
-  public static Scene getScene() {
-    return scene;
-  }
-
-  public static void setHandCard() throws IOException {
-    handCard.setRoot(loadFxml("my_development_cards"));
-  }
-
-  public static void setReserveCard() throws IOException {
-    reservedCards.setRoot(loadFxml("my_reserved_cards"));
-  }
-
-  public static Scene getHandCard() {
-    return handCard;
-  }
-
-  public static Scene getReservedCards() {
-    return reservedCards;
-  }
-
+  ///**
+  // * Load a fxml file and return a Parent.
+  // *
+  // * @param fxml The fxml file where we read the GUI setup
+  // * @return A Parent that was loaded from the fxml file
+  // * @throws IOException when fxml not found
+  // */
+  //// Open another new stage as same size as the initial game stage
+  //private static Parent loadFxml(String fxml) throws IOException {
+  //  FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+  //  return fxmlLoader.load();
+  //}
 
   public static LobbyRequestSender getLobbyServiceRequestSender() {
     return lobbyRequestSender;
@@ -240,19 +219,56 @@ public class App extends Application {
    * @param popUpStageWidth window width
    * @param popUpStageHeight window height
    * @throws IOException in case fxml is not found
-   * @return the stage (window) that displays the scene loaded with the fxml file.
    */
-  public static Stage loadPopUpWithController(String fxmlName, Object controller,
+  public static void loadPopUpWithController(String fxmlName, Object controller, Rectangle cover,
                                              double popUpStageWidth, double popUpStageHeight)
       throws IOException {
+
+    // the new stage is shown, make the rectangle visible
+    //cover.setVisible(true);
+    //cover.setOpacity(0.2);
+    //cover.toFront();
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
     fxmlLoader.setController(controller);
     Stage newStage = new Stage();
     newStage.setScene(new Scene(fxmlLoader.load(), popUpStageWidth, popUpStageHeight));
     newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+    // make the new popup window always stay on top level
+    newStage.setAlwaysOnTop(true);
+    // establish a relationship between two window (popup and primary)
+    newStage.initOwner(primaryStage);
+    // block user from clicking on the main stage
+    newStage.initModality(Modality.WINDOW_MODAL);
+    // disable the full screen (green one) button for mac
+    newStage.initStyle(StageStyle.UTILITY);
+    //newStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+    // show the popup window
     newStage.show();
-    return newStage;
+    //newStage.setOnCloseRequest(closeEvent -> {
+    //  cover.setVisible(false);
+    //});
   }
+
+  /**
+   * Show a popup Stage with the corresponding fxml file, controller class, and the width/height.
+   *
+   * @param fxmlName fxml file name
+   * @param controller controller class of the popup
+   * @throws IOException in case fxml is not found
+   */
+  public static void loadNewSceneToPrimaryStage(String fxmlName, Object controller)
+      throws IOException {
+    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
+    fxmlLoader.setController(controller);
+    double width = primaryStage.getScene().getWidth();
+    double height = primaryStage.getScene().getHeight();
+    // setting the scene might turn off full screen mode, must reset to full again immediately
+    primaryStage.setScene(new Scene(fxmlLoader.load(), width, height));
+    primaryStage.setFullScreen(true);
+  }
+
+
+
 
   /**
    * A static method to refresh the user's access token.

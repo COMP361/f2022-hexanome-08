@@ -22,8 +22,8 @@ public class SaveGamePopUpController implements Initializable {
   @FXML
   private Button saveButton;
 
-  @FXML
-  private Button cancelButton;
+  //@FXML
+  //private Button cancelButton;
 
   private final GameInfo gameInfo;
   private final long gameId;
@@ -42,20 +42,20 @@ public class SaveGamePopUpController implements Initializable {
     };
   }
 
-  private EventHandler<ActionEvent> createOnClickCancelButton() {
-    return event -> {
-      Button button = (Button) event.getSource();
-      Stage curWindow = (Stage) button.getScene().getWindow();
-      curWindow.close();
-    };
-  }
+  //private EventHandler<ActionEvent> createOnClickCancelButton() {
+  //  return event -> {
+  //    Button button = (Button) event.getSource();
+  //    Stage curWindow = (Stage) button.getScene().getWindow();
+  //    curWindow.close();
+  //  };
+  //}
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     List<String> playerNamesList = gameInfo.getPlayerNames();
     String[] playerNames = playerNamesList.toArray(new String[playerNamesList.size()]);
     String gameName = App.getGameRequestSender().getGameServiceName();
-    cancelButton.setOnAction(createOnClickCancelButton());
+    //cancelButton.setOnAction(createOnClickCancelButton());
     Thread saveGameFiledThread = new Thread(()->{
       while (true) {
         // keep looping until user input something

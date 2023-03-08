@@ -152,6 +152,8 @@ public class ActionGenerator {
             tokensPaid.put(Colour.GOLD, goldTokensInHand);
             goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand)/2);
           }
+        } else {
+          tokensPaid.put(Colour.GOLD, 0);
         }
         result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
       }
@@ -298,8 +300,8 @@ public class ActionGenerator {
         threeDiffColourTokens.put(colourList.get(0), 1);
         threeDiffColourTokens.put(colourList.get(1), 1);
         threeDiffColourTokens.put(colourList.get(2), 1);
+        result.add(new TakeTokenAction(threeDiffColourTokens));
       }
-      result.add(new TakeTokenAction(threeDiffColourTokens));
     }
 
     return result;
