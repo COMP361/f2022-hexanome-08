@@ -203,6 +203,11 @@ public class GameManager {
         savedGame.renamePlayers(playerNames, creator);
         // put the renamed objects to manager
         GameInfo newGameInfo = savedGame.getGameInfo();
+        // reset the action map since those actions are old
+        for (String name : newGameInfo.getPlayerActionMaps().keySet()) {
+          newGameInfo.getPlayerActionMaps().get(name).clear();
+        }
+
         PlayerStates newPlayerStates = savedGame.getPlayerStates();
         activeGames.put(gameId, newGameInfo);
         activePlayers.put(gameId, newPlayerStates);
