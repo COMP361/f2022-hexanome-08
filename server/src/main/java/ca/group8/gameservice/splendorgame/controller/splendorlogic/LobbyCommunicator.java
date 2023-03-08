@@ -2,6 +2,7 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.GameServerParameters;
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
@@ -99,22 +100,18 @@ public class LobbyCommunicator {
 
   }
 
-  /**
-   * Send a delete request to LS to indicate that we want to delete.
-   * the game: gameName, with saveGameId.
-   *
-   * @param gameName   name of the game service. (fixed, such splendorbase)
-   * @param saveGameId id of the saved game. (a saved customized name)
-   */
-  public void deleteSavedGame(String gameName, String saveGameId) throws UnirestException {
-    String url = String.format("%s/api/gameservices/%s/savegames/%s", lobbyServiceAddress,
-        gameName, saveGameId);
+
+
+  public void deleteGameSession(long gameId, LauncherInfo launcherInfo) {
+    String gameServiceName = launcherInfo.getGameServer();
+    String url = String.format("%s/api/sessions/%s", lobbyServiceAddress, gameId);
     try {
-      String accessToken = getGameOauthToken(gameName, gameServicePasswords.get(0));
+      String serverAccessToken = getGameOauthToken(gameServiceName, gameServicePasswords.get(0));
       HttpResponse<String> response = Unirest.delete(url)
-          .queryString("access_token", accessToken).asString();
+          .queryString("access_token", serverAccessToken)
+          .asString();
       if (response.getStatus() != 200) {
-        throw new UnirestException("Failed to delete the game with id: " + saveGameId);
+        throw new UnirestException("Failed to delete the session with id: " + gameId);
       }
     } catch (UnirestException e) {
       logger.warn(e.getMessage());

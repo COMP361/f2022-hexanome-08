@@ -145,9 +145,11 @@ public class SplendorRestController {
       // immediately tell the client, game is over
       gameInfoBroadcastContentManager.get(gameId).touch();
       // remove anything related to this game from game manager
+      // implicitly tell LS to delete this session
       gameManager.deleteGame(gameId);
+
       // remove the broadcast content manager which controls the
-      // long polling updates
+      // long polling updates after letting clients know the game is finished
       gameInfoBroadcastContentManager.remove(gameId);
       allPlayerInfoBroadcastContentManager.remove(gameId);
       return ResponseEntity.status(HttpStatus.OK).body("");
@@ -341,20 +343,22 @@ public class SplendorRestController {
       ActionInterpreter actionInterpreter = gameManager.getGameActionInterpreter(gameId);
       actionInterpreter.interpretAction(actionId, playerName);
 
-      // if anything might have changed, let the client side know immediately
-      allPlayerInfoBroadcastContentManager.get(gameId).touch();
-      gameInfoBroadcastContentManager.get(gameId).touch();
-
       // end of turn check
       GameInfo curGame = gameManager.getGameById(gameId);
       if (curGame.isFinished()) {
         // remove anything related to this game from game manager
+        // implicitly tells lobby to remove the session as well
         gameManager.deleteGame(gameId);
         // remove the broadcast content manager which controls the
         // long polling updates
         gameInfoBroadcastContentManager.remove(gameId);
         allPlayerInfoBroadcastContentManager.remove(gameId);
       }
+
+      // if anything might have changed, let the client side know immediately
+      allPlayerInfoBroadcastContentManager.get(gameId).touch();
+      gameInfoBroadcastContentManager.get(gameId).touch();
+
 
       return ResponseEntity.status(HttpStatus.OK).body(null);
     } catch (ModelAccessException e) {
