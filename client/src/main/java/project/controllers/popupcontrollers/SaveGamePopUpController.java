@@ -1,4 +1,4 @@
-package project;
+package project.controllers.popupcontrollers;
 
 import ca.mcgill.comp361.splendormodel.model.GameInfo;
 import java.io.IOException;
@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import project.App;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
 import project.view.lobby.communication.Savegame;

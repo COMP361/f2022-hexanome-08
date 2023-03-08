@@ -1,4 +1,4 @@
-package project;
+package project.controllers.stagecontrollers;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
@@ -11,8 +11,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
+import project.App;
+import project.GameBoardLayoutConfig;
 import project.connection.LobbyRequestSender;
-import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.User;
 
 /**

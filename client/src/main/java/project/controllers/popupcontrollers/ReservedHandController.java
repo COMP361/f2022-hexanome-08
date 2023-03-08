@@ -1,4 +1,4 @@
-package project;
+package project.controllers.popupcontrollers;
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
@@ -15,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
+import project.App;
 
 /**
  * Reserve hand controller class.

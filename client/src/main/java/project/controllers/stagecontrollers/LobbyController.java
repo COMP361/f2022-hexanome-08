@@ -1,4 +1,4 @@
-package project;
+package project.controllers.stagecontrollers;
 
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import org.apache.commons.codec.digest.DigestUtils;
+import project.App;
 import project.connection.LobbyRequestSender;
 import project.view.lobby.communication.GameParameters;
 import project.view.lobby.communication.Savegame;

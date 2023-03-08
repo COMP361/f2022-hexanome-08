@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
@@ -23,6 +22,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
+import project.controllers.stagecontrollers.GameController;
+import project.controllers.stagecontrollers.LobbyController;
 import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.User;
 
@@ -109,60 +110,6 @@ public class App extends Application {
   public static void main(String[] args) {
     launch();
   }
-
-  ///**
-  // * Replace the current scene with the scene loaded from input fxml
-  // * file with the same layout ([640,400] by default).
-  // *
-  // * @param fxml The fxml file where we read the GUI setup
-  // * @throws IOException when fxml not found
-  // */
-  //public static void setRoot(String fxml) throws IOException {
-  //  scene.setRoot(loadFxml(fxml));
-  //}
-
-  ///**
-  // * Load a Scene from the fxml file to a new Stage with input height and width and title.
-  // *
-  // * @param fxml   The fxml file where we read the GUI setup
-  // * @param height Height of the new stage
-  // * @param width  Width of the new stage
-  // * @param title  Title of the new stage
-  // * @throws IOException when fxml not found
-  // */
-  //public static void setRootWithSizeTitle(String fxml, int height, int width, String title)
-  //    throws IOException {
-  //  Stage newStage = new Stage();
-  //  newStage.setTitle(title);
-  //  newStage.setScene(new Scene(loadFxml(fxml), height, width));
-  //  newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
-  //  newStage.show();
-  //}
-
-  ///**
-  // * Set the scene of the pop-up stage into a new scene loaded from fxml.
-  // *
-  // * @param fxml     The fxml file where we read the GUI setup
-  // * @param curScene The current scene of the pop-up
-  // * @throws IOException when fxml not found
-  // */
-  //public static void setPopUpRoot(String fxml, Scene curScene) throws IOException {
-  //  curScene.setRoot(loadFxml(fxml));
-  //}
-
-  ///**
-  // * Load a fxml file and return a Parent.
-  // *
-  // * @param fxml The fxml file where we read the GUI setup
-  // * @return A Parent that was loaded from the fxml file
-  // * @throws IOException when fxml not found
-  // */
-  //// Open another new stage as same size as the initial game stage
-  //private static Parent loadFxml(String fxml) throws IOException {
-  //  FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-  //  return fxmlLoader.load();
-  //}
-
   public static LobbyRequestSender getLobbyServiceRequestSender() {
     return lobbyRequestSender;
   }

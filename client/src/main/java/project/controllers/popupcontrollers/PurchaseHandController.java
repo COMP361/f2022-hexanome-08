@@ -1,4 +1,4 @@
-package project;
+package project.controllers.popupcontrollers;
 
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
@@ -22,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import ca.mcgill.comp361.splendormodel.model.*;
+import project.App;
 
 /**
  * Purchase controller class, controls the visual updates happening in purchase hand.
