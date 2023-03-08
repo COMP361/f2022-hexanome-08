@@ -77,7 +77,7 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
   private Map<Colour, Map<PlayerWealthInfo, Text>> getPlayerColourWealthMap(
       PlayerPosition playerPosition) {
     Map<Colour, Map<PlayerWealthInfo, Text>> resultMap = new HashMap<>();
-    Colour[] colours = App.getBaseColours();
+    Colour[] colours = App.getAllColours();
     ObservableList<Node> allChildren = this.getChildren();
     if (playerPosition.equals(PlayerPosition.LEFT)) {
       for (int i = 0; i < colours.length; i++) {
@@ -87,10 +87,6 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
         mapInMap.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         resultMap.put(colours[i], mapInMap);
       }
-      Group curGroup = (Group) allChildren.get(6);
-      Map<PlayerWealthInfo, Text> goldMap = new HashMap<>();
-      goldMap.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(1));
-      resultMap.put(Colour.GOLD, goldMap);
     } else if (playerPosition.equals(PlayerPosition.RIGHT)) {
       for (int i = 0; i < colours.length; i++) {
         Map<PlayerWealthInfo, Text> mapInMap = new HashMap<>();
@@ -100,11 +96,6 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
         mapInMap.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(3));
         resultMap.put(colours[i], mapInMap);
       }
-      HBox curBox = (HBox) allChildren.get(5);
-      Map<PlayerWealthInfo, Text> goldMap = new HashMap<>();
-      Group curGroup = (Group) curBox.getChildren().get(1);
-      goldMap.put(PlayerWealthInfo.TOKEN, (Text) curGroup.getChildren().get(1));
-      resultMap.put(Colour.GOLD, goldMap);
     }
     return resultMap;
   }
@@ -156,15 +147,9 @@ public class VerticalPlayerInfoGui extends VBox implements PlayerInfoGui {
     Set<Colour> regularColours = SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet();
     for (Colour colour : regularColours) {
       Map<PlayerWealthInfo, Text> perColourWealth = wealthInfo.get(colour);
-      if (colour.equals(Colour.GOLD)) {
-        perColourWealth
-            .get(PlayerWealthInfo.TOKEN)
-            .setText(Integer.toString(gemsInHand.get(colour)));
-      } else {
-        perColourWealth
-            .get(PlayerWealthInfo.GEM)
-            .setText(Integer.toString(gemsInHand.get(colour)));
-      }
+      perColourWealth
+          .get(PlayerWealthInfo.GEM)
+          .setText(Integer.toString(gemsInHand.get(colour)));
     }
   }
 

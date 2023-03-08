@@ -132,7 +132,17 @@
         <Region prefHeight="200.0" prefWidth="200.0" />
         <Group>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#faff1f" height="90.0" stroke="BLACK" strokeType="INSIDE" width="90.0" />
-            <Text layoutX="40.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+            <Text layoutX="19.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+                <font>
+                    <Font size="24.0" />
+                </font>
+            </Text>
+            <Text layoutX="44.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Text>
+            <Text layoutX="59.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                 <font>
                     <Font size="24.0" />
                 </font>
