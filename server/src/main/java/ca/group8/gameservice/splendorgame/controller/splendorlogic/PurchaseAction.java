@@ -12,6 +12,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -70,7 +71,6 @@ public class PurchaseAction extends Action {
       //if cardPosition.getX()==0, it would mean this is from reservedHand. Therefore
       //we would skip the steps to remove & replace card on board.
       if(cardPosition.getX()!=0) {
-
         if(curCard.isBaseCard()) {
           // remove card from board
           BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
@@ -86,8 +86,11 @@ public class PurchaseAction extends Action {
         }
       } else { //means this is a reserved card, so remove from player's ReserveHand
         playerInGame.getReservedHand().removeDevelopmentCard(curCard);
-
       }
+      // no possible chance of generating any cascade in here, return and reset current
+      // player action map
+      actionGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
+      return;
     }
 
     if (effectNum == 1) {
@@ -131,6 +134,9 @@ public class PurchaseAction extends Action {
         // only update action map if it's not double gold
         if (!curEffect.equals(CardEffect.DOUBLE_GOLD)) {
           actionGenerator.updateCascadeActions(playerInGame, curCard, curEffect);
+        } else {
+          // the current effect is indeed double gold, no cascade possible, reset map
+          actionGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
         }
       }
 
@@ -161,6 +167,8 @@ public class PurchaseAction extends Action {
         playerInGame.getReservedHand().removeDevelopmentCard(curCard);
 
       }
+      // always have cascade, there is no situation where you purchased a new 2 effect card
+      // but no cascade is happening
       actionGenerator.updateCascadeActions(playerInGame, curCard, CardEffect.SATCHEL);
     }
 
