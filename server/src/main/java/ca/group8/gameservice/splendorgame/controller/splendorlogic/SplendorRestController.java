@@ -116,7 +116,14 @@ public class SplendorRestController {
 
   }
 
-
+  /**
+   * step to save the game.
+   *
+   * @param gameId gameId
+   * @param saveGameInfo saveGameInfo
+   * @param accessToken accessToken
+   * @return ResponseEntity
+   */
   @PutMapping(value = {
       "/splendorbase/api/games/{gameId}/savegame",
       "/splendortrade/api/games/{gameId}/savegame",
@@ -272,7 +279,8 @@ public class SplendorRestController {
   // *
   // * This end point is only used to get the initial actionMap (Purchase, Reserve, TakeToken)
   // * The cascade case will update the Map< String, Map< String, Action > > in GameInfo, which is
-  // * under long-polling control. Therefore user can get updated action map to handle cascade action
+  // * under long-polling control.
+  // * Therefore user can get updated action map to handle cascade action
   // * without calling to this end point again.
   // */
   //@GetMapping(value = {"/splendortrade/api/games/{gameId}/players/{playerName}/actions",

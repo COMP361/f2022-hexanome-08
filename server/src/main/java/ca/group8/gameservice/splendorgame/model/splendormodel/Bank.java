@@ -86,14 +86,16 @@ public class Bank {
   }
 
   /**
+   * getRegularTokenCount.
+   *
    * @return a number indicating how many non-gold tokens are left
    */
   public int getRegularTokenCount() {
 
     return allTokens.entrySet()
         .stream()
-        .filter(entry -> !entry.getKey().equals(Colour.GOLD) &&
-            !entry.getKey().equals(Colour.ORIENT))
+        .filter(entry -> !entry.getKey().equals(Colour.GOLD)
+                && !entry.getKey().equals(Colour.ORIENT))
         .mapToInt(Map.Entry::getValue)
         .sum();
   }

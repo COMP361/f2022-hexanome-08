@@ -6,8 +6,8 @@ import java.util.Objects;
 
 /**
  * This class represents the Power functionality in the Trading Post Extension.
- * <p>
- * Every abstract class was serialized/deserialized using the repository from:
+ *
+ * <p>Every abstract class was serialized/deserialized using the repository from:
  * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
  * Thank him so much!!!!!!!!!!!!!!!
  */
@@ -73,8 +73,8 @@ public abstract class Power {
     }
 
     Power other = (Power) obj;
-    return this.unlocked == other.unlocked &&
-        this.powerEffect.equals(other.powerEffect);
+    return this.unlocked == other.unlocked
+            && this.powerEffect.equals(other.powerEffect);
   }
 
   @Override

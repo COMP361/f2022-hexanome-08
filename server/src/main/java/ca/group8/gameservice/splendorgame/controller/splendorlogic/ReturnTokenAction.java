@@ -14,6 +14,12 @@ public class ReturnTokenAction extends Action {
   private final EnumMap<Colour, Integer> tokensToReturn;
   private final int extraTokenCount;
 
+  /**
+   * return token.
+   *
+   * @param tokensToReturn tokensToReturn
+   * @param extraTokens extraTokens
+   */
   public ReturnTokenAction(EnumMap<Colour, Integer> tokensToReturn, int extraTokens) {
     super.type = this.getClass().getSimpleName();
     this.tokensToReturn = tokensToReturn;

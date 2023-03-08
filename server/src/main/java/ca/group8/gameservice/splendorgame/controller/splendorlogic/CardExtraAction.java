@@ -76,6 +76,12 @@ public class CardExtraAction extends Action {
   }
    */
 
+  /**
+   * Helper for reserve action.
+   *
+   * @param curTableTop curTableTop
+   * @param curPlayer curPlayer
+   */
   public void reserveNobleActionHelper(TableTop curTableTop,
                                        PlayerInGame curPlayer) {
 
@@ -92,6 +98,12 @@ public class CardExtraAction extends Action {
     curPlayer.getReservedHand().addNobleCard(noble);
   }
 
+  /**
+   * Helper to satchelAction.
+   *
+   * @param curPlayer curPlayer
+   * @param associatedActionInterpreter associatedActionInterpreter
+   */
   public void satchelActionHelper(PlayerInGame curPlayer,
                                   ActionInterpreter associatedActionInterpreter) {
 
@@ -129,6 +141,13 @@ public class CardExtraAction extends Action {
      */
   }
 
+  /**
+   * Helper for free card action.
+   *
+   * @param curTableTop curTableTop
+   * @param curPlayer curPlayer
+   * @param associatedActionInterpreter associatedActionInterpreter
+   */
   //TODO
   public void freeCardActionHelper(TableTop curTableTop,
                                    PlayerInGame curPlayer,
@@ -183,11 +202,17 @@ public class CardExtraAction extends Action {
     }
   }
 
+  /**
+   * Helper for burnAction.
+   *
+   * @param curPlayer curPlayer
+   * @param associatedActionInterpreter associatedActionInterpreter
+   */
   public void burnActionHelper(PlayerInGame curPlayer,
                                ActionInterpreter associatedActionInterpreter) {
 
     DevelopmentCard cardToBurn = (DevelopmentCard) this.curCard;
-    int burnNumber = associatedActionInterpreter.getBurnCardCount();
+    final int burnNumber = associatedActionInterpreter.getBurnCardCount();
     int gemNumber = cardToBurn.getGemNumber();
     //make it negative since you're taking away points
     int prestigePoints = -1 * cardToBurn.getPrestigePoints();
