@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -181,23 +182,38 @@ public class GameManager {
     // the game content rather than creating new objects.
     logger.info("Trying to launch a game");
     gameLauncherInfos.put(gameId, launcherInfo);
+
+    // get all player names
+    List<String> playerNames = launcherInfo
+        .getPlayers()
+        .stream()
+        .map(PlayerInfo::getName)
+        .collect(Collectors.toList());
+
+    // randomly shuffle the playerNames
+    Collections.shuffle(playerNames);
     if (!launcherInfo.getSavegame().isEmpty()) {
       String saveGameId = launcherInfo.getSavegame();
-      List<String> curPlayerNames = launcherInfo.getPlayers().stream()
-          .map(PlayerInfo::getName)
-          .collect(Collectors.toList());
       String creator = launcherInfo.getCreator();
       Map<String, SavedGameState> savedGames;
       try {
         savedGames = readSavedGameDataFromFile();
         SavedGameState savedGame = savedGames.get(saveGameId);
         // rename the player names in this savedGameState
-        savedGame.renamePlayers(curPlayerNames, creator);
+        savedGame.renamePlayers(playerNames, creator);
 
         // put the renamed objects to manager
         activeGames.put(gameId, savedGame.getGameInfo());
         activePlayers.put(gameId, savedGame.getPlayerStates());
         gameActionInterpreters.put(gameId, savedGame.getActionInterpreter());
+
+        // generate default actions for every player, even it's a loaded game
+        ActionGenerator actionGenerator = savedGame.getActionInterpreter().getActionGenerator();
+        String currentPlayerName = savedGame.getGameInfo().getCurrentPlayer();
+        for (PlayerInGame playerInGame : savedGame.getPlayerStates().getPlayersInfo().values()) {
+          // only set the initial actions for the first player, others' remain empty
+          actionGenerator.setInitialActions(playerInGame, currentPlayerName);
+        }
         return savedGame;
       }catch (IOException e) {
         e.printStackTrace();
@@ -215,15 +231,6 @@ public class GameManager {
       if (gameServerName.equals("splendortrade")) {
         gameExtensions.add(Extension.TRADING_POST);
       }
-      // get all player names
-      List<String> playerNames = launcherInfo
-          .getPlayers()
-          .stream()
-          .map(PlayerInfo::getName)
-          .collect(Collectors.toList());
-      // randomly shuffle the playerNames
-      // TODO: Mute for debug
-      //Collections.shuffle(playerNames);
       GameInfo newGameInfo = new GameInfo(gameExtensions, playerNames, launcherInfo.getCreator());
       PlayerStates newPlayerStates = new PlayerStates(playerNames);
       ActionInterpreter newActionInterpreter = new ActionInterpreter(newGameInfo, newPlayerStates);
