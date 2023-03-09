@@ -448,11 +448,17 @@ public class GameController implements Initializable {
                   .fromJson(playerStatesJson, PlayerStates.class);
               PlayerInGame playerInGame = playerStates.getOnePlayerInGame(playerName);
               PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
-              App.loadPopUpWithController("my_development_cards.fxml",
-                  new PurchaseHandController(gameId, purchasedHand, playerActionMap, coverRectangle),
-                  coverRectangle,
-                  800,
-                  600);
+              Platform.runLater(() -> {
+                try {
+                  App.loadPopUpWithController("my_development_cards.fxml",
+                      new PurchaseHandController(gameId, purchasedHand, playerActionMap, coverRectangle),
+                      coverRectangle,
+                      800,
+                      600);
+                } catch (IOException e) {
+                  throw new RuntimeException(e);
+                }
+              });
             }
 
             // TODO: After one purchase, the server side did not set next player properly
@@ -511,8 +517,6 @@ public class GameController implements Initializable {
         }
       } catch (InterruptedException | UnirestException e) {
         System.out.println(e.getMessage());
-      } catch (IOException e) {
-        throw new RuntimeException(e);
       }
 
     });
