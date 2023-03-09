@@ -81,9 +81,7 @@ public class ActionInterpreter {
    * @param actionId   the identifier of the action being interpreted
    * @param playerName the player associated with this action
    */
-  public void interpretAction(String actionId, String playerName,
-                              BroadcastContentManager<PlayerStates> playerStatesManager,
-                              BroadcastContentManager<GameInfo> gameInfoManger) {
+  public void interpretAction(String actionId, String playerName) {
     Logger logger = LoggerFactory.getLogger(ActionInterpreter.class);
     //logger.info("Before execute the action" + playerChosenAction.checkIsCardAction());
     Map<String, Action> actionMap = actionGenerator.getPlayerActionMaps().get(playerName);

@@ -37,7 +37,7 @@ public class TestActionInterpreter {
 
   @Test
   public void testReserveAction_BaseCard() {
-    //actionGenerator.setInitialActions(playerInGame);
+    actionGenerator.setInitialActions(playerInGame, curPlayerName);
     Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(curPlayerName);
     DevelopmentCard reservedCard = null;
     for (String actionId : playerActionMap.keySet()) {
@@ -47,7 +47,7 @@ public class TestActionInterpreter {
         Position position = reserveAction.getCardPosition();
         reservedCard = reserveAction.getCurCard();
         if (reservedCard.isBaseCard()){
-          //actionInterpreter.interpretAction(actionId, curPlayerName);
+          actionInterpreter.interpretAction(actionId, curPlayerName);
           break;
         }
       }
@@ -58,66 +58,52 @@ public class TestActionInterpreter {
     assertEquals(reservedCard,reservedCardInHand);
   }
 
-  //
-  //@Test
-  //public void testReserveAction_OrientCard() {
-  //  //actionGenerator.setInitialActions(playerInGame);
-  //  Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(curPlayerName);
-  //  DevelopmentCard reservedCard = null;
-  //  for (String actionId : playerActionMap.keySet()) {
-  //    Action curAction = playerActionMap.get(actionId);
-  //    if (curAction instanceof ReserveAction) {
-  //      ReserveAction reserveAction = (ReserveAction) curAction;
-  //      Position position = reserveAction.getCardPosition();
-  //      reservedCard = reserveAction.getCurCard();
-  //      if (!reservedCard.isBaseCard()){
-  //        actionInterpreter.interpretAction(actionId, curPlayerName);
-  //        break;
-  //      }
-  //    }
-  //  }
-  //  DevelopmentCard reservedCardInHand = playerInGame.getReservedHand().getDevelopmentCards().get(0);
-  //  // there should be no more action map
-  //  assertEquals(new HashMap<>(), actionGenerator.getPlayerActionMaps().get(curPlayerName));
-  //  assertEquals(reservedCard,reservedCardInHand);
-  //}
+
+  @Test
+  public void testReserveAction_OrientCard() {
+    actionGenerator.setInitialActions(playerInGame, curPlayerName);
+    Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(curPlayerName);
+    DevelopmentCard reservedCard = null;
+    for (String actionId : playerActionMap.keySet()) {
+      Action curAction = playerActionMap.get(actionId);
+      if (curAction instanceof ReserveAction) {
+        ReserveAction reserveAction = (ReserveAction) curAction;
+        Position position = reserveAction.getCardPosition();
+        reservedCard = reserveAction.getCurCard();
+        if (!reservedCard.isBaseCard()){
+          actionInterpreter.interpretAction(actionId, curPlayerName);
+          break;
+        }
+      }
+    }
+    DevelopmentCard reservedCardInHand = playerInGame.getReservedHand().getDevelopmentCards().get(0);
+    // there should be no more action map
+    assertEquals(new HashMap<>(), actionGenerator.getPlayerActionMaps().get(curPlayerName));
+    assertEquals(reservedCard,reservedCardInHand);
+  }
 
 
-  //@Test
-  //public void testTakeTokenAction_NoReturnToken() {
-  //  //actionGenerator.setInitialActions(playerInGame);
-  //  Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(curPlayerName);
-  //  EnumMap<Colour, Integer> tokensTakenFromBank = new EnumMap<>(Colour.class);
-  //  for (String actionId : playerActionMap.keySet()) {
-  //    Action curAction = playerActionMap.get(actionId);
-  //    if (curAction instanceof TakeTokenAction) {
-  //      TakeTokenAction takeTokenAction = (TakeTokenAction) curAction;
-  //      try {
-  //        takeTokenAction.getCurCard();
-  //      } catch (NullPointerException e) {
-  //        assertEquals("There is no card associated with this action.", e.getMessage());
-  //      }
-  //
-  //      try {
-  //        takeTokenAction.getCardPosition();
-  //      } catch (NullPointerException e) {
-  //        assertEquals("There is no card position associated with this action.", e.getMessage());
-  //      }
-  //      tokensTakenFromBank = takeTokenAction.getTokens();
-  //      actionInterpreter.interpretAction(actionId, curPlayerName);
-  //      break;
-  //    }
-  //  }
-  //  // note the all tokens in hand include the gold token, thus we want to exclude that before
-  //  // comparison
-  //  EnumMap<Colour, Integer> regularTokensInHand =
-  //      new EnumMap<>(playerInGame.getTokenHand().getAllTokens());
-  //  regularTokensInHand.remove(Colour.GOLD);
-  //  System.out.println(regularTokensInHand);
-  //  // there should be no more action map
-  //  assertEquals(regularTokensInHand, tokensTakenFromBank);
-  //  //Bank bank = gameInfo.getTableTop().getBank();
-  //}
+  @Test
+  public void testTakeTokenAction_NoReturnToken() {
+    actionGenerator.setInitialActions(playerInGame, curPlayerName);
+    Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(curPlayerName);
+    EnumMap<Colour, Integer> tokensTakenFromBank = new EnumMap<>(Colour.class);
+    for (String actionId : playerActionMap.keySet()) {
+      Action curAction = playerActionMap.get(actionId);
+      if (curAction instanceof TakeTokenAction) {
+        TakeTokenAction takeTokenAction = (TakeTokenAction) curAction;
+        tokensTakenFromBank = takeTokenAction.getTokens();
+        actionInterpreter.interpretAction(actionId, curPlayerName);
+        break;
+      }
+    }
+    // note the all tokens in hand include the gold token, thus we want to exclude that before
+    // comparison
+    EnumMap<Colour, Integer> regularTokensInHand =
+        new EnumMap<>(playerInGame.getTokenHand().getAllTokens());
+    // there should be no more action map
+    assertEquals(regularTokensInHand, tokensTakenFromBank);
+  }
 
 
   @Test
@@ -168,18 +154,6 @@ public class TestActionInterpreter {
     for (String actionId : returnTokenActionMap.keySet()) {
       ReturnTokenAction action = (ReturnTokenAction) returnTokenActionMap.get(actionId);
       EnumMap<Colour, Integer> returnTokens = action.getTokens();
-
-      //try {
-      //  action.getCurCard();
-      //} catch (NullPointerException e) {
-      //  assertEquals("There is no card associated with this action.", e.getMessage());
-      //}
-      //
-      //try {
-      //  action.getCardPosition();
-      //} catch (NullPointerException e) {
-      //  assertEquals("There is no card position associated with this action.", e.getMessage());
-      //}
     }
 
   }

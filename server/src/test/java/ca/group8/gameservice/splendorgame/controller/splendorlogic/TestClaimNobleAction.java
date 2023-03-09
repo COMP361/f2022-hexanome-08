@@ -39,15 +39,15 @@ public class TestClaimNobleAction {
   PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
   EnumMap<Colour, Integer> price1 = new EnumMap<>(Colour.class);
   List<CardEffect> cardEffects = new ArrayList<>();
-  DevelopmentCard d1 = new DevelopmentCard(1, price1,
+  DevelopmentCard d1 = new DevelopmentCard(0, price1,
+      "card1", 3, Colour.GREEN, 2,cardEffects);
+  DevelopmentCard d2 = new DevelopmentCard(0, price1,
+      "card1", 2, Colour.GREEN, 2,cardEffects);
+  DevelopmentCard d3 = new DevelopmentCard(0, price1,
       "card1", 1, Colour.GREEN, 2,cardEffects);
-  DevelopmentCard d2 = new DevelopmentCard(1, price1,
-      "card1", 1, Colour.GREEN, 2,cardEffects);
-  DevelopmentCard d3 = new DevelopmentCard(1, price1,
-      "card1", 1, Colour.GREEN, 2,cardEffects);
-  DevelopmentCard d4 = new DevelopmentCard(1, price1,
-      "card1", 1, Colour.GREEN, 2,cardEffects);
-  DevelopmentCard d5 = new DevelopmentCard(1, price1,
+  DevelopmentCard d4 = new DevelopmentCard(0, price1,
+      "card1", 2, Colour.GREEN, 1,cardEffects);
+  DevelopmentCard d5 = new DevelopmentCard(0, price1,
       "card1", 1, Colour.GREEN, 2,cardEffects);
   NobleCard n1 = new NobleCard(1,price1, "noble1");
   Position position = new Position(2,1);
@@ -66,26 +66,20 @@ public class TestClaimNobleAction {
 
 
   @Test
-  void addNobleToPlayerHand() {
+  void testClaimNobleActionExecution() {
     claimNobleAction.execute(gameInfo.getTableTop(),playerInGame,actionGenerator,actionInterpreter);
     assertEquals(n1, playerInGame.getPurchasedHand().getNobleCards().get(0));
-    assertEquals(1, playerInGame.getPrestigePoints());
-  }
+    // the power is unlocked immediately, thus the points should be updated
+    assertEquals(6, playerInGame.getPrestigePoints());
 
-  //must be run after the addNobleTest
-  @Test
-  void isNobleReplaced() {
-   BaseBoard b1 = (BaseBoard) gameInfo.getTableTop().getBoard(Extension.BASE);
+    BaseBoard b1 = (BaseBoard) gameInfo.getTableTop().getBoard(Extension.BASE);
     List<NobleCard> nobles = b1.getNobles();
-    assertFalse(b1.getNobles().contains(n1));
-  }
+    assertFalse(nobles.contains(n1));
 
-  //must be run after the addNobleTest
-  @Test
-  void testPowerUnlock() {
     TraderBoard t = (TraderBoard) gameInfo.getTableTop().getBoard(Extension.TRADING_POST);
     Power p = t.getPlayerOnePower(playerInGame.getName(), PowerEffect.FIVE_POINTS);
     assertTrue(p.isUnlocked());
-    assertEquals(11,playerInGame.getPrestigePoints());
+    assertEquals(6,playerInGame.getPrestigePoints());
   }
+
 }
