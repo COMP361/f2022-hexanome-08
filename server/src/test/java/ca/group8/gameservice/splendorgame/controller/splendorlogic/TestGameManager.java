@@ -114,9 +114,4 @@ public class TestGameManager{
 
   }
 
-  @Test
-  public void test() {
-    System.out.println(gameManager.getActiveGames().keySet());
-  }
-
 }

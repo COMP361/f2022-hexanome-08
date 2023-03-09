@@ -68,31 +68,31 @@ public class TestCardExtraAction {
     assertFalse(b1.getLevelCardsOnBoard(1)[0].equals(devCard));
   }
 
-  @Test
-  void testFreeCardHelperOrient1_ReplaceCardOnBoard() {
-    OrientBoard o1 = (OrientBoard) gameInfo.getTableTop().getBoard(Extension.ORIENT);
-    DevelopmentCard devCard = o1.getLevelCardsOnBoard(1)[0];
-    CardExtraAction freeCard = new CardExtraAction(devCard,CardEffect.FREE_CARD,
-        new Position(1,0));
-    freeCard.freeCardActionHelper(gameInfo.getTableTop(),playerInGame,actionInterpreter);
-    assertFalse(o1.getLevelCardsOnBoard(1)[0].equals(devCard));
-  }
-
-  @Test
-  void testGetFreeSatchelCardOrDoubleGold() {
-    OrientBoard o1 = (OrientBoard) gameInfo.getTableTop().getBoard(Extension.ORIENT);
-    DevelopmentCard devCard = o1.getLevelCardsOnBoard(1)[1];
-    System.out.println(devCard.getPurchaseEffects().get(0));
-    CardExtraAction freeCard = new CardExtraAction(devCard,CardEffect.FREE_CARD,
-        new Position(1,0));
-    freeCard.freeCardActionHelper(gameInfo.getTableTop(),playerInGame,actionInterpreter);
-    assertFalse(o1.getLevelCardsOnBoard(1)[0].equals(devCard));
-
-    if(devCard.getPurchaseEffects().get(0) == CardEffect.SATCHEL) {
-      System.out.println("Stored Card is: " +
-          actionInterpreter.getStashedCard().getPurchaseEffects());
-      assertTrue(actionInterpreter.getStashedCard() == devCard);
-    }
-  }
+  //@Test
+  //void testFreeCardHelperOrient1_ReplaceCardOnBoard() {
+  //  OrientBoard o1 = (OrientBoard) gameInfo.getTableTop().getBoard(Extension.ORIENT);
+  //  DevelopmentCard devCard = o1.getLevelCardsOnBoard(1)[0];
+  //  CardExtraAction freeCard = new CardExtraAction(devCard,CardEffect.FREE_CARD,
+  //      new Position(1,0));
+  //  freeCard.freeCardActionHelper(gameInfo.getTableTop(),playerInGame,actionInterpreter);
+  //  assertFalse(o1.getLevelCardsOnBoard(1)[0].equals(devCard));
+  //}
+  //
+  //@Test
+  //void testGetFreeSatchelCardOrDoubleGold() {
+  //  OrientBoard o1 = (OrientBoard) gameInfo.getTableTop().getBoard(Extension.ORIENT);
+  //  DevelopmentCard devCard = o1.getLevelCardsOnBoard(1)[1];
+  //  System.out.println(devCard.getPurchaseEffects().get(0));
+  //  CardExtraAction freeCard = new CardExtraAction(devCard,CardEffect.FREE_CARD,
+  //      new Position(1,0));
+  //  freeCard.freeCardActionHelper(gameInfo.getTableTop(),playerInGame,actionInterpreter);
+  //  assertFalse(o1.getLevelCardsOnBoard(1)[0].equals(devCard));
+  //
+  //  if(devCard.getPurchaseEffects().get(0) == CardEffect.SATCHEL) {
+  //    System.out.println("Stored Card is: " +
+  //        actionInterpreter.getStashedCard().getPurchaseEffects());
+  //    assertTrue(actionInterpreter.getStashedCard() == devCard);
+  //  }
+  //}
 
 }

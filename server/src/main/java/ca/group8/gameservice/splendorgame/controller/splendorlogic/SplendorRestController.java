@@ -354,7 +354,7 @@ public class SplendorRestController {
       BroadcastContentManager<GameInfo> gameInfoManger =
           gameInfoBroadcastContentManager.get(gameId);
 
-      actionInterpreter.interpretAction(actionId, playerName, playerStatesManager, gameInfoManger);
+      actionInterpreter.interpretAction(actionId, playerName);
 
       // end of turn check
       GameInfo curGame = gameManager.getGameById(gameId);
