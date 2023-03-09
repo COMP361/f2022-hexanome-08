@@ -20,11 +20,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import project.App;
 import project.view.splendor.ActionIdPair;
 
@@ -122,6 +125,9 @@ public class ReservedHandController implements Initializable {
         App.loadPopUpWithController("card_action.fxml",
             new CardActionController(gameId, allActions, coverRectangle),
             coverRectangle, 360, 170);
+        Button button = (Button) event.getSource();
+        Stage window = (Stage) button.getScene().getWindow();
+        window.close();
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
