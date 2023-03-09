@@ -88,6 +88,14 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     }
   }
 
+  /**
+   * This method creates a CardActionController for a set of specific actions [so a pop up
+   * can appear to display to the user those actions].
+   *
+   * @param gameId ID of current game
+   * @param allActions list of Actions which you will be pairing to a card *using "clickOn" event.
+   * @return Returns a list of Event Handlers. (event type is a pop up when clicked on).
+   */
   public EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
                                                             List<ActionIdPair> allActions) {
     return event -> {

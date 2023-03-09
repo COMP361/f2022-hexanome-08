@@ -74,7 +74,7 @@ public class ReservedHandController implements Initializable {
       playerNobles.add(nobleImageView);
     }
 
-    for (int i = 0; i<reservedCards.size(); i++) {
+    for (int i = 0; i < reservedCards.size(); i++) {
       String cardPath;
       DevelopmentCard card = reservedCards.get(i);
       if (!card.isBaseCard()) {
@@ -84,9 +84,9 @@ public class ReservedHandController implements Initializable {
       }
       ImageView cardImageView = new ImageView(new Image(cardPath));
 
-      List<ActionIdPair> actions = positionToActionMap.get(new Position(0,i));
-      if(actions!=null){
-        cardImageView.setOnMouseClicked(createClickOnCardHandler(gameId,actions));//TODO);
+      List<ActionIdPair> actions = positionToActionMap.get(new Position(0, i));
+      if (actions != null) {
+        cardImageView.setOnMouseClicked(createClickOnCardHandler(gameId, actions)); //TODO);
       }
       cardImageView.setFitWidth(80);
       cardImageView.setFitHeight(100);
@@ -108,7 +108,7 @@ public class ReservedHandController implements Initializable {
       cardPosition = purchaseAction.getCardPosition();
       int level = cardPosition.getX();
 
-      if(level==0){
+      if (level == 0) {
         List<ActionIdPair> actions = new ArrayList<>();
         actions.add(new ActionIdPair(actionId, action));
         positionToActionMap.put(cardPosition, actions);

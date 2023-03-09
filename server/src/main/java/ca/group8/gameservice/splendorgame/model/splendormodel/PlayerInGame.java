@@ -105,7 +105,7 @@ public class PlayerInGame {
         //if (card.hasRegularGemColour()) {
         //}
         Colour colour = card.getGemColour();
-        if (!colour.equals(Colour.ORIENT)){
+        if (!colour.equals(Colour.ORIENT)) {
           Logger logger  = LoggerFactory.getLogger(PlayerInGame.class);
           logger.warn("Colour " + colour);
           logger.warn("TotalGems: " + totalGems);
