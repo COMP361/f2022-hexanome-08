@@ -25,56 +25,25 @@ public class CardActionController implements Initializable {
   private final long gameId;
   //@FXML
   //private Button goBackButton;
-  private final Rectangle coverRectangle;
   @FXML
   private Button purchaseButton;
   @FXML
   private Button reserveButton;
+
+  private final Stage window;
 
   /**
    * CardActionController.
    *
    * @param gameId gameId
    * @param allActionsPair allActionsPair
-   * @param coverRectangle coverRectangle
+   * @param window the stage of the parent, can be null
    */
-  public CardActionController(long gameId, List<ActionIdPair> allActionsPair,
-                              Rectangle coverRectangle) {
+  public CardActionController(long gameId, List<ActionIdPair> allActionsPair, Stage window) {
     this.gameId = gameId;
     this.allActionsPair = allActionsPair;
-    this.coverRectangle = coverRectangle;
+    this.window = window;
   }
-
-  //private EventHandler<ActionEvent> createOnClickPurchaseHandler(String actionId) {
-  //  // TODO: Send the request in here to the game server, for now do nothing
-  //  return event -> {
-  //    Button purchaseButton = (Button) event.getSource();
-  //    // it's clickable, we can send some requests here
-  //    GameRequestSender gameRequestSender = App.getGameRequestSender();
-  //    String playerName = App.getUser().getUsername();
-  //    String accessToken = App.getUser().getAccessToken();
-  //    // sends a POST request that tells the server which action we chose
-  //    gameRequestSender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
-  //    Stage curWindow = (Stage) purchaseButton.getScene().getWindow();
-  //    curWindow.close();
-  //
-  //  };
-  //}
-  //
-  //private EventHandler<ActionEvent> createOnClickReserveHandler(String actionId) {
-  //  // TODO: Send the request in here to the game server, for now do nothing
-  //  return event -> {
-  //    // it's clickable, we can send some requests here
-  //    Button reserveButton = (Button) event.getSource();
-  //    GameRequestSender gameRequestSender = App.getGameRequestSender();
-  //    String playerName = App.getUser().getUsername();
-  //    String accessToken = App.getUser().getAccessToken();
-  //    // sends a POST request that tells the server which action we chose
-  //    gameRequestSender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
-  //    Stage curWindow = (Stage) reserveButton.getScene().getWindow();
-  //    curWindow.close();
-  //  };
-  //}
 
   // click on either purchase or reserve do the same thing, send the request
   private EventHandler<ActionEvent> createOnClickButtonHandler(String actionId) {
@@ -89,19 +58,12 @@ public class CardActionController implements Initializable {
       gameRequestSender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
       Button button = (Button) event.getSource();
       Stage curWindow = (Stage) button.getScene().getWindow();
-      coverRectangle.setVisible(false);
       curWindow.close();
+      if (this.window != null) {
+        this.window.close();
+      }
     };
   }
-
-
-  //
-  //private EventHandler<ActionEvent> createOnClickBackHandler() {
-  //  return event -> {
-  //    Stage curWindow = (Stage) goBackButton.getScene().getWindow();
-  //    curWindow.close();
-  //  };
-  //}
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {

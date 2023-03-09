@@ -122,12 +122,11 @@ public class ReservedHandController implements Initializable {
       List<ActionIdPair> allActions) {
     return event -> {
       try {
+        ImageView imageView = (ImageView) event.getSource();
+        Stage window = (Stage) imageView.getScene().getWindow();
         App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(gameId, allActions, coverRectangle),
+            new CardActionController(gameId, allActions, window),
             coverRectangle, 360, 170);
-        Button button = (Button) event.getSource();
-        Stage window = (Stage) button.getScene().getWindow();
-        window.close();
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
