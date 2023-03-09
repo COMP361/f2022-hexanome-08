@@ -348,12 +348,6 @@ public class SplendorRestController {
     try {
       gameValidator.gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
       ActionInterpreter actionInterpreter = gameManager.getGameActionInterpreter(gameId);
-      BroadcastContentManager<PlayerStates> playerStatesManager =
-          allPlayerInfoBroadcastContentManager.get(gameId);
-
-      BroadcastContentManager<GameInfo> gameInfoManger =
-          gameInfoBroadcastContentManager.get(gameId);
-
       actionInterpreter.interpretAction(actionId, playerName);
 
       // end of turn check
@@ -367,6 +361,12 @@ public class SplendorRestController {
         gameInfoBroadcastContentManager.remove(gameId);
         allPlayerInfoBroadcastContentManager.remove(gameId);
       }
+
+      BroadcastContentManager<PlayerStates> playerStatesManager =
+          allPlayerInfoBroadcastContentManager.get(gameId);
+
+      BroadcastContentManager<GameInfo> gameInfoManger =
+          gameInfoBroadcastContentManager.get(gameId);
 
       // if anything might have changed, let the client side know immediately
       playerStatesManager.touch();
