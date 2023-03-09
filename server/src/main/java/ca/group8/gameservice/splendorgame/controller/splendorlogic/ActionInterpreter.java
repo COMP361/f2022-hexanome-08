@@ -105,8 +105,8 @@ public class ActionInterpreter {
     actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
     if (actionMap.isEmpty()) {
       // if anything might have changed, let the client side know immediately
-      playerStatesManager.touch();
-      gameInfoManger.touch();
+      //playerStatesManager.touch();
+      //gameInfoManger.touch();
       // if the current player's action map is empty, we do end turn check
       // and then set to next player's turn
 
