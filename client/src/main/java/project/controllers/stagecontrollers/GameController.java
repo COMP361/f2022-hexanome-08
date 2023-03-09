@@ -440,7 +440,7 @@ public class GameController implements Initializable {
                 .allMatch(action -> action instanceof CardExtraAction &&
                     ((CardExtraAction) action).getCardEffect().equals(CardEffect.SATCHEL));
 
-            if ( !playerActionMap.isEmpty() && allPairActions) {
+            if (!playerActionMap.isEmpty() && allPairActions) {
               HttpResponse<String> response =
                   gameRequestSender.sendGetAllPlayerInfoRequest(gameId, "");
               String playerStatesJson = response.getBody();
