@@ -168,7 +168,7 @@ public class App extends Application {
     double height = primaryStage.getScene().getHeight();
     // setting the scene might turn off full screen mode, must reset to full again immediately
     primaryStage.setScene(new Scene(fxmlLoader.load(), width, height));
-    primaryStage.setFullScreen(true);
+    //primaryStage.setFullScreen(true);
   }
 
   /**

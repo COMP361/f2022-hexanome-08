@@ -10,6 +10,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,8 +28,7 @@ public class CardExtraAction extends Action {
    * @param curCard    DevelopmentCard which "unlocks" this extra action
    * @param cardEffect The type of extra action
    */
-  public CardExtraAction(Card curCard, CardEffect cardEffect,
-                         Position position) {
+  public CardExtraAction(Card curCard, CardEffect cardEffect, Position position) {
     assert curCard != null;
     super.type = this.getClass().getSimpleName();
     this.curCard = curCard;
@@ -117,8 +117,9 @@ public class CardExtraAction extends Action {
     DevelopmentCard satchel = associatedActionInterpreter.getStashedCard();
 
     //pair the card
-    ownedCard.setIsPaired(true);
-    ownedCard.setPairedCard(satchel);
+    //ownedCard.setIsPaired(true);
+    //ownedCard.setPairedCard(satchel);
+    ownedCard.pairCard(satchel);
 
     //add card to hand, add prestige points
     int prestigeAmount = satchel.getPrestigePoints();
@@ -127,6 +128,9 @@ public class CardExtraAction extends Action {
 
     //reset stashedCard to null
     associatedActionInterpreter.setStashedCard(null);
+    ActionGenerator actionGenerator = associatedActionInterpreter.getActionGenerator();
+    actionGenerator.getPlayerActionMaps().put(curPlayer.getName(), new HashMap<>());
+
     /*
     //which row and column
     int index = position.getY();
