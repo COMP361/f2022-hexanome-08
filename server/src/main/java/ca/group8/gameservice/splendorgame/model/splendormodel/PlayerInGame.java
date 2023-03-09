@@ -105,11 +105,13 @@ public class PlayerInGame {
         //if (card.hasRegularGemColour()) {
         //}
         Colour colour = card.getGemColour();
-        Logger logger  = LoggerFactory.getLogger(PlayerInGame.class);
-        logger.warn("Colour " + colour);
-        logger.warn("TotalGems: " + totalGems);
-        int oldValue = totalGems.get(colour);
-        totalGems.put(colour, oldValue + card.getGemNumber());
+        if (!colour.equals(Colour.ORIENT)){
+          Logger logger  = LoggerFactory.getLogger(PlayerInGame.class);
+          logger.warn("Colour " + colour);
+          logger.warn("TotalGems: " + totalGems);
+          int oldValue = totalGems.get(colour);
+          totalGems.put(colour, oldValue + card.getGemNumber());
+        }
       }
     }
     return totalGems;

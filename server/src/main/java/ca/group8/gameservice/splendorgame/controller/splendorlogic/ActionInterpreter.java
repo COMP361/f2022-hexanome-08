@@ -16,6 +16,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
+import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -80,7 +81,9 @@ public class ActionInterpreter {
    * @param actionId   the identifier of the action being interpreted
    * @param playerName the player associated with this action
    */
-  public void interpretAction(String actionId, String playerName) {
+  public void interpretAction(String actionId, String playerName,
+                              BroadcastContentManager<PlayerStates> playerStatesManager,
+                              BroadcastContentManager<GameInfo> gameInfoManger) {
     Logger logger = LoggerFactory.getLogger(ActionInterpreter.class);
     //logger.info("Before execute the action" + playerChosenAction.checkIsCardAction());
     Map<String, Action> actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
@@ -101,6 +104,9 @@ public class ActionInterpreter {
     // the action has been executed, and the player's action map is possibly empty now, check!
     actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
     if (actionMap.isEmpty()) {
+
+      playerStatesManager.touch();
+      gameInfoManger.touch();
       // if the current player's action map is empty, we do end turn check
       // and then set to next player's turn
 
