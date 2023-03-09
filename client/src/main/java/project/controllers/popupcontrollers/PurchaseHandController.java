@@ -216,8 +216,8 @@ public class PurchaseHandController implements Initializable {
       String noblePath = App.getNoblePath(nobleCard.getCardName());
       ImageView imageView = new ImageView(new Image(noblePath));
       // add the image view to vbox
-      imageView.setFitWidth(100);
-      imageView.setFitHeight(150);
+      imageView.setFitWidth(120);
+      imageView.setFitHeight(120);
       noblesUnLocked.getChildren().add(imageView);
     }
   }

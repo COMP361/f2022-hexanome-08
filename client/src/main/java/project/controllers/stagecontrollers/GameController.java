@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -258,6 +260,23 @@ public class GameController implements Initializable {
             Gson splendorParser = SplendorDevHelper.getInstance().getGson();
             PlayerStates playerStates =
                 splendorParser.fromJson(responseInJsonString, PlayerStates.class);
+            if (!nameToPlayerInfoGuiMap.isEmpty()) {
+              for (PlayerInfoGui playerInfoGui : nameToPlayerInfoGuiMap.values()) {
+                Platform.runLater(() -> {
+                  ObservableList<Node> mainBoardChildren = playerBoardAnchorPane.getChildren();
+                  if (playerInfoGui instanceof VerticalPlayerInfoGui) {
+                    mainBoardChildren.remove((VerticalPlayerInfoGui) playerInfoGui);
+                  }
+                  if (playerInfoGui instanceof HorizontalPlayerInfoGui) {
+                    mainBoardChildren.remove((HorizontalPlayerInfoGui) playerInfoGui);
+                  }
+
+                });
+              }
+              // clean the map
+              nameToPlayerInfoGuiMap.clear();
+            }
+
             // set up GUI
             setupAllPlayerInfoGui(0);
 

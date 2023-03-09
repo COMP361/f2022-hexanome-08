@@ -110,7 +110,7 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     Map<PlayerVisibleInfo, Text> resultMap = new HashMap<>();
     if (playerPosition.equals(PlayerPosition.TOP)) {
       Group group = (Group) this.getChildren().get(6);
-      resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(6));
+      resultMap.put(PlayerVisibleInfo.POINT, (Text) group.getChildren().get(7));
       resultMap.put(PlayerVisibleInfo.RESERVED_CARDS, (Text) group.getChildren().get(9));
       resultMap.put(PlayerVisibleInfo.RESERVED_NOBLES, (Text) group.getChildren().get(8));
 
