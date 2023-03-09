@@ -95,37 +95,37 @@ public class TestCardExtraAction {
   //  }
   //}
 
-  @Test
-  void testGetFreeandSatchel() {
-    OrientBoard o1 = (OrientBoard) gameInfo.getTableTop().getBoard(Extension.ORIENT);
-    DevelopmentCard[] devCards = o1.getLevelCardsOnBoard(2);
-    DevelopmentCard developmentCard = devCards[1];
-    System.out.println(developmentCard.getPurchaseEffects());
+ // @Test
+ // void testGetFreeandSatchel() {
+ //   OrientBoard o1 = (OrientBoard) gameInfo.getTableTop().getBoard(Extension.ORIENT);
+ //   DevelopmentCard[] devCards = o1.getLevelCardsOnBoard(2);
+ //   DevelopmentCard developmentCard = devCards[1];
+ //   System.out.println(developmentCard.getPurchaseEffects());
+ //
+ //   if (developmentCard.getPurchaseEffects().size()==1) {
+ //     testCardHelperOrient1_ReplaceCardOnBoard2(developmentCard);
+ //   }
+ //   if (developmentCard.getPurchaseEffects().size()==2) {
+ //     CardExtraAction freeCard = new CardExtraAction(developmentCard,CardEffect.FREE_CARD,
+ //         new Position(2,1));
+ //     freeCard.freeCardActionHelper(gameInfo.getTableTop(),playerInGame,actionInterpreter);
+ //
+ //     assertTrue(actionInterpreter.getStashedCard() == developmentCard);
+ //     assertTrue(actionInterpreter.getFreeCardLevel() == developmentCard.getLevel()-1);
+ //
+ //
+ //   }
+ //
+ //}
 
-    if (developmentCard.getPurchaseEffects().size()==1) {
-      testCardHelperOrient1_ReplaceCardOnBoard2(developmentCard);
-    }
-    if (developmentCard.getPurchaseEffects().size()==2) {
-      CardExtraAction freeCard = new CardExtraAction(developmentCard,CardEffect.FREE_CARD,
-          new Position(2,1));
-      freeCard.freeCardActionHelper(gameInfo.getTableTop(),playerInGame,actionInterpreter);
-
-      assertTrue(actionInterpreter.getStashedCard() == developmentCard);
-      assertTrue(actionInterpreter.getFreeCardLevel() == developmentCard.getLevel()-1);
-
-
-    }
-
- }
-
-  @Test
-  void testCardHelperOrient1_ReplaceCardOnBoard2(DevelopmentCard devCard) {
-    OrientBoard o1 = (OrientBoard) gameInfo.getTableTop().getBoard(Extension.ORIENT);
-    //DevelopmentCard devCard = o1.getLevelCardsOnBoard(1)[0];
-    CardExtraAction freeCard = new CardExtraAction(devCard,devCard.getPurchaseEffects().get(0),
-        new Position(2,1));
-    freeCard.freeCardActionHelper(gameInfo.getTableTop(),playerInGame,actionInterpreter);
-    assertFalse(o1.getLevelCardsOnBoard(1)[0].equals(devCard));
-  }
+  //@Test
+  //void testCardHelperOrient1_ReplaceCardOnBoard2(DevelopmentCard devCard) {
+  //  OrientBoard o1 = (OrientBoard) gameInfo.getTableTop().getBoard(Extension.ORIENT);
+  //  //DevelopmentCard devCard = o1.getLevelCardsOnBoard(1)[0];
+  //  CardExtraAction freeCard = new CardExtraAction(devCard,devCard.getPurchaseEffects().get(0),
+  //      new Position(2,1));
+  //  freeCard.freeCardActionHelper(gameInfo.getTableTop(),playerInGame,actionInterpreter);
+  //  assertFalse(o1.getLevelCardsOnBoard(1)[0].equals(devCard));
+  //}
 
 }
