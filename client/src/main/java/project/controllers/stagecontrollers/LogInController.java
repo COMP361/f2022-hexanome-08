@@ -90,7 +90,7 @@ public class LogInController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    userName.setText("ruoyu");
-    userPassword.setText("abc123_ABC123");
+    //userName.setText("ruoyu");
+    //userPassword.setText("abc123_ABC123");
   }
 }

@@ -205,8 +205,7 @@ public class DevelopmentCard extends Card {
 
     DevelopmentCard other = (DevelopmentCard) obj;
 
-    return super.equals(other)
-            && this.level == other.level
+    return this.level == other.level
             && this.gemNumber == other.gemNumber
             && this.isPaired == other.isPaired
             && this.gemColour.equals(other.gemColour)

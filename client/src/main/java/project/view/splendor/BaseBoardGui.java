@@ -152,7 +152,7 @@ public class BaseBoardGui implements BoardGui {
     }
     for (Position position : positionToActionMap.keySet()) {
       System.out.print("level + index: " + position.getX() + " " + position.getY());
-      System.out.println(" " +positionToActionMap.get(position).size());
+      System.out.println(" " + positionToActionMap.get(position).size());
     }
     return positionToActionMap;
   }

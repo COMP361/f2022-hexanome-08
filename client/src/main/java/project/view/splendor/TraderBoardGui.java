@@ -32,6 +32,12 @@ public class TraderBoardGui extends VBox implements BoardGui {
 
   private Map<String, Integer> nameToArmCodeMap;
 
+  /**
+   * Constructor.
+   *
+   * @param gameId gameId to associate to this traderBoard.
+   * @param nameToArmCodeMap maps player names to arms/powers.
+   */
   public TraderBoardGui(long gameId, Map<String, Integer> nameToArmCodeMap) {
     this.gameId = gameId;
     this.nameToArmCodeMap = nameToArmCodeMap;

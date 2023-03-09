@@ -449,15 +449,16 @@ public class GameController implements Initializable {
             // TODO: Step 4. update MyPurchaseHand and MyReserveHand
 
 
-            // First, check what extensions are we playing
-            List<Extension> extensions = curGameInfo.getExtensions();
+            //previously, here we checked what extensions are active --> moved this code closer to
+            //where the extensions variable is actually used.
             TableTop tableTop = curGameInfo.getTableTop();
             // always get the action map from game info
             String playerName = curUser.getUsername();
             Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
             boolean allPairActions = playerActionMap.values().stream()
-                .allMatch(action -> action instanceof CardExtraAction &&
-                    ((CardExtraAction) action).getCardEffect().equals(CardEffect.SATCHEL));
+                .allMatch(action -> action instanceof CardExtraAction
+                    && ((CardExtraAction) action).getCardEffect().equals(CardEffect.SATCHEL));
+
 
             if (!playerActionMap.isEmpty() && allPairActions) {
               HttpResponse<String> response =
@@ -470,8 +471,8 @@ public class GameController implements Initializable {
               Platform.runLater(() -> {
                 try {
                   App.loadPopUpWithController("my_development_cards.fxml",
-                      new PurchaseHandController(gameId, purchasedHand, playerActionMap, coverRectangle),
-                      coverRectangle,
+                      new PurchaseHandController(gameId,
+                          purchasedHand, playerActionMap, coverRectangle), coverRectangle,
                       800,
                       600);
                 } catch (IOException e) {
@@ -487,6 +488,9 @@ public class GameController implements Initializable {
             for (BoardGui boardGui : extensionBoardGuiMap.values()) {
               Platform.runLater(boardGui::clearContent);
             }
+
+            // First, check what extensions are we playing
+            List<Extension> extensions = curGameInfo.getExtensions();
 
             // generate BoardGui based on extension type
             for (Extension extension : extensions) {

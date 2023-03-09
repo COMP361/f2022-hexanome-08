@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestOrientBoard {
 
@@ -95,7 +96,9 @@ public class TestOrientBoard {
       throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
     setUpDeckFromPool();
     for (int level = 1; level <= 3; level++) {
-      assertEquals(testLevelDecks.get(level).get(0),board.popLevelCardFromDeck(level));
+      DevelopmentCard cardFromDeck = testLevelDecks.get(level).get(0);
+      DevelopmentCard cardPoped = board.popLevelCardFromDeck(level);
+      assertTrue(cardFromDeck.equals(cardPoped));
     }
   }
 

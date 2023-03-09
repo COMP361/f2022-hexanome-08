@@ -65,7 +65,8 @@ public class PurchaseHandController implements Initializable {
    * @param playerActions playerActions
    * @param coverRectangle coverRectangle
    */
-  public PurchaseHandController(long gameId, PurchasedHand purchasedHand, Map<String, Action> playerActions,
+  public PurchaseHandController(long gameId, PurchasedHand purchasedHand,
+                                Map<String, Action> playerActions,
                                 Rectangle coverRectangle) {
     // organize all dev cards (including gold colour ones) into colour map
     this.gameId = gameId;
@@ -107,7 +108,8 @@ public class PurchaseHandController implements Initializable {
 
   // Add the satchel mark display to every dev card (exclude the orient gold card)
   //private List<HBox> generateCardSatchelPair(List<DevelopmentCard> allDevCards,
-  //                                           Map<Position, List<ActionIdPair>> positionToActionMap) {
+  //                                           Map<Position,
+  //                                           List<ActionIdPair>> positionToActionMap) {
   //  List<HBox> result = new ArrayList<>();
   //  for (int i = 0; i < allDevCards.size(); i=+)
   //
@@ -169,7 +171,7 @@ public class PurchaseHandController implements Initializable {
       // if we have some pair actions, assign them
       if (!positionSatchelActionMap.isEmpty()) {
         List<List<ActionIdPair>> satchelActions = positionSatchelActionMap.values().stream()
-            .filter(e -> ((CardExtraAction)e.get(0).getAction()).getCurCard().equals(card))
+            .filter(e -> ((CardExtraAction) e.get(0).getAction()).getCurCard().equals(card))
             .collect(Collectors.toList());
         if (satchelActions.size() > 0) {
           imgV.setOnMouseClicked(createClickOnCardToPair(gameId, satchelActions.get(0)));
@@ -223,7 +225,8 @@ public class PurchaseHandController implements Initializable {
   }
 
   //private List<HBox> generateCardSatchelPairWithActions(
-  //    List<DevelopmentCard> oneColourCards, Map<Position, List<ActionIdPair>> positionToActionMap) {
+  //    List<DevelopmentCard> oneColourCards, Map<Position,
+  //    List<ActionIdPair>> positionToActionMap) {
   //  List<HBox> result = new ArrayList<>();
   //  for (DevelopmentCard card : oneColourCards) {
   //    Rectangle satchelMark = new Rectangle();
@@ -338,7 +341,7 @@ public class PurchaseHandController implements Initializable {
         // only for normal
         // cards with RED, WHITE, BLUE, GREEN, BLACK colours)
         // Bind actions to image view during generateCardSatchelPair(...) method
-        for(DevelopmentCard card:cardsOfOneColour){
+        for (DevelopmentCard card : cardsOfOneColour) {
           System.out.println(card.getCardName());
         }
 
