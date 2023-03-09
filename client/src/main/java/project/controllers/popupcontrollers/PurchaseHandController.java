@@ -2,9 +2,12 @@ package project.controllers.popupcontrollers;
 
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
+import ca.mcgill.comp361.splendormodel.actions.CardExtraAction;
+import ca.mcgill.comp361.splendormodel.model.CardEffect;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.NobleCard;
+import ca.mcgill.comp361.splendormodel.model.Position;
 import ca.mcgill.comp361.splendormodel.model.PurchasedHand;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,17 +15,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import project.App;
+import project.connection.GameRequestSender;
+import project.view.splendor.ActionIdPair;
 
 /**
  * Purchase controller class, controls the visual updates happening in purchase hand.
@@ -47,6 +56,8 @@ public class PurchaseHandController implements Initializable {
   // hold List<NobleCard>
   private VBox noblesUnLocked;
 
+  private final long gameId;
+
   /**
    * PurchaseHandController.
    *
@@ -54,9 +65,10 @@ public class PurchaseHandController implements Initializable {
    * @param playerActions playerActions
    * @param coverRectangle coverRectangle
    */
-  public PurchaseHandController(PurchasedHand purchasedHand, Map<String, Action> playerActions,
+  public PurchaseHandController(long gameId, PurchasedHand purchasedHand, Map<String, Action> playerActions,
                                 Rectangle coverRectangle) {
     // organize all dev cards (including gold colour ones) into colour map
+    this.gameId = gameId;
     List<DevelopmentCard> allCardsInHand = purchasedHand.getDevelopmentCards();
     this.colourCardsMap = reorganizeCardsInHand(allCardsInHand);
     this.colourGroupMap = new HashMap<>();
@@ -94,7 +106,44 @@ public class PurchaseHandController implements Initializable {
 
 
   // Add the satchel mark display to every dev card (exclude the orient gold card)
-  private List<HBox> generateCardSatchelPair(List<DevelopmentCard> oneColourCards) {
+  //private List<HBox> generateCardSatchelPair(List<DevelopmentCard> allDevCards,
+  //                                           Map<Position, List<ActionIdPair>> positionToActionMap) {
+  //  List<HBox> result = new ArrayList<>();
+  //  for (int i = 0; i < allDevCards.size(); i=+)
+  //
+  //
+  //  for (DevelopmentCard card : oneColourCards) {
+  //    Rectangle satchelMark = new Rectangle();
+  //    // Colour will be assigned differently if the card is linked
+  //    if (card.isPaired()) {
+  //      satchelMark.setFill(Color.BLUE);
+  //    } else {
+  //      satchelMark.setFill(Color.WHITESMOKE);
+  //    }
+  //    Image img;
+  //    // has some effect -> orient
+  //    if (!card.isBaseCard()) {
+  //      img = new Image(App.getOrientCardPath(card.getCardName(), card.getLevel()));
+  //    } else { // otherwise, base
+  //      img = new Image(App.getBaseCardPath(card.getCardName(), card.getLevel()));
+  //    }
+  //    Position cardPosition = new Position(card.getLevel(),)
+  //    ImageView imgV = new ImageView(img);
+  //    imgV.setFitWidth(100);
+  //    imgV.setFitHeight(150);
+  //    satchelMark.setWidth(20);
+  //    satchelMark.setHeight(150);
+  //    HBox container = new HBox(imgV, satchelMark);
+  //    result.add(container);
+  //  }
+  //  return result;
+  //}
+
+  // Add the satchel mark display to every dev card (exclude the orient gold card)
+  private List<HBox> generateCardSatchelPair(
+      List<DevelopmentCard> oneColourCards,
+      Map<Position, List<ActionIdPair>> positionSatchelActionMap) {
+
     List<HBox> result = new ArrayList<>();
     for (DevelopmentCard card : oneColourCards) {
       Rectangle satchelMark = new Rectangle();
@@ -116,6 +165,16 @@ public class PurchaseHandController implements Initializable {
       imgV.setFitHeight(150);
       satchelMark.setWidth(20);
       satchelMark.setHeight(150);
+
+      // if we have some pair actions, assign them
+      if (!positionSatchelActionMap.isEmpty()) {
+        List<List<ActionIdPair>> satchelActions = positionSatchelActionMap.values().stream()
+            .filter(e -> ((CardExtraAction)e.get(0).getAction()).getCurCard().equals(card))
+            .collect(Collectors.toList());
+        if (satchelActions.size() > 0) {
+          imgV.setOnMouseClicked(createClickOnCardToPair(gameId, satchelActions.get(0)));
+        }
+      }
       HBox container = new HBox(imgV, satchelMark);
       result.add(container);
     }
@@ -163,9 +222,86 @@ public class PurchaseHandController implements Initializable {
     }
   }
 
+  //private List<HBox> generateCardSatchelPairWithActions(
+  //    List<DevelopmentCard> oneColourCards, Map<Position, List<ActionIdPair>> positionToActionMap) {
+  //  List<HBox> result = new ArrayList<>();
+  //  for (DevelopmentCard card : oneColourCards) {
+  //    Rectangle satchelMark = new Rectangle();
+  //    // Colour will be assigned differently if the card is linked
+  //    if (card.isPaired()) {
+  //      satchelMark.setFill(Color.BLUE);
+  //    } else {
+  //      satchelMark.setFill(Color.WHITESMOKE);
+  //    }
+  //    Image img;
+  //    // has some effect -> orient
+  //    if (!card.isBaseCard()) {
+  //      img = new Image(App.getOrientCardPath(card.getCardName(), card.getLevel()));
+  //    } else { // otherwise, base
+  //      img = new Image(App.getBaseCardPath(card.getCardName(), card.getLevel()));
+  //    }
+  //    ImageView imgV = new ImageView(img);
+  //    imgV.setFitWidth(100);
+  //    imgV.setFitHeight(150);
+  //    satchelMark.setWidth(20);
+  //    satchelMark.setHeight(150);
+  //    HBox container = new HBox(imgV, satchelMark);
+  //    result.add(container);
+  //  }
+  //  return result;
+  //
+  //
+  //}
+
+  private EventHandler<MouseEvent> createClickOnCardToPair(long gameId,
+                                                           List<ActionIdPair> satchelAction) {
+    return event -> {
+      // it's clickable, we can send some requests here
+
+      GameRequestSender gameRequestSender = App.getGameRequestSender();
+      String playerName = App.getUser().getUsername();
+      String accessToken = App.getUser().getAccessToken();
+      String actionId = satchelAction.get(0).getActionId();
+      // sends a POST request that tells the server which action we chose
+      gameRequestSender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
+      ImageView imageView = (ImageView) event.getSource();
+      Stage curWindow = (Stage) imageView.getScene().getWindow();
+      curWindow.close();
+    };
+  }
+
+
+
+
+  private Map<Position, List<ActionIdPair>> getSatchelActionsInPurchaseHand(
+      Map<String, Action> satchelActions) {
+    Map<Position, List<ActionIdPair>> positionToActionMap = new HashMap<>();
+    // assign actions to positions (each position can have a list of action pair associated)
+    for (String actionId : satchelActions.keySet()) {
+      Action action = satchelActions.get(actionId);
+      Position cardPosition;
+      CardExtraAction satchelAction = (CardExtraAction) action;
+      cardPosition = satchelAction.getCardPosition();
+      List<ActionIdPair> actions = new ArrayList<>();
+      actions.add(new ActionIdPair(actionId, action));
+      positionToActionMap.put(cardPosition, actions);
+    }
+
+    return positionToActionMap;
+  }
+
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    Map<String, Action> satchelActions = playerActions.entrySet()
+        .stream().filter(e -> e.getValue() instanceof CardExtraAction &&
+            ((CardExtraAction) e).getCardEffect().equals(CardEffect.SATCHEL))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    Map<Position, List<ActionIdPair>> positionSatchelActionMap = new HashMap<>();
+    if (satchelActions.size() > 0) {
+      positionSatchelActionMap = getSatchelActionsInPurchaseHand(satchelActions);
+    }
+
     Colour[] baseColours = App.getBaseColours();
     // the groups are stored in HBox in FXML file, there are 6 elements in the HBox
     // the first 5 are groups that store regular dev cards
@@ -193,7 +329,8 @@ public class PurchaseHandController implements Initializable {
         for(DevelopmentCard card:cardsOfOneColour){
           System.out.println(card.getCardName());
         }
-        List<HBox> allPairs = generateCardSatchelPair(cardsOfOneColour);
+
+        List<HBox> allPairs = generateCardSatchelPair(cardsOfOneColour, positionSatchelActionMap);
         addCardSatchelPairToColourGroup(allPairs, colourGroupMap.get(c));
       }
     }
