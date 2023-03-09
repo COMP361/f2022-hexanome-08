@@ -2,6 +2,8 @@ package project.controllers.stagecontrollers;
 
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
+import ca.mcgill.comp361.splendormodel.actions.CardExtraAction;
+import ca.mcgill.comp361.splendormodel.model.CardEffect;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.Extension;
 import ca.mcgill.comp361.splendormodel.model.GameInfo;
@@ -174,7 +176,7 @@ public class GameController implements Initializable {
 
       try {
         App.loadPopUpWithController("my_development_cards.fxml",
-            new PurchaseHandController(purchasedHand, playerActions, coverRectangle),
+            new PurchaseHandController(gameId, purchasedHand, playerActions, coverRectangle),
             coverRectangle,
             800,
             600);
@@ -429,11 +431,36 @@ public class GameController implements Initializable {
 
 
             // First, check what extensions are we playing
-            final List<Extension> extensions = curGameInfo.getExtensions();
+            List<Extension> extensions = curGameInfo.getExtensions();
             TableTop tableTop = curGameInfo.getTableTop();
             // always get the action map from game info
             String playerName = curUser.getUsername();
             Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
+            boolean allPairActions = playerActionMap.values().stream()
+                .allMatch(action -> action instanceof CardExtraAction &&
+                    ((CardExtraAction) action).getCardEffect().equals(CardEffect.SATCHEL));
+
+            if (!playerActionMap.isEmpty() && allPairActions) {
+              HttpResponse<String> response =
+                  gameRequestSender.sendGetAllPlayerInfoRequest(gameId, "");
+              String playerStatesJson = response.getBody();
+              PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
+                  .fromJson(playerStatesJson, PlayerStates.class);
+              PlayerInGame playerInGame = playerStates.getOnePlayerInGame(playerName);
+              PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
+              Platform.runLater(() -> {
+                try {
+                  App.loadPopUpWithController("my_development_cards.fxml",
+                      new PurchaseHandController(gameId, purchasedHand, playerActionMap, coverRectangle),
+                      coverRectangle,
+                      800,
+                      600);
+                } catch (IOException e) {
+                  throw new RuntimeException(e);
+                }
+              });
+            }
+
             // TODO: After one purchase, the server side did not set next player properly
             System.out.println("Current turn: " + curGameInfo.getCurrentPlayer());
             System.out.println("Player: " + playerName + playerActionMap.values());

@@ -203,6 +203,7 @@ public class GameManager {
         GameInfo newGameInfo = savedGame.getGameInfo();
         PlayerStates newPlayerStates = savedGame.getPlayerStates();
 
+
         // put the renamed objects to manager
         activeGames.put(gameId, newGameInfo);
         activePlayers.put(gameId, newPlayerStates);
@@ -211,6 +212,8 @@ public class GameManager {
         ActionInterpreter newInterpreter = new ActionInterpreter(newGameInfo, newPlayerStates);
         gameActionInterpreters.put(gameId, newInterpreter);
 
+        // new SavedGameState
+        savedGame = new SavedGameState(newGameInfo, newPlayerStates, newInterpreter);
         // generate default actions for every player, even it's a loaded game
         ActionGenerator actionGenerator = newInterpreter.getActionGenerator();
         String currentPlayerName = newGameInfo.getCurrentPlayer();

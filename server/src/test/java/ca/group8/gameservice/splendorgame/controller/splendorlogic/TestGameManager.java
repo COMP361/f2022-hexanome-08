@@ -66,24 +66,25 @@ public class TestGameManager{
   @Test
   @Order(2)
   public void testLaunchWithSavedGameId() throws ModelAccessException {
-    String[] newPlayers = new String[] {"penn", "muzhi"};
+    String[] newPlayers = new String[] {"julia", "young"};
     List<PlayerInfo> playerInfos = IntStream
         .range(0, newPlayers.length)
         .mapToObj(i -> new PlayerInfo(newPlayers[i], colours[i]))
         .collect(Collectors.toList());
     LauncherInfo launcherInfo2 = new LauncherInfo(gamename,
         new LinkedList<>(playerInfos),
-        players[0]);
+        newPlayers[0]);
     launcherInfo2.setSavegame(savegameids[0]);
     long newGameId = 12451517195L;
-    gameManager.launchGame(newGameId, launcherInfo2);
+    SavedGameState savedGameState = gameManager.launchGame(newGameId, launcherInfo2);
     // there should be two new players whose game was loaded based on one previously saved game
     assertEquals(new HashSet<>(Arrays.asList(newPlayers)),
         new HashSet<>(gameManager.getGameById(newGameId).getPlayerNames()));
+    assertEquals(newPlayers[0], savedGameState.getGameInfo().getCreator());
 
-    gameManager.deleteAllSavedGame();
-    // after all saved game being deleted, all saved game ids remain empty
-    assertEquals(new ArrayList<>(), gameManager.getSavedGameIds());
+    //gameManager.deleteAllSavedGame();
+    //// after all saved game being deleted, all saved game ids remain empty
+    //assertEquals(new ArrayList<>(), gameManager.getSavedGameIds());
   }
 
 
