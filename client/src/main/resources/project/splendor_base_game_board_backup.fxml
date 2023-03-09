@@ -57,14 +57,14 @@
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="125.0" stroke="BLACK" strokeType="INSIDE" width="665.0" />
             </children></HBox>
         <Button fx:id="myCardButton" layoutX="1180.0" layoutY="720.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Cards" />
-        <Button fx:id="myReservedCardsButton" layoutX="1180.0" layoutY="757.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Reserved Cards" />
-        <Button fx:id="quitButton" layoutX="1499.0" layoutY="20.0" mnemonicParsing="false" text="Quit" />
+        <Button fx:id="myReservedCardsButton" layoutX="1180.0" layoutY="770.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Reserved Cards" />
+        <Button fx:id="quitButton" layoutX="1180.0" layoutY="800.0" mnemonicParsing="false" text="Quit" />
         <HBox layoutX="240.0" layoutY="110.0" prefHeight="100.0" prefWidth="750.0">
             <children>
                 <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="100.0" stroke="BLACK" strokeType="INSIDE" width="750.0" />
             </children>
         </HBox>
-      <VBox layoutX="1120.0" layoutY="150.0" prefHeight="200.0" prefWidth="100.0">
+      <VBox layoutX="1120.0" layoutY="125.0" prefHeight="200.0" prefWidth="100.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="500.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
          </children>
