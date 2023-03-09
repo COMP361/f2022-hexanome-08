@@ -93,7 +93,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     return event -> {
       try {
         App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(gameId, allActions, coverRectangle),
+            new CardActionController(gameId, allActions, null),
             coverRectangle, 360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
