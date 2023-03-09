@@ -29,7 +29,7 @@ public class TokenBankGui extends HBox {
 
   private final long gameId;
   private Map<String, TakeTokenAction> takeTokenActionMap = new HashMap<>();
-  private final Map<String, ReturnTokenAction> returnTokenActionMap = new HashMap<>();
+  private Map<String, ReturnTokenAction> returnTokenActionMap = new HashMap<>();
 
   /**
    * Construct the Token Bank GUI.

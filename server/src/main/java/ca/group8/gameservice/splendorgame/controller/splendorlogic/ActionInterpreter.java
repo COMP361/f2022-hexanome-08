@@ -104,7 +104,7 @@ public class ActionInterpreter {
     // the action has been executed, and the player's action map is possibly empty now, check!
     actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
     if (actionMap.isEmpty()) {
-
+      // if anything might have changed, let the client side know immediately
       playerStatesManager.touch();
       gameInfoManger.touch();
       // if the current player's action map is empty, we do end turn check
@@ -130,6 +130,9 @@ public class ActionInterpreter {
           NobleCard nobleCard = allNobles.get(nobleIndices.get(0));
           baseBoard.removeNoble(nobleCard);
           purchasedHand.addNobleCard(nobleCard);
+          int oldPoints = playerInGame.getPrestigePoints();
+          int noblePoints = nobleCard.getPrestigePoints();
+          playerInGame.changePrestigePoints(oldPoints + noblePoints);
           nobleVisited = true;
         }
 

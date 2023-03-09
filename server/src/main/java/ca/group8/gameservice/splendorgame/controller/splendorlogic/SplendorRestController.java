@@ -369,8 +369,8 @@ public class SplendorRestController {
       }
 
       // if anything might have changed, let the client side know immediately
-      playerStatesManager.touch();
-      gameInfoManger.touch();
+      //playerStatesManager.touch();
+      //gameInfoManger.touch();
 
 
       return ResponseEntity.status(HttpStatus.OK).body(null);
