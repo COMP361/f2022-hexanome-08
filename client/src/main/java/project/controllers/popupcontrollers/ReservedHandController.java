@@ -83,7 +83,6 @@ public class ReservedHandController implements Initializable {
 
       List<ActionIdPair> actions = positionToActionMap.get(new Position(0,i));
       if(actions!=null){
-        System.out.println("Size of actionpairID list is:" + actions.size());
         cardImageView.setOnMouseClicked(createClickOnCardHandler(gameId,actions));//TODO);
       }
       cardImageView.setFitWidth(80);
@@ -92,20 +91,6 @@ public class ReservedHandController implements Initializable {
     }
 
     this.playerActions = playerActions;
-  }
-
-  @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    // add the image view to the Hbox to display
-    for (ImageView imageView : playerNobles) {
-      reservedNoblesHbox.getChildren().add(imageView);
-      reservedNoblesHbox.setSpacing(5);
-    }
-
-    for (ImageView imageView : playerCards) {
-      reservedDevCardsHbox.getChildren().add(imageView);
-      reservedDevCardsHbox.setSpacing(5);
-    }
   }
 
   private Map<Position, List<ActionIdPair>> getPositionActionsInReservedHand(
@@ -141,5 +126,19 @@ public class ReservedHandController implements Initializable {
         throw new RuntimeException(e);
       }
     };
+  }
+
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    // add the image view to the Hbox to display
+    for (ImageView imageView : playerNobles) {
+      reservedNoblesHbox.getChildren().add(imageView);
+      reservedNoblesHbox.setSpacing(5);
+    }
+
+    for (ImageView imageView : playerCards) {
+      reservedDevCardsHbox.getChildren().add(imageView);
+      reservedDevCardsHbox.setSpacing(5);
+    }
   }
 }
