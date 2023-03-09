@@ -348,7 +348,13 @@ public class SplendorRestController {
     try {
       gameValidator.gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
       ActionInterpreter actionInterpreter = gameManager.getGameActionInterpreter(gameId);
-      actionInterpreter.interpretAction(actionId, playerName);
+      BroadcastContentManager<PlayerStates> playerStatesManager =
+          allPlayerInfoBroadcastContentManager.get(gameId);
+
+      BroadcastContentManager<GameInfo> gameInfoManger =
+          gameInfoBroadcastContentManager.get(gameId);
+
+      actionInterpreter.interpretAction(actionId, playerName, playerStatesManager, gameInfoManger);
 
       // end of turn check
       GameInfo curGame = gameManager.getGameById(gameId);
@@ -363,8 +369,8 @@ public class SplendorRestController {
       }
 
       // if anything might have changed, let the client side know immediately
-      allPlayerInfoBroadcastContentManager.get(gameId).touch();
-      gameInfoBroadcastContentManager.get(gameId).touch();
+      playerStatesManager.touch();
+      gameInfoManger.touch();
 
 
       return ResponseEntity.status(HttpStatus.OK).body(null);
