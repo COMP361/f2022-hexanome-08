@@ -583,11 +583,12 @@ public class GameController implements Initializable {
     }
 
     // if we are playing the Trading Extension, initialize the map of player name
-    // to their arm code index, based on the sorted map
+    // to their arm code index
     List<Extension> extensionsPlaying = curGameInfo.getExtensions();
+    playerNames = curGameInfo.getPlayerNames();
     if (extensionsPlaying.contains(Extension.TRADING_POST)) {
-      for (int i = 1; i <= sortedPlayerNames.size(); i++) {
-        nameToArmCodeMap.put(sortedPlayerNames.get(i - 1), i);
+      for (int i = 1; i <= playerNames.size(); i++) {
+        nameToArmCodeMap.put(playerNames.get(i - 1), i);
       }
     }
 
