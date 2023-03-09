@@ -90,7 +90,7 @@
         "price":{
             "BLUE":1,
             "BLACK":0,
-            "RED":1,
+            "RED":3,
             "GREEN":1,
             "WHITE":1
         },
