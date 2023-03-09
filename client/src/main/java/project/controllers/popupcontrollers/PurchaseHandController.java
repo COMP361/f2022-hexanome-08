@@ -293,10 +293,22 @@ public class PurchaseHandController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    Map<String, Action> satchelActions = playerActions.entrySet()
-        .stream().filter(e -> e.getValue() instanceof CardExtraAction &&
-            ((CardExtraAction) e).getCardEffect().equals(CardEffect.SATCHEL))
-        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    //Map<String, Action> satchelActions = playerActions.entrySet()
+    //    .stream().filter(e -> e.getValue() instanceof CardExtraAction &&
+    //        ((CardExtraAction) e).getCardEffect().equals(CardEffect.SATCHEL))
+    //    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    Map<String, Action> satchelActions = new HashMap<>();
+    for (String actionId : playerActions.keySet()) {
+      Action action = playerActions.get(actionId);
+      if (action instanceof CardExtraAction) {
+        CardExtraAction cardExtraAction = (CardExtraAction) action;
+        if (cardExtraAction.getCardEffect().equals(CardEffect.SATCHEL)) {
+          satchelActions.put(actionId, action);
+        }
+      }
+    }
+
+
     Map<Position, List<ActionIdPair>> positionSatchelActionMap = new HashMap<>();
     if (satchelActions.size() > 0) {
       positionSatchelActionMap = getSatchelActionsInPurchaseHand(satchelActions);
