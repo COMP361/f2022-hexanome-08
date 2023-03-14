@@ -378,20 +378,20 @@ public class TokenBankGui extends HBox {
    * @param firstSetup whether it's first set up or not
    */
   public void setupReturnToken(Map<String, ReturnTokenAction> returnTokenActionMap,
-      EnumMap<Colour, Integer> bankMap,
-      double layoutX, double layoutY, boolean firstSetup) {
-      this.returnTokenActionMap = returnTokenActionMap;
+                               EnumMap<Colour, Integer> bankMap,
+                               double layoutX, double layoutY, boolean firstSetup) {
+    this.returnTokenActionMap = returnTokenActionMap;
 
-      //TODO DEBUG -- DELETE LATER
-      for (String actionId : returnTokenActionMap.keySet()) {
-        System.out.println("Return Action ID: " + actionId);
+    //TODO DEBUG -- DELETE LATER
+    for (String actionId : returnTokenActionMap.keySet()) {
+      System.out.println("Return Action ID: " + actionId);
 
-      }
+    }
     // set the layout of the GUI
-      setLayoutX(layoutX);
-      setLayoutY(layoutY);
-      bindActionToButtonAndLabel();
-      setColourTokenBankMap(bankMap);
+    setLayoutX(layoutX);
+    setLayoutY(layoutY);
+    bindActionToButtonAndLabel();
+    setColourTokenBankMap(bankMap);
 
   }
 }
