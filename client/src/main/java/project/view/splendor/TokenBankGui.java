@@ -251,6 +251,17 @@ public class TokenBankGui extends HBox {
           return actionId;
         }
       }
+    } else if (returnTokenActionMap.size() > 0) { //check for matches with existing return actions
+      for (String actionId : returnTokenActionMap.keySet()) {
+        ReturnTokenAction returnTokenAction = returnTokenActionMap.get(actionId);
+        EnumMap<Colour, Integer> comb = returnTokenAction.getTokens();
+        // if any combination matches,
+        if (comb.equals(currentChoiceComb)) {
+          //System.out.println("Current choice: " + comb);
+          //System.out.println("Action Combo: " + currentChoiceComb);
+          return actionId;
+        }
+      }
     }
     // can return more
     //if (returnTokenActionMap.size() > 0) {
@@ -355,7 +366,7 @@ public class TokenBankGui extends HBox {
     }
     setColourTokenBankMap(bankMap);
   }
-}
+
 
 
   /**
@@ -369,14 +380,19 @@ public class TokenBankGui extends HBox {
   public void setupReturnToken(Map<String, ReturnTokenAction> returnTokenActionMap,
       EnumMap<Colour, Integer> bankMap,
       double layoutX, double layoutY, boolean firstSetup) {
-    this.returnTokenActionMap = returnTokenActionMap;
+      this.returnTokenActionMap = returnTokenActionMap;
+
+      //TODO DEBUG -- DELETE LATER
+      for (String actionId : returnTokenActionMap.keySet()) {
+        System.out.println("Return Action ID: " + actionId);
+
+      }
     // set the layout of the GUI
-    if (firstSetup) {
       setLayoutX(layoutX);
       setLayoutY(layoutY);
       bindActionToButtonAndLabel();
-    }
-    setColourTokenBankMap(bankMap);
+      setColourTokenBankMap(bankMap);
+
   }
 }
 
