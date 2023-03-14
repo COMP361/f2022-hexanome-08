@@ -246,8 +246,9 @@ public class TokenBankGui extends HBox {
         EnumMap<Colour, Integer> comb = takeTokenAction.getTokens();
         // if any combination matches,
         if (comb.equals(currentChoiceComb)) {
-          //System.out.println("Current choice: " + comb);
-          //System.out.println("Action Combo: " + currentChoiceComb);
+          System.out.println("Action Id:" + actionId);
+          System.out.println("Current choice: " + comb);
+          System.out.println("Action Combo: " + currentChoiceComb);
           return actionId;
         }
       }
@@ -257,8 +258,9 @@ public class TokenBankGui extends HBox {
         EnumMap<Colour, Integer> comb = returnTokenAction.getTokens();
         // if any combination matches,
         if (comb.equals(currentChoiceComb)) {
-          //System.out.println("Current choice: " + comb);
-          //System.out.println("Action Combo: " + currentChoiceComb);
+          System.out.println("Action Id:" + actionId);
+          System.out.println("Current choice: " + comb);
+          System.out.println("Action Combo: " + currentChoiceComb);
           return actionId;
         }
       }
@@ -384,7 +386,9 @@ public class TokenBankGui extends HBox {
 
     //TODO DEBUG -- DELETE LATER
     for (String actionId : returnTokenActionMap.keySet()) {
-      System.out.println("Return Action ID: " + actionId);
+      ReturnTokenAction action = returnTokenActionMap.get(actionId);
+      System.out.println("Return Action ID: " + actionId
+          + ", tokens to return: " + action.getExtraTokenCount());
 
     }
     // set the layout of the GUI
