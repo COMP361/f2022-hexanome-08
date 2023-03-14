@@ -89,7 +89,7 @@ public class BaseBoardGui implements BoardGui {
       }
     }
     EnumMap<Colour, Integer> bankBalance = tableTop.getBank().getAllTokens();
-    if(returnTokenActionMap.isEmpty()) {
+    if (returnTokenActionMap.isEmpty()) {
       Platform.runLater(() -> {
         tokenBankGui.setup(takeTokenActionMap,
             bankBalance,
