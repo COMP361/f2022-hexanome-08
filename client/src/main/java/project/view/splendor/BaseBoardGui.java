@@ -3,6 +3,7 @@ package project.view.splendor;
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
 import ca.mcgill.comp361.splendormodel.actions.ReserveAction;
+import ca.mcgill.comp361.splendormodel.actions.ReturnTokenAction;
 import ca.mcgill.comp361.splendormodel.actions.TakeTokenAction;
 import ca.mcgill.comp361.splendormodel.model.BaseBoard;
 import ca.mcgill.comp361.splendormodel.model.Colour;
@@ -10,6 +11,7 @@ import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.Extension;
 import ca.mcgill.comp361.splendormodel.model.NobleCard;
 import ca.mcgill.comp361.splendormodel.model.Position;
+import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import ca.mcgill.comp361.splendormodel.model.TableTop;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -87,15 +89,26 @@ public class BaseBoardGui implements BoardGui {
       }
     }
     EnumMap<Colour, Integer> bankBalance = tableTop.getBank().getAllTokens();
-    if(returnTokenActionMap.size) //TODO
-    Platform.runLater(() -> {
-      tokenBankGui.setup(takeTokenActionMap,
-          bankBalance,
-          config.getTokenBankLayoutX(),
-          config.getTokenBankLayoutY(),
-          true);
-      playerBoardAnchorPane.getChildren().add(tokenBankGui);
-    });
+    if(returnTokenActionMap.isEmpty()) {
+      Platform.runLater(() -> {
+        tokenBankGui.setup(takeTokenActionMap,
+            bankBalance,
+            config.getTokenBankLayoutX(),
+            config.getTokenBankLayoutY(),
+            true);
+        playerBoardAnchorPane.getChildren().add(tokenBankGui);
+      });
+    } else { //means there are only return token actions
+      Platform.runLater(() -> {
+        tokenBankGui.setupReturnToken(returnTokenActionMap,
+            SplendorDevHelper.getInstance().getRawTokenColoursMap(),  //this is an empty bank map
+            config.getTokenBankLayoutX(),
+            config.getTokenBankLayoutY(),
+            true);
+        playerBoardAnchorPane.getChildren().add(tokenBankGui);
+      });
+    }
+
 
     // set up and add base card GUI, only purchase and reserve actions are
     // there in the action map at this point (or empty)
