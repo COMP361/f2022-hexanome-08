@@ -71,6 +71,8 @@ public class BaseBoardGui implements BoardGui {
     // set up and add bank GUI. need to consider the action map for all take token actions
     // since it's set up, not update, no return token action can be here
     Map<String, TakeTokenAction> takeTokenActionMap = new HashMap<>();
+    Map<String, ReturnTokenAction> returnTokenActionMap = new HashMap<>();
+
     for (String actionId : playerActionMap.keySet()) {
       Action action = playerActionMap.get(actionId);
       if (action instanceof TakeTokenAction) {
@@ -78,8 +80,14 @@ public class BaseBoardGui implements BoardGui {
         //System.out.println(takeTokenAction.getTokens());
         takeTokenActionMap.put(actionId, takeTokenAction);
       }
+      if (action instanceof ReturnTokenAction) {
+        ReturnTokenAction returnTokenAction = (ReturnTokenAction) action;
+        //System.out.println(takeTokenAction.getTokens());
+        returnTokenActionMap.put(actionId, returnTokenAction);
+      }
     }
     EnumMap<Colour, Integer> bankBalance = tableTop.getBank().getAllTokens();
+    if(returnTokenActionMap.size) //TODO
     Platform.runLater(() -> {
       tokenBankGui.setup(takeTokenActionMap,
           bankBalance,
