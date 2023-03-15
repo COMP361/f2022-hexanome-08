@@ -7,16 +7,12 @@ import ca.mcgill.comp361.splendormodel.model.PowerEffect;
 import ca.mcgill.comp361.splendormodel.model.TableTop;
 import ca.mcgill.comp361.splendormodel.model.TraderBoard;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import project.App;
 

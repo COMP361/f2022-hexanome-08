@@ -2,7 +2,6 @@ package project.controllers.popupcontrollers;
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
-import ca.mcgill.comp361.splendormodel.actions.ReserveAction;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.NobleCard;
 import ca.mcgill.comp361.splendormodel.model.Position;
@@ -14,14 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -125,8 +120,7 @@ public class ReservedHandController implements Initializable {
         ImageView imageView = (ImageView) event.getSource();
         Stage window = (Stage) imageView.getScene().getWindow();
         App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(gameId, allActions, window),
-            coverRectangle, 360, 170);
+            new CardActionController(gameId, allActions, window), 360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-
 <AnchorPane fx:id="playerBoardAnchorPane" maxHeight="900.0" maxWidth="1600.0" prefHeight="900.0" prefWidth="1600.0" style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox fx:id="nobleList" layoutX="950.0" layoutY="200.0" prefHeight="500.0" prefWidth="100.0" />

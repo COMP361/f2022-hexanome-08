@@ -59,21 +59,17 @@ public class LogInController implements Initializable {
       // if user is player, display admin_lobby_page
       GameBoardLayoutConfig config = App.getGuiLayouts();
       if (App.getUser().getAuthority().equals("ROLE_ADMIN")
-              ||
-          App.getUser().getAuthority().equals("ROLE_PLAYER")) {
-        if (App.getLobbyController() == null) {
-          App.setLobbyController(new LobbyController());
-        }
+              || App.getUser().getAuthority().equals("ROLE_PLAYER")) {
 
-        App.loadNewSceneToPrimaryStage(
-            "admin_lobby_page.fxml",
-            App.getLobbyController());
+        App.loadNewSceneToPrimaryStage("admin_lobby_page.fxml", new LobbyController());
 
-      } else { // otherwise, player_lobby_page
+      } else {
+
+        // TODO: player lobby page without the admin page button
+        // otherwise, player_lobby_page
         // App.setRoot("player_lobby_page");
         //App.setRoot("LobbyService");
       }
-      //lobbyRequestSender.getRemoteSessions();
 
     } catch (Exception e) {
       logInPageErrorMessage.setText("Please enter both valid username and password");
@@ -90,7 +86,7 @@ public class LogInController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    //userName.setText("ruoyu");
-    //userPassword.setText("abc123_ABC123");
+    userName.setText("ruoyu");
+    userPassword.setText("abc123_ABC123");
   }
 }
