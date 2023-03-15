@@ -37,8 +37,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameManager {
 
-  private final File saveGameInfoFile = new File("src/saved_games_data.json");
-  private final File saveGameMetaFile = new File("src/saved_games_meta.json");
+  private final File saveGameInfoFile = new File("../saved_games_data.json");
+  private final File saveGameMetaFile = new File("../saved_games_meta.json");
   private final Map<Long, PlayerStates> activePlayers;
   private final Map<Long, GameInfo> activeGames;
   private final Map<Long, ActionInterpreter> gameActionInterpreters;
@@ -213,7 +213,7 @@ public class GameManager {
         gameActionInterpreters.put(gameId, newInterpreter);
 
         // new SavedGameState
-        savedGame = new SavedGameState(newGameInfo, newPlayerStates, newInterpreter);
+        savedGame = new SavedGameState(newGameInfo, newPlayerStates);
         // generate default actions for every player, even it's a loaded game
         ActionGenerator actionGenerator = newInterpreter.getActionGenerator();
         String currentPlayerName = newGameInfo.getCurrentPlayer();
@@ -255,7 +255,7 @@ public class GameManager {
       }
       logger.info("Launched game " + gameId);
       logger.info("Current game ids: " + activeGames.keySet());
-      return new SavedGameState(newGameInfo, newPlayerStates, newActionInterpreter);
+      return new SavedGameState(newGameInfo, newPlayerStates);
     }
   }
 
@@ -326,12 +326,11 @@ public class GameManager {
     }
 
     // TODO: 2. store the actual data and metadata into the file
-    GameInfo gameInfo = activeGames.get(gameId);
-    SavedGameState newSaveGame =
-        new SavedGameState(
-            gameInfo,
-            activePlayers.get(gameId),
-            gameActionInterpreters.get(gameId));
+
+    SavedGameState newSaveGame = new SavedGameState(
+        activeGames.get(gameId),
+        activePlayers.get(gameId));
+
     savedGameIds.add(savegame.getSavegameid());
     writeSavedGameDataToFile(savegame.getSavegameid(), newSaveGame, true);
     writeSavedGameMetaDataToFile(savegame, true);

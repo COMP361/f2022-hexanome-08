@@ -11,20 +11,16 @@ import java.util.List;
 public class SavedGameState {
   private final GameInfo gameInfo;
   private final PlayerStates playerStates;
-  private final ActionInterpreter actionInterpreter;
 
   /**
    * SavedGameState.
    *
    * @param gameInfo gameInfo
    * @param playerStates playerStates
-   * @param actionInterpreter actionInterpreter
    */
-  public SavedGameState(GameInfo gameInfo, PlayerStates playerStates,
-                        ActionInterpreter actionInterpreter) {
+  public SavedGameState(GameInfo gameInfo, PlayerStates playerStates) {
     this.gameInfo = gameInfo;
     this.playerStates = playerStates;
-    this.actionInterpreter = actionInterpreter;
   }
 
   public GameInfo getGameInfo() {
@@ -33,10 +29,6 @@ public class SavedGameState {
 
   public PlayerStates getPlayerStates() {
     return playerStates;
-  }
-
-  public ActionInterpreter getActionInterpreter() {
-    return actionInterpreter;
   }
 
 

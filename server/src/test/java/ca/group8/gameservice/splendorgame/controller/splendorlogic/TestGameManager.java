@@ -109,7 +109,6 @@ public class TestGameManager{
     // observe the player actions after loading the file
     GameInfo gameInfo = savedGameState.getGameInfo();
     PlayerStates playerStates = savedGameState.getPlayerStates();
-    ActionInterpreter actionInterpreter = savedGameState.getActionInterpreter();
     System.out.println();
 
   }
