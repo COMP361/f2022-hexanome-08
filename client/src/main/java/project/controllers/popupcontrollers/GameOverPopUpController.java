@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import project.App;
+import project.controllers.stagecontrollers.LobbyController;
 
 /**
  * The buttons aside the player.
@@ -38,8 +39,7 @@ public class GameOverPopUpController implements Initializable {
                                                          Thread playerInfoThread) {
     return event -> {
       try {
-        App.loadNewSceneToPrimaryStage("admin_lobby_page.fxml",
-            App.getLobbyController());
+        App.loadNewSceneToPrimaryStage("admin_lobby_page.fxml", new LobbyController());
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

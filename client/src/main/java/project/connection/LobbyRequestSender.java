@@ -23,8 +23,6 @@ public class LobbyRequestSender {
   private final String lobbyUrl;
   private final Map<String, String> gameNameMapping;
 
-  private final SessionList localSessionList;
-
   /**
    * lobby service request sender constructor.
    *
@@ -33,11 +31,6 @@ public class LobbyRequestSender {
   public LobbyRequestSender(String lobbyUrlInput) {
     lobbyUrl = lobbyUrlInput;
     gameNameMapping = new HashMap<>();
-    localSessionList = new SessionList();
-  }
-
-  public String getLobbyUrl() {
-    return lobbyUrl;
   }
 
   public Map<String, String> getGameNameMapping() {

@@ -140,7 +140,7 @@ public class GameController implements Initializable {
       try {
         App.loadPopUpWithController("my_reserved_cards.fxml",
             new ReservedHandController(reservedHand, playerActions, coverRectangle, gameId),
-            coverRectangle, 800, 600);
+            800, 600);
 
       } catch (IOException e) {
         throw new RuntimeException(e);
@@ -179,7 +179,6 @@ public class GameController implements Initializable {
       try {
         App.loadPopUpWithController("my_development_cards.fxml",
             new PurchaseHandController(gameId, purchasedHand, playerActions, coverRectangle),
-            coverRectangle,
             800,
             600);
       } catch (IOException e) {
@@ -387,8 +386,6 @@ public class GameController implements Initializable {
         }
       }
     });
-    //// at this point, the map can not be empty, safely get the playerGui
-    //nameToPlayerInfoGuiMap.get(firstPlayer).setHighlight(true);
   }
 
   //
@@ -429,28 +426,13 @@ public class GameController implements Initializable {
                 try {
                   App.loadPopUpWithController("game_over.fxml",
                       new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
-                      coverRectangle, 360, 170);
+                      360, 170);
                 } catch (IOException e) {
                   throw new RuntimeException(e);
                 }
               });
             }
-            //TODO: For this game application, we always play BASE + ORIENT, thus
-            // we do not worry about NOT having their GUI set up
 
-            // Step 0. who's turn is it update (highlight feature)
-
-            // Step 1. update base board gui
-
-            // Step 2. update orient board gui
-
-            // Step 3. (optionally) update extension board gui
-
-            // TODO: Step 4. update MyPurchaseHand and MyReserveHand
-
-
-            //previously, here we checked what extensions are active --> moved this code closer to
-            //where the extensions variable is actually used.
             TableTop tableTop = curGameInfo.getTableTop();
             // always get the action map from game info
             String playerName = curUser.getUsername();
@@ -472,7 +454,7 @@ public class GameController implements Initializable {
                 try {
                   App.loadPopUpWithController("my_development_cards.fxml",
                       new PurchaseHandController(gameId,
-                          purchasedHand, playerActionMap, coverRectangle), coverRectangle,
+                          purchasedHand, playerActionMap, coverRectangle),
                       800,
                       600);
                 } catch (IOException e) {
@@ -551,7 +533,6 @@ public class GameController implements Initializable {
       try {
         App.loadPopUpWithController("save_game.fxml",
             new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
-            coverRectangle,
             360,
             170);
       } catch (IOException e) {
@@ -566,7 +547,7 @@ public class GameController implements Initializable {
       try {
         App.loadPopUpWithController("quit_game.fxml",
             new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
-            coverRectangle, 360, 170);
+            360, 170);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

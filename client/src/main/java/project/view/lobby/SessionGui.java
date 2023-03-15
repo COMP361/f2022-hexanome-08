@@ -26,6 +26,8 @@ public class SessionGui extends HBox {
   private final User curUser;
   private Session curSession;
 
+  private Thread lobbyUpdateThread;
+
 
   // TODO: Needs to add a field -> String saveGameId, constructed in constructor
   //private final String saveGameId;
@@ -36,11 +38,13 @@ public class SessionGui extends HBox {
    * @param curSession   provides the current Session object.
    * @param curSessionId provides the current Session's ID.
    * @param curUser      provides the current User object.
+   * @param lobbyUpdateThread the thread that controls the lobby page GUI udpates
    */
-  public SessionGui(Session curSession, Long curSessionId, User curUser) {
+  public SessionGui(Session curSession, Long curSessionId, User curUser, Thread lobbyUpdateThread) {
     this.curSession = curSession;
     this.curSessionId = curSessionId;
     this.curUser = curUser;
+    this.lobbyUpdateThread = lobbyUpdateThread;
     FXMLLoader fxmlLoader = new FXMLLoader(getClass()
         .getResource("/project/session_template.fxml"));
     fxmlLoader.setRoot(this);
@@ -119,19 +123,11 @@ public class SessionGui extends HBox {
         // send correct REST requests to our backend in a right path name (splendorbase, city...)
         App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
 
-        // passing Session as param of GameController param cuz it contains optionally
-        // the save game id, later will be used to save game
-        //App.loadPopUpWithController("splendor_base_game_board.fxml",
-        //    new GameController(curSessionId, curSession),
-        //    config.getAppWidth(),
-        //    config.getAppHeight());
         App.loadNewSceneToPrimaryStage("splendor_base_game_board.fxml",
             new GameController(curSessionId, curSession));
-        App.getAppLobbyGuiThread().interrupt();
-        App.setAppLobbyGuiThread(null);
-        Button playButton = (Button) event.getSource();
-        //Stage lobbyWindow = (Stage) playButton.getScene().getWindow();
-        //lobbyWindow.close();
+        // when we click Play, we need to stop the lobby thread from keep monitoring
+        // the changes
+        lobbyUpdateThread.interrupt();
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

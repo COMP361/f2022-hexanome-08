@@ -4,7 +4,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
 <Pane fx:id="purchaseContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Text layoutX="60.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Would you like to reserve 1 card from the deck?" textAlignment="CENTER" wrappingWidth="241.015625">

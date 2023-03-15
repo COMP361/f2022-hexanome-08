@@ -72,23 +72,11 @@ public class LobbyController implements Initializable {
   }
 
 
-  //@FXML
-  //protected void onLogOutFromLobbyMenu() throws IOException {
-  //  // clean up local lobby session cache before logging out
-  //  App.setUser(null);
-  //  App.setRoot("start_page");
-  //}
-  //
-  //@FXML
-  //public void joinGameDev() throws IOException {
-  //  // TODO: For debug usage
-  //  App.setRoot("splendor_base_game_board");
-  //}
 
-
-  private void createAndAddSessionGui(Session curSession, Long sessionId, User user) {
+  private void createAndAddSessionGui(Session curSession, Long sessionId, User user,
+                                      Thread lobbyUpdateThread) {
     // create the new GUI
-    SessionGui curSessionGui = new SessionGui(curSession, sessionId, user);
+    SessionGui curSessionGui = new SessionGui(curSession, sessionId, user, lobbyUpdateThread);
     // set up the session gui
     curSessionGui.setup();
     SessionGuiManager.addSessionGui(curSessionGui);
@@ -132,13 +120,11 @@ public class LobbyController implements Initializable {
             SessionList sessionList =
                 new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
             Map<Long, Session> sessionMap = sessionList.getSessions();
-            System.out.println(
-                "Session lists updated, we have sessions ids: " + sessionList.getSessionIds());
             // clear all old sessions and add the new ones
             SessionGuiManager.clearSessionsRecorded();
             for (long sessionId : sessionMap.keySet()) {
               Session curSession = sessionMap.get(sessionId);
-              createAndAddSessionGui(curSession, sessionId, App.getUser());
+              createAndAddSessionGui(curSession, sessionId, App.getUser(), Thread.currentThread());
             }
           }
           // update the content in scroll pane
@@ -189,17 +175,7 @@ public class LobbyController implements Initializable {
     gameChoices.setItems(gameOptionsList);
 
     // Set up the thread to keep updating sessions
-    Thread updateAddRemoveSessionThread;
-
-    if (App.getAppLobbyGuiThread() == null) {
-      updateAddRemoveSessionThread = createUpdateGuiThread();
-      App.setAppLobbyGuiThread(updateAddRemoveSessionThread);
-    } else {
-      updateAddRemoveSessionThread = App.getAppLobbyGuiThread();
-    }
-    System.out.println("Current Lobby Thread: " + App.getAppLobbyGuiThread().getName());
-    updateAddRemoveSessionThread.start();
-    //App.addLobbyThread(updateAddRemoveSessionThread);
+    createUpdateGuiThread().start();
   }
 }
 
