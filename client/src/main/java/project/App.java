@@ -3,9 +3,11 @@ package project;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -26,16 +28,12 @@ import project.view.lobby.communication.User;
  */
 public class App extends Application {
 
+  //private static final String mode = "ruoyu_server";
+  //private static final String mode = "local_host";
+  private static final String mode = "same_wifi";
 
-  private static final String lobbyUrl = "http://127.0.0.1:4242";
-  private static final String gameUrl = "http://127.0.0.1:4246/";
-
-  //private static final String lobbyUrl = "http://76.66.139.161:4242";
-  //private static final String gameUrl = "http://76.66.139.161:4246/";
-
-  private static final GameRequestSender gameRequestSender = new GameRequestSender(gameUrl, "");
-  private static final LobbyRequestSender lobbyRequestSender = new LobbyRequestSender(lobbyUrl);
-
+  private static GameRequestSender gameRequestSender = null;
+  private static LobbyRequestSender lobbyRequestSender = null;
 
 
   private static final Colour[] allColours = new Colour[] {
@@ -85,11 +83,76 @@ public class App extends Application {
     primaryStage.show();
   }
 
-  public static LobbyRequestSender getLobbyServiceRequestSender() {
-    return lobbyRequestSender;
+  private static String getWifiIp() throws IOException {
+    // Run "ipconfig getifaddr en0" command on a Mac system
+    ProcessBuilder pb = new ProcessBuilder("ipconfig", "getifaddr", "en0");
+    Process process = pb.start();
+
+    // Read the output of the command and store it as a string
+    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    StringBuilder output = new StringBuilder();
+    String line;
+    while ((line = reader.readLine()) != null) {
+      output.append(line);
+    }
+
+    return output.toString();
   }
 
+  /**
+   * get the lobby request sender.
+   *
+   * @return lobby request sender.
+   */
+  public static LobbyRequestSender getLobbyServiceRequestSender() {
+    try {
+      if (lobbyRequestSender == null) {
+        String lobbyUrl;
+        if (mode.equals("ruoyu_server")) {
+          lobbyUrl = "http://76.66.139.161:4242";
+        } else if (mode.equals("local_host")) {
+          lobbyUrl = "http://127.0.0.1:4242";
+        } else if (mode.equals("same_wifi")) {
+          lobbyUrl = String.format("http://%s:4242", getWifiIp());
+        } else {
+          throw new IOException("Unknown mode!");
+        }
+        System.out.println(lobbyUrl);
+        lobbyRequestSender = new LobbyRequestSender(lobbyUrl);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return lobbyRequestSender;
+
+  }
+
+  /**
+   * get the game request sender.
+   *
+   * @return game request sender.
+   */
   public static GameRequestSender getGameRequestSender() {
+    try {
+      if (gameRequestSender == null) {
+        String gameUrl;
+        if (mode.equals("ruoyu_server")) {
+          gameUrl = "http://76.66.139.161:42426/";
+        } else if (mode.equals("local_host")) {
+          gameUrl = "http://127.0.0.1:4246/";
+        } else if (mode.equals("same_wifi")) {
+
+          gameUrl = String.format("http://%s:4242", getWifiIp());
+        } else {
+          throw new IOException("Unknown mode!");
+        }
+        gameRequestSender = new GameRequestSender(gameUrl, "");
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     return gameRequestSender;
   }
 

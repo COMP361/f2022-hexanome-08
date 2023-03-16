@@ -1,5 +1,8 @@
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.Position;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -74,6 +77,29 @@ public class TestBoardGui {
   public void testEnum() {
     EnumMap<Colour, Integer> totalGems = new EnumMap<>(Colour.class);
     System.out.println(totalGems);
+  }
+
+  @Test
+  public void testCommandLine() throws IOException, InterruptedException {
+    // Run "ipconfig getifaddr en0" command on a Mac system
+    ProcessBuilder pb = new ProcessBuilder("ipconfig", "getifaddr", "en0");
+    Process process = pb.start();
+
+    // Read the output of the command and store it as a string
+    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    StringBuilder output = new StringBuilder();
+    String line;
+    while ((line = reader.readLine()) != null) {
+      output.append(line);
+      output.append("\n");
+    }
+
+    // Wait for the command to finish and check the exit value
+    int exitCode = process.waitFor();
+    System.out.println("Exited with error code " + exitCode);
+
+    // Print the output string
+    System.out.println("Output:\n" + output.toString());
   }
 }
 
