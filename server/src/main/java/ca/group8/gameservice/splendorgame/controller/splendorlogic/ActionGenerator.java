@@ -524,12 +524,16 @@ public class ActionGenerator {
         put(Colour.BLACK, 0);
         put(Colour.GREEN, 0);
         put(Colour.WHITE, 0);
-      }};
+        put(Colour.GOLD, 0);
+    }};
 
     // generate all combinations based extra token count
     if (extraTokenCount == 1) {
       for (Colour c : rawMap.keySet()) {
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
+        if (c.equals(Colour.GOLD)) {
+          continue;
+        }
         curMap.put(c, 1);
         allCombos.add(curMap);
       }
@@ -537,6 +541,9 @@ public class ActionGenerator {
 
     if (extraTokenCount == 2) {
       for (Colour c : rawMap.keySet()) {
+        if (c.equals(Colour.GOLD)) {
+          continue;
+        }
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         curMap.put(c, 2);
         allCombos.add(curMap);
@@ -546,6 +553,9 @@ public class ActionGenerator {
       for (Set<Colour> otherColours : colours) {
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         for (Colour c : otherColours) {
+          if (c.equals(Colour.GOLD)) {
+            continue;
+          }
           curMap.put(c, 1);
         }
         allCombos.add(curMap);
@@ -554,6 +564,9 @@ public class ActionGenerator {
 
     if (extraTokenCount == 3) {
       for (Colour c : rawMap.keySet()) {
+        if (c.equals(Colour.GOLD)) {
+          continue;
+        }
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         curMap.put(c, 3);
         allCombos.add(curMap);
@@ -563,12 +576,18 @@ public class ActionGenerator {
       for (Set<Colour> otherColours : colours) {
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         for (Colour c : otherColours) {
+          if (c.equals(Colour.GOLD)) {
+            continue;
+          }
           curMap.put(c, 1);
         }
         allCombos.add(curMap);
       }
 
       for (Colour c : rawMap.keySet()) {
+        if (c.equals(Colour.GOLD)) {
+          continue;
+        }
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         curMap.put(c, 2);
         allCombos.add(curMap);
@@ -576,6 +595,9 @@ public class ActionGenerator {
             .filter(c2 -> !c2.equals(c))
             .collect(Collectors.toList());
         for (Colour c2 : otherColours) {
+          if (c.equals(Colour.GOLD)) {
+            continue;
+          }
           EnumMap<Colour, Integer> finalMap = new EnumMap<>(curMap);
           finalMap.put(c2, 1);
           allCombos.add(finalMap);
@@ -600,6 +622,7 @@ public class ActionGenerator {
         }
       }
       if (isValid) {
+        combo.put(Colour.GOLD,0);
         returnTokenActions.add(new ReturnTokenAction(combo, extraTokenCount));
       }
     }
