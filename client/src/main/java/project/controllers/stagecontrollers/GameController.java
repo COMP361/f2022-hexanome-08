@@ -3,12 +3,16 @@ package project.controllers.stagecontrollers;
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.CardExtraAction;
+import ca.mcgill.comp361.splendormodel.actions.ClaimNobleAction;
+import ca.mcgill.comp361.splendormodel.model.BaseBoard;
 import ca.mcgill.comp361.splendormodel.model.CardEffect;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.Extension;
 import ca.mcgill.comp361.splendormodel.model.GameInfo;
+import ca.mcgill.comp361.splendormodel.model.NobleCard;
 import ca.mcgill.comp361.splendormodel.model.PlayerInGame;
 import ca.mcgill.comp361.splendormodel.model.PlayerStates;
+import ca.mcgill.comp361.splendormodel.model.Position;
 import ca.mcgill.comp361.splendormodel.model.PurchasedHand;
 import ca.mcgill.comp361.splendormodel.model.ReservedHand;
 import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
@@ -39,6 +43,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
+import project.controllers.popupcontrollers.ClaimNoblePopUpController;
 import project.controllers.popupcontrollers.GameOverPopUpController;
 import project.controllers.popupcontrollers.PurchaseHandController;
 import project.controllers.popupcontrollers.ReservedHandController;
@@ -437,11 +442,30 @@ public class GameController implements Initializable {
             // always get the action map from game info
             String playerName = curUser.getUsername();
             Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
+
+            // return true if EVERY ACTION in playerActionMap is ClaimNobleAction
+            boolean allClaimNobleActions = playerActionMap.values().stream()
+                .allMatch(action -> action instanceof ClaimNobleAction);
+
+            if (!playerActionMap.isEmpty() && allClaimNobleActions) {
+              Platform.runLater(() -> {
+                try {
+                  App.loadPopUpWithController("noble_claim_pop_up.fxml",
+                      new ClaimNoblePopUpController(gameId, playerActionMap),
+                      800,
+                      600);
+                } catch (IOException e) {
+                  throw new RuntimeException(e);
+                }
+              });
+            }
+
+
+
+            // generate special pop up for pairing card
             boolean allPairActions = playerActionMap.values().stream()
                 .allMatch(action -> action instanceof CardExtraAction
                     && ((CardExtraAction) action).getCardEffect().equals(CardEffect.SATCHEL));
-
-
             if (!playerActionMap.isEmpty() && allPairActions) {
               HttpResponse<String> response =
                   gameRequestSender.sendGetAllPlayerInfoRequest(gameId, "");
