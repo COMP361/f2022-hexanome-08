@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+
 <Pane fx:id="purchaseContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Text layoutX="60.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Would you like to reserve 1 card from the deck?" textAlignment="CENTER" wrappingWidth="241.015625">
+        <Text layoutX="60.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose one noble to claim" textAlignment="CENTER" wrappingWidth="241.015625">
             <font>
                 <Font name="System Bold" size="19.0" />
             </font>
         </Text>
-        <Button fx:id="reserveButton" layoutX="142.0" layoutY="90.0" mnemonicParsing="false" text="Reserve" />
+      <HBox fx:id="unlockedNoblesHbox" layoutX="21.0" layoutY="53.0" prefHeight="100.0" prefWidth="324.0" />
     </children>
 </Pane>
