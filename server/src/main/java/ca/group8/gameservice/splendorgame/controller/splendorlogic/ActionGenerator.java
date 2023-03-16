@@ -605,10 +605,11 @@ public class ActionGenerator {
       }
     }
 
+    List<EnumMap<Colour,Integer>> allCombinations = allCombos.stream().filter(c -> c.get(Colour.GOLD)==0).collect(Collectors.toList());
     // after all combinations, we generate the actions
     EnumMap<Colour, Integer> playerTokens = playerInGame.getTokenHand().getAllTokens();
     List<Action> returnTokenActions = new ArrayList<>();
-    for (EnumMap<Colour, Integer> combo : allCombos) {
+    for (EnumMap<Colour, Integer> combo : allCombinations) {
       boolean isValid = true;
       for (Colour colour : combo.keySet()) {
         if (playerTokens.get(colour) < combo.get(colour)) {
