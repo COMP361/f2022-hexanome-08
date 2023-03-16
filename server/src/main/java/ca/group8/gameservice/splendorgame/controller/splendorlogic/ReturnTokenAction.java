@@ -4,6 +4,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import java.util.EnumMap;
+import java.util.HashMap;
 
 /**
  * This class represents the action for returning tokens if the player exceeds the maximum
@@ -43,6 +44,8 @@ public class ReturnTokenAction extends Action {
     //remove tokens from Player's tokenHand & add those tokens to the bank
     playerInGame.getTokenHand().removeToken(tokensToReturn);
     curTableTop.getBank().returnToken(tokensToReturn);
+
+    actionListGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
 
   }
 
