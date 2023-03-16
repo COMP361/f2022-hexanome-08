@@ -101,7 +101,7 @@ public class BaseBoardGui implements BoardGui {
     } else { //means there are only return token actions
       Platform.runLater(() -> {
         tokenBankGui.setupReturnToken(returnTokenActionMap,
-            SplendorDevHelper.getInstance().getRawTokenColoursMap(),  //this is an empty bank map
+            bankBalance,  //this is an empty bank map
             config.getTokenBankLayoutX(),
             config.getTokenBankLayoutY(),
             true);

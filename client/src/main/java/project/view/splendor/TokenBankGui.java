@@ -345,6 +345,11 @@ public class TokenBankGui extends HBox {
       minusButton.setOnAction(createBackTokenHandler(displayLabel));
     }
     Button confirmButton = getConfirmButton();
+    if (returnTokenActionMap.size() != 0) {
+      confirmButton.setText("Return");
+    } else {
+      confirmButton.setText("Confirm");
+    }
     confirmButton.setDisable(true);
   }
 
