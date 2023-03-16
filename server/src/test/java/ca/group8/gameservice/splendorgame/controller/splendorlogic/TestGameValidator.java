@@ -46,8 +46,8 @@ class TestGameValidator {
     GameValidator gameValidator4;
 
     private String accessToken;
-    private String userNameStr = "ruoyu";
-    private String userPasswordStr = "abc123_ABC123";
+    private final String userNameStr = "ruoyu";
+    private final String userPasswordStr = "abc123_ABC123";
 
     String[] gameServiceNames = {"splendorbase","splendorcity","splendortrade"};
 

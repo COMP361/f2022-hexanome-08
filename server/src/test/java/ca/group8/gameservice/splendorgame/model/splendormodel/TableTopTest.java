@@ -47,7 +47,7 @@ public class TableTopTest {
 
     @Test
     void isEmpty() {
-        assert (t1.isEmpty() == false);
+        assert (!t1.isEmpty());
     }
 
 

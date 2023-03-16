@@ -26,8 +26,8 @@ public class TestLobbyCommunicator {
   @Value("${lobbyservice.location}")
   private String lobbyUrl;
 
-  private String userNameStr = "ruoyu";
-  private String userPasswordStr = "abc123_ABC123";
+  private final String userNameStr = "ruoyu";
+  private final String userPasswordStr = "abc123_ABC123";
   private String accessToken;
   private JSONObject sendLogInRequest(String userNameStr, String userPasswordStr)
       throws UnirestException {

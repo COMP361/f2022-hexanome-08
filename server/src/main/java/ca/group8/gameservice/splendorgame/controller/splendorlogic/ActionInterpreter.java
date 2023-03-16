@@ -36,9 +36,9 @@ public class ActionInterpreter {
   private int burnCardCount = 0;
   private Colour burnCardColour = null;
   private DevelopmentCard stashedCard = null;
-  private PlayerStates playerStates;
-  private GameInfo gameInfo;
-  private ActionGenerator actionGenerator;
+  private final PlayerStates playerStates;
+  private final GameInfo gameInfo;
+  private final ActionGenerator actionGenerator;
   private boolean bonusTokenStashed = false;
 
   /**
