@@ -9,8 +9,10 @@ In order to keep a clean running environment, we will need the help from docker.
 2. cd into `BoardGamePlatform` and run `updatesubmodules.ps1` for windows with powershell or "./updatesubmodules.sh" for mac after you cloned it.
 3. replace `BoardGamePlatform/LobbyService/ls-db-setup.sql` with `ls-db-setup.sql` in this link: https://drive.google.com/drive/folders/1D9_GvqYhzx_vdExBnbjYq9dK5b-d0Orf
 4. make sure you are under `BoardGamePlatform` directory and docker desktop running, then type: `docker compose up` in the terminal, and you should have both database and lobby service ready.
-5. use `mvn clean spring-boot:run` under our `server` directory to run it, you should be good to go to test the server.
+5. use `mvn clean spring-boot:run -P test` under our `server` directory to run it, you should be good to go to test the server.
 - Note: I have a dummy running instance of merging this manually running `server` thing into `docker compose up` prepared for M8, but for now, just follow these steps for M7.
+6. Also run the LobbyService the same way
+
 
 #### Frontend (how to run client)
 1. Run the docker container of databased obtained from previous `docker compose up`. *(Only the database!!!!!)*
