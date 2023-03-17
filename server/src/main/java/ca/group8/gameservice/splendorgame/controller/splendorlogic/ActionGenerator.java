@@ -3,6 +3,7 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
@@ -379,17 +380,17 @@ public class ActionGenerator {
       int freeLevel = purchasedCard.getLevel() - 1;
       BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
       OrientBoard orientBoard = (OrientBoard) tableTop.getBoard(Extension.ORIENT);
-      DevelopmentCard[] baseCardsToFree = baseBoard.getLevelCardsOnBoard(freeLevel);
+      Card[] baseCardsToFree = baseBoard.getLevelCardsOnBoard(freeLevel);
       for (int i = 0; i < baseCardsToFree.length; i++) {
         Position position = new Position(freeLevel, i);
-        DevelopmentCard curCard = baseCardsToFree[i];
+        Card curCard = baseCardsToFree[i];
         cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
       }
 
-      DevelopmentCard[] orientCardsToFree = orientBoard.getLevelCardsOnBoard(freeLevel);
+      Card[] orientCardsToFree = orientBoard.getLevelCardsOnBoard(freeLevel);
       for (int i = 0; i < orientCardsToFree.length; i++) {
         Position position = new Position(freeLevel, i);
-        DevelopmentCard curCard = orientCardsToFree[i];
+        Card curCard = orientCardsToFree[i];
         cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
       }
     }
@@ -443,7 +444,7 @@ public class ActionGenerator {
           .collect(Collectors.toList());
       for (int i : unpairedCardsIndices) {
         Position position = new Position(0, i);
-        DevelopmentCard card = cardsInHand.get(i);
+        Card card = cardsInHand.get(i);
         cascadeActions.add(new CardExtraAction(card, cardEffect, position));
       }
 
