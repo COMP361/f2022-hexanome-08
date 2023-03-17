@@ -57,7 +57,7 @@ public class SaveGamePopUpController implements Initializable {
       //playerInfoThread.interrupt();
       //mainGameUpdateThread.interrupt();
       //try {
-      //  App.loadNewSceneToPrimaryStage("admin_lobby_page.fxml",
+      //  App.loadNewSceneToPrimaryStage("lobby_page.fxml",
       //      App.getLobbyController());
       //} catch (IOException e) {
       //  throw new RuntimeException(e);

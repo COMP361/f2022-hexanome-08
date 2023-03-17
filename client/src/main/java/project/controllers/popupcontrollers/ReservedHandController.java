@@ -6,7 +6,6 @@ import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.NobleCard;
 import ca.mcgill.comp361.splendormodel.model.Position;
 import ca.mcgill.comp361.splendormodel.model.ReservedHand;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,14 +115,11 @@ public class ReservedHandController implements Initializable {
   private EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
       List<ActionIdPair> allActions) {
     return event -> {
-      try {
+
         ImageView imageView = (ImageView) event.getSource();
         Stage window = (Stage) imageView.getScene().getWindow();
         App.loadPopUpWithController("card_action.fxml",
             new CardActionController(gameId, allActions, window), 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
     };
   }
 

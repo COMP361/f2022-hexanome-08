@@ -1,6 +1,5 @@
 package project.controllers.popupcontrollers;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -38,11 +37,7 @@ public class GameOverPopUpController implements Initializable {
   public EventHandler<ActionEvent> clickOnQuitGameButton(Thread mainGameUpdateThread,
                                                          Thread playerInfoThread) {
     return event -> {
-      try {
-        App.loadNewSceneToPrimaryStage("admin_lobby_page.fxml", new LobbyController());
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadNewSceneToPrimaryStage("lobby_page.fxml", new LobbyController());
       // once player clicks on quit button, stop the threads and load the lobby for them
       mainGameUpdateThread.interrupt();
       playerInfoThread.interrupt();

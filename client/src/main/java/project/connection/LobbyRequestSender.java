@@ -12,8 +12,8 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import project.view.lobby.communication.GameParameters;
+import project.view.lobby.communication.Player;
 import project.view.lobby.communication.Savegame;
-import project.view.lobby.communication.SessionList;
 
 
 /**
@@ -322,5 +322,104 @@ public class LobbyRequestSender {
     return result;
   }
 
+
+  // /api/users : GET
+  public Player[] getPlayers(String accessToken) {
+    String url = String.format("%s/api/users", lobbyUrl);
+    Player[] result = new Player[0];
+    try {
+      HttpResponse<String> response = Unirest.get(url)
+          .queryString("access_token", accessToken)
+          .asString();
+      String responseJson = response.getBody();
+      result = new Gson().fromJson(responseJson, Player[].class);
+      if (response.getStatus() != 200) {
+        String msg = "Unable to perform GET all players request to LS";
+        throw new UnirestException(msg);
+      }
+    } catch (UnirestException e) {
+      System.out.println(e.getMessage());
+    }
+    return result;
+  }
+
+  // /api/users/{users} : GET
+  public Player getOnePlayer(String accessToken, String playerName) {
+    String url = String.format("%s/api/users/%s", lobbyUrl, playerName);
+    Player result = null;
+    try {
+      HttpResponse<String> response = Unirest.get(url)
+          .queryString("access_token", accessToken)
+          .asString();
+      String responseJson = response.getBody();
+      result = new Gson().fromJson(responseJson, Player.class);
+      if (response.getStatus() != 200) {
+        String msg = "Unable to perform GET one player request to LS";
+        throw new UnirestException(msg);
+      }
+    } catch (UnirestException e) {
+      System.out.println(e.getMessage());
+    }
+    return result;
+  }
+
+  // /api/users/{users} : PUT
+  //TODO: This Unirest Exception should be handled correctly to display something
+  // that warns the admin about failure of creating a new user
+  public void putOneNewPlayer(String accessToken, String playerName, Player player)
+      throws UnirestException {
+    String url = String.format("%s/api/users/%s", lobbyUrl, playerName);
+    String requestBody = new Gson().toJson(player, Player.class);
+    HttpResponse<String> response = Unirest.post(url)
+          .queryString("access_token", accessToken)
+          .header("Content-Type", "application/json")
+          .body(requestBody)
+          .asString();
+
+  }
+
+  // /api/users/{users} : DELETE
+  //TODO: This Unirest Exception should be handled correctly to display something
+  // that warns the admin about failure of deleting an existing user
+  public void deleteOnePlayer(String accessToken, String playerName)
+      throws UnirestException {
+    String url = String.format("%s/api/users/%s", lobbyUrl, playerName);
+    HttpResponse<String> response = Unirest.delete(url)
+        .queryString("access_token", accessToken)
+        .asString();
+  }
+
+  // /api/users/{users}/password : POST
+  //TODO: This Unirest Exception should be handled correctly to display something
+  // that warns the admin/user about failure of updating one's password (does not obey the rule)
+  public void updateOnePlayerPassword(String accessToken, String playerName,
+                                      String oldPassword, String nextPassword)
+      throws UnirestException{
+    String url = String.format("%s/api/users/%s/password", lobbyUrl, playerName);
+    JSONObject requestBody = new JSONObject();
+    requestBody.put("nextPassword", nextPassword);
+    requestBody.put("oldPassword", oldPassword);
+
+    HttpResponse<String> response = Unirest.post(url)
+        .queryString("access_token", accessToken)
+        .header("Content-Type", "application/json")
+        .body(requestBody)
+        .asString();
+  }
+
+  // /api/users/{users}/colour : POST
+  //TODO: This Unirest Exception should be handled correctly to display something
+  // that warns the admin/user about failure of updating one's colour
+  public void updateOnePlayerColour(String accessToken, String playerName, String colourCode)
+  throws UnirestException {
+    String url = String.format("%s/api/users/%s/colour", lobbyUrl, playerName);
+    JSONObject requestBody = new JSONObject();
+    requestBody.put("colour", colourCode);
+    HttpResponse<String> response = Unirest.post(url)
+        .queryString("access_token", accessToken)
+        .header("Content-Type", "application/json")
+        .body(requestBody)
+        .asString();
+  }
 
 }

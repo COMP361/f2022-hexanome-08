@@ -11,7 +11,6 @@ import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.Extension;
 import ca.mcgill.comp361.splendormodel.model.NobleCard;
 import ca.mcgill.comp361.splendormodel.model.Position;
-import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import ca.mcgill.comp361.splendormodel.model.TableTop;
 import java.util.ArrayList;
 import java.util.EnumMap;
