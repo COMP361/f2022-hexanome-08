@@ -4,15 +4,12 @@ package project.controllers.stagecontrollers;
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.CardExtraAction;
 import ca.mcgill.comp361.splendormodel.actions.ClaimNobleAction;
-import ca.mcgill.comp361.splendormodel.model.BaseBoard;
 import ca.mcgill.comp361.splendormodel.model.CardEffect;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.Extension;
 import ca.mcgill.comp361.splendormodel.model.GameInfo;
-import ca.mcgill.comp361.splendormodel.model.NobleCard;
 import ca.mcgill.comp361.splendormodel.model.PlayerInGame;
 import ca.mcgill.comp361.splendormodel.model.PlayerStates;
-import ca.mcgill.comp361.splendormodel.model.Position;
 import ca.mcgill.comp361.splendormodel.model.PurchasedHand;
 import ca.mcgill.comp361.splendormodel.model.ReservedHand;
 import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
@@ -44,6 +41,7 @@ import project.App;
 import project.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
 import project.controllers.popupcontrollers.ClaimNoblePopUpController;
+import project.controllers.popupcontrollers.FreeCardPopUpController;
 import project.controllers.popupcontrollers.GameOverPopUpController;
 import project.controllers.popupcontrollers.PurchaseHandController;
 import project.controllers.popupcontrollers.ReservedHandController;
@@ -89,6 +87,10 @@ public class GameController implements Initializable {
   private Button myCardButton;
   @FXML
   private Button saveButton;
+
+  @FXML
+  private Button pendingActionButton;
+
   @FXML
   private Button myReservedCardsButton;
   @FXML
@@ -103,7 +105,7 @@ public class GameController implements Initializable {
   /**
    * GameController for the main page.
    *
-   * @param gameId gameId
+   * @param gameId     gameId
    * @param curSession curSession
    */
   public GameController(long gameId, Session curSession) {
@@ -193,13 +195,6 @@ public class GameController implements Initializable {
     };
   }
 
-  private List<String> sortPlayerNames(String curPlayerName, List<String> allPlayerNames) {
-    while (!allPlayerNames.get(0).equals(curPlayerName)) {
-      String tmpPlayerName = allPlayerNames.remove(0);
-      allPlayerNames.add(tmpPlayerName);
-    }
-    return new ArrayList<>(allPlayerNames);
-  }
 
   //private Map<PlayerPosition, String> setPlayerToPosition(String curPlayerName,
   //                                                        List<String> allPlayerNames) {
@@ -393,7 +388,198 @@ public class GameController implements Initializable {
     });
   }
 
-  //
+  private void showClaimNoblePopUp(GameInfo curGameInfo) {
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(App.getUser().getUsername());
+    // return true if EVERY ACTION in playerActionMap is ClaimNobleAction
+    boolean allClaimNobleActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof ClaimNobleAction);
+
+    if (!playerActionMap.isEmpty() && allClaimNobleActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          try {
+            App.loadPopUpWithController("noble_claim_pop_up.fxml",
+                new ClaimNoblePopUpController(gameId, playerActionMap),
+                360,
+                170);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        try {
+          App.loadPopUpWithController("noble_claim_pop_up.fxml",
+              new ClaimNoblePopUpController(gameId, playerActionMap),
+              360,
+              170);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      });
+
+    }
+  }
+
+  private void showPairingCardPopUp(GameInfo curGameInfo) {
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(App.getUser().getUsername());
+    boolean allPairActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof CardExtraAction
+            && ((CardExtraAction) action).getCardEffect().equals(CardEffect.SATCHEL));
+    if (!playerActionMap.isEmpty() && allPairActions) {
+      HttpResponse<String> response =
+          App.getGameRequestSender().sendGetAllPlayerInfoRequest(gameId, "");
+      String playerStatesJson = response.getBody();
+      PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
+          .fromJson(playerStatesJson, PlayerStates.class);
+      PlayerInGame playerInGame = playerStates.getOnePlayerInGame(App.getUser().getUsername());
+      PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
+      Platform.runLater(() -> {
+        try {
+          App.loadPopUpWithController("my_development_cards.fxml",
+              new PurchaseHandController(gameId,
+                  purchasedHand, playerActionMap, coverRectangle),
+              800,
+              600);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      });
+    }
+  }
+
+  private void showFreeCardPopUp(GameInfo curGameInfo) {
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(App.getUser().getUsername());
+    boolean allFreeActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof CardExtraAction
+            && ((CardExtraAction) action).getCardEffect().equals(CardEffect.FREE_CARD));
+    if (!playerActionMap.isEmpty() && allFreeActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          try {
+            App.loadPopUpWithController("free_card_pop_up.fxml",
+                new FreeCardPopUpController(gameId, playerActionMap),
+                720,
+                170);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        try {
+          App.loadPopUpWithController("free_card_pop_up.fxml",
+              new FreeCardPopUpController(gameId, playerActionMap),
+              720,
+              170);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      });
+    }
+  }
+
+  private void resetAllGameBoards(GameInfo curGameInfo) {
+    // clear up all children in playerBoardAnchorPane
+    for (BoardGui boardGui : extensionBoardGuiMap.values()) {
+      Platform.runLater(boardGui::clearContent);
+    }
+
+    // First, check what extensions are we playing
+    List<Extension> extensions = curGameInfo.getExtensions();
+    TableTop tableTop = curGameInfo.getTableTop();
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(App.getUser().getUsername());
+    // generate BoardGui based on extension type
+    for (Extension extension : extensions) {
+      switch (extension) {
+        case BASE:
+          BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane,
+              gameId, coverRectangle);
+          baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+          extensionBoardGuiMap.put(extension, baseBoardGui);
+          break;
+        case ORIENT:
+          OrientBoardGui orientBoardGui = new OrientBoardGui(playerBoardAnchorPane,
+              gameId, coverRectangle);
+          orientBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+          extensionBoardGuiMap.put(extension, orientBoardGui);
+          break;
+        case TRADING_POST:
+          GameBoardLayoutConfig config = App.getGuiLayouts();
+          TraderBoardGui traderBoardGui = new TraderBoardGui(gameId, nameToArmCodeMap);
+          traderBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+          traderBoardGui.setLayoutX(config.getPacBoardLayoutX());
+          traderBoardGui.setLayoutY(config.getPacBoardLayoutY());
+          Platform.runLater(() -> {
+            playerBoardAnchorPane.getChildren().add(traderBoardGui);
+          });
+          extensionBoardGuiMap.put(extension, traderBoardGui);
+          break;
+        case CITY:
+          CityBoardGui cityBoardGui = new CityBoardGui(playerBoardAnchorPane,
+              gameId, coverRectangle);
+          cityBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+          extensionBoardGuiMap.put(extension, cityBoardGui);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+
+  private void showFinishGamePopUp(GameInfo curGameInfo) {
+    // the current game is finished (either done by Save OR GameOver)
+    if (curGameInfo.isFinished()) {
+      // should load a game over page (jump back to lobby after they click the button)
+      // implicitly handle the threading stopping logic and loading back to lobby
+      Platform.runLater(() -> {
+        try {
+          App.loadPopUpWithController("game_over.fxml",
+              new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
+              360, 170);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      });
+    }
+  }
+
+  private void resetPendingActionButton(GameInfo curGameInfo) {
+    // always get the action map from game info
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(App.getUser().getUsername());
+    // player has finished one's pending action, set the button back to greyed out
+    if (playerActionMap.isEmpty()) {
+      pendingActionButton.setDisable(true);
+    }
+  }
+
+  private void highlightPlayerInfoGui(GameInfo curGameInfo) {
+    // highlight players accordingly
+    String curTurnPlayerName = curGameInfo.getCurrentPlayer();
+    if (!nameToPlayerInfoGuiMap.isEmpty()) {
+      for (String name : nameToPlayerInfoGuiMap.keySet()) {
+        nameToPlayerInfoGuiMap.get(name).setHighlight(name.equals(curTurnPlayerName));
+      }
+    }
+  }
+
+
   private Thread generateGameInfoUpdateThread() {
     GameRequestSender gameRequestSender = App.getGameRequestSender();
     User curUser = App.getUser(); // at this point, user will not be Null
@@ -422,134 +608,30 @@ public class GameController implements Initializable {
             String responseInJsonString = longPullResponse.getBody();
             Gson gsonParser = SplendorDevHelper.getInstance().getGson();
             GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
+            // if the game is over, load the game over pop up page
+            showFinishGamePopUp(curGameInfo);
+            // internally, check if the player has empty action map, if so
+            // disable this pending action button
+            resetPendingActionButton(curGameInfo);
 
-            // the current game is finished (either done by Save OR GameOver)
-            if (curGameInfo.isFinished()) {
-              // should load a game over page (jump back to lobby after they click the button)
-              // implicitly handle the threading stopping logic and loading back to lobby
-              Platform.runLater(() -> {
-                try {
-                  App.loadPopUpWithController("game_over.fxml",
-                      new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
-                      360, 170);
-                } catch (IOException e) {
-                  throw new RuntimeException(e);
-                }
-              });
-            }
+            // TODO: <<<<< START OF OPTIONAL SECTION >>>>>>>>>
+            // TODO: <<<<< This section contains the method that contains optional pop ups>>>>>>>>>
+            // TODO: <<<<< conditions are check internally in method for readability      >>>>>>>>>
 
-            TableTop tableTop = curGameInfo.getTableTop();
-            // always get the action map from game info
-            String playerName = curUser.getUsername();
-            Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
+            // optionally, show the claim noble pop up, condition is checked inside method
+            showClaimNoblePopUp(curGameInfo);
+            // optionally, show the pairing card pop up, condition is checked inside method
+            showPairingCardPopUp(curGameInfo);
+            // optionally, show the taking a free card pop up, condition is checked inside method
+            showFreeCardPopUp(curGameInfo);
 
+            // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
 
-            //// return true if EVERY ACTION in playerActionMap is CardExtraAction
-            //// with cardEffect being FREE_CARD
-            //boolean allFreeCardExtraActions = playerActionMap.values().stream()
-            //    .allMatch(action -> action instanceof CardExtraAction && )
+            // ALWAYS, reset all game boards gui based on the new game info
+            resetAllGameBoards(curGameInfo);
+            //ALWAYS, highlight the correct player gui based on the new game info
+            highlightPlayerInfoGui(curGameInfo);
 
-
-
-            // return true if EVERY ACTION in playerActionMap is ClaimNobleAction
-            boolean allClaimNobleActions = playerActionMap.values().stream()
-                .allMatch(action -> action instanceof ClaimNobleAction);
-
-            if (!playerActionMap.isEmpty() && allClaimNobleActions) {
-              Platform.runLater(() -> {
-                try {
-                  App.loadPopUpWithController("noble_claim_pop_up.fxml",
-                      new ClaimNoblePopUpController(gameId, playerActionMap),
-                      360,
-                      170);
-                } catch (IOException e) {
-                  throw new RuntimeException(e);
-                }
-              });
-            }
-
-
-
-            // generate special pop up for pairing card
-            boolean allPairActions = playerActionMap.values().stream()
-                .allMatch(action -> action instanceof CardExtraAction
-                    && ((CardExtraAction) action).getCardEffect().equals(CardEffect.SATCHEL));
-            if (!playerActionMap.isEmpty() && allPairActions) {
-              HttpResponse<String> response =
-                  gameRequestSender.sendGetAllPlayerInfoRequest(gameId, "");
-              String playerStatesJson = response.getBody();
-              PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
-                  .fromJson(playerStatesJson, PlayerStates.class);
-              PlayerInGame playerInGame = playerStates.getOnePlayerInGame(playerName);
-              PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
-              Platform.runLater(() -> {
-                try {
-                  App.loadPopUpWithController("my_development_cards.fxml",
-                      new PurchaseHandController(gameId,
-                          purchasedHand, playerActionMap, coverRectangle),
-                      800,
-                      600);
-                } catch (IOException e) {
-                  throw new RuntimeException(e);
-                }
-              });
-            }
-
-            // TODO: After one purchase, the server side did not set next player properly
-            System.out.println("Current turn: " + curGameInfo.getCurrentPlayer());
-            System.out.println("Player: " + playerName + playerActionMap.values());
-            // clear up all children in playerBoardAnchorPane
-            for (BoardGui boardGui : extensionBoardGuiMap.values()) {
-              Platform.runLater(boardGui::clearContent);
-            }
-
-            // First, check what extensions are we playing
-            List<Extension> extensions = curGameInfo.getExtensions();
-
-            // generate BoardGui based on extension type
-            for (Extension extension : extensions) {
-              switch (extension) {
-                case BASE:
-                  BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane,
-                      gameId, coverRectangle);
-                  baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
-                  extensionBoardGuiMap.put(extension, baseBoardGui);
-                  break;
-                case ORIENT:
-                  OrientBoardGui orientBoardGui = new OrientBoardGui(playerBoardAnchorPane,
-                      gameId, coverRectangle);
-                  orientBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
-                  extensionBoardGuiMap.put(extension, orientBoardGui);
-                  break;
-                case TRADING_POST:
-                  GameBoardLayoutConfig config = App.getGuiLayouts();
-                  TraderBoardGui traderBoardGui = new TraderBoardGui(gameId, nameToArmCodeMap);
-                  traderBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
-                  traderBoardGui.setLayoutX(config.getPacBoardLayoutX());
-                  traderBoardGui.setLayoutY(config.getPacBoardLayoutY());
-                  Platform.runLater(() -> {
-                    playerBoardAnchorPane.getChildren().add(traderBoardGui);
-                  });
-                  extensionBoardGuiMap.put(extension, traderBoardGui);
-                  break;
-                case CITY:
-                  System.out.println("\nThis is city DLC\n");
-                  CityBoardGui cityBoardGui = new CityBoardGui(playerBoardAnchorPane,
-                      gameId, coverRectangle);
-                  cityBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
-                  extensionBoardGuiMap.put(extension, cityBoardGui);
-                  break;
-                default: break;
-              }
-            }
-
-            // highlight players accordingly
-            String curTurnPlayerName = curGameInfo.getCurrentPlayer();
-            if (!nameToPlayerInfoGuiMap.isEmpty()) {
-              for (String name : nameToPlayerInfoGuiMap.keySet()) {
-                nameToPlayerInfoGuiMap.get(name).setHighlight(name.equals(curTurnPlayerName));
-              }
-            }
           }
         }
       } catch (InterruptedException | UnirestException e) {
@@ -586,23 +668,7 @@ public class GameController implements Initializable {
     };
   }
 
-  @Override
-  // TODO: This method contains what's gonna happen after clicking "play" on the board
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    // the shaded shape that is used to prevent player to mess around with
-    // actions when we do not allow them to click on things that are
-    // not in pop up window
-
-    GameRequestSender gameRequestSender = App.getGameRequestSender();
-    HttpResponse<String> firstGameInfoResponse = null;
-    try {
-      firstGameInfoResponse = gameRequestSender.sendGetGameInfoRequest(gameId, "");
-    } catch (UnirestException e) {
-      System.out.println(e.getMessage());
-    }
-    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
-    GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
-    //lastTurnPlayerName = curGameInfo.getFirstPlayerName();
+  private void setupSaveGameButton(GameInfo curGameInfo) {
     saveButton.setDisable(true);
     quitButton.setOnAction(createClickOnQuitButtonEvent());
     if (App.getUser().getUsername().equals(curGameInfo.getCreator())) {
@@ -611,26 +677,55 @@ public class GameController implements Initializable {
       saveButton.setDisable(false);
       saveButton.setOnAction(createClickOnSaveButtonEvent(curGameInfo, gameId));
     }
+  }
 
+  private void sortAllPlayerNames(GameInfo curGameInfo) {
     List<String> playerNames = curGameInfo.getPlayerNames();
     List<String> tmpPlayerNames = new ArrayList<>(playerNames);
     // sort the player names and store it to this game controller
     if (sortedPlayerNames.isEmpty()) {
-      sortedPlayerNames = sortPlayerNames(App.getUser().getUsername(), tmpPlayerNames);
+      while (!tmpPlayerNames.get(0).equals(App.getUser().getUsername())) {
+        String popPlayerName = tmpPlayerNames.remove(0);
+        tmpPlayerNames.add(popPlayerName);
+      }
+      sortedPlayerNames = new ArrayList<>(tmpPlayerNames);
     }
+  }
+
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    // initially, there is no pending action at all!
+    pendingActionButton.setDisable(true);
+
+    GameRequestSender gameRequestSender = App.getGameRequestSender();
+    HttpResponse<String> firstGameInfoResponse = null;
+    try {
+      firstGameInfoResponse = gameRequestSender.sendGetGameInfoRequest(gameId, "");
+    } catch (UnirestException e) {
+      throw new RuntimeException(e.getMessage());
+    }
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+    GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
+    // only enable the save game button for the creator of the game
+    setupSaveGameButton(curGameInfo);
+    // sort player names based on different client views
+    sortAllPlayerNames(curGameInfo);
 
     // if we are playing the Trading Extension, initialize the map of player name
     // to their arm code index
     List<Extension> extensionsPlaying = curGameInfo.getExtensions();
+    List<String> playerNames = curGameInfo.getPlayerNames();
     if (extensionsPlaying.contains(Extension.TRADING_POST)) {
       for (int i = 1; i <= playerNames.size(); i++) {
         nameToArmCodeMap.put(playerNames.get(i - 1), i);
       }
     }
 
+    // start thread to update player info
     playerInfoThread = generateAllPlayerInfoUpdateThread();
     playerInfoThread.start();
 
+    // start thread to update game info
     mainGameUpdateThread = generateGameInfoUpdateThread();
     mainGameUpdateThread.start();
 

@@ -52,60 +52,6 @@ public class TokenBankGui extends HBox {
     return (Button) confirmVbox.getChildren().get(1);
   }
 
-  //private EventHandler<ActionEvent> createTakeTokenHandler(
-  //    Label displayZone, Colour curColour) {
-  //  return event -> {
-  //    // add only if it's a valid take
-  //    // for this colour
-  //    // and for all colour
-  //    int curNum = Integer.parseInt(displayZone.getText());
-  //    int tokenLeft = Integer.parseInt(this.getColourTokenBankMap().get(curColour).getText());
-  //    // can only increment if 0 <= takeNum < 2 && bank > 0
-  //
-  //    int uniqueColourTakenCount = 0;
-  //    for (Colour c : this.getTakeTokenDecision().keySet()) {
-  //      int curColourTake = this.getTakeTokenDecision().get(c);
-  //      if (curColourTake > 0) {
-  //        uniqueColourTakenCount += 1;
-  //      }
-  //    }
-  //
-  //    if (curNum == 0 && uniqueColourTakenCount == 2) {
-  //      curNum += 1;
-  //      String newNum = curNum + "";
-  //      displayZone.setText(newNum);
-  //    } else {
-  //      if (!(curNum == 1 && uniqueColourTakenCount == 2)
-  //          && curNum < 2 && curNum >= 0 && tokenLeft > 0
-  //          && !banFromTaking(uniqueColourTakenCount)) {
-  //        // then we can have this Label being changed
-  //        if (curNum == 1) {
-  //          if (tokenLeft >= 4) {
-  //            curNum += 1;
-  //            String newNum = curNum + "";
-  //            displayZone.setText(newNum);
-  //          }
-  //        } else {
-  //          curNum += 1;
-  //          String newNum = curNum + "";
-  //          displayZone.setText(newNum);
-  //        }
-  //
-  //      }
-  //    }
-  //    uniqueColourTakenCount = 0;
-  //    for (Colour c : this.getTakeTokenDecision().keySet()) {
-  //      int curColourTake = this.getTakeTokenDecision().get(c);
-  //      if (curColourTake > 0) {
-  //        uniqueColourTakenCount += 1;
-  //      }
-  //    }
-  //    if (banFromTaking(uniqueColourTakenCount)) {
-  //      getConfirmButton().setDisable(false);
-  //    }
-  //  };
-  //}
-
 
   private EventHandler<ActionEvent> createConfirmTakeTokenHandler(String actionId) {
     // TODO: Need to send the request to Game server for future use
@@ -119,14 +65,8 @@ public class TokenBankGui extends HBox {
       Map<Colour, Label> playerNewDecisions = getColourTokenTakeMap();
       for (Colour c : playerNewDecisions.keySet()) {
         if (!c.equals(Colour.GOLD)) {
-          //Text bankBalanceText = bankTokenBankMap.get(c);
           Label playerNewChoice = playerNewDecisions.get(c);
-          //int curTokenLeft = Integer.parseInt(bankBalanceText.getText());
-          //int curTokenTake = playerDecision.get(c);
-          //int newBankBalance = curTokenLeft - curTokenTake;
-          // reset decision back to 0
           playerNewChoice.setText("0");
-          //bankBalanceText.setText(newBankBalance + "");
         }
       }
       // disable
@@ -266,17 +206,6 @@ public class TokenBankGui extends HBox {
         }
       }
     }
-    // can return more
-    //if (returnTokenActionMap.size() > 0) {
-    //  for (String actionId : returnTokenActionMap.keySet()) {
-    //    ReturnTokenAction returnTokenAction = returnTokenActionMap.get(actionId);
-    //    EnumMap<Colour, Integer> comb = returnTokenAction.getTokens();
-    //    // if any combination matches,
-    //    if (comb.equals(currentChoiceComb)) {
-    //      return actionId;
-    //    }
-    //  }
-    //}
     return "";
   }
 
@@ -291,6 +220,14 @@ public class TokenBankGui extends HBox {
         String newNum = curNum + "";
         getConfirmButton().setDisable(true);
         displayZone.setText(newNum);
+        // minus button should have the after effect as well
+        if (!tokenCombMatchedActionId().equals("")) {
+          Button confirmButton = getConfirmButton();
+          // do not allow taking anymore, activate confirm button
+          confirmButton.setDisable(false);
+          String actionId = tokenCombMatchedActionId();
+          confirmButton.setOnAction(createConfirmTakeTokenHandler(actionId));
+        }
       }
     };
   }

@@ -3,7 +3,6 @@ package project.controllers.popupcontrollers;
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.ClaimNobleAction;
 import ca.mcgill.comp361.splendormodel.model.NobleCard;
-import ca.mcgill.comp361.splendormodel.model.Position;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -18,13 +17,16 @@ import javafx.stage.Stage;
 import project.App;
 import project.connection.GameRequestSender;
 
+/**
+ * Control claim noble pop up.
+ */
 public class ClaimNoblePopUpController implements Initializable {
 
   @FXML
   private HBox unlockedNoblesHbox;
-
   private final long gameId;
   private final Map<String, Action> playerActionMap;
+
   public ClaimNoblePopUpController(long gameId, Map<String, Action> playerActionMap) {
     this.gameId = gameId;
     this.playerActionMap = playerActionMap;
@@ -57,7 +59,6 @@ public class ClaimNoblePopUpController implements Initializable {
       nobleImageView.setFitWidth(80);
       nobleImageView.setOnMouseClicked(createClickOnNobleToClaim(actionId));
       unlockedNoblesHbox.getChildren().add(nobleImageView);
-
     }
 
   }
