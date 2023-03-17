@@ -196,15 +196,24 @@ public class GameController implements Initializable {
   }
 
 
-  //private Map<PlayerPosition, String> setPlayerToPosition(String curPlayerName,
-  //                                                        List<String> allPlayerNames) {
-  //  Map<PlayerPosition, String> resultMap = new HashMap<>();
-  //  List<String> orderedNames = sortPlayerNames(curPlayerName, allPlayerNames);
-  //  for (int i = 0; i < orderedNames.size(); i++) {
-  //    resultMap.put(PlayerPosition.values()[i], orderedNames.get(i));
-  //  }
-  //  return resultMap;
-  //}
+  private void clearAllPlayerInfoGui() {
+    if (!nameToPlayerInfoGuiMap.isEmpty()) {
+      for (PlayerInfoGui playerInfoGui : nameToPlayerInfoGuiMap.values()) {
+        Platform.runLater(() -> {
+          ObservableList<Node> mainBoardChildren = playerBoardAnchorPane.getChildren();
+          if (playerInfoGui instanceof VerticalPlayerInfoGui) {
+            mainBoardChildren.remove((VerticalPlayerInfoGui) playerInfoGui);
+          }
+          if (playerInfoGui instanceof HorizontalPlayerInfoGui) {
+            mainBoardChildren.remove((HorizontalPlayerInfoGui) playerInfoGui);
+          }
+
+        });
+      }
+      // clean the map
+      nameToPlayerInfoGuiMap.clear();
+    }
+  }
 
 
   /**
@@ -259,22 +268,9 @@ public class GameController implements Initializable {
             Gson splendorParser = SplendorDevHelper.getInstance().getGson();
             PlayerStates playerStates =
                 splendorParser.fromJson(responseInJsonString, PlayerStates.class);
-            if (!nameToPlayerInfoGuiMap.isEmpty()) {
-              for (PlayerInfoGui playerInfoGui : nameToPlayerInfoGuiMap.values()) {
-                Platform.runLater(() -> {
-                  ObservableList<Node> mainBoardChildren = playerBoardAnchorPane.getChildren();
-                  if (playerInfoGui instanceof VerticalPlayerInfoGui) {
-                    mainBoardChildren.remove((VerticalPlayerInfoGui) playerInfoGui);
-                  }
-                  if (playerInfoGui instanceof HorizontalPlayerInfoGui) {
-                    mainBoardChildren.remove((HorizontalPlayerInfoGui) playerInfoGui);
-                  }
 
-                });
-              }
-              // clean the map
-              nameToPlayerInfoGuiMap.clear();
-            }
+            // clear the previous GUI
+            clearAllPlayerInfoGui();
 
             // set up GUI
             setupAllPlayerInfoGui(0);
@@ -441,6 +437,23 @@ public class GameController implements Initializable {
           .fromJson(playerStatesJson, PlayerStates.class);
       PlayerInGame playerInGame = playerStates.getOnePlayerInGame(App.getUser().getUsername());
       PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
+      // also assign the pending action button some functionality
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          try {
+            App.loadPopUpWithController("my_development_cards.fxml",
+                new PurchaseHandController(gameId,
+                    purchasedHand, playerActionMap, coverRectangle),
+                800,
+                600);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        });
+      });
+
+      // do a pop up right now
       Platform.runLater(() -> {
         try {
           App.loadPopUpWithController("my_development_cards.fxml",
