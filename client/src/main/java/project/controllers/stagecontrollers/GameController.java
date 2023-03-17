@@ -443,6 +443,14 @@ public class GameController implements Initializable {
             String playerName = curUser.getUsername();
             Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
 
+
+            //// return true if EVERY ACTION in playerActionMap is CardExtraAction
+            //// with cardEffect being FREE_CARD
+            //boolean allFreeCardExtraActions = playerActionMap.values().stream()
+            //    .allMatch(action -> action instanceof CardExtraAction && )
+
+
+
             // return true if EVERY ACTION in playerActionMap is ClaimNobleAction
             boolean allClaimNobleActions = playerActionMap.values().stream()
                 .allMatch(action -> action instanceof ClaimNobleAction);
@@ -452,8 +460,8 @@ public class GameController implements Initializable {
                 try {
                   App.loadPopUpWithController("noble_claim_pop_up.fxml",
                       new ClaimNoblePopUpController(gameId, playerActionMap),
-                      800,
-                      600);
+                      360,
+                      170);
                 } catch (IOException e) {
                   throw new RuntimeException(e);
                 }

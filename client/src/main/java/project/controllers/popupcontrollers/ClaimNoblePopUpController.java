@@ -56,6 +56,7 @@ public class ClaimNoblePopUpController implements Initializable {
       nobleImageView.setFitHeight(100);
       nobleImageView.setFitWidth(80);
       nobleImageView.setOnMouseClicked(createClickOnNobleToClaim(actionId));
+      unlockedNoblesHbox.getChildren().add(nobleImageView);
 
     }
 
