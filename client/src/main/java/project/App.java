@@ -28,8 +28,8 @@ import project.view.lobby.communication.User;
  */
 public class App extends Application {
 
-  private static final String mode = "ruoyu_server";
-  //private static final String mode = "local_host";
+  //private static final String mode = "ruoyu_server";
+  private static final String mode = "local_host";
   //private static final String mode = "same_wifi";
 
   private static GameRequestSender gameRequestSender = null;
@@ -113,7 +113,7 @@ public class App extends Application {
         } else if (mode.equals("local_host")) {
           lobbyUrl = "http://127.0.0.1:4242";
         } else if (mode.equals("same_wifi")) {
-          lobbyUrl = "http://10.122.126.253:4242";
+          lobbyUrl = "http://10.121.139.187:4242";
           //lobbyUrl = String.format("http://%s:4242", getWifiIp());
         } else {
           throw new IOException("Unknown mode!");
@@ -143,7 +143,7 @@ public class App extends Application {
         } else if (mode.equals("local_host")) {
           gameUrl = "http://127.0.0.1:4246/";
         } else if (mode.equals("same_wifi")) {
-          gameUrl = "http://10.122.126.253:4246/";
+          gameUrl = "http://10.121.139.187:4246/";
           //gameUrl = String.format("http://%s:4246/", getWifiIp());
         } else {
           throw new IOException("Unknown mode!");
