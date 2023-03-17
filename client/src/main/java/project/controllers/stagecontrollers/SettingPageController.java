@@ -1,23 +1,18 @@
-package project.controllers.guielementcontroller;
+package project.controllers.stagecontrollers;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.paint.Color;
 import project.App;
 import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.view.lobby.communication.Player;
 
-public class PlayerLobbyGuiController implements Initializable {
-
-  @FXML
-  private Label textInfoLabel;
+public class SettingPageController extends AbstractLobbyController {
 
   @FXML
   private PasswordField passwordField;
@@ -34,23 +29,44 @@ public class PlayerLobbyGuiController implements Initializable {
   @FXML
   private Button deletePlayerButton;
 
-  private final Player player;
+  @FXML
+  private Button adminZoneButton;
 
-  public PlayerLobbyGuiController(Player player) {
-    this.player = player;
+  @FXML
+  private Button lobbyPageButton;
+
+
+
+  private void pageSpecificActionBind() {
+    adminZoneButton.setVisible(false);
+    // potentially enable admin zone button functionality
+    String role = App.getUser().getAuthority();
+    // only set up for admin role
+    if (role.equals("ROLE_ADMIN")) {
+      adminZoneButton.setVisible(true);
+      adminZoneButton.setOnAction(event -> {
+        App.loadNewSceneToPrimaryStage("admin_zone.fxml",new AdminPageController());
+      });
+    }
+
+    // jump back to lobby page
+    lobbyPageButton.setOnAction(event -> {
+      App.loadNewSceneToPrimaryStage("lobby_page.fxml", new LobbyController());
+    });
   }
-
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    // set up text for player
-    String name = player.getName();
-    String role = player.getRole().toString();
-    String labelContent = String.format("User name: %s \nUser role: %s\n", name, role);
-    textInfoLabel.setText(labelContent);
+    super.initialize(url, resourceBundle);
+
+    // for admin page, bind action to admin and lobby button (admin potentially greyed out)
+    pageSpecificActionBind();
 
 
     // set up the colour part and update button part
+    Player player = App.getLobbyServiceRequestSender()
+        .getOnePlayer(App.getUser().getAccessToken(), App.getUser().getUsername());
+
     Color color = Color.web(player.getPreferredColour());
     colorPicker.setValue(color);
     colorUpdateButton.setOnAction(event -> {
@@ -66,7 +82,7 @@ public class PlayerLobbyGuiController implements Initializable {
       try {
         App.getLobbyServiceRequestSender().updateOnePlayerColour(
             App.getUser().getAccessToken(),
-            name,
+            App.getUser().getUsername(),
             colorString
         );
       } catch (UnirestException e) {
@@ -80,8 +96,6 @@ public class PlayerLobbyGuiController implements Initializable {
       }
     });
 
-    // TODO: Finish the other update action binding
-
-
+    // TODO: Finish the other update action binding (can copy paste from PlayerLobbyGui controller)
   }
 }

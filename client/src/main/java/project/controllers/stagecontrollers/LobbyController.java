@@ -15,12 +15,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.ImageView;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.connection.LobbyRequestSender;
@@ -35,7 +32,7 @@ import project.view.lobby.communication.User;
 /**
  * login GUI controller.
  */
-public class LobbyController implements Initializable {
+public class LobbyController extends AbstractLobbyController {
 
   private final Map<String, Savegame> allSaveGamesMap = new HashMap<>();
   @FXML
@@ -49,16 +46,7 @@ public class LobbyController implements Initializable {
   private Button adminZoneButton;
 
   @FXML
-  private Button logOutButton;
-
-  @FXML
   private Button settingButton;
-
-  @FXML
-  private ImageView userImageView;
-
-  @FXML
-  private Label userNameLabel;
 
 
   private EventHandler<ActionEvent> createClickOnCreateButton() {
@@ -189,8 +177,13 @@ public class LobbyController implements Initializable {
     gameChoices.setItems(gameOptionsList);
   }
 
+  private void pageSpecificActionBind() {
+    settingButton.setOnAction(event -> {
+      App.loadNewSceneToPrimaryStage("setting_page.fxml", new SettingPageController());
+    });
 
-  private void setUpAdminZoneButton() {
+    adminZoneButton.setVisible(false);
+    // potentially enable admin zone button functionality
     String role = App.getUser().getAuthority();
     // only set up for admin role
     if (role.equals("ROLE_ADMIN")) {
@@ -202,25 +195,11 @@ public class LobbyController implements Initializable {
   }
 
 
-  private void setUpUserDisplay() {
-    userImageView.setImage(App.getPlayerImage(App.getUser().getUsername()));
-    userNameLabel.setText("Current user: " + App.getUser().getUsername());
-  }
-
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    adminZoneButton.setVisible(false);
-    // potentially enable admin zone button functionality
-    setUpAdminZoneButton();
-    // regular display set up for all users (admin or player)
-    setUpUserDisplay();
-    logOutButton.setOnAction(event -> {
-      // Reset the App user to null
-      App.setUser(null);
-
-      // jump back to start page
-      App.loadNewSceneToPrimaryStage("start_page.fxml", new LogInController());
-    });
+    super.initialize(url,resourceBundle);
+    // for lobby page, bind action to setting and admin button
+    pageSpecificActionBind();
 
     // everytime we assign a new lobby controller, clean
     // the previous sessions
