@@ -3,6 +3,7 @@ package project.controllers.popupcontrollers;
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.CardExtraAction;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
+import ca.mcgill.comp361.splendormodel.model.Position;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -51,21 +52,30 @@ public class FreeCardPopUpController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    int cardsAvailableToFree = playerActionMap.size();
+    ImageView[] sortedImageViews = new ImageView[cardsAvailableToFree];
     for (String actionId : playerActionMap.keySet()) {
       Action action = playerActionMap.get(actionId);
       CardExtraAction cardExtraAction = (CardExtraAction) action;
       DevelopmentCard card = (DevelopmentCard) cardExtraAction.getCurCard();
+      Position cardPosition = cardExtraAction.getCardPosition();
       String cardImagePath;
+      int imageViewInsertIndex;
       if (card.isBaseCard()) {
         cardImagePath = App.getBaseCardPath(card.getCardName(), card.getLevel());
+        imageViewInsertIndex = cardPosition.getY();
       } else {
         cardImagePath = App.getOrientCardPath(card.getCardName(), card.getLevel());
+        imageViewInsertIndex = cardPosition.getY() + 4;
       }
       ImageView cardImageView = new ImageView(new Image(cardImagePath));
       cardImageView.setFitHeight(100);
       cardImageView.setFitWidth(80);
+      sortedImageViews[imageViewInsertIndex] = cardImageView;
       cardImageView.setOnMouseClicked(createClickOnFreeCardToTake(actionId));
-      freeCardsHbox.getChildren().add(cardImageView);
     }
+    // add all sorted, function assigned image views to the HBox
+    freeCardsHbox.getChildren().addAll(sortedImageViews);
   }
+
 }

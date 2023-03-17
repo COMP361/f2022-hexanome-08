@@ -48,6 +48,25 @@ public class LobbyController extends AbstractLobbyController {
   @FXML
   private Button settingButton;
 
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    super.initialize(url,resourceBundle);
+    // for lobby page, bind action to setting and admin button
+    pageSpecificActionBind();
+
+    // everytime we assign a new lobby controller, clean
+    // the previous sessions
+    SessionGuiManager.getInstance().clearSessionsRecorded();
+
+    // assign function to the "Create" button
+    createSessionButton.setOnAction(createClickOnCreateButton());
+
+    // get all possible game names (including saved games) from LS
+    setUpAvailableGameNames();
+
+    // Set up the thread to keep updating sessions
+    createUpdateGuiThread().start();
+  }
 
   private EventHandler<ActionEvent> createClickOnCreateButton() {
     return event -> {
@@ -195,24 +214,6 @@ public class LobbyController extends AbstractLobbyController {
   }
 
 
-  @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    super.initialize(url,resourceBundle);
-    // for lobby page, bind action to setting and admin button
-    pageSpecificActionBind();
 
-    // everytime we assign a new lobby controller, clean
-    // the previous sessions
-    SessionGuiManager.getInstance().clearSessionsRecorded();
-
-    // assign function to the "Create" button
-    createSessionButton.setOnAction(createClickOnCreateButton());
-
-    // get all possible game names (including saved games) from LS
-    setUpAvailableGameNames();
-
-    // Set up the thread to keep updating sessions
-    createUpdateGuiThread().start();
-  }
 }
 

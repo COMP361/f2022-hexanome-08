@@ -170,7 +170,9 @@ public class CardExtraAction extends Action {
       baseBoard.update();
       curPlayer.getPurchasedHand().addDevelopmentCard(freeCard);
       curPlayer.changePrestigePoints(prestigePoints);
-
+      // reset the player action, so we know this free is over
+      associatedActionInterpreter.getActionGenerator()
+          .getPlayerActionMaps().put(curPlayer.getName(), new HashMap<>());
       //if it is an orient card
     } else {
       ActionGenerator actionGenerator = associatedActionInterpreter.getActionGenerator();
@@ -184,11 +186,15 @@ public class CardExtraAction extends Action {
         orientBoard.update();
 
         if (currentEffect == CardEffect.SATCHEL) {
+          // stash the SATCHEL since we this card can not just go to player's purchase
           associatedActionInterpreter.setStashedCard(freeCard);
         } else {
+          // otherwise: FREE OR DOUBLE_GOLD OR RESERVE_NOBLE can just go to player's hand
           curPlayer.getPurchasedHand().addDevelopmentCard(freeCard);
           curPlayer.changePrestigePoints(prestigePoints);
         }
+        //TODO: Why do we leave the BURN out in here? -- for julia and young to fix
+        // i have no clue how to do this              ----- by ruoyu ;)
         if (currentEffect != CardEffect.BURN_CARD) {
           actionGenerator.updateCascadeActions(curPlayer, freeCard, currentEffect);
         }
