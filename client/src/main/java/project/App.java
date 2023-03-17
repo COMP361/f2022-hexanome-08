@@ -28,9 +28,9 @@ import project.view.lobby.communication.User;
  */
 public class App extends Application {
 
-  //private static final String mode = "ruoyu_server";
+  private static final String mode = "ruoyu_server";
   //private static final String mode = "local_host";
-  private static final String mode = "same_wifi";
+  //private static final String mode = "same_wifi";
 
   private static GameRequestSender gameRequestSender = null;
   private static LobbyRequestSender lobbyRequestSender = null;
@@ -78,7 +78,7 @@ public class App extends Application {
     primaryStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     primaryStage.setFullScreenExitHint("");
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-    primaryStage.setFullScreen(true);
+    //primaryStage.setFullScreen(true);
     primaryStage.setScene(scene);
     primaryStage.show();
   }
@@ -139,7 +139,7 @@ public class App extends Application {
       if (gameRequestSender == null) {
         String gameUrl;
         if (mode.equals("ruoyu_server")) {
-          gameUrl = "http://76.66.139.161:42426/";
+          gameUrl = "http://76.66.139.161:4246/";
         } else if (mode.equals("local_host")) {
           gameUrl = "http://127.0.0.1:4246/";
         } else if (mode.equals("same_wifi")) {
@@ -182,7 +182,6 @@ public class App extends Application {
     newStage.initModality(Modality.WINDOW_MODAL);
     // disable the full screen (green one) button for mac
     newStage.initStyle(StageStyle.UTILITY);
-    //newStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
     // show the popup window
     newStage.show();
   }
@@ -202,7 +201,7 @@ public class App extends Application {
     double height = primaryStage.getScene().getHeight();
     // setting the scene might turn off full screen mode, must reset to full again immediately
     primaryStage.setScene(new Scene(fxmlLoader.load(), width, height));
-    primaryStage.setFullScreen(true);
+    //primaryStage.setFullScreen(true);
   }
 
   /**
