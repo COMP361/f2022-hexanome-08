@@ -256,7 +256,7 @@ public class GameManager {
       }
       logger.info("Launched game " + gameId);
       logger.info("Current game ids: " + activeGames.keySet());
-      return new SavedGameState(newGameInfo, newPlayerStates);
+      return new SavedGameState(newGameInfo, newPlayerStates, newActionInterpreter);
     }
   }
 
@@ -327,11 +327,11 @@ public class GameManager {
     }
 
     // TODO: 2. store the actual data and metadata into the file
-
-    SavedGameState newSaveGame = new SavedGameState(
-        activeGames.get(gameId),
-        activePlayers.get(gameId));
-
+    GameInfo gameInfo = activeGames.get(gameId);
+    SavedGameState newSaveGame =
+        new SavedGameState(
+            gameInfo,
+            activePlayers.get(gameId));
     savedGameIds.add(savegame.getSavegameid());
     writeSavedGameDataToFile(savegame.getSavegameid(), newSaveGame, true);
     writeSavedGameMetaDataToFile(savegame, true);

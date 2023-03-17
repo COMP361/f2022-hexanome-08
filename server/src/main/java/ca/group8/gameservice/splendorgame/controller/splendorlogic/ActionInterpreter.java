@@ -55,20 +55,20 @@ public class ActionInterpreter {
     this.actionGenerator = new ActionGenerator(playerActionMaps, tableTop);
   }
 
-  ///**
-  // * After parsing the object from json, we need to relink the references.
-  // * between this action interpreter and the other game states information.
-  // *
-  // * @param gameInfo     a game info instance
-  // * @param playerStates player states instance
-  // */
-  //public void relinkReferences(GameInfo gameInfo, PlayerStates playerStates) {
-  //  this.playerStates = playerStates;
-  //  this.gameInfo = gameInfo;
-  //  Map<String, Map<String, Action>> playerActionMaps = gameInfo.getPlayerActionMaps();
-  //  TableTop tableTop = gameInfo.getTableTop();
-  //  this.actionGenerator = new ActionGenerator(playerActionMaps, tableTop);
-  //}
+  /**
+   * After parsing the object from json, we need to relink the references.
+   * between this action interpreter and the other game states information.
+   *
+   * @param gameInfo     a game info instance
+   * @param playerStates player states instance
+   */
+  public void relinkReferences(GameInfo gameInfo, PlayerStates playerStates) {
+    this.playerStates = playerStates;
+    this.gameInfo = gameInfo;
+    Map<String, Map<String, Action>> playerActionMaps = gameInfo.getPlayerActionMaps();
+    TableTop tableTop = gameInfo.getTableTop();
+    this.actionGenerator = new ActionGenerator(playerActionMaps, tableTop);
+  }
 
   /**
    * TODO: Fix this description at the end
