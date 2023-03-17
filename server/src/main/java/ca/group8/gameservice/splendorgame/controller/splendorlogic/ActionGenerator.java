@@ -380,17 +380,17 @@ public class ActionGenerator {
       int freeLevel = purchasedCard.getLevel() - 1;
       BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
       OrientBoard orientBoard = (OrientBoard) tableTop.getBoard(Extension.ORIENT);
-      Card[] baseCardsToFree = baseBoard.getLevelCardsOnBoard(freeLevel);
+      DevelopmentCard[] baseCardsToFree = baseBoard.getLevelCardsOnBoard(freeLevel);
       for (int i = 0; i < baseCardsToFree.length; i++) {
         Position position = new Position(freeLevel, i);
-        Card curCard = baseCardsToFree[i];
+        DevelopmentCard curCard = baseCardsToFree[i];
         cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
       }
 
-      Card[] orientCardsToFree = orientBoard.getLevelCardsOnBoard(freeLevel);
+      DevelopmentCard[] orientCardsToFree = orientBoard.getLevelCardsOnBoard(freeLevel);
       for (int i = 0; i < orientCardsToFree.length; i++) {
         Position position = new Position(freeLevel, i);
-        Card curCard = orientCardsToFree[i];
+        DevelopmentCard curCard = orientCardsToFree[i];
         cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
       }
     }
@@ -444,7 +444,7 @@ public class ActionGenerator {
           .collect(Collectors.toList());
       for (int i : unpairedCardsIndices) {
         Position position = new Position(0, i);
-        Card card = cardsInHand.get(i);
+        DevelopmentCard card = cardsInHand.get(i);
         cascadeActions.add(new CardExtraAction(card, cardEffect, position));
       }
 

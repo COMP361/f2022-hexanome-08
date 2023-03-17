@@ -4,6 +4,7 @@ import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.SavedGameState;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Board;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
+import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CityCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
@@ -48,7 +49,7 @@ public class TestSplendorDevHelper {
     put(Colour.WHITE, 0);
   }};
   DevelopmentCard devCard = new DevelopmentCard(3,
-      price, "c2", 1, Colour.BLACK, 1, new ArrayList<>());
+      price, "c2", 2, Colour.BLACK, 1, new ArrayList<>());
 
   ActionInterpreter actionInterpreter = new ActionInterpreter(gameInfo, playerStates);
 
@@ -135,6 +136,8 @@ public class TestSplendorDevHelper {
     Gson gson = SplendorDevHelper.getInstance().getGson();
     String boardsJson = gson.toJson(boards, boardMapType);
     Map<Extension,Board> newBoards = gson.fromJson(boardsJson, boardMapType);
+    actionInterpreter.getActionGenerator()
+        .updateCascadeActions(playerStates.getOnePlayerInGame("Bob"), devCard, CardEffect.FREE_CARD);
 
     assertEquals(boards.keySet(),newBoards.keySet());
   }
