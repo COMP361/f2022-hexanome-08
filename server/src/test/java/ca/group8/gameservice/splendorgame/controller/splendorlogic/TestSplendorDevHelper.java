@@ -148,7 +148,7 @@ public class TestSplendorDevHelper {
   //@Test
   //void testReferenceOfGameInfoAfterParsing() {
   //  Gson gson = SplendorDevHelper.getInstance().getGson();
-  //  SavedGameState savedGameState = new SavedGameState(gameInfo, playerStates);
+  //  SavedGameState savedGameState = new SavedGameState(gameInfo, playerStates, actionInterpreter);
   //  Map<String,Map<String,Action>> actionMapFromGame = savedGameState.getGameInfo()
   //      .getPlayerActionMaps();
   //  actionMapFromGame.put("Bob", new HashMap<>());
