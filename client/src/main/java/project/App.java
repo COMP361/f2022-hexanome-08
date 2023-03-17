@@ -28,8 +28,8 @@ import project.view.lobby.communication.User;
  */
 public class App extends Application {
 
-  //private static final String mode = "ruoyu_server";
-  private static final String mode = "local_host";
+  private static final String mode = "ruoyu_server";
+  //private static final String mode = "local_host";
   //private static final String mode = "same_wifi";
 
   private static GameRequestSender gameRequestSender = null;
@@ -139,7 +139,7 @@ public class App extends Application {
       if (gameRequestSender == null) {
         String gameUrl;
         if (mode.equals("ruoyu_server")) {
-          gameUrl = "http://76.66.139.161:42426/";
+          gameUrl = "http://76.66.139.161:4246/";
         } else if (mode.equals("local_host")) {
           gameUrl = "http://127.0.0.1:4246/";
         } else if (mode.equals("same_wifi")) {
