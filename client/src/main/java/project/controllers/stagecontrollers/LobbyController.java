@@ -18,7 +18,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.connection.LobbyRequestSender;
@@ -42,6 +44,22 @@ public class LobbyController implements Initializable {
   private ScrollPane allSessionScrollPane;
   @FXML
   private Button createSessionButton;
+
+  @FXML
+  private Button adminZoneButton;
+
+  @FXML
+  private Button logOutButton;
+
+  @FXML
+  private Button settingButton;
+
+  @FXML
+  private ImageView userImageView;
+
+  @FXML
+  private Label userNameLabel;
+
 
   private EventHandler<ActionEvent> createClickOnCreateButton() {
     return event -> {
@@ -79,7 +97,7 @@ public class LobbyController implements Initializable {
     SessionGui curSessionGui = new SessionGui(curSession, sessionId, user, lobbyUpdateThread);
     // set up the session gui
     curSessionGui.setup();
-    SessionGuiManager.addSessionGui(curSessionGui);
+    SessionGuiManager.getInstance().addSessionGui(curSessionGui);
 
   }
 
@@ -121,7 +139,7 @@ public class LobbyController implements Initializable {
                 new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
             Map<Long, Session> sessionMap = sessionList.getSessions();
             // clear all old sessions and add the new ones
-            SessionGuiManager.clearSessionsRecorded();
+            SessionGuiManager.getInstance().clearSessionsRecorded();
             for (long sessionId : sessionMap.keySet()) {
               Session curSession = sessionMap.get(sessionId);
               createAndAddSessionGui(curSession, sessionId, App.getUser(), Thread.currentThread());
@@ -140,18 +158,13 @@ public class LobbyController implements Initializable {
   }
 
 
-  @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    // everytime a lobby controller is initialized, kill all previous lobby thread
-    // and the game thread
-
-    SessionGuiManager.clearSessionsRecorded();
-    createSessionButton.setOnAction(createClickOnCreateButton());
+  private void setUpAvailableGameNames() {
     // Get all available games and pre-set the ChoiceBox
     // mainly about display on session info
     LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
+    List<String> saveGameIds = new ArrayList<>();
 
     // map from display name to actual game name
     for (GameParameters g : gameParameters) {
@@ -165,14 +178,59 @@ public class LobbyController implements Initializable {
         // we have more than 1 saved game ids for this current service game
         for (Savegame savegame : savegames) {
           allSaveGamesMap.put(savegame.getSavegameid(), savegame);
-          gameDisplayNames.add(savegame.getSavegameid());
+          // adding all saved game ids to a separate list
+          saveGameIds.add(savegame.getSavegameid());
         }
       }
     }
-
+    gameDisplayNames.addAll(saveGameIds);
     // Available games to choose from ChoiceBox (Note, this includes save game ids)
     ObservableList<String> gameOptionsList = FXCollections.observableArrayList(gameDisplayNames);
     gameChoices.setItems(gameOptionsList);
+  }
+
+
+  private void setUpAdminZoneButton() {
+    String role = App.getUser().getAuthority();
+    // only set up for admin role
+    if (role.equals("ROLE_ADMIN")) {
+      adminZoneButton.setVisible(true);
+      adminZoneButton.setOnAction(event -> {
+        App.loadNewSceneToPrimaryStage("admin_zone.fxml",new AdminPageController());
+      });
+    }
+  }
+
+
+  private void setUpUserDisplay() {
+    userImageView.setImage(App.getPlayerImage(App.getUser().getUsername()));
+    userNameLabel.setText("Current user: " + App.getUser().getUsername());
+  }
+
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    adminZoneButton.setVisible(false);
+    // potentially enable admin zone button functionality
+    setUpAdminZoneButton();
+    // regular display set up for all users (admin or player)
+    setUpUserDisplay();
+    logOutButton.setOnAction(event -> {
+      // Reset the App user to null
+      App.setUser(null);
+
+      // jump back to start page
+      App.loadNewSceneToPrimaryStage("start_page.fxml", new LogInController());
+    });
+
+    // everytime we assign a new lobby controller, clean
+    // the previous sessions
+    SessionGuiManager.getInstance().clearSessionsRecorded();
+
+    // assign function to the "Create" button
+    createSessionButton.setOnAction(createClickOnCreateButton());
+
+    // get all possible game names (including saved games) from LS
+    setUpAvailableGameNames();
 
     // Set up the thread to keep updating sessions
     createUpdateGuiThread().start();

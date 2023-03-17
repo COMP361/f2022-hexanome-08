@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
-import project.view.lobby.SessionGuiManager;
+import project.controllers.stagecontrollers.LogInController;
 import project.view.lobby.communication.User;
 
 
@@ -31,6 +31,8 @@ public class App extends Application {
   //private static final String mode = "ruoyu_server";
   private static final String mode = "local_host";
   //private static final String mode = "same_wifi";
+
+  private static final String wifiIp = "10.121.139.187";
 
   private static GameRequestSender gameRequestSender = null;
   private static LobbyRequestSender lobbyRequestSender = null;
@@ -46,6 +48,9 @@ public class App extends Application {
   private static Stage primaryStage;
   private static User user;
   private static GameBoardLayoutConfig guiLayouts;
+
+  private static final String defaultImageUrl =
+      "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg";
 
   public static void main(String[] args) {
     launch();
@@ -70,8 +75,10 @@ public class App extends Application {
       throw new RuntimeException(e);
     }
     FXMLLoader startPageLoader = new FXMLLoader(App.class.getResource("start_page.fxml"));
-    SessionGuiManager.getInstance();
-    final Scene scene = new Scene(startPageLoader.load(),
+    // assign controller of log in page
+    startPageLoader.setController(new LogInController());
+
+    Scene scene = new Scene(startPageLoader.load(),
         guiLayouts.getAppWidth(),
         guiLayouts.getAppHeight());
     primaryStage.setTitle("Welcome to Splendor!");
@@ -95,7 +102,6 @@ public class App extends Application {
     while ((line = reader.readLine()) != null) {
       output.append(line);
     }
-
     return output.toString();
   }
 
@@ -113,12 +119,11 @@ public class App extends Application {
         } else if (mode.equals("local_host")) {
           lobbyUrl = "http://127.0.0.1:4242";
         } else if (mode.equals("same_wifi")) {
-          lobbyUrl = "http://10.121.139.187:4242";
-          //lobbyUrl = String.format("http://%s:4242", getWifiIp());
+          //lobbyUrl = "http://10.121.139.187:4242";
+          lobbyUrl = String.format("http://%s:4242", wifiIp);
         } else {
           throw new IOException("Unknown mode!");
         }
-        System.out.println(lobbyUrl);
         lobbyRequestSender = new LobbyRequestSender(lobbyUrl);
       }
     } catch (IOException e) {
@@ -143,7 +148,7 @@ public class App extends Application {
         } else if (mode.equals("local_host")) {
           gameUrl = "http://127.0.0.1:4246/";
         } else if (mode.equals("same_wifi")) {
-          gameUrl = "http://10.121.139.187:4246/";
+          gameUrl = String.format("http://%s:4246/",wifiIp);
           //gameUrl = String.format("http://%s:4246/", getWifiIp());
         } else {
           throw new IOException("Unknown mode!");
@@ -167,12 +172,15 @@ public class App extends Application {
    * @throws IOException in case fxml is not found
    */
   public static void loadPopUpWithController(String fxmlName, Object controller,
-                                             double popUpStageWidth, double popUpStageHeight)
-      throws IOException {
+                                             double popUpStageWidth, double popUpStageHeight) {
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
     fxmlLoader.setController(controller);
     Stage newStage = new Stage();
-    newStage.setScene(new Scene(fxmlLoader.load(), popUpStageWidth, popUpStageHeight));
+    try {
+      newStage.setScene(new Scene(fxmlLoader.load(), popUpStageWidth, popUpStageHeight));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     newStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     // make the new popup window always stay on top level
     newStage.setAlwaysOnTop(true);
@@ -193,14 +201,17 @@ public class App extends Application {
    * @param controller controller class of the popup
    * @throws IOException in case fxml is not found
    */
-  public static void loadNewSceneToPrimaryStage(String fxmlName, Object controller)
-      throws IOException {
+  public static void loadNewSceneToPrimaryStage(String fxmlName, Object controller) {
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
     fxmlLoader.setController(controller);
     double width = primaryStage.getScene().getWidth();
     double height = primaryStage.getScene().getHeight();
     // setting the scene might turn off full screen mode, must reset to full again immediately
-    primaryStage.setScene(new Scene(fxmlLoader.load(), width, height));
+    try {
+      primaryStage.setScene(new Scene(fxmlLoader.load(), width, height));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     //primaryStage.setFullScreen(true);
   }
 
@@ -253,5 +264,15 @@ public class App extends Application {
   public static String getBaseCardPath(String cardName, int level) {
     assert level >= 1 && level <= 3;
     return String.format("project/pictures/level%d/%s.png", level, cardName);
+  }
+
+  public static Image getPlayerImage(String playerName) {
+    Image playerImage;
+    try {
+      playerImage = new Image(String.format("project/pictures/ta_pictures/%s.png", playerName));
+    } catch (Exception e) {
+      playerImage = new Image(defaultImageUrl);
+    }
+    return playerImage;
   }
 }

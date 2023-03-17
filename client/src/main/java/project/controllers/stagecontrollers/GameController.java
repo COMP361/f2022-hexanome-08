@@ -17,7 +17,6 @@ import ca.mcgill.comp361.splendormodel.model.TableTop;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -144,14 +143,9 @@ public class GameController implements Initializable {
       String playerName = App.getUser().getUsername();
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
-      try {
-        App.loadPopUpWithController("my_reserved_cards.fxml",
-            new ReservedHandController(reservedHand, playerActions, coverRectangle, gameId),
-            800, 600);
-
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("my_reserved_cards.fxml",
+          new ReservedHandController(reservedHand, playerActions, coverRectangle, gameId),
+          800, 600);
 
     };
   }
@@ -183,14 +177,10 @@ public class GameController implements Initializable {
       String playerName = App.getUser().getUsername();
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
-      try {
-        App.loadPopUpWithController("my_development_cards.fxml",
-            new PurchaseHandController(gameId, purchasedHand, playerActions, coverRectangle),
-            800,
-            600);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("my_development_cards.fxml",
+          new PurchaseHandController(gameId, purchasedHand, playerActions, coverRectangle),
+          800,
+          600);
 
     };
   }
@@ -396,27 +386,19 @@ public class GameController implements Initializable {
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
-          try {
-            App.loadPopUpWithController("noble_claim_pop_up.fxml",
-                new ClaimNoblePopUpController(gameId, playerActionMap),
-                360,
-                170);
-          } catch (IOException e) {
-            throw new RuntimeException(e);
-          }
+          App.loadPopUpWithController("noble_claim_pop_up.fxml",
+              new ClaimNoblePopUpController(gameId, playerActionMap),
+              360,
+              170);
         });
       });
 
       // also, show a popup immediately
       Platform.runLater(() -> {
-        try {
-          App.loadPopUpWithController("noble_claim_pop_up.fxml",
-              new ClaimNoblePopUpController(gameId, playerActionMap),
-              360,
-              170);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+        App.loadPopUpWithController("noble_claim_pop_up.fxml",
+            new ClaimNoblePopUpController(gameId, playerActionMap),
+            360,
+            170);
       });
 
     }
@@ -441,29 +423,21 @@ public class GameController implements Initializable {
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
-          try {
-            App.loadPopUpWithController("my_development_cards.fxml",
-                new PurchaseHandController(gameId,
-                    purchasedHand, playerActionMap, coverRectangle),
-                800,
-                600);
-          } catch (IOException e) {
-            throw new RuntimeException(e);
-          }
-        });
-      });
-
-      // do a pop up right now
-      Platform.runLater(() -> {
-        try {
           App.loadPopUpWithController("my_development_cards.fxml",
               new PurchaseHandController(gameId,
                   purchasedHand, playerActionMap, coverRectangle),
               800,
               600);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+        });
+      });
+
+      // do a pop up right now
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("my_development_cards.fxml",
+            new PurchaseHandController(gameId,
+                purchasedHand, playerActionMap, coverRectangle),
+            800,
+            600);
       });
     }
   }
@@ -480,27 +454,19 @@ public class GameController implements Initializable {
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
-          try {
-            App.loadPopUpWithController("free_card_pop_up.fxml",
-                new FreeCardPopUpController(gameId, playerActionMap),
-                720,
-                170);
-          } catch (IOException e) {
-            throw new RuntimeException(e);
-          }
+          App.loadPopUpWithController("free_card_pop_up.fxml",
+              new FreeCardPopUpController(gameId, playerActionMap),
+              720,
+              170);
         });
       });
 
       // also, show a popup immediately
       Platform.runLater(() -> {
-        try {
-          App.loadPopUpWithController("free_card_pop_up.fxml",
-              new FreeCardPopUpController(gameId, playerActionMap),
-              720,
-              170);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+        App.loadPopUpWithController("free_card_pop_up.fxml",
+            new FreeCardPopUpController(gameId, playerActionMap),
+            720,
+            170);
       });
     }
   }
@@ -561,13 +527,9 @@ public class GameController implements Initializable {
       // should load a game over page (jump back to lobby after they click the button)
       // implicitly handle the threading stopping logic and loading back to lobby
       Platform.runLater(() -> {
-        try {
-          App.loadPopUpWithController("game_over.fxml",
-              new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
-              360, 170);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+        App.loadPopUpWithController("game_over.fxml",
+            new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
+            360, 170);
       });
     }
   }
@@ -657,27 +619,19 @@ public class GameController implements Initializable {
   // interrupt the game update thread to save resources
   private EventHandler<ActionEvent> createClickOnSaveButtonEvent(GameInfo gameInfo, long gameId) {
     return event -> {
-      try {
-        App.loadPopUpWithController("save_game.fxml",
-            new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
-            360,
-            170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("save_game.fxml",
+          new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
+          360,
+          170);
     };
   }
 
   // interrupt the game update thread to save resources
   private EventHandler<ActionEvent> createClickOnQuitButtonEvent() {
     return event -> {
-      try {
-        App.loadPopUpWithController("quit_game.fxml",
-            new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
-            360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("quit_game.fxml",
+          new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
+          360, 170);
     };
   }
 
