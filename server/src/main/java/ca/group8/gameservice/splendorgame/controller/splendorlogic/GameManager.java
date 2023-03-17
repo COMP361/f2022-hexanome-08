@@ -256,7 +256,7 @@ public class GameManager {
       }
       logger.info("Launched game " + gameId);
       logger.info("Current game ids: " + activeGames.keySet());
-      return new SavedGameState(newGameInfo, newPlayerStates, newActionInterpreter);
+      return new SavedGameState(newGameInfo, newPlayerStates);
     }
   }
 
