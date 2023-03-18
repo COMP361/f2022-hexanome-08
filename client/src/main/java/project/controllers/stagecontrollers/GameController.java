@@ -451,9 +451,9 @@ public class GameController implements Initializable {
       ReturnTokenAction firstAction = (ReturnTokenAction) playerActionMap.values().iterator().next();
       int amountToReturn = firstAction.getExtraTokenCount();
 
-      String msg = "You have exceeded 10 tokens. Please return: " + amountToReturn;
+      String msg = "Please return: " + amountToReturn;
       App.loadPopUpWithController("lobby_warn.fxml",
-          new LobbyWarnPopUpController(msg),
+          new LobbyWarnPopUpController(msg, "Return Tokens"),
           360,
           170);
     }
