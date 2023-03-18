@@ -50,8 +50,9 @@ public class BaseBoardGui implements BoardGui {
    * @param coverRectangle        coverRectangle
    */
   public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     this.gameId = gameId;
-    nobleBoardGui = new NobleBoardGui(100, 100, 5);
+    nobleBoardGui = new NobleBoardGui(config.getNobleWidth(), config.getNobleHeight(), config.getNobleSpace());
     tokenBankGui = new TokenBankGui(gameId);
     this.playerBoardAnchorPane = playerBoardAnchorPane;
     this.baseCardBoard = new VBox();

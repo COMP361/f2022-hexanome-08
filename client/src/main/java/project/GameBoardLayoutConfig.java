@@ -8,6 +8,7 @@ public class GameBoardLayoutConfig {
   private double appHeight;
   private double nobleLayoutX;
   private double nobleLayoutY;
+  private double nobleSpace;
   private double tokenBankLayoutX;
   private double tokenBankLayoutY;
   private double topPlayerLayoutX;
@@ -40,6 +41,9 @@ public class GameBoardLayoutConfig {
   private double baseCardBoardHeight;
   private double pacWidth;
   private double pacHeight;
+  private double cityWidth;
+  private double cityHeight;
+  private double citySpace;
   private double cardActionWidth;
   private double cardActionHeight;
   private double deckActionWidth;
@@ -82,6 +86,10 @@ public class GameBoardLayoutConfig {
   public void setNobleLayoutY(double nobleLayoutY) {
     this.nobleLayoutY = nobleLayoutY;
   }
+
+  public double getNobleSpace() {return nobleSpace;}
+
+  public void setNobleSpace(double nobleSpace) {this.nobleSpace = nobleSpace;}
 
   public double getTokenBankLayoutX() {
     return tokenBankLayoutX;
@@ -210,6 +218,17 @@ public class GameBoardLayoutConfig {
   public void setPacBoardLayoutY(double powerAndCityBoardLayoutY) {
     this.pacBoardLayoutY = powerAndCityBoardLayoutY;
   }
+  public void setCityWidth(double cityWidth) {this.cityWidth = cityWidth;}
+
+  public void setCityHeight(double cityHeight) {this.cityHeight = cityHeight;}
+
+  public void setCitySpace(double citySpace) {this.citySpace = citySpace;}
+
+  public double getCityWidth() {return cityWidth;}
+
+  public double getCityHeight() {return cityHeight;}
+
+  public double getCitySpace() {return citySpace;}
 
   public double getNobleWidth() {
     return nobleWidth;
