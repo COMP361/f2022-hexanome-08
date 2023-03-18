@@ -129,11 +129,24 @@ public class CardExtraAction extends Action {
     int prestigeAmount = satchel.getPrestigePoints();
     curPlayer.getPurchasedHand().addDevelopmentCard(satchel);
     curPlayer.changePrestigePoints(prestigeAmount);
-
-    //reset stashedCard to null
-    associatedActionInterpreter.setStashedCard(null);
     ActionGenerator actionGenerator = associatedActionInterpreter.getActionGenerator();
-    actionGenerator.getPlayerActionMaps().put(curPlayer.getName(), new HashMap<>());
+
+    // this is a regular satchel -> reset stash to null is ok
+    if (satchel.getPurchaseEffects().size() == 1) {
+      //reset stashedCard to null
+      associatedActionInterpreter.setStashedCard(null);
+      actionGenerator.getPlayerActionMaps().put(curPlayer.getName(), new HashMap<>());
+    }
+
+    // this is a regular satchel + free -> DO NOT reset stash to null
+    // instead, update cascade with free actions
+    if (satchel.getPurchaseEffects().size() == 2) {
+      actionGenerator.updateCascadeActions(curPlayer, satchel, CardEffect.FREE_CARD);
+
+    }
+
+
+
 
     /*
     //which row and column
@@ -182,37 +195,58 @@ public class CardExtraAction extends Action {
       ActionGenerator actionGenerator = associatedActionInterpreter.getActionGenerator();
       CardEffect currentEffect = cardEffects.get(0);
 
-      // Case for most orient cards
-      if (effectNum == 1) {
-        OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
-        //remove freeCard from Board, replace.
-        orientBoard.removeCard(this.position);
-        orientBoard.update();
+      OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
+      //remove freeCard from Board, replace.
+      orientBoard.removeCard(this.position);
+      orientBoard.update();
 
-        if (currentEffect == CardEffect.SATCHEL) {
-          // stash the SATCHEL since we this card can not just go to player's purchase
-          associatedActionInterpreter.setStashedCard(freeCard);
-        } else {
-          // otherwise: FREE OR DOUBLE_GOLD OR RESERVE_NOBLE can just go to player's hand
-          curPlayer.getPurchasedHand().addDevelopmentCard(freeCard);
-          curPlayer.changePrestigePoints(prestigePoints);
-        }
-        //TODO: Why do we leave the BURN out in here? -- for julia and young to fix
-        // i have no clue how to do this              ----- by ruoyu ;)
-        if (currentEffect != CardEffect.BURN_CARD) {
-          actionGenerator.updateCascadeActions(curPlayer, freeCard, currentEffect);
-        }
-
-        // Special case where an orient card has satchel and free card.
-      } else if (effectNum == 2) {
+      if (currentEffect == CardEffect.SATCHEL) {
+        // stash the SATCHEL since we this card can not just go to player's purchase
         associatedActionInterpreter.setStashedCard(freeCard);
-        associatedActionInterpreter.setFreeCardLevel(freeCard.getLevel() - 1);
-
-        actionGenerator.updateCascadeActions(curPlayer, freeCard, CardEffect.SATCHEL);
-        //Should never reach here.
       } else {
-        System.out.println("FreeCard: Error, size of CardEffect List is not 0,1,2");
+        // otherwise: FREE OR DOUBLE_GOLD OR RESERVE_NOBLE can just go to player's hand
+        curPlayer.getPurchasedHand().addDevelopmentCard(freeCard);
+        curPlayer.changePrestigePoints(prestigePoints);
       }
+      //TODO: Why do we leave the BURN out in here? -- for julia and young to fix
+      // i have no clue how to do this              ----- by ruoyu ;)
+      if (currentEffect != CardEffect.BURN_CARD) {
+        actionGenerator.updateCascadeActions(curPlayer, freeCard, currentEffect);
+      }
+
+
+      //// Case for most orient cards
+      //if (effectNum == 1) {
+      //  OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
+      //  //remove freeCard from Board, replace.
+      //  orientBoard.removeCard(this.position);
+      //  orientBoard.update();
+      //
+      //  if (currentEffect == CardEffect.SATCHEL) {
+      //    // stash the SATCHEL since we this card can not just go to player's purchase
+      //    associatedActionInterpreter.setStashedCard(freeCard);
+      //  } else {
+      //    // otherwise: FREE OR DOUBLE_GOLD OR RESERVE_NOBLE can just go to player's hand
+      //    curPlayer.getPurchasedHand().addDevelopmentCard(freeCard);
+      //    curPlayer.changePrestigePoints(prestigePoints);
+      //  }
+      //  //TODO: Why do we leave the BURN out in here? -- for julia and young to fix
+      //  // i have no clue how to do this              ----- by ruoyu ;)
+      //  if (currentEffect != CardEffect.BURN_CARD) {
+      //    actionGenerator.updateCascadeActions(curPlayer, freeCard, currentEffect);
+      //  }
+      //
+      //  // Special case where an orient card has satchel and free card.
+      //} else if (effectNum == 2) {
+      //  associatedActionInterpreter.setStashedCard(freeCard);
+      //  associatedActionInterpreter.setFreeCardLevel(freeCard.getLevel() - 1);
+      //
+      //  actionGenerator.updateCascadeActions(curPlayer, freeCard, CardEffect.SATCHEL);
+      //
+      //  //Should never reach here.
+      //} else {
+      //  System.out.println("FreeCard: Error, size of CardEffect List is not 0,1,2");
+      //}
     }
   }
 
