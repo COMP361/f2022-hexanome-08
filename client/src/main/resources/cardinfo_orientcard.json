@@ -10,7 +10,7 @@
             "WHITE":0
         },
         "purchaseEffects":[
-
+            "DOUBLE_GOLD"
         ],
         "level":1,
         "gemColour":"GOLD",
@@ -27,7 +27,7 @@
             "WHITE":0
         },
         "purchaseEffects":[
-
+            "DOUBLE_GOLD"
         ],
         "level":1,
         "gemColour":"GOLD",
@@ -44,7 +44,7 @@
             "WHITE":3
         },
         "purchaseEffects":[
-
+            "DOUBLE_GOLD"
         ],
         "level":1,
         "gemColour":"GOLD",
@@ -61,7 +61,7 @@
             "WHITE":0
         },
         "purchaseEffects":[
-
+            "DOUBLE_GOLD"
         ],
         "level":1,
         "gemColour":"GOLD",
@@ -78,7 +78,7 @@
             "WHITE":0
         },
         "purchaseEffects":[
-
+            "DOUBLE_GOLD"
         ],
         "level":1,
         "gemColour":"GOLD",
@@ -347,9 +347,9 @@
         "price":{
             "BLUE":3,
             "BLACK":1,
-            "RED":6,
+            "RED":0,
             "GREEN":0,
-            "WHITE":0
+            "WHITE":6
         },
         "purchaseEffects":[
             "FREE_CARD"
