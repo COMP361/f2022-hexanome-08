@@ -450,7 +450,7 @@ public class GameController implements Initializable {
       //get the first (or any) action in the map and find how many tokens to return
       ReturnTokenAction firstAction = (ReturnTokenAction) playerActionMap.values().iterator().next();
       int amountToReturn = firstAction.getExtraTokenCount();
-
+      System.out.println("amount to return: " + amountToReturn);
       String msg = "Please return: " + amountToReturn;
       Platform.runLater(() -> {
         App.loadPopUpWithController("lobby_warn.fxml",
@@ -620,7 +620,6 @@ public class GameController implements Initializable {
             // optionally, show the taking a free card pop up, condition is checked inside method
             showFreeCardPopUp(curGameInfo);
             // optionally, show the return token pop up, condition is checked inside method
-            showReturnTokenPopup(curGameInfo);
             // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
 
             // ALWAYS, reset all game boards gui based on the new game info
