@@ -23,8 +23,6 @@ public class CardActionController implements Initializable {
 
   private final long gameId;
   private final Stage window;
-  //@FXML
-  //private Button goBackButton;
   @FXML
   private Button purchaseButton;
   @FXML
@@ -80,7 +78,5 @@ public class CardActionController implements Initializable {
         reserveButton.setOnAction(createOnClickButtonHandler(actionIdPair.getActionId()));
       }
     }
-
-    //goBackButton.setOnAction(createOnClickBackHandler());
   }
 }
