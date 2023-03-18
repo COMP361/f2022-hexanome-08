@@ -28,9 +28,9 @@ import project.view.lobby.communication.User;
  */
 public class App extends Application {
 
-  //private static final String mode = "ruoyu_server";
+  private static final String mode = "ruoyu_server";
   //private static final String mode = "local_host";
-  private static final String mode = "same_wifi";
+  //private static final String mode = "same_wifi";
   private static final String wifiIp = "10.122.126.253";
   private static final Colour[] allColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
