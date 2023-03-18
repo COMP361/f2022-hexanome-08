@@ -26,6 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import project.App;
 import project.GameBoardLayoutConfig;
+import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 
 /**
  * Display the baseboardGUI.
@@ -49,8 +50,9 @@ public class BaseBoardGui implements BoardGui {
    * @param coverRectangle        coverRectangle
    */
   public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     this.gameId = gameId;
-    nobleBoardGui = new NobleBoardGui(100, 100, 5);
+    nobleBoardGui = new NobleBoardGui(config.getNobleWidth(), config.getNobleHeight(), config.getNobleSpace());
     tokenBankGui = new TokenBankGui(gameId);
     this.playerBoardAnchorPane = playerBoardAnchorPane;
     this.baseCardBoard = new VBox();
@@ -98,7 +100,17 @@ public class BaseBoardGui implements BoardGui {
         playerBoardAnchorPane.getChildren().add(tokenBankGui);
       });
     } else { //means there are only return token actions
-
+      ReturnTokenAction firstAction = (ReturnTokenAction) returnTokenActionMap.values().iterator().next();
+      int amountToReturn = firstAction.getExtraTokenCount();
+      System.out.println("amount to return: " + amountToReturn);
+      String msg = "Please return: " + amountToReturn;
+      String title = "Return Tokens";
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("lobby_warn.fxml",
+            new LobbyWarnPopUpController(msg, title),
+            360,
+            170);
+      });
 
       Platform.runLater(() -> {
         tokenBankGui.setupReturnToken(returnTokenActionMap,

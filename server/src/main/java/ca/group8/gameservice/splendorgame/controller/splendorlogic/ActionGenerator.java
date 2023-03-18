@@ -13,6 +13,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
 import com.google.common.collect.Sets;
@@ -201,7 +202,28 @@ public class ActionGenerator {
         } else {
           tokensPaid.put(Colour.GOLD, 0);
         }
-        result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+        PurchasedHand purchasedHand = curPlayerInfo.getPurchasedHand();
+        List<DevelopmentCard> cardsInHand = purchasedHand.getDevelopmentCards();
+        boolean hasSatchel = card.getPurchaseEffects().contains(CardEffect.SATCHEL);
+        boolean hasCardToPair = false;
+        for (DevelopmentCard developmentCard : cardsInHand) {
+          // if a card is not gold, not paired, has gem num at least 1, means we can pair something
+          // so that the satchel we are about to buy is allowed to be bought
+          if(!developmentCard.getGemColour().equals(Colour.GOLD) &&
+              developmentCard.getGemNumber() >= 1 && !developmentCard.isPaired()) {
+            hasCardToPair = true;
+            break;
+          }
+        }
+
+        if (!hasSatchel) {
+          result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+        } else {
+          if (hasCardToPair) {
+            result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+          }
+        }
+
       }
     }
 
@@ -248,7 +270,30 @@ public class ActionGenerator {
         } else {
           tokensPaid.put(Colour.GOLD, 0);
         }
-        result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+
+        PurchasedHand purchasedHand = curPlayerInfo.getPurchasedHand();
+        List<DevelopmentCard> cardsInHand = purchasedHand.getDevelopmentCards();
+        boolean hasSatchel = card.getPurchaseEffects().contains(CardEffect.SATCHEL);
+        boolean hasCardToPair = false;
+        for (DevelopmentCard developmentCard : cardsInHand) {
+          // if a card is not gold, not paired, has gem num at least 1, means we can pair something
+          // so that the satchel we are about to buy is allowed to be bought
+          if(!developmentCard.getGemColour().equals(Colour.GOLD) &&
+              developmentCard.getGemNumber() >= 1 && !developmentCard.isPaired()) {
+            hasCardToPair = true;
+            break;
+          }
+        }
+
+        if (!hasSatchel) {
+          result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+        } else {
+          if (hasCardToPair) {
+            result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+          }
+        }
+
+        //result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
       }
     }
 

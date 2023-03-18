@@ -49,9 +49,8 @@ public class ReserveAction extends Action {
                       ActionGenerator actionGenerator,
                       ActionInterpreter actionInterpreter) {
     // curCard is the card that we want to reserve
-    List<CardEffect> cardEffects = curCard.getPurchaseEffects();
     // then it's an orient card
-    if (cardEffects.size() > 0) {
+    if (!curCard.isBaseCard()) {
       OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
       orientBoard.removeCard(cardPosition);
       orientBoard.update();

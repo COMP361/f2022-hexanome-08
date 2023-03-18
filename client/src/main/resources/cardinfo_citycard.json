@@ -5,7 +5,7 @@
         "price":{
             "BLUE":0,
             "BLACK":3,
-            "RED":0,
+            "RED":4,
             "GREEN":0,
             "WHITE":0
         },
