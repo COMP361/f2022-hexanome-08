@@ -37,7 +37,8 @@ public class CityBoardGui implements BoardGui {
    */
   public CityBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
     this.gameId = gameId;
-    citiesGui = new CitiesGui(200, 100, 10);
+    GameBoardLayoutConfig config = App.getGuiLayouts();
+    citiesGui = new CitiesGui(config.getCityWidth(), config.getCityHeight(), config.getCitySpace());
     this.playerBoardAnchorPane = playerBoardAnchorPane;
     this.coverRectangle = coverRectangle;
     this.cityCardBoard = new VBox();
