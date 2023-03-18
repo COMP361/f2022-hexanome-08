@@ -76,6 +76,27 @@ public class PlayerLobbyGuiController implements Initializable {
 
     // TODO: Finish the other update action binding
 
+    passwordUpdateButton.setOnAction(event -> {
+      String msg;
+      try {
+        App.getLobbyServiceRequestSender()
+            .updateOnePlayerPassword(
+                App.getUser().getAccessToken(),
+                player.getName(),
+                player.getPassword(),
+                passwordField.getText());
+        msg = "Update correctly!";
+
+      } catch (UnirestException e) {
+        msg = "Wrong password format";
+      }
+
+      App.loadPopUpWithController("lobby_warn.fxml",
+          new LobbyWarnPopUpController(msg),
+          360,
+          170);
+      passwordField.clear();
+    });
 
   }
 }
