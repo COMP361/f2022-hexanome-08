@@ -23,8 +23,6 @@ public class SaveGamePopUpController implements Initializable {
   private final long gameId;
   private final Thread playerInfoThread;
   private final Thread mainGameUpdateThread;
-  //@FXML
-  //private Button cancelButton;
   @FXML
   private TextField saveGameIdTextField;
   @FXML
@@ -52,15 +50,6 @@ public class SaveGamePopUpController implements Initializable {
       GameRequestSender sender = App.getGameRequestSender();
       // first save it, and then delete the current session to LS
       sender.sendSaveGameRequest(gameId, savegame, accessToken);
-      // interrupt the threads when creator choose to save the game.
-      //playerInfoThread.interrupt();
-      //mainGameUpdateThread.interrupt();
-      //try {
-      //  App.loadNewSceneToPrimaryStage("lobby_page.fxml",
-      //      App.getLobbyController());
-      //} catch (IOException e) {
-      //  throw new RuntimeException(e);
-      //}
       Button button = (Button) event.getSource();
       Stage curWindow = (Stage) button.getScene().getWindow();
       curWindow.close();

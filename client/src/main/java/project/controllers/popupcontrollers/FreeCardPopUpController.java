@@ -21,32 +21,16 @@ import project.connection.GameRequestSender;
 /**
  * Control free card pop up.
  */
-public class FreeCardPopUpController implements Initializable {
-
-
-  private final long gameId;
+public class FreeCardPopUpController extends ActionSelectionSender implements Initializable {
   private final Map<String, Action> playerActionMap;
   @FXML
   private HBox freeCardsHbox;
 
   public FreeCardPopUpController(long gameId, Map<String, Action> playerActionMap) {
-    this.gameId = gameId;
+    super(gameId);
     this.playerActionMap = playerActionMap;
   }
 
-  private EventHandler<MouseEvent> createClickOnFreeCardToTake(String actionId) {
-    return event -> {
-      GameRequestSender gameRequestSender = App.getGameRequestSender();
-      String playerName = App.getUser().getUsername();
-      String accessToken = App.getUser().getAccessToken();
-      // sends a POST request that tells the server which action we chose
-      gameRequestSender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
-
-      ImageView imageView = (ImageView) event.getSource();
-      Stage curWindow = (Stage) imageView.getScene().getWindow();
-      curWindow.close();
-    };
-  }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -70,7 +54,7 @@ public class FreeCardPopUpController implements Initializable {
       cardImageView.setFitHeight(100);
       cardImageView.setFitWidth(80);
       sortedImageViews[imageViewInsertIndex] = cardImageView;
-      cardImageView.setOnMouseClicked(createClickOnFreeCardToTake(actionId));
+      cardImageView.setOnMouseClicked(createOnActionSelectionClick(actionId));
     }
     // add all sorted, function assigned image views to the HBox
     freeCardsHbox.getChildren().addAll(sortedImageViews);
