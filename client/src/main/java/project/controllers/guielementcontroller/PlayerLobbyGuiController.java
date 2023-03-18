@@ -12,6 +12,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.paint.Color;
 import project.App;
 import project.controllers.popupcontrollers.LobbyWarnPopUpController;
+import project.controllers.stagecontrollers.AdminPageController;
 import project.view.lobby.communication.Player;
 
 public class PlayerLobbyGuiController implements Initializable {
@@ -101,6 +102,30 @@ public class PlayerLobbyGuiController implements Initializable {
           170);
       passwordField.clear();
     });
+
+    deletePlayerButton.setOnAction(event -> {
+      String msg;
+      String title;
+      try {
+        App.getLobbyServiceRequestSender()
+            .deleteOnePlayer(App.getUser().getAccessToken(),
+                player.getName());
+        //refresh the page to reflect that player has been deleted
+        App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
+        title = "Delete Player Confirmation";
+        msg = "Deleted correctly!";
+      } catch (UnirestException e) {
+        title = "Delete Player Error";
+        msg = "Player was unable to be deleted.";
+      }
+
+      App.loadPopUpWithController("lobby_warn.fxml",
+          new LobbyWarnPopUpController(msg, title),
+          360,
+          170);
+    });
+
+
 
   }
 }

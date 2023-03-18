@@ -1,9 +1,12 @@
 package project.controllers.stagecontrollers;
 
+import ca.mcgill.comp361.splendormodel.model.Colour;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,10 +16,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import project.App;
 import project.connection.LobbyRequestSender;
+import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.view.lobby.PlayerLobbyGui;
 import project.view.lobby.communication.Player;
+import project.view.lobby.communication.Role;
 
 public class AdminPageController extends AbstractLobbyController {
 
@@ -77,6 +83,44 @@ public class AdminPageController extends AbstractLobbyController {
       allPlayersVbox.getChildren().add(new PlayerLobbyGui(player));
     }
     allPlayersScrollPane.setContent(allPlayersVbox);
+
+    //add choices for rolesChoiceBox (player, service, admin)
+    rolesChoiceBox.getItems().add("Player");
+    rolesChoiceBox.getItems().add("Admin");
+    rolesChoiceBox.getItems().add("Service");
+
+    addUserButton.setOnAction(event -> {
+      String msg;
+      String title;
+      String username = userName.getText();
+      String password = userPassword.getText();
+      String pref_colour = newUserColourPicker.getValue().toString();
+      //pref_colour = pref_colour.substring(2,8);
+      Role role = Role.valueOf("ROLE_" + rolesChoiceBox.getValue().toUpperCase(Locale.ROOT));
+      Player new_player = new Player(username, pref_colour, password,role);
+      //passing in name of player who we are adding
+
+      try {
+        App.getLobbyServiceRequestSender().putOneNewPlayer(App.getUser().getAccessToken()
+            ,username,new_player);
+        //refresh the page
+        App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
+        title = "Add New Player Confirmation";
+        msg = "Player was added to the Lobby Service database!";
+        App.loadPopUpWithController("lobby_warn.fxml",
+            new LobbyWarnPopUpController(msg, title),
+            360,
+            170);
+      } catch (UnirestException e) {
+        title = "Add New Player Error";
+        msg = "Player could not be added to the Lobby Service database";
+        App.loadPopUpWithController("lobby_warn.fxml",
+            new LobbyWarnPopUpController(msg, title),
+            360,
+            170);
+
+      }
+    });
 
 
     // TODO: Finish other features on admin zone

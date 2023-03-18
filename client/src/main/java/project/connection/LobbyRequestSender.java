@@ -370,11 +370,15 @@ public class LobbyRequestSender {
       throws UnirestException {
     String url = String.format("%s/api/users/%s", lobbyUrl, playerName);
     String requestBody = new Gson().toJson(player, Player.class);
-    HttpResponse<String> response = Unirest.post(url)
+    HttpResponse<String> response = Unirest.put(url)
         .queryString("access_token", accessToken)
         .header("Content-Type", "application/json")
         .body(requestBody)
         .asString();
+
+    if (response.getStatus() != 200) {
+      throw new UnirestException("Failed to add new player.");
+    }
 
   }
 
@@ -387,6 +391,10 @@ public class LobbyRequestSender {
     HttpResponse<String> response = Unirest.delete(url)
         .queryString("access_token", accessToken)
         .asString();
+
+    if (response.getStatus() != 200) {
+      throw new UnirestException("Delete player error :(");
+    }
   }
 
   // /api/users/{users}/password : POST
