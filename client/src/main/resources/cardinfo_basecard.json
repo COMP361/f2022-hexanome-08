@@ -89,10 +89,10 @@
         "prestigePoints":0,
         "price":{
             "BLUE":0,
-            "BLACK":0,
+            "BLACK":1,
             "RED":3,
             "GREEN":1,
-            "WHITE":1
+            "WHITE":0
         },
         "purchaseEffects":[
 
