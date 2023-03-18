@@ -21,6 +21,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import project.App;
+import project.GameBoardLayoutConfig;
 import project.controllers.popupcontrollers.CardActionController;
 import project.controllers.popupcontrollers.DeckActionController;
 
@@ -98,16 +99,18 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
    */
   public EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
                                                            List<ActionIdPair> allActions) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       App.loadPopUpWithController("card_action.fxml",
-          new CardActionController(gameId, allActions, null), 360, 170);
+          new CardActionController(gameId, allActions, null), config.getCardActionWidth(), config.getCardActionHeight());
     };
   }
 
   private EventHandler<MouseEvent> createClickOnDeckHandler(long gameId, String actionId) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       App.loadPopUpWithController("deck_action.fxml",
-          new DeckActionController(gameId, actionId, coverRectangle), 360, 170);
+          new DeckActionController(gameId, actionId, coverRectangle), config.getDeckActionWidth(), config.getDeckActionHeight());
     };
   }
 
