@@ -405,6 +405,9 @@ public class LobbyRequestSender {
         .header("Content-Type", "application/json")
         .body(requestBody)
         .asString();
+    if (response.getStatus() != 200) {
+      throw new UnirestException("");
+    }
   }
 
   // /api/users/{users}/colour : POST
