@@ -87,13 +87,15 @@ public class SettingPageController extends AbstractLobbyController {
       } catch (UnirestException e) {
         // somehow failed to update the colour
         e.printStackTrace();
+        String errorTitle = "Colour Selection Error";
         String error = "Could not update user's new colour choice!\nPlease try again";
         App.loadPopUpWithController("lobby_warn.fxml",
-            new LobbyWarnPopUpController(error),
+            new LobbyWarnPopUpController(error, errorTitle),
             360,
             170);
       }
     });
+    
 
     // TODO: Finish the other update action binding (can copy paste from PlayerLobbyGui controller)
   }

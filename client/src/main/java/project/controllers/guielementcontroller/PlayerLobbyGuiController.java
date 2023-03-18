@@ -66,9 +66,10 @@ public class PlayerLobbyGuiController implements Initializable {
       } catch (UnirestException e) {
         // somehow failed to update the colour
         e.printStackTrace();
+        String errorTitle = "Colour Selection Error";
         String error = "Could not update user's new colour choice!\nPlease try again";
         App.loadPopUpWithController("lobby_warn.fxml",
-            new LobbyWarnPopUpController(error),
+            new LobbyWarnPopUpController(error, errorTitle),
             360,
             170);
       }
@@ -78,6 +79,7 @@ public class PlayerLobbyGuiController implements Initializable {
 
     passwordUpdateButton.setOnAction(event -> {
       String msg;
+      String title;
       try {
         App.getLobbyServiceRequestSender()
             .updateOnePlayerPassword(
@@ -85,14 +87,16 @@ public class PlayerLobbyGuiController implements Initializable {
                 player.getName(),
                 player.getPassword(),
                 passwordField.getText());
-        msg = "Update correctly!";
+        title = "Password Update Confirmation";
+        msg = "Updated correctly!";
 
       } catch (UnirestException e) {
-        msg = "Wrong password format";
+        title = "Password Update Error";
+        msg = "Wrong password format.";
       }
 
       App.loadPopUpWithController("lobby_warn.fxml",
-          new LobbyWarnPopUpController(msg),
+          new LobbyWarnPopUpController(msg, title),
           360,
           170);
       passwordField.clear();
