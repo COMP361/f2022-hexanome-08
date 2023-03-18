@@ -4,6 +4,7 @@ package project.controllers.stagecontrollers;
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.CardExtraAction;
 import ca.mcgill.comp361.splendormodel.actions.ClaimNobleAction;
+import ca.mcgill.comp361.splendormodel.actions.ReturnTokenAction;
 import ca.mcgill.comp361.splendormodel.model.CardEffect;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.Extension;
@@ -39,12 +40,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
-import project.controllers.popupcontrollers.ClaimNoblePopUpController;
-import project.controllers.popupcontrollers.FreeCardPopUpController;
-import project.controllers.popupcontrollers.GameOverPopUpController;
-import project.controllers.popupcontrollers.PurchaseHandController;
-import project.controllers.popupcontrollers.ReservedHandController;
-import project.controllers.popupcontrollers.SaveGamePopUpController;
+import project.controllers.popupcontrollers.*;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 import project.view.splendor.BaseBoardGui;
@@ -442,6 +438,28 @@ public class GameController implements Initializable {
     }
   }
 
+  private void showReturnTokenPopup(GameInfo curGameInfo) {
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(App.getUser().getUsername());
+
+    //player's action map has only return token actions
+    boolean hasReturnAction = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof ReturnTokenAction);
+
+    if (!playerActionMap.isEmpty() && hasReturnAction) {
+      //get the first (or any) action in the map and find how many tokens to return
+      ReturnTokenAction firstAction = (ReturnTokenAction) playerActionMap.values().iterator().next();
+      int amountToReturn = firstAction.getExtraTokenCount();
+
+      String msg = "You have exceeded 10 tokens. Please return: " + amountToReturn;
+      App.loadPopUpWithController("lobby_warn.fxml",
+          new LobbyWarnPopUpController(msg),
+          360,
+          170);
+    }
+  }
+
+
   private void showFreeCardPopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
@@ -599,7 +617,8 @@ public class GameController implements Initializable {
             showPairingCardPopUp(curGameInfo);
             // optionally, show the taking a free card pop up, condition is checked inside method
             showFreeCardPopUp(curGameInfo);
-
+            // optionally, show the return token pop up, condition is checked inside method
+            showReturnTokenPopup(curGameInfo);
             // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
 
             // ALWAYS, reset all game boards gui based on the new game info
