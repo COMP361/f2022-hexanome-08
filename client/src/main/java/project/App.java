@@ -109,7 +109,7 @@ public class App extends Application {
           gameUrl = "http://127.0.0.1:4246/";
         } else if (mode.equals("same_wifi")) {
           //gameUrl = String.format("http://10.122.126.253:4246/", wifiIp);
-          gameUrl = String.format("http://%s:4246/", getWifiIp());
+          gameUrl = String.format("http://%s:4246/", wifiIp);
         } else {
           throw new IOException("Unknown mode!");
         }
