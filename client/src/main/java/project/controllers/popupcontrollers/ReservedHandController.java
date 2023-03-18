@@ -33,7 +33,6 @@ public class ReservedHandController implements Initializable {
   private final List<ImageView> playerCards = new ArrayList<>();
   private final List<ImageView> playerNobles = new ArrayList<>();
   private final Map<String, Action> playerActions;
-  private final Rectangle coverRectangle;
   @FXML
   private HBox reservedDevCardsHbox;
   @FXML
@@ -44,10 +43,8 @@ public class ReservedHandController implements Initializable {
    *
    * @param reservedHand   reservedHand
    * @param playerActions  playerActions
-   * @param coverRectangle coverRectangle
    */
-  public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions,
-                                Rectangle coverRectangle, long gameId) {
+  public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions, long gameId) {
     Map<String, Action> purchaseActions = playerActions.entrySet()
         .stream().filter(e -> e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -55,8 +52,6 @@ public class ReservedHandController implements Initializable {
     Map<Position, List<ActionIdPair>> positionToActionMap =
         getPositionActionsInReservedHand(purchaseActions);
 
-
-    this.coverRectangle = coverRectangle;
     List<NobleCard> reservedNobles = reservedHand.getNobleCards();
     List<DevelopmentCard> reservedCards = reservedHand.getDevelopmentCards();
     // initialize the list of image views from player's reserved hand
