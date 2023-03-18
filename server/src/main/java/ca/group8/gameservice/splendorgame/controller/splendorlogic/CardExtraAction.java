@@ -39,14 +39,14 @@ public class CardExtraAction extends Action {
 
   @Override
   public void execute(TableTop curTableTop, PlayerInGame playerInGame,
-                      ActionGenerator actionListGenerator, ActionInterpreter actionInterpreter) {
+                      ActionGenerator actionGenerator, ActionInterpreter actionInterpreter) {
     //based on the cardEffect, execute the associated helper
     if (this.cardEffect == CardEffect.BURN_CARD) {
       burnActionHelper(playerInGame, actionInterpreter);
     } else if (this.cardEffect == CardEffect.SATCHEL) {
       satchelActionHelper(playerInGame, actionInterpreter);
     } else if (this.cardEffect == CardEffect.RESERVE_NOBLE) {
-      reserveNobleActionHelper(curTableTop, playerInGame);
+      reserveNobleActionHelper(curTableTop, playerInGame, actionGenerator);
     } else if (this.cardEffect == CardEffect.FREE_CARD) {
       //Don't know which card is the freeCard
       freeCardActionHelper(curTableTop, playerInGame, actionInterpreter);
@@ -83,19 +83,23 @@ public class CardExtraAction extends Action {
    * @param curPlayer curPlayer
    */
   public void reserveNobleActionHelper(TableTop curTableTop,
-                                       PlayerInGame curPlayer) {
+                                       PlayerInGame curPlayer,
+                                       ActionGenerator actionGenerator) {
 
-    // Make sure curCard is right type
-    if (!(this.curCard instanceof NobleCard)) {
-      //throw new SplendorGameException("Error: Reserve Card is not a NobleCard");
-      System.out.println("ReserveNoble: Not a noble");
-      return;
-    }
+    //// Make sure curCard is right type
+    //if (!(this.curCard instanceof NobleCard)) {
+    //  //throw new SplendorGameException("Error: Reserve Card is not a NobleCard");
+    //  System.out.println("ReserveNoble: Not a noble");
+    //  return;
+    //}
     NobleCard noble = (NobleCard) this.curCard;
     //remove noble from base board
     ((BaseBoard) curTableTop.getBoard(Extension.BASE)).removeNoble(noble);
     //add it to player's reserve hand
     curPlayer.getReservedHand().addNobleCard(noble);
+
+    // clear the player's action to empty to indicate end of turn
+    actionGenerator.getPlayerActionMaps().put(curPlayer.getName(), new HashMap<>());
   }
 
   /**
