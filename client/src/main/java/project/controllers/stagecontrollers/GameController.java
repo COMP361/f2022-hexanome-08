@@ -452,10 +452,12 @@ public class GameController implements Initializable {
       int amountToReturn = firstAction.getExtraTokenCount();
 
       String msg = "Please return: " + amountToReturn;
-      App.loadPopUpWithController("lobby_warn.fxml",
-          new LobbyWarnPopUpController(msg, "Return Tokens"),
-          360,
-          170);
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("lobby_warn.fxml",
+            new LobbyWarnPopUpController(msg, "Return Tokens"),
+            360,
+            170);
+          });
     }
   }
 

@@ -98,6 +98,8 @@ public class BaseBoardGui implements BoardGui {
         playerBoardAnchorPane.getChildren().add(tokenBankGui);
       });
     } else { //means there are only return token actions
+
+
       Platform.runLater(() -> {
         tokenBankGui.setupReturnToken(returnTokenActionMap,
             bankBalance,  //this is an empty bank map
