@@ -83,7 +83,7 @@ public class PlayerInGame {
   /**
    * Amount can be negative, as to minus.
    *
-   * @param amount amount
+   * @param amount amountNotSetter
    */
   public void changePrestigePoints(int amount) {
     prestigePoints += amount;
