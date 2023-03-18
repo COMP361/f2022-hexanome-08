@@ -39,7 +39,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
-import project.controllers.popupcontrollers.ClaimNoblePopUpController;
+import project.controllers.popupcontrollers.ActOnNoblePopUpController;
 import project.controllers.popupcontrollers.FreeCardPopUpController;
 import project.controllers.popupcontrollers.GameOverPopUpController;
 import project.controllers.popupcontrollers.PurchaseHandController;
@@ -144,7 +144,7 @@ public class GameController implements Initializable {
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
       App.loadPopUpWithController("my_reserved_cards.fxml",
-          new ReservedHandController(reservedHand, playerActions, coverRectangle, gameId),
+          new ReservedHandController(reservedHand, playerActions, gameId),
           800, 600);
 
     };
@@ -386,8 +386,8 @@ public class GameController implements Initializable {
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
-          App.loadPopUpWithController("noble_claim_pop_up.fxml",
-              new ClaimNoblePopUpController(gameId, playerActionMap),
+          App.loadPopUpWithController("noble_action_pop_up.fxml",
+              new ActOnNoblePopUpController(gameId, playerActionMap, false),
               360,
               170);
         });
@@ -395,8 +395,8 @@ public class GameController implements Initializable {
 
       // also, show a popup immediately
       Platform.runLater(() -> {
-        App.loadPopUpWithController("noble_claim_pop_up.fxml",
-            new ClaimNoblePopUpController(gameId, playerActionMap),
+        App.loadPopUpWithController("noble_action_pop_up.fxml",
+            new ActOnNoblePopUpController(gameId, playerActionMap, false),
             360,
             170);
       });
@@ -466,6 +466,37 @@ public class GameController implements Initializable {
         App.loadPopUpWithController("free_card_pop_up.fxml",
             new FreeCardPopUpController(gameId, playerActionMap),
             720,
+            170);
+      });
+    }
+  }
+
+
+  private void showReserveNoblePopUp(GameInfo curGameInfo) {
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(App.getUser().getUsername());
+    boolean allReserveNobleActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof CardExtraAction
+            && ((CardExtraAction) action).getCardEffect().equals(CardEffect.RESERVE_NOBLE));
+
+    if (!playerActionMap.isEmpty() && allReserveNobleActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("noble_action_pop_up.fxml",
+             new ActOnNoblePopUpController(gameId, playerActionMap,true),
+              360,
+              170);
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("noble_action_pop_up.fxml",
+            new ActOnNoblePopUpController(gameId, playerActionMap,true),
+            360,
             170);
       });
     }
@@ -599,6 +630,8 @@ public class GameController implements Initializable {
             showPairingCardPopUp(curGameInfo);
             // optionally, show the taking a free card pop up, condition is checked inside method
             showFreeCardPopUp(curGameInfo);
+            // optionally, show the taking a reserve noble pop up, condition is checked inside method
+            showReserveNoblePopUp(curGameInfo);
 
             // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
 
