@@ -21,22 +21,21 @@ import project.view.lobby.communication.Savegame;
 public class SaveGamePopUpController implements Initializable {
   private final GameInfo gameInfo;
   private final long gameId;
-
+  private final Thread playerInfoThread;
+  private final Thread mainGameUpdateThread;
   //@FXML
   //private Button cancelButton;
   @FXML
   private TextField saveGameIdTextField;
   @FXML
   private Button saveButton;
-  private final Thread playerInfoThread;
-  private final Thread mainGameUpdateThread;
 
   /**
    * Controller ofr save game pop up.
    *
-   * @param gameInfo gameInfo
-   * @param gameId gameId
-   * @param playerInfoThread playerInfoThread
+   * @param gameInfo             gameInfo
+   * @param gameId               gameId
+   * @param playerInfoThread     playerInfoThread
    * @param mainGameUpdateThread mainGameUpdateThread
    */
   public SaveGamePopUpController(GameInfo gameInfo, long gameId,

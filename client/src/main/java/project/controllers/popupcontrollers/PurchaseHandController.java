@@ -44,6 +44,7 @@ public class PurchaseHandController implements Initializable {
   private final List<NobleCard> nobleCards;
   private final Map<String, Action> playerActions;
   private final Rectangle coverRectangle;
+  private final long gameId;
   @FXML
   // each index represent the group of displaying all cards of one colour
   // there are 6 colours to display (hold the Groups)
@@ -56,13 +57,11 @@ public class PurchaseHandController implements Initializable {
   // hold List<NobleCard>
   private VBox noblesUnLocked;
 
-  private final long gameId;
-
   /**
    * PurchaseHandController.
    *
-   * @param purchasedHand purchasedHand
-   * @param playerActions playerActions
+   * @param purchasedHand  purchasedHand
+   * @param playerActions  playerActions
    * @param coverRectangle coverRectangle
    */
   public PurchaseHandController(long gameId, PurchasedHand purchasedHand,
@@ -272,8 +271,6 @@ public class PurchaseHandController implements Initializable {
       curWindow.close();
     };
   }
-
-
 
 
   private Map<Position, List<ActionIdPair>> getSatchelActionsInPurchaseHand(

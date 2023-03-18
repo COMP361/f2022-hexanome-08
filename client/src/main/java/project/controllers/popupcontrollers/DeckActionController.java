@@ -26,8 +26,8 @@ public class DeckActionController implements Initializable {
   /**
    * DeckActionController.
    *
-   * @param gameId gameId
-   * @param actionId actionId
+   * @param gameId         gameId
+   * @param actionId       actionId
    * @param coverRectangle coverRectangle
    */
   public DeckActionController(long gameId, String actionId, Rectangle coverRectangle) {

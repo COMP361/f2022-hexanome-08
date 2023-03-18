@@ -35,8 +35,8 @@ public class OrientBoardGui implements BoardGui {
    * It displays the OrinetBoardGui.
    *
    * @param playerBoardAnchorPane playerBoardAnchorPane
-   * @param gameId gameID
-   * @param coverRectangle coverRectangle
+   * @param gameId                gameID
+   * @param coverRectangle        coverRectangle
    */
   public OrientBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
     this.gameId = gameId;
@@ -53,7 +53,7 @@ public class OrientBoardGui implements BoardGui {
     // there in the action map at this point (or empty)
     Map<String, Action> reservePurchaseActions = playerActionMap.entrySet().stream()
         .filter(e -> e.getValue() instanceof ReserveAction
-                ||
+            ||
             e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 

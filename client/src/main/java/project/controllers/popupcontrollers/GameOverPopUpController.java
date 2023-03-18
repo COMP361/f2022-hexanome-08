@@ -16,11 +16,10 @@ import project.controllers.stagecontrollers.LobbyController;
  */
 public class GameOverPopUpController implements Initializable {
 
-  @FXML
-  private Button byeButton;
-
   private final Thread mainGameUpdateThread;
   private final Thread playerInfoThread;
+  @FXML
+  private Button byeButton;
 
   public GameOverPopUpController(Thread mainGameUpdateThread, Thread playerInfoThread) {
     this.mainGameUpdateThread = mainGameUpdateThread;
@@ -31,7 +30,7 @@ public class GameOverPopUpController implements Initializable {
    * It shows what happens after clicking the quit button.
    *
    * @param mainGameUpdateThread mainGameUpdateThread
-   * @param playerInfoThread playerInfoThread
+   * @param playerInfoThread     playerInfoThread
    * @return return the eventHandler
    */
   public EventHandler<ActionEvent> clickOnQuitGameButton(Thread mainGameUpdateThread,

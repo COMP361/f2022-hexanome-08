@@ -22,10 +22,10 @@ import project.connection.GameRequestSender;
  */
 public class ClaimNoblePopUpController implements Initializable {
 
-  @FXML
-  private HBox unlockedNoblesHbox;
   private final long gameId;
   private final Map<String, Action> playerActionMap;
+  @FXML
+  private HBox unlockedNoblesHbox;
 
   public ClaimNoblePopUpController(long gameId, Map<String, Action> playerActionMap) {
     this.gameId = gameId;

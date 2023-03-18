@@ -8,10 +8,10 @@ import javafx.scene.control.Label;
 
 public class LobbyWarnPopUpController implements Initializable {
 
+  private final String errorMsg;
   @FXML
   private Label errorMessageLabel;
 
-  private final String errorMsg;
   public LobbyWarnPopUpController(String errorMsg) {
     this.errorMsg = errorMsg;
   }

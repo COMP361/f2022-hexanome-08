@@ -26,7 +26,7 @@ public class SessionGui extends HBox {
   private final User curUser;
   private Session curSession;
 
-  private Thread lobbyUpdateThread;
+  private final Thread lobbyUpdateThread;
 
 
   // TODO: Needs to add a field -> String saveGameId, constructed in constructor
@@ -35,9 +35,9 @@ public class SessionGui extends HBox {
   /**
    * This constructs a new SessionGUI.
    *
-   * @param curSession   provides the current Session object.
-   * @param curSessionId provides the current Session's ID.
-   * @param curUser      provides the current User object.
+   * @param curSession        provides the current Session object.
+   * @param curSessionId      provides the current Session's ID.
+   * @param curUser           provides the current User object.
    * @param lobbyUpdateThread the thread that controls the lobby page GUI udpates
    */
   public SessionGui(Session curSession, Long curSessionId, User curUser, Thread lobbyUpdateThread) {
@@ -114,19 +114,19 @@ public class SessionGui extends HBox {
 
   private EventHandler<ActionEvent> createPlayGameHandler() {
     return event -> {
-        // display the GUI with some basic information needed
-        // 0. sessionId needs to be passed to this controller, the other info
-        // I can get from based on this sessionId (gameId)
-        GameBoardLayoutConfig config = App.getGuiLayouts();
-        // whenever the user clicks play button, we will reset the game request sender to
-        // send correct REST requests to our backend in a right path name (splendorbase, city...)
-        App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
+      // display the GUI with some basic information needed
+      // 0. sessionId needs to be passed to this controller, the other info
+      // I can get from based on this sessionId (gameId)
+      GameBoardLayoutConfig config = App.getGuiLayouts();
+      // whenever the user clicks play button, we will reset the game request sender to
+      // send correct REST requests to our backend in a right path name (splendorbase, city...)
+      App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
 
-        App.loadNewSceneToPrimaryStage("splendor_base_game_board.fxml",
-            new GameController(curSessionId, curSession));
-        // when we click Play, we need to stop the lobby thread from keep monitoring
-        // the changes
-        lobbyUpdateThread.interrupt();
+      App.loadNewSceneToPrimaryStage("splendor_base_game_board.fxml",
+          new GameController(curSessionId, curSession));
+      // when we click Play, we need to stop the lobby thread from keep monitoring
+      // the changes
+      lobbyUpdateThread.interrupt();
     };
   }
 

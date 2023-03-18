@@ -103,8 +103,8 @@ public class LogInController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-      setDefaultLogInInfo();
-      logInButton.setOnAction(createOnLogInClick());
-      quitButton.setOnAction(createOnQuitClick());
+    setDefaultLogInInfo();
+    logInButton.setOnAction(createOnLogInClick());
+    quitButton.setOnAction(createOnQuitClick());
   }
 }
