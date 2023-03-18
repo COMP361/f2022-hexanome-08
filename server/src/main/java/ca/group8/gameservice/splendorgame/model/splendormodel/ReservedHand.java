@@ -50,4 +50,8 @@ public class ReservedHand {
   public List<NobleCard> getNobleCards() {
     return Collections.unmodifiableList(nobleCards);
   }
+
+  public void removeNoble(NobleCard nobleCard) {
+    nobleCards.remove(nobleCard);
+  }
 }
