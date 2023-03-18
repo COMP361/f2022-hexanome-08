@@ -438,29 +438,6 @@ public class GameController implements Initializable {
     }
   }
 
-  private void showReturnTokenPopup(GameInfo curGameInfo) {
-    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(App.getUser().getUsername());
-
-    //player's action map has only return token actions
-    boolean hasReturnAction = playerActionMap.values().stream()
-        .allMatch(action -> action instanceof ReturnTokenAction);
-
-    if (!playerActionMap.isEmpty() && hasReturnAction) {
-      //get the first (or any) action in the map and find how many tokens to return
-      ReturnTokenAction firstAction = (ReturnTokenAction) playerActionMap.values().iterator().next();
-      int amountToReturn = firstAction.getExtraTokenCount();
-      System.out.println("amount to return: " + amountToReturn);
-      String msg = "Please return: " + amountToReturn;
-      Platform.runLater(() -> {
-        App.loadPopUpWithController("lobby_warn.fxml",
-            new LobbyWarnPopUpController(msg, "Return Tokens"),
-            360,
-            170);
-          });
-    }
-  }
-
 
   private void showFreeCardPopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
