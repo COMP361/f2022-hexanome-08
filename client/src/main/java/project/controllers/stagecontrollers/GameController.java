@@ -226,8 +226,11 @@ public class GameController implements Initializable {
       // TODO: Add updating number of noble reserved and number of dev cards reserved
       playerInfoGui.setNewPrestigePoints(newPoints);
       playerInfoGui.setNewTokenInHand(newTokenInHand);
-      System.out.println(App.getUser().getUsername() + " has tokens in hand: " + newTokenInHand);
-      System.out.println(App.getUser().getUsername() + " has gems in hand: " + gemsInHand);
+      System.out.println("Someone made a move:");
+      System.out.println(playerName + " has tokens in hand: " + newTokenInHand);
+      System.out.println(playerName + " has gems in hand: " + gemsInHand);
+      System.out.println("Update finish");
+      System.out.println();
       playerInfoGui.setGemsInHand(gemsInHand);
     });
   }
