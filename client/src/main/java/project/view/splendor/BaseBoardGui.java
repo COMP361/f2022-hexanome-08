@@ -26,6 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import project.App;
 import project.GameBoardLayoutConfig;
+import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 
 /**
  * Display the baseboardGUI.
@@ -98,6 +99,18 @@ public class BaseBoardGui implements BoardGui {
         playerBoardAnchorPane.getChildren().add(tokenBankGui);
       });
     } else { //means there are only return token actions
+      ReturnTokenAction firstAction = (ReturnTokenAction) returnTokenActionMap.values().iterator().next();
+      int amountToReturn = firstAction.getExtraTokenCount();
+      System.out.println("amount to return: " + amountToReturn);
+      String msg = "Please return: " + amountToReturn;
+      String title = "Return Tokens";
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("lobby_warn.fxml",
+            new LobbyWarnPopUpController(msg, title),
+            360,
+            170);
+      });
+
       Platform.runLater(() -> {
         tokenBankGui.setupReturnToken(returnTokenActionMap,
             bankBalance,  //this is an empty bank map
