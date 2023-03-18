@@ -288,7 +288,7 @@ public class LobbyRequestSender {
         .asString();
     if (response.getStatus() != 200) {
       throw new UnirestException("Can not launch the session!, token = "
-              + accessToken + " and id: " + sessionId + "Error code: " + response.getStatus());
+          + accessToken + " and id: " + sessionId + "Error code: " + response.getStatus());
     }
   }
 
@@ -371,10 +371,10 @@ public class LobbyRequestSender {
     String url = String.format("%s/api/users/%s", lobbyUrl, playerName);
     String requestBody = new Gson().toJson(player, Player.class);
     HttpResponse<String> response = Unirest.post(url)
-          .queryString("access_token", accessToken)
-          .header("Content-Type", "application/json")
-          .body(requestBody)
-          .asString();
+        .queryString("access_token", accessToken)
+        .header("Content-Type", "application/json")
+        .body(requestBody)
+        .asString();
 
   }
 
@@ -394,7 +394,7 @@ public class LobbyRequestSender {
   // that warns the admin/user about failure of updating one's password (does not obey the rule)
   public void updateOnePlayerPassword(String accessToken, String playerName,
                                       String oldPassword, String nextPassword)
-      throws UnirestException{
+      throws UnirestException {
     String url = String.format("%s/api/users/%s/password", lobbyUrl, playerName);
     JSONObject requestBody = new JSONObject();
     requestBody.put("nextPassword", nextPassword);
@@ -411,7 +411,7 @@ public class LobbyRequestSender {
   //TODO: This Unirest Exception should be handled correctly to display something
   // that warns the admin/user about failure of updating one's colour
   public void updateOnePlayerColour(String accessToken, String playerName, String colourCode)
-  throws UnirestException {
+      throws UnirestException {
     String url = String.format("%s/api/users/%s/colour", lobbyUrl, playerName);
     JSONObject requestBody = new JSONObject();
     requestBody.put("colour", colourCode);

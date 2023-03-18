@@ -36,7 +36,6 @@ public class SettingPageController extends AbstractLobbyController {
   private Button lobbyPageButton;
 
 
-
   private void pageSpecificActionBind() {
     adminZoneButton.setVisible(false);
     // potentially enable admin zone button functionality
@@ -45,7 +44,7 @@ public class SettingPageController extends AbstractLobbyController {
     if (role.equals("ROLE_ADMIN")) {
       adminZoneButton.setVisible(true);
       adminZoneButton.setOnAction(event -> {
-        App.loadNewSceneToPrimaryStage("admin_zone.fxml",new AdminPageController());
+        App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
       });
     }
 

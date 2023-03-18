@@ -24,12 +24,10 @@ import project.connection.GameRequestSender;
 public class FreeCardPopUpController implements Initializable {
 
 
+  private final long gameId;
+  private final Map<String, Action> playerActionMap;
   @FXML
   private HBox freeCardsHbox;
-
-  private final long gameId;
-
-  private final Map<String, Action> playerActionMap;
 
   public FreeCardPopUpController(long gameId, Map<String, Action> playerActionMap) {
     this.gameId = gameId;

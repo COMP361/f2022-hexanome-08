@@ -33,61 +33,22 @@ public class App extends Application {
   //private static final String mode = "same_wifi";
 
   private static final String wifiIp = "10.121.139.187";
-
-  private static GameRequestSender gameRequestSender = null;
-  private static LobbyRequestSender lobbyRequestSender = null;
-
-
   private static final Colour[] allColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
   };
   private static final Colour[] baseColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
   };
-
+  private static final String defaultImageUrl =
+      "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg";
+  private static GameRequestSender gameRequestSender = null;
+  private static LobbyRequestSender lobbyRequestSender = null;
   private static Stage primaryStage;
   private static User user;
   private static GameBoardLayoutConfig guiLayouts;
 
-  private static final String defaultImageUrl =
-      "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg";
-
   public static void main(String[] args) {
     launch();
-  }
-
-  /**
-   * Override the start() method to launch the whole project.
-   *
-   * @param stage The default stage to display
-   * @throws IOException when fxml not found
-   */
-  @Override
-  public void start(Stage stage) throws IOException {
-    System.setProperty("com.apple.macos.useScreenMenuBar", "true");
-    primaryStage = stage;
-    try {
-      FileReader f = new FileReader(Objects.requireNonNull(
-          App.class.getClassLoader().getResource("appConfig.json")).getFile());
-      JsonReader jfReader = new JsonReader(f);
-      guiLayouts = new Gson().fromJson(jfReader, GameBoardLayoutConfig.class);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    FXMLLoader startPageLoader = new FXMLLoader(App.class.getResource("start_page.fxml"));
-    // assign controller of log in page
-    startPageLoader.setController(new LogInController());
-
-    Scene scene = new Scene(startPageLoader.load(),
-        guiLayouts.getAppWidth(),
-        guiLayouts.getAppHeight());
-    primaryStage.setTitle("Welcome to Splendor!");
-    primaryStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
-    primaryStage.setFullScreenExitHint("");
-    primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-    //primaryStage.setFullScreen(true);
-    primaryStage.setScene(scene);
-    primaryStage.show();
   }
 
   private static String getWifiIp() throws IOException {
@@ -148,7 +109,7 @@ public class App extends Application {
         } else if (mode.equals("local_host")) {
           gameUrl = "http://127.0.0.1:4246/";
         } else if (mode.equals("same_wifi")) {
-          gameUrl = String.format("http://%s:4246/",wifiIp);
+          gameUrl = String.format("http://%s:4246/", wifiIp);
           //gameUrl = String.format("http://%s:4246/", getWifiIp());
         } else {
           throw new IOException("Unknown mode!");
@@ -225,7 +186,6 @@ public class App extends Application {
     user.setAccessToken(newAccessToken);
   }
 
-
   public static Colour[] getAllColours() {
     return allColours;
   }
@@ -274,5 +234,38 @@ public class App extends Application {
       playerImage = new Image(defaultImageUrl);
     }
     return playerImage;
+  }
+
+  /**
+   * Override the start() method to launch the whole project.
+   *
+   * @param stage The default stage to display
+   * @throws IOException when fxml not found
+   */
+  @Override
+  public void start(Stage stage) throws IOException {
+    System.setProperty("com.apple.macos.useScreenMenuBar", "true");
+    primaryStage = stage;
+    try {
+      FileReader f = new FileReader(Objects.requireNonNull(
+          App.class.getClassLoader().getResource("appConfig.json")).getFile());
+      JsonReader jfReader = new JsonReader(f);
+      guiLayouts = new Gson().fromJson(jfReader, GameBoardLayoutConfig.class);
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    FXMLLoader startPageLoader = new FXMLLoader(App.class.getResource("start_page.fxml"));
+    // assign controller of log in page
+    startPageLoader.setController(new LogInController());
+    primaryStage.setTitle("Welcome to Splendor!");
+    primaryStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+    primaryStage.setFullScreenExitHint("");
+    primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+    //primaryStage.setFullScreen(true);
+    Scene scene = new Scene(startPageLoader.load(),
+        guiLayouts.getAppWidth(),
+        guiLayouts.getAppHeight());
+    primaryStage.setScene(scene);
+    primaryStage.show();
   }
 }

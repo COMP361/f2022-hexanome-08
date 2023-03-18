@@ -50,7 +50,7 @@ public class LobbyController extends AbstractLobbyController {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    super.initialize(url,resourceBundle);
+    super.initialize(url, resourceBundle);
     // for lobby page, bind action to setting and admin button
     pageSpecificActionBind();
 
@@ -95,7 +95,6 @@ public class LobbyController extends AbstractLobbyController {
       }
     };
   }
-
 
 
   private void createAndAddSessionGui(Session curSession, Long sessionId, User user,
@@ -208,11 +207,10 @@ public class LobbyController extends AbstractLobbyController {
     if (role.equals("ROLE_ADMIN")) {
       adminZoneButton.setVisible(true);
       adminZoneButton.setOnAction(event -> {
-        App.loadNewSceneToPrimaryStage("admin_zone.fxml",new AdminPageController());
+        App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
       });
     }
   }
-
 
 
 }

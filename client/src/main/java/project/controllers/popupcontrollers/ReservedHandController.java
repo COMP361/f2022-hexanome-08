@@ -42,8 +42,8 @@ public class ReservedHandController implements Initializable {
   /**
    * Controller for the ReservedHand.
    *
-   * @param reservedHand reservedHand
-   * @param playerActions playerActions
+   * @param reservedHand   reservedHand
+   * @param playerActions  playerActions
    * @param coverRectangle coverRectangle
    */
   public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions,
@@ -113,13 +113,13 @@ public class ReservedHandController implements Initializable {
 
 
   private EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
-      List<ActionIdPair> allActions) {
+                                                            List<ActionIdPair> allActions) {
     return event -> {
 
-        ImageView imageView = (ImageView) event.getSource();
-        Stage window = (Stage) imageView.getScene().getWindow();
-        App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(gameId, allActions, window), 360, 170);
+      ImageView imageView = (ImageView) event.getSource();
+      Stage window = (Stage) imageView.getScene().getWindow();
+      App.loadPopUpWithController("card_action.fxml",
+          new CardActionController(gameId, allActions, window), 360, 170);
     };
   }
 

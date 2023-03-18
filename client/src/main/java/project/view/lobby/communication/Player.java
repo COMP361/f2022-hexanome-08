@@ -3,7 +3,6 @@ package project.view.lobby.communication;
 
 /**
  * Communication class needed to update player information to LS.
- *
  */
 public class Player {
 
@@ -14,6 +13,7 @@ public class Player {
   private String preferredColour;
 
   private Role role;
+
   public Player() {
 
   }

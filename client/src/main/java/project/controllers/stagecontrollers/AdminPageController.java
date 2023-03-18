@@ -62,9 +62,10 @@ public class AdminPageController extends AbstractLobbyController {
       App.loadNewSceneToPrimaryStage("lobby_page.fxml", new LobbyController());
     });
   }
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    super.initialize(url,resourceBundle);
+    super.initialize(url, resourceBundle);
     // for admin page, bind action to setting and lobby button
     pageSpecificActionBind();
 
@@ -76,7 +77,6 @@ public class AdminPageController extends AbstractLobbyController {
       allPlayersVbox.getChildren().add(new PlayerLobbyGui(player));
     }
     allPlayersScrollPane.setContent(allPlayersVbox);
-
 
 
     // TODO: Finish other features on admin zone

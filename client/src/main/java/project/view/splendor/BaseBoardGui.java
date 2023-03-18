@@ -45,8 +45,8 @@ public class BaseBoardGui implements BoardGui {
    * What the baseBoardGUI has.
    *
    * @param playerBoardAnchorPane playerBoardAnchorPane
-   * @param gameId gameId
-   * @param coverRectangle coverRectangle
+   * @param gameId                gameId
+   * @param coverRectangle        coverRectangle
    */
   public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
     this.gameId = gameId;
@@ -113,7 +113,7 @@ public class BaseBoardGui implements BoardGui {
     // there in the action map at this point (or empty)
     Map<String, Action> reservePurchaseActions = playerActionMap.entrySet()
         .stream().filter(e -> e.getValue() instanceof ReserveAction
-                    ||
+            ||
             e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 

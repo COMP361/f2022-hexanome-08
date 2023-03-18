@@ -16,25 +16,19 @@ import project.view.lobby.communication.Player;
 
 public class PlayerLobbyGuiController implements Initializable {
 
+  private final Player player;
   @FXML
   private Label textInfoLabel;
-
   @FXML
   private PasswordField passwordField;
-
   @FXML
   private Button passwordUpdateButton;
-
   @FXML
   private ColorPicker colorPicker;
-
   @FXML
   private Button colorUpdateButton;
-
   @FXML
   private Button deletePlayerButton;
-
-  private final Player player;
 
   public PlayerLobbyGuiController(Player player) {
     this.player = player;

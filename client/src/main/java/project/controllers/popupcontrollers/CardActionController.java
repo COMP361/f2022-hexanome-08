@@ -22,6 +22,7 @@ public class CardActionController implements Initializable {
   private final List<ActionIdPair> allActionsPair;
 
   private final long gameId;
+  private final Stage window;
   //@FXML
   //private Button goBackButton;
   @FXML
@@ -29,14 +30,12 @@ public class CardActionController implements Initializable {
   @FXML
   private Button reserveButton;
 
-  private final Stage window;
-
   /**
    * CardActionController.
    *
-   * @param gameId gameId
+   * @param gameId         gameId
    * @param allActionsPair allActionsPair
-   * @param window the stage of the parent, can be null
+   * @param window         the stage of the parent, can be null
    */
   public CardActionController(long gameId, List<ActionIdPair> allActionsPair, Stage window) {
     this.gameId = gameId;
