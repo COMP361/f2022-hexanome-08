@@ -444,7 +444,7 @@ public class GameController implements Initializable {
       });
     }
   }
-
+  //TODO: take out prints
   private void showBurnCardPopUp(GameInfo curGameInfo) {
     System.out.println("showburnHelper checking...");
     // generate special pop up for pairing card
@@ -453,6 +453,10 @@ public class GameController implements Initializable {
     boolean allBurnActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.BURN_CARD));
+    System.out.println("action Map: ");
+    for(String actionId : playerActionMap.keySet()){
+      System.out.println((Action) playerActionMap.get(actionId));
+    }
     if (!playerActionMap.isEmpty() && allBurnActions) {
       System.out.println("showburnHelper condition met!");
       System.out.println("cards able to burn: " + playerActionMap.size());
