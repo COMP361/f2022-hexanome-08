@@ -169,12 +169,28 @@ public class ActionGenerator {
         int goldCardsNeeded = 0;
         final Position cardPosition = new Position(level, cardIndex);
         DevelopmentCard card = orientLevelCards[cardIndex];
+
+        //if orient card is a burn card
+        if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
+          Colour cardsColour = null;
+          for (Colour color : card.getPrice().keySet()){
+            if (card.getPrice().get(color) == 2) {
+              cardsColour = color;
+              if ( curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
+                result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
+              }
+              break;
+            }
+          }
+          continue;
+        }
+
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
         }
         // always generate reserve actions for base cards for index 0,1,2,3
-        EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        EnumMap<Colour, Integer> tokensPaid = new EnumMap<Colour, Integer>(card.getPrice());
         for (Colour c : totalGems.keySet()) {
           if (c.equals(Colour.GOLD)) {
             continue;
@@ -220,10 +236,7 @@ public class ActionGenerator {
 
         //no gold cards ever required for burn, therefore always set to 0
         //set card price to its original price (no discounts on burn cards)
-        if (hasBurnCard) {
-          result.add(new PurchaseAction(cardPosition,card,0,card.getPrice()));
-        }
-        else if (!hasSatchel) {
+        if (!hasSatchel) {
           result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
         } else {
           if (hasCardToPair) {
