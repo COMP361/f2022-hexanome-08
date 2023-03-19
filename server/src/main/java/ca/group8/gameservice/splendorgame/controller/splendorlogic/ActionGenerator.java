@@ -620,7 +620,6 @@ public class ActionGenerator {
       for (Colour c : rawMap.keySet()) {
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         curMap.put(c, 2);
-        allCombos.add(curMap);
         List<Colour> otherColours = curMap.keySet().stream()
             .filter(c2 -> !c2.equals(c))
             .collect(Collectors.toList());
