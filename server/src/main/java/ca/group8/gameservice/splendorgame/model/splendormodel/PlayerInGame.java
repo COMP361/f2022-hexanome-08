@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import org.slf4j.Logger;
@@ -45,15 +46,20 @@ public class PlayerInGame {
     tokenHand.removeToken(paidTokens);
 
     List<DevelopmentCard> allDevCards = purchasedHand.getDevelopmentCards();
+    List<DevelopmentCard> goldCardsToRemove = new ArrayList<>();
+
     while (goldCardsRequired > 0) {
       for (DevelopmentCard card : allDevCards) {
         if (card.getGemColour().equals(Colour.GOLD)) {
           goldCardsRequired -= 1;
           // remove the gold card that's used to pay
-          purchasedHand.removeDevelopmentCard(card);
+          //purchasedHand.removeDevelopmentCard(card);
+          goldCardsToRemove.add(card);
         }
       }
     }
+
+    allDevCards.removeAll(goldCardsToRemove);
   }
 
   public TokenHand getTokenHand() {
