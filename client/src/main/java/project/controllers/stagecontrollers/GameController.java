@@ -453,8 +453,10 @@ public class GameController implements Initializable {
     boolean allBurnActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.BURN_CARD));
+    System.out.println("action Map size: " + playerActionMap.size());
     System.out.println("action Map: ");
     for(String actionId : playerActionMap.keySet()){
+      System.out.println("**");
       System.out.println((Action) playerActionMap.get(actionId));
     }
     if (!playerActionMap.isEmpty() && allBurnActions) {
