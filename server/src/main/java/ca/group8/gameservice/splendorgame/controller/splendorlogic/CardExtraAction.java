@@ -285,9 +285,9 @@ public class CardExtraAction extends Action {
       curPlayer.getPurchasedHand().addDevelopmentCard(newCard);
 
       //TODO: remove card from board
-      //OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
-      //orientBoard.removeCard(this.position);
-      //orientBoard.update();
+      OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
+      orientBoard.removeCard(associatedActionInterpreter.getStashedCard().ge);
+      orientBoard.update();
 
       //add prestige points
       int newPrestigePoints = newCard.getPrestigePoints();
