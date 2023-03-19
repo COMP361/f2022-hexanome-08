@@ -45,7 +45,7 @@ public class CardExtraAction extends Action {
                       ActionGenerator actionGenerator, ActionInterpreter actionInterpreter) {
     //based on the cardEffect, execute the associated helper
     if (this.cardEffect == CardEffect.BURN_CARD) {
-      burnActionHelper(curTableTop, playerInGame, actionInterpreter);
+      burnActionHelper( playerInGame, actionInterpreter);
     } else if (this.cardEffect == CardEffect.SATCHEL) {
       satchelActionHelper(playerInGame, actionInterpreter);
     } else if (this.cardEffect == CardEffect.RESERVE_NOBLE) {
@@ -259,7 +259,7 @@ public class CardExtraAction extends Action {
    * @param curPlayer curPlayer
    * @param associatedActionInterpreter associatedActionInterpreter
    */
-  public void burnActionHelper(TableTop curTableTop, PlayerInGame curPlayer,
+  public void burnActionHelper(PlayerInGame curPlayer,
                                ActionInterpreter associatedActionInterpreter) {
 
     DevelopmentCard cardToBurn = (DevelopmentCard) this.curCard;
@@ -283,11 +283,6 @@ public class CardExtraAction extends Action {
       //take stashed card and add to player's hand
       DevelopmentCard newCard = associatedActionInterpreter.getStashedCard();
       curPlayer.getPurchasedHand().addDevelopmentCard(newCard);
-
-      //TODO: remove card from board
-      OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
-      orientBoard.removeCard(associatedActionInterpreter.getStashedCard().ge);
-      orientBoard.update();
 
       //add prestige points
       int newPrestigePoints = newCard.getPrestigePoints();
