@@ -45,21 +45,16 @@ public class PlayerInGame {
     // remove tokens (after discount_ for this payment from playerHand
     tokenHand.removeToken(paidTokens);
 
-    List<DevelopmentCard> allDevCards = purchasedHand.getDevelopmentCards();
-    List<DevelopmentCard> goldCardsToRemove = new ArrayList<>();
-
+    List<DevelopmentCard> allDevCards = new ArrayList<>(purchasedHand.getDevelopmentCards());
     while (goldCardsRequired > 0) {
       for (DevelopmentCard card : allDevCards) {
         if (card.getGemColour().equals(Colour.GOLD)) {
           goldCardsRequired -= 1;
           // remove the gold card that's used to pay
-          //purchasedHand.removeDevelopmentCard(card);
-          goldCardsToRemove.add(card);
+          purchasedHand.removeDevelopmentCard(card);
         }
       }
     }
-
-    allDevCards.removeAll(goldCardsToRemove);
   }
 
   public TokenHand getTokenHand() {
