@@ -14,6 +14,8 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -55,7 +57,9 @@ public class PurchaseAction extends Action {
     Bank curBank = curTableTop.getBank();
     PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
     int points = curCard.getPrestigePoints();
-
+    Logger logger = LoggerFactory.getLogger(PurchaseAction.class);
+    logger.info("Tokens that should be paid: " + tokensToBePaid);
+    logger.info("Card's price: " + curCard.getPrice());
 
     if (effectNum == 0) {
       // tokens off from hands
