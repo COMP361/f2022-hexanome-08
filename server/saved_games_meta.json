@@ -1,1 +1,9 @@
+<<<<<<< HEAD
 [{"players":["young","ruoyu"],"gamename":"splendorbase","savegameid":"1 step before the most complicate case"},{"players":["ruoyu","young"],"gamename":"splendorbase","savegameid":"cat game"},{"players":["ruoyu","young"],"gamename":"splendorbase","savegameid":"bug test 1"},{"players":["ruoyu","young"],"gamename":"splendorbase","savegameid":"unlock cat noble from reservehand"},{"players":["young","eden"],"gamename":"splendorbase","savegameid":"burn test 1"},{"players":["young","eden"],"gamename":"splendorbase","savegameid":"burn test 2"},{"players":["eden","young"],"gamename":"splendorbase","savegameid":"burn test 3"}]
+=======
+<<<<<<< HEAD
+[{"players":["eden","ruoyu"],"gamename":"splendorbase","savegameid":"noble2"},{"players":["eden","ruoyu"],"gamename":"splendorbase","savegameid":"unlockNoble"},{"players":["ruoyu","eden"],"gamename":"splendorbase","savegameid":"1Step Before unlocking noble"},{"players":["julia","ruoyu"],"gamename":"splendorbase","savegameid":"one step before free"}]
+=======
+[{"players":["young","ruoyu"],"gamename":"splendorbase","savegameid":"1 step before the most complicate case"},{"players":["ruoyu","young"],"gamename":"splendorbase","savegameid":"cat game"},{"players":["ruoyu","young"],"gamename":"splendorbase","savegameid":"bug test 1"},{"players":["ruoyu","young"],"gamename":"splendorbase","savegameid":"unlock cat noble from reservehand"}]
+>>>>>>> cfec90b86600b93451233150b076e77ea1cd5546
+>>>>>>> 3d224dac85d349f5a8424ca397cee4b256c0cd04

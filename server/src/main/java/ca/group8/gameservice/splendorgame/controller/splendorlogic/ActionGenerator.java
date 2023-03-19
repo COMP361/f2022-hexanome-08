@@ -132,7 +132,7 @@ public class ActionGenerator {
           continue; // this card can not be bought
         }
         // always generate reserve actions for base cards for index 0,1,2,3
-        EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        EnumMap<Colour, Integer> tokensPaid = new EnumMap<Colour, Integer>(card.getPrice());
         for (Colour c : totalGems.keySet()) {
           if (c.equals(Colour.GOLD)) {
             continue;
@@ -275,8 +275,8 @@ public class ActionGenerator {
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
         }
-        // always generate reserve actions for base cards for index 0,1,2,3
-        EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        // always generate reserve actions for base  cards for index 0,1,2,3
+        EnumMap<Colour, Integer> tokensPaid = new EnumMap<Colour, Integer>(card.getPrice());
         for (Colour c : totalGems.keySet()) {
           if (c.equals(Colour.GOLD)) {
             continue;

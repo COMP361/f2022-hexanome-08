@@ -58,7 +58,6 @@ public class PurchaseAction extends Action {
     PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
     int points = curCard.getPrestigePoints();
 
-
     if (effectNum == 0) {
       // tokens off from hands
       playerInGame.payTokensToBuy(goldCardsRequired, tokensToBePaid);
