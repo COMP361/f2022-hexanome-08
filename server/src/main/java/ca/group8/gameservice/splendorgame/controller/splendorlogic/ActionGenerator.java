@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.*;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -168,12 +169,28 @@ public class ActionGenerator {
         int goldCardsNeeded = 0;
         final Position cardPosition = new Position(level, cardIndex);
         DevelopmentCard card = orientLevelCards[cardIndex];
+
+        //if orient card is a burn card
+        if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
+          Colour cardsColour = null;
+          for (Colour color : card.getPrice().keySet()){
+            if (card.getPrice().get(color) == 2) {
+              cardsColour = color;
+              if ( curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
+                result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
+              }
+              break;
+            }
+          }
+          continue;
+        }
+
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
         }
         // always generate reserve actions for base cards for index 0,1,2,3
-        EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        EnumMap<Colour, Integer> tokensPaid = new EnumMap<Colour, Integer>(card.getPrice());
         for (Colour c : totalGems.keySet()) {
           if (c.equals(Colour.GOLD)) {
             continue;
@@ -216,6 +233,8 @@ public class ActionGenerator {
           }
         }
 
+        //no gold cards ever required for burn, therefore always set to 0
+        //set card price to its original price (no discounts on burn cards)
         if (!hasSatchel) {
           result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
         } else {
@@ -236,6 +255,22 @@ public class ActionGenerator {
         //x coordinate = 0, means this is a card in the reserve hand!
         final Position cardPosition = new Position(0, cardIndex);
         DevelopmentCard card = reservedCards[cardIndex];
+
+        //if is burn card
+        if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
+          Colour cardsColour = null;
+          for (Colour color : card.getPrice().keySet()){
+            if (card.getPrice().get(color) == 2) {
+              cardsColour = color;
+              if ( curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
+                result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
+              }
+              break;
+            }
+          }
+          continue;
+        }
+
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
@@ -441,9 +476,13 @@ public class ActionGenerator {
     }
 
     if (cardEffect.equals(CardEffect.BURN_CARD)) {
+      Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
+      logger.info("Generating cascade actions");
       List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
       Colour burnColourPrice = null;
       EnumMap<Colour, Integer> cardPrice = purchasedCard.getPrice();
+      logger.info("Purchased card: " + purchasedCard.getCardName());
+      logger.info("price " + cardPrice);
       for (Colour colour : cardPrice.keySet()) {
         if (cardPrice.get(colour) > 0) {
           burnColourPrice = colour;
@@ -452,22 +491,24 @@ public class ActionGenerator {
       }
       // iterate to find the card in player's hand to find which card colour to burn
       Colour finalBurnColourPrice = burnColourPrice;
+      logger.info("Colour: " + finalBurnColourPrice);
       List<Integer> pairedCardIndices = IntStream.range(0, cardsInHand.size())
           .filter(i -> cardsInHand.get(i).isPaired())
           .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
           .boxed()
           .collect(Collectors.toList());
-
+      logger.info("Paired Burnable Cards: " + pairedCardIndices.size());
       // if there is no paired card to use
       if (pairedCardIndices.size() == 0) {
         List<Integer> sameColourCardsIndices = IntStream.range(0, cardsInHand.size())
             .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
             .boxed()
             .collect(Collectors.toList());
-
+        logger.info("Burnable Cards: " + sameColourCardsIndices.size());
         for (int i : sameColourCardsIndices) {
           Position position = new Position(0, i);
           DevelopmentCard card = cardsInHand.get(i);
+          logger.info("burnable card " + i +": name: " + card.getCardName());
           cascadeActions.add(new CardExtraAction(card, cardEffect, position));
         }
       }

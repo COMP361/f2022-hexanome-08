@@ -39,12 +39,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
-import project.controllers.popupcontrollers.ActOnNoblePopUpController;
-import project.controllers.popupcontrollers.FreeCardPopUpController;
-import project.controllers.popupcontrollers.GameOverPopUpController;
-import project.controllers.popupcontrollers.PurchaseHandController;
-import project.controllers.popupcontrollers.ReservedHandController;
-import project.controllers.popupcontrollers.SaveGamePopUpController;
+import project.controllers.popupcontrollers.*;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 import project.view.splendor.BaseBoardGui;
@@ -226,8 +221,11 @@ public class GameController implements Initializable {
       // TODO: Add updating number of noble reserved and number of dev cards reserved
       playerInfoGui.setNewPrestigePoints(newPoints);
       playerInfoGui.setNewTokenInHand(newTokenInHand);
-      System.out.println(App.getUser().getUsername() + " has tokens in hand: " + newTokenInHand);
-      System.out.println(App.getUser().getUsername() + " has gems in hand: " + gemsInHand);
+      System.out.println("Someone made a move:");
+      System.out.println(playerName + " has tokens in hand: " + newTokenInHand);
+      System.out.println(playerName + " has gems in hand: " + gemsInHand);
+      System.out.println("Update finish");
+      System.out.println();
       playerInfoGui.setGemsInHand(gemsInHand);
     });
   }
@@ -441,6 +439,46 @@ public class GameController implements Initializable {
       });
     }
   }
+  //TODO: take out prints
+  private void showBurnCardPopUp(GameInfo curGameInfo) {
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(App.getUser().getUsername());
+    boolean allBurnActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof CardExtraAction
+            && ((CardExtraAction) action).getCardEffect().equals(CardEffect.BURN_CARD));
+    for(String actionId : playerActionMap.keySet()){
+    }
+    if (!playerActionMap.isEmpty() && allBurnActions) {
+      HttpResponse<String> response =
+          App.getGameRequestSender().sendGetAllPlayerInfoRequest(gameId, "");
+      String playerStatesJson = response.getBody();
+      PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
+          .fromJson(playerStatesJson, PlayerStates.class);
+      PlayerInGame playerInGame = playerStates.getOnePlayerInGame(App.getUser().getUsername());
+      PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
+      // also assign the pending action button some functionality
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("free_card_pop_up.fxml",
+              new BurnCardController(gameId, playerActionMap),
+              800,
+              600);
+        });
+      });
+
+      // do a pop up right now
+      Platform.runLater(() -> {
+
+        App.loadPopUpWithController("free_card_pop_up.fxml",
+            new BurnCardController(gameId, playerActionMap),
+            800,
+            600);
+      });
+    }
+  }
+
 
 
   private void showFreeCardPopUp(GameInfo curGameInfo) {
@@ -456,7 +494,7 @@ public class GameController implements Initializable {
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
           App.loadPopUpWithController("free_card_pop_up.fxml",
-              new FreeCardPopUpController(gameId, playerActionMap),
+              new BurnCardController(gameId, playerActionMap),
               720,
               170);
         });
@@ -465,7 +503,7 @@ public class GameController implements Initializable {
       // also, show a popup immediately
       Platform.runLater(() -> {
         App.loadPopUpWithController("free_card_pop_up.fxml",
-            new FreeCardPopUpController(gameId, playerActionMap),
+            new BurnCardController(gameId, playerActionMap),
             720,
             170);
       });
@@ -631,6 +669,8 @@ public class GameController implements Initializable {
             showPairingCardPopUp(curGameInfo);
             // optionally, show the taking a free card pop up, condition is checked inside method
             showFreeCardPopUp(curGameInfo);
+            // optionally, show the taking a free card pop up, condition is checked inside method
+            showBurnCardPopUp(curGameInfo);
             // optionally, show the taking a reserve noble pop up, condition is checked inside method
             showReserveNoblePopUp(curGameInfo);
 

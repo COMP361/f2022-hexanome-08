@@ -15,7 +15,7 @@ import project.view.lobby.communication.Player;
 public class SettingPageController extends AbstractLobbyController {
 
   @FXML
-  private PasswordField passwordField;
+  private PasswordField userPassword;
 
   @FXML
   private Button passwordUpdateButton;
@@ -64,7 +64,7 @@ public class SettingPageController extends AbstractLobbyController {
 
     // set up the colour part and update button part
     Player player = App.getLobbyServiceRequestSender()
-        .getOnePlayer(App.getUser().getAccessToken(), App.getUser().getUsername());
+        .getOnePlayer(App.getUser().getAccessToken(), App.getUser().getUsername().toLowerCase());
 
     Color color = Color.web(player.getPreferredColour());
     colorPicker.setValue(color);
@@ -95,7 +95,53 @@ public class SettingPageController extends AbstractLobbyController {
             170);
       }
     });
-    
+
+    deletePlayerButton.setOnAction(event -> {
+      String msg;
+      String title;
+      try {
+        App.getLobbyServiceRequestSender()
+            .deleteOnePlayer(App.getUser().getAccessToken(),
+                player.getName());
+        //refresh the page to reflect that player has been deleted
+        App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
+        title = "Delete Player Confirmation";
+        msg = "Deleted correctly!";
+      } catch (UnirestException e) {
+        title = "Delete Player Error";
+        msg = "Player was unable to be deleted.";
+      }
+
+      App.loadPopUpWithController("lobby_warn.fxml",
+          new LobbyWarnPopUpController(msg, title),
+          360,
+          170);
+    });
+
+    passwordUpdateButton.setOnAction(event -> {
+      String msg;
+      String title;
+      try {
+        App.getLobbyServiceRequestSender()
+            .updateOnePlayerPassword(
+                App.getUser().getAccessToken(),
+                player.getName(),
+                player.getPassword(),
+                userPassword.getText());
+        title = "Password Update Confirmation";
+        msg = "Updated correctly!";
+
+      } catch (UnirestException e) {
+        title = "Password Update Error";
+        msg = "Wrong password format.";
+      }
+
+      App.loadPopUpWithController("lobby_warn.fxml",
+          new LobbyWarnPopUpController(msg, title),
+          360,
+          170);
+      userPassword.clear();
+    });
 
     // TODO: Finish the other update action binding (can copy paste from PlayerLobbyGui controller)
   }
