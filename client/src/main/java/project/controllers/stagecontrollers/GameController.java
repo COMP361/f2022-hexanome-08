@@ -446,6 +446,7 @@ public class GameController implements Initializable {
   }
 
   private void showBurnCardPopUp(GameInfo curGameInfo) {
+    System.out.println("showburnHelper checking...");
     // generate special pop up for pairing card
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
         .get(App.getUser().getUsername());
@@ -453,6 +454,8 @@ public class GameController implements Initializable {
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.BURN_CARD));
     if (!playerActionMap.isEmpty() && allBurnActions) {
+      System.out.println("showburnHelper condition met!");
+      System.out.println("cards able to burn: " + playerActionMap.size());
       // enable player to continue their pending action even they close the window
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
