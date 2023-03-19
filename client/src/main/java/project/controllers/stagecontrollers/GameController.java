@@ -445,6 +445,36 @@ public class GameController implements Initializable {
     }
   }
 
+  private void showBurnCardPopUp(GameInfo curGameInfo) {
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(App.getUser().getUsername());
+    boolean allBurnActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof CardExtraAction
+            && ((CardExtraAction) action).getCardEffect().equals(CardEffect.BURN_CARD));
+    if (!playerActionMap.isEmpty() && allBurnActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("free_card_pop_up.fxml",
+              new FreeCardPopUpController(gameId, playerActionMap),
+              720,
+              170);
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("free_card_pop_up.fxml",
+            new FreeCardPopUpController(gameId, playerActionMap),
+            720,
+            170);
+      });
+    }
+  }
+
+
 
   private void showFreeCardPopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card

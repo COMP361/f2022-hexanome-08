@@ -4,9 +4,10 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+
 <Pane fx:id="purchaseContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Text layoutX="97.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose one development card to take for freeeeee" textAlignment="CENTER" wrappingWidth="513.015625">
+        <Text fx:id="title" layoutX="97.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose one development card to take for freeeeee" textAlignment="CENTER" wrappingWidth="513.015625">
             <font>
                 <Font name="System Bold" size="19.0" />
             </font>
