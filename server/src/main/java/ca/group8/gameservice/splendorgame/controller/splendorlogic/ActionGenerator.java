@@ -173,7 +173,13 @@ public class ActionGenerator {
           continue; // this card can not be bought
         }
         // always generate reserve actions for base cards for index 0,1,2,3
-        EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        //EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        EnumMap<Colour, Integer> tokensPaid = new EnumMap<>(card.getPrice());
+
+
+        // calculating the regular colour (RED,BLUE.... EXCLUDING GOLD) gem discount
+        // and modify the tokens that we actually need to pay before taking account
+        // of any gold token
         for (Colour c : totalGems.keySet()) {
           if (c.equals(Colour.GOLD)) {
             continue;
@@ -191,6 +197,9 @@ public class ActionGenerator {
           }
         }
 
+        //TODO: gold token needed can contain gold tokens (actual token)
+        // or gold gem (from double_gold) even we say it's "gold gem",
+        // but we treat it as gold token needed in here!
         if (goldTokenNeeded > 0) {
           int goldTokensInHand = totalTokens.get(Colour.GOLD);
           if (goldTokensInHand >= goldTokenNeeded) {
@@ -241,7 +250,8 @@ public class ActionGenerator {
           continue; // this card can not be bought
         }
         // always generate reserve actions for base cards for index 0,1,2,3
-        EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        //EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        EnumMap<Colour, Integer> tokensPaid = new EnumMap<>(card.getPrice());
         for (Colour c : totalGems.keySet()) {
           if (c.equals(Colour.GOLD)) {
             continue;

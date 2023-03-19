@@ -95,7 +95,8 @@ public class PlayerInGame {
 
   /**
    * Returns map of total gems (out of all dev cards) a player has.
-   * Guarantee to return a map with only RED, BLUE, WHITE, BLACK AND GREEN
+   * Guarantee to return a map with only RED, BLUE, WHITE, BLACK AND GREEN and gold
+   * for the purpose of double_gold card in orient
    */
   public EnumMap<Colour, Integer> getTotalGems() {
     EnumMap<Colour, Integer> totalGems = SplendorDevHelper.getInstance().getRawTokenColoursMap();
@@ -128,11 +129,7 @@ public class PlayerInGame {
     //logger.info("All gems as a enum map: " + gems);
 
     for (Colour colour : SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet()) {
-      if (colour.equals(Colour.GOLD)) {
-        wealth.put(colour, tokenHand.getAllTokens().get(colour));
-      } else {
-        wealth.put(colour, tokenHand.getAllTokens().get(colour) + gems.get(colour));
-      }
+      wealth.put(colour, tokenHand.getAllTokens().get(colour) + gems.get(colour));
     }
     return wealth;
   }
