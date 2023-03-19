@@ -664,6 +664,8 @@ public class GameController implements Initializable {
             showPairingCardPopUp(curGameInfo);
             // optionally, show the taking a free card pop up, condition is checked inside method
             showFreeCardPopUp(curGameInfo);
+            // optionally, show the taking a free card pop up, condition is checked inside method
+            showBurnCardPopUp(curGameInfo);
             // optionally, show the taking a reserve noble pop up, condition is checked inside method
             showReserveNoblePopUp(curGameInfo);
 
