@@ -10,6 +10,9 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -271,9 +274,12 @@ public class CardExtraAction extends Action {
 
     //remove the gems from burned card from total amount needed to burn
     associatedActionInterpreter.removeBurnCardCount(gemNumber);
+    ActionGenerator actionGenerator = associatedActionInterpreter.getActionGenerator();
+    Logger logger = LoggerFactory.getLogger(ActionInterpreter.class);
 
     //if you have finished burning cards
     if (burnNumber - gemNumber <= 0) {
+      logger.info("Should be no gems left to burn: " +(burnNumber - gemNumber) );
       //take stashed card and add to player's hand
       DevelopmentCard newCard = associatedActionInterpreter.getStashedCard();
       curPlayer.getPurchasedHand().addDevelopmentCard(newCard);
@@ -283,6 +289,10 @@ public class CardExtraAction extends Action {
       curPlayer.changePrestigePoints(newPrestigePoints);
 
       associatedActionInterpreter.setStashedCard(null);
+      actionGenerator.getPlayerActionMaps().put(curPlayer.getName(), new HashMap<>());
+    } else {
+      logger.info("Gems still Left to burn: " +(burnNumber - gemNumber) );
+      actionGenerator.updateCascadeActions(curPlayer,(DevelopmentCard) curCard, CardEffect.BURN_CARD);
     }
   }
 

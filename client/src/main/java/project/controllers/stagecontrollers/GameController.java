@@ -39,12 +39,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
-import project.controllers.popupcontrollers.ActOnNoblePopUpController;
-import project.controllers.popupcontrollers.FreeCardPopUpController;
-import project.controllers.popupcontrollers.GameOverPopUpController;
-import project.controllers.popupcontrollers.PurchaseHandController;
-import project.controllers.popupcontrollers.ReservedHandController;
-import project.controllers.popupcontrollers.SaveGamePopUpController;
+import project.controllers.popupcontrollers.*;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 import project.view.splendor.BaseBoardGui;
@@ -446,39 +441,40 @@ public class GameController implements Initializable {
   }
   //TODO: take out prints
   private void showBurnCardPopUp(GameInfo curGameInfo) {
-    System.out.println("showburnHelper checking...");
     // generate special pop up for pairing card
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
         .get(App.getUser().getUsername());
     boolean allBurnActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.BURN_CARD));
-    System.out.println("action Map size: " + playerActionMap.size());
-    System.out.println("action Map: ");
     for(String actionId : playerActionMap.keySet()){
-      System.out.println("**");
-      System.out.println((Action) playerActionMap.get(actionId));
     }
     if (!playerActionMap.isEmpty() && allBurnActions) {
-      System.out.println("showburnHelper condition met!");
-      System.out.println("cards able to burn: " + playerActionMap.size());
-      // enable player to continue their pending action even they close the window
+      HttpResponse<String> response =
+          App.getGameRequestSender().sendGetAllPlayerInfoRequest(gameId, "");
+      String playerStatesJson = response.getBody();
+      PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
+          .fromJson(playerStatesJson, PlayerStates.class);
+      PlayerInGame playerInGame = playerStates.getOnePlayerInGame(App.getUser().getUsername());
+      PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
+      // also assign the pending action button some functionality
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
           App.loadPopUpWithController("free_card_pop_up.fxml",
-              new FreeCardPopUpController(gameId, playerActionMap),
-              720,
-              170);
+              new BurnCardController(gameId, playerActionMap),
+              800,
+              600);
         });
       });
 
-      // also, show a popup immediately
+      // do a pop up right now
       Platform.runLater(() -> {
+
         App.loadPopUpWithController("free_card_pop_up.fxml",
-            new FreeCardPopUpController(gameId, playerActionMap),
-            720,
-            170);
+            new BurnCardController(gameId, playerActionMap),
+            800,
+            600);
       });
     }
   }
@@ -498,7 +494,7 @@ public class GameController implements Initializable {
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
           App.loadPopUpWithController("free_card_pop_up.fxml",
-              new FreeCardPopUpController(gameId, playerActionMap),
+              new BurnCardController(gameId, playerActionMap),
               720,
               170);
         });
@@ -507,7 +503,7 @@ public class GameController implements Initializable {
       // also, show a popup immediately
       Platform.runLater(() -> {
         App.loadPopUpWithController("free_card_pop_up.fxml",
-            new FreeCardPopUpController(gameId, playerActionMap),
+            new BurnCardController(gameId, playerActionMap),
             720,
             170);
       });
