@@ -48,6 +48,8 @@ public class LobbyController extends AbstractLobbyController {
   @FXML
   private Button settingButton;
 
+  private Thread sessionUpdateThread;
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     super.initialize(url, resourceBundle);
@@ -65,7 +67,8 @@ public class LobbyController extends AbstractLobbyController {
     setUpAvailableGameNames();
 
     // Set up the thread to keep updating sessions
-    createUpdateGuiThread().start();
+    sessionUpdateThread = createSessionGuiUpdateThread();
+    sessionUpdateThread.start();
   }
 
   private EventHandler<ActionEvent> createClickOnCreateButton() {
@@ -97,18 +100,7 @@ public class LobbyController extends AbstractLobbyController {
   }
 
 
-  private void createAndAddSessionGui(Session curSession, Long sessionId, User user,
-                                      Thread lobbyUpdateThread) {
-    // create the new GUI
-    SessionGui curSessionGui = new SessionGui(curSession, sessionId, user, lobbyUpdateThread);
-    // set up the session gui
-    curSessionGui.setup();
-    SessionGuiManager.getInstance().addSessionGui(curSessionGui);
-
-  }
-
-
-  private Thread createUpdateGuiThread() {
+  private Thread createSessionGuiUpdateThread() {
     return new Thread(() -> {
 
       LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
@@ -148,9 +140,17 @@ public class LobbyController extends AbstractLobbyController {
             SessionGuiManager.getInstance().clearSessionsRecorded();
             for (long sessionId : sessionMap.keySet()) {
               Session curSession = sessionMap.get(sessionId);
-              createAndAddSessionGui(curSession, sessionId, App.getUser(), Thread.currentThread());
+              // create the new GUI
+              SessionGui curSessionGui = new SessionGui(curSession, sessionId, App.getUser(), Thread.currentThread());
+              // set up the session gui
+              curSessionGui.setup();
+              SessionGuiManager.getInstance().addSessionGui(curSessionGui);
             }
           }
+          // change the order of session GUI based on username
+          // and update the color if it's launched
+          SessionGuiManager.getInstance().setupSessionGuiOrder();
+
           // update the content in scroll pane
           Platform.runLater(() -> {
             allSessionScrollPane.setContent(SessionGuiManager.getInstance());
@@ -197,6 +197,8 @@ public class LobbyController extends AbstractLobbyController {
 
   private void pageSpecificActionBind() {
     settingButton.setOnAction(event -> {
+      // before leaving the lobby page, make sure to stop the update thread
+      sessionUpdateThread.interrupt();
       App.loadNewSceneToPrimaryStage("setting_page.fxml", new SettingPageController());
     });
 
@@ -207,6 +209,8 @@ public class LobbyController extends AbstractLobbyController {
     if (role.equals("ROLE_ADMIN")) {
       adminZoneButton.setVisible(true);
       adminZoneButton.setOnAction(event -> {
+        // before leaving the lobby page, make sure to stop the update thread
+        sessionUpdateThread.interrupt();
         App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
       });
     }
