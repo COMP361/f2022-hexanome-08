@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import project.App;
 import project.connection.GameRequestSender;
@@ -25,6 +26,8 @@ public class FreeCardPopUpController extends ActionSelectionSender implements In
   private final Map<String, Action> playerActionMap;
   @FXML
   private HBox freeCardsHbox;
+  @FXML
+  private Text title;
   public FreeCardPopUpController(long gameId, Map<String, Action> playerActionMap) {
     super(gameId);
     this.playerActionMap = playerActionMap;
@@ -57,6 +60,7 @@ public class FreeCardPopUpController extends ActionSelectionSender implements In
     }
     // add all sorted, function assigned image views to the HBox
     freeCardsHbox.getChildren().addAll(sortedImageViews);
+    title.setText("Choose one development card to take for free :)");
   }
 
 }

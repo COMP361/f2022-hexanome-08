@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import project.App;
 
 /**
@@ -22,6 +23,8 @@ public class BurnCardController extends ActionSelectionSender implements Initial
   private final Map<String, Action> playerActionMap;
   @FXML
   private HBox freeCardsHbox;
+  @FXML
+  private Text title;
   public BurnCardController(long gameId, Map<String, Action> playerActionMap) {
     super(gameId);
     this.playerActionMap = playerActionMap;
@@ -59,6 +62,8 @@ public class BurnCardController extends ActionSelectionSender implements Initial
     }
     // add all sorted, function assigned image views to the HBox
     freeCardsHbox.getChildren().addAll(sortedImageViews);
+    title.setText("Choose one card to burn");
+
   }
 
 }
