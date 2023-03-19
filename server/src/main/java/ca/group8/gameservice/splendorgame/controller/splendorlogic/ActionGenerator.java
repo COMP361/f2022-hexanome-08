@@ -207,6 +207,7 @@ public class ActionGenerator {
         List<DevelopmentCard> cardsInHand = purchasedHand.getDevelopmentCards();
         boolean hasSatchel = card.getPurchaseEffects().contains(CardEffect.SATCHEL);
         boolean hasCardToPair = false;
+        boolean hasBurnCard = card.getPurchaseEffects().contains(CardEffect.BURN_CARD);
         for (DevelopmentCard developmentCard : cardsInHand) {
           // if a card is not gold, not paired, has gem num at least 1, means we can pair something
           // so that the satchel we are about to buy is allowed to be bought
@@ -217,7 +218,12 @@ public class ActionGenerator {
           }
         }
 
-        if (!hasSatchel) {
+        //no gold cards ever required for burn, therefore always set to 0
+        //set card price to its original price (no discounts on burn cards)
+        if (hasBurnCard) {
+          result.add(new PurchaseAction(cardPosition,card,0,card.getPrice()));
+        }
+        else if (!hasSatchel) {
           result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
         } else {
           if (hasCardToPair) {
