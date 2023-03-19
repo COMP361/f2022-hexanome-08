@@ -313,7 +313,6 @@ public class TokenBankGui extends HBox {
   }
 
 
-
   /**
    * Set up the TokenBank GUI object.
    *

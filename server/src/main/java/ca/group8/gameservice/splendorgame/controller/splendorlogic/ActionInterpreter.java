@@ -128,14 +128,44 @@ public class ActionInterpreter {
           NobleCard nobleCard = allNobles.get(nobleIndices.get(0));
           baseBoard.removeNoble(nobleCard);
           purchasedHand.addNobleCard(nobleCard);
-          int oldPoints = playerInGame.getPrestigePoints();
           int noblePoints = nobleCard.getPrestigePoints();
-          playerInGame.changePrestigePoints(oldPoints + noblePoints);
+          playerInGame.changePrestigePoints(noblePoints);
           nobleVisited = true;
         }
 
         if (nobleIndices.size() > 1) {
           actionGenerator.updateClaimNobleActions(nobleIndices, playerInGame);
+          // we do not want to continue the other condition checks
+          nobleVisited = true;
+          return;
+        }
+      }
+
+
+      // checking any noble unlocked from reserved hand
+      List<Integer> noblesInReserveHandIndices = new ArrayList<>();
+      List<NobleCard> nobleCardsInHand = playerInGame.getReservedHand().getNobleCards();
+      for (int i = 0; i < nobleCardsInHand.size(); i++) {
+        NobleCard nobleCard = nobleCardsInHand.get(i);
+        if (nobleCard.canVisit(playerInGame)) {
+          noblesInReserveHandIndices.add(i);
+        }
+      }
+
+      if (!nobleVisited) {
+        // if the player unlocked one noble, added it to player hand,
+        // remove it from baseboard
+        if (noblesInReserveHandIndices.size() == 1) {
+          NobleCard nobleCard = nobleCardsInHand.get(noblesInReserveHandIndices.get(0));
+          playerInGame.getReservedHand().removeNoble(nobleCard);
+          purchasedHand.addNobleCard(nobleCard);
+          int noblePoints = nobleCard.getPrestigePoints();
+          playerInGame.changePrestigePoints(noblePoints);
+          nobleVisited = true;
+        }
+
+        if (noblesInReserveHandIndices.size() > 1) {
+          actionGenerator.updateClaimNobleActions(noblesInReserveHandIndices, playerInGame);
           // we do not want to continue the other condition checks
           nobleVisited = true;
           return;

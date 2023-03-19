@@ -189,13 +189,11 @@ public class HorizontalPlayerInfoGui extends HBox implements PlayerInfoGui {
     if (playerPosition.equals(PlayerPosition.TOP)) {
       Group imageGroup = (Group) this.getChildren().get(childrenCount - 1);
       ImageView playerImageView = (ImageView) imageGroup.getChildren().get(1);
-      Image img = new Image(String.format("project/pictures/ta_pictures/%s.png", playerName));
-      playerImageView.setImage(img);
+      playerImageView.setImage(App.getPlayerImage(playerName));
     } else if (playerPosition.equals(PlayerPosition.BOTTOM)) {
       Group imageGroup = (Group) this.getChildren().get(0);
       ImageView playerImageView = (ImageView) imageGroup.getChildren().get(1);
-      Image img = new Image(String.format("project/pictures/ta_pictures/%s.png", playerName));
-      playerImageView.setImage(img);
+      playerImageView.setImage(App.getPlayerImage(playerName));
     }
   }
 

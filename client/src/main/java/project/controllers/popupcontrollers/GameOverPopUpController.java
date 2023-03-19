@@ -1,6 +1,5 @@
 package project.controllers.popupcontrollers;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -17,11 +16,10 @@ import project.controllers.stagecontrollers.LobbyController;
  */
 public class GameOverPopUpController implements Initializable {
 
-  @FXML
-  private Button byeButton;
-
   private final Thread mainGameUpdateThread;
   private final Thread playerInfoThread;
+  @FXML
+  private Button byeButton;
 
   public GameOverPopUpController(Thread mainGameUpdateThread, Thread playerInfoThread) {
     this.mainGameUpdateThread = mainGameUpdateThread;
@@ -32,17 +30,13 @@ public class GameOverPopUpController implements Initializable {
    * It shows what happens after clicking the quit button.
    *
    * @param mainGameUpdateThread mainGameUpdateThread
-   * @param playerInfoThread playerInfoThread
+   * @param playerInfoThread     playerInfoThread
    * @return return the eventHandler
    */
   public EventHandler<ActionEvent> clickOnQuitGameButton(Thread mainGameUpdateThread,
                                                          Thread playerInfoThread) {
     return event -> {
-      try {
-        App.loadNewSceneToPrimaryStage("admin_lobby_page.fxml", new LobbyController());
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadNewSceneToPrimaryStage("lobby_page.fxml", new LobbyController());
       // once player clicks on quit button, stop the threads and load the lobby for them
       mainGameUpdateThread.interrupt();
       playerInfoThread.interrupt();

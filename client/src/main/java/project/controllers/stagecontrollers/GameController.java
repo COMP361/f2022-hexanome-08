@@ -17,7 +17,6 @@ import ca.mcgill.comp361.splendormodel.model.TableTop;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -40,7 +39,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
-import project.controllers.popupcontrollers.ClaimNoblePopUpController;
+import project.controllers.popupcontrollers.ActOnNoblePopUpController;
 import project.controllers.popupcontrollers.FreeCardPopUpController;
 import project.controllers.popupcontrollers.GameOverPopUpController;
 import project.controllers.popupcontrollers.PurchaseHandController;
@@ -144,14 +143,9 @@ public class GameController implements Initializable {
       String playerName = App.getUser().getUsername();
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
-      try {
-        App.loadPopUpWithController("my_reserved_cards.fxml",
-            new ReservedHandController(reservedHand, playerActions, coverRectangle, gameId),
-            800, 600);
-
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("my_reserved_cards.fxml",
+          new ReservedHandController(reservedHand, playerActions, gameId),
+          800, 600);
 
     };
   }
@@ -183,28 +177,33 @@ public class GameController implements Initializable {
       String playerName = App.getUser().getUsername();
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
-      try {
-        App.loadPopUpWithController("my_development_cards.fxml",
-            new PurchaseHandController(gameId, purchasedHand, playerActions, coverRectangle),
-            800,
-            600);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("my_development_cards.fxml",
+          new PurchaseHandController(gameId, purchasedHand, playerActions, coverRectangle),
+          800,
+          600);
 
     };
   }
 
 
-  //private Map<PlayerPosition, String> setPlayerToPosition(String curPlayerName,
-  //                                                        List<String> allPlayerNames) {
-  //  Map<PlayerPosition, String> resultMap = new HashMap<>();
-  //  List<String> orderedNames = sortPlayerNames(curPlayerName, allPlayerNames);
-  //  for (int i = 0; i < orderedNames.size(); i++) {
-  //    resultMap.put(PlayerPosition.values()[i], orderedNames.get(i));
-  //  }
-  //  return resultMap;
-  //}
+  private void clearAllPlayerInfoGui() {
+    if (!nameToPlayerInfoGuiMap.isEmpty()) {
+      for (PlayerInfoGui playerInfoGui : nameToPlayerInfoGuiMap.values()) {
+        Platform.runLater(() -> {
+          ObservableList<Node> mainBoardChildren = playerBoardAnchorPane.getChildren();
+          if (playerInfoGui instanceof VerticalPlayerInfoGui) {
+            mainBoardChildren.remove((VerticalPlayerInfoGui) playerInfoGui);
+          }
+          if (playerInfoGui instanceof HorizontalPlayerInfoGui) {
+            mainBoardChildren.remove((HorizontalPlayerInfoGui) playerInfoGui);
+          }
+
+        });
+      }
+      // clean the map
+      nameToPlayerInfoGuiMap.clear();
+    }
+  }
 
 
   /**
@@ -259,22 +258,9 @@ public class GameController implements Initializable {
             Gson splendorParser = SplendorDevHelper.getInstance().getGson();
             PlayerStates playerStates =
                 splendorParser.fromJson(responseInJsonString, PlayerStates.class);
-            if (!nameToPlayerInfoGuiMap.isEmpty()) {
-              for (PlayerInfoGui playerInfoGui : nameToPlayerInfoGuiMap.values()) {
-                Platform.runLater(() -> {
-                  ObservableList<Node> mainBoardChildren = playerBoardAnchorPane.getChildren();
-                  if (playerInfoGui instanceof VerticalPlayerInfoGui) {
-                    mainBoardChildren.remove((VerticalPlayerInfoGui) playerInfoGui);
-                  }
-                  if (playerInfoGui instanceof HorizontalPlayerInfoGui) {
-                    mainBoardChildren.remove((HorizontalPlayerInfoGui) playerInfoGui);
-                  }
 
-                });
-              }
-              // clean the map
-              nameToPlayerInfoGuiMap.clear();
-            }
+            // clear the previous GUI
+            clearAllPlayerInfoGui();
 
             // set up GUI
             setupAllPlayerInfoGui(0);
@@ -400,27 +386,19 @@ public class GameController implements Initializable {
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
-          try {
-            App.loadPopUpWithController("noble_claim_pop_up.fxml",
-                new ClaimNoblePopUpController(gameId, playerActionMap),
-                360,
-                170);
-          } catch (IOException e) {
-            throw new RuntimeException(e);
-          }
+          App.loadPopUpWithController("noble_action_pop_up.fxml",
+              new ActOnNoblePopUpController(gameId, playerActionMap, false),
+              360,
+              170);
         });
       });
 
       // also, show a popup immediately
       Platform.runLater(() -> {
-        try {
-          App.loadPopUpWithController("noble_claim_pop_up.fxml",
-              new ClaimNoblePopUpController(gameId, playerActionMap),
-              360,
-              170);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+        App.loadPopUpWithController("noble_action_pop_up.fxml",
+            new ActOnNoblePopUpController(gameId, playerActionMap, false),
+            360,
+            170);
       });
 
     }
@@ -441,19 +419,29 @@ public class GameController implements Initializable {
           .fromJson(playerStatesJson, PlayerStates.class);
       PlayerInGame playerInGame = playerStates.getOnePlayerInGame(App.getUser().getUsername());
       PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
-      Platform.runLater(() -> {
-        try {
+      // also assign the pending action button some functionality
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
           App.loadPopUpWithController("my_development_cards.fxml",
               new PurchaseHandController(gameId,
                   purchasedHand, playerActionMap, coverRectangle),
               800,
               600);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+        });
+      });
+
+      // do a pop up right now
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("my_development_cards.fxml",
+            new PurchaseHandController(gameId,
+                purchasedHand, playerActionMap, coverRectangle),
+            800,
+            600);
       });
     }
   }
+
 
   private void showFreeCardPopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
@@ -467,27 +455,50 @@ public class GameController implements Initializable {
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
-          try {
-            App.loadPopUpWithController("free_card_pop_up.fxml",
-                new FreeCardPopUpController(gameId, playerActionMap),
-                720,
-                170);
-          } catch (IOException e) {
-            throw new RuntimeException(e);
-          }
+          App.loadPopUpWithController("free_card_pop_up.fxml",
+              new FreeCardPopUpController(gameId, playerActionMap),
+              720,
+              170);
         });
       });
 
       // also, show a popup immediately
       Platform.runLater(() -> {
-        try {
-          App.loadPopUpWithController("free_card_pop_up.fxml",
-              new FreeCardPopUpController(gameId, playerActionMap),
-              720,
+        App.loadPopUpWithController("free_card_pop_up.fxml",
+            new FreeCardPopUpController(gameId, playerActionMap),
+            720,
+            170);
+      });
+    }
+  }
+
+
+  private void showReserveNoblePopUp(GameInfo curGameInfo) {
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(App.getUser().getUsername());
+    boolean allReserveNobleActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof CardExtraAction
+            && ((CardExtraAction) action).getCardEffect().equals(CardEffect.RESERVE_NOBLE));
+
+    if (!playerActionMap.isEmpty() && allReserveNobleActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("noble_action_pop_up.fxml",
+             new ActOnNoblePopUpController(gameId, playerActionMap,true),
+              360,
               170);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("noble_action_pop_up.fxml",
+            new ActOnNoblePopUpController(gameId, playerActionMap,true),
+            360,
+            170);
       });
     }
   }
@@ -548,13 +559,9 @@ public class GameController implements Initializable {
       // should load a game over page (jump back to lobby after they click the button)
       // implicitly handle the threading stopping logic and loading back to lobby
       Platform.runLater(() -> {
-        try {
-          App.loadPopUpWithController("game_over.fxml",
-              new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
-              360, 170);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        }
+        App.loadPopUpWithController("game_over.fxml",
+            new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
+            360, 170);
       });
     }
   }
@@ -624,6 +631,8 @@ public class GameController implements Initializable {
             showPairingCardPopUp(curGameInfo);
             // optionally, show the taking a free card pop up, condition is checked inside method
             showFreeCardPopUp(curGameInfo);
+            // optionally, show the taking a reserve noble pop up, condition is checked inside method
+            showReserveNoblePopUp(curGameInfo);
 
             // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
 
@@ -644,27 +653,19 @@ public class GameController implements Initializable {
   // interrupt the game update thread to save resources
   private EventHandler<ActionEvent> createClickOnSaveButtonEvent(GameInfo gameInfo, long gameId) {
     return event -> {
-      try {
-        App.loadPopUpWithController("save_game.fxml",
-            new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
-            360,
-            170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("save_game.fxml",
+          new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
+          360,
+          170);
     };
   }
 
   // interrupt the game update thread to save resources
   private EventHandler<ActionEvent> createClickOnQuitButtonEvent() {
     return event -> {
-      try {
-        App.loadPopUpWithController("quit_game.fxml",
-            new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
-            360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("quit_game.fxml",
+          new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
+          360, 170);
     };
   }
 

@@ -44,6 +44,7 @@ public class PurchaseHandController implements Initializable {
   private final List<NobleCard> nobleCards;
   private final Map<String, Action> playerActions;
   private final Rectangle coverRectangle;
+  private final long gameId;
   @FXML
   // each index represent the group of displaying all cards of one colour
   // there are 6 colours to display (hold the Groups)
@@ -56,13 +57,11 @@ public class PurchaseHandController implements Initializable {
   // hold List<NobleCard>
   private VBox noblesUnLocked;
 
-  private final long gameId;
-
   /**
    * PurchaseHandController.
    *
-   * @param purchasedHand purchasedHand
-   * @param playerActions playerActions
+   * @param purchasedHand  purchasedHand
+   * @param playerActions  playerActions
    * @param coverRectangle coverRectangle
    */
   public PurchaseHandController(long gameId, PurchasedHand purchasedHand,
@@ -104,42 +103,6 @@ public class PurchaseHandController implements Initializable {
     }
     return result;
   }
-
-
-  // Add the satchel mark display to every dev card (exclude the orient gold card)
-  //private List<HBox> generateCardSatchelPair(List<DevelopmentCard> allDevCards,
-  //                                           Map<Position,
-  //                                           List<ActionIdPair>> positionToActionMap) {
-  //  List<HBox> result = new ArrayList<>();
-  //  for (int i = 0; i < allDevCards.size(); i=+)
-  //
-  //
-  //  for (DevelopmentCard card : oneColourCards) {
-  //    Rectangle satchelMark = new Rectangle();
-  //    // Colour will be assigned differently if the card is linked
-  //    if (card.isPaired()) {
-  //      satchelMark.setFill(Color.BLUE);
-  //    } else {
-  //      satchelMark.setFill(Color.WHITESMOKE);
-  //    }
-  //    Image img;
-  //    // has some effect -> orient
-  //    if (!card.isBaseCard()) {
-  //      img = new Image(App.getOrientCardPath(card.getCardName(), card.getLevel()));
-  //    } else { // otherwise, base
-  //      img = new Image(App.getBaseCardPath(card.getCardName(), card.getLevel()));
-  //    }
-  //    Position cardPosition = new Position(card.getLevel(),)
-  //    ImageView imgV = new ImageView(img);
-  //    imgV.setFitWidth(100);
-  //    imgV.setFitHeight(150);
-  //    satchelMark.setWidth(20);
-  //    satchelMark.setHeight(150);
-  //    HBox container = new HBox(imgV, satchelMark);
-  //    result.add(container);
-  //  }
-  //  return result;
-  //}
 
   // Add the satchel mark display to every dev card (exclude the orient gold card)
   private List<HBox> generateCardSatchelPair(
@@ -272,8 +235,6 @@ public class PurchaseHandController implements Initializable {
       curWindow.close();
     };
   }
-
-
 
 
   private Map<Position, List<ActionIdPair>> getSatchelActionsInPurchaseHand(

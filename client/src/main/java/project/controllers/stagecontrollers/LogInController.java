@@ -1,8 +1,9 @@
 package project.controllers.stagecontrollers;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,7 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import project.App;
-import project.GameBoardLayoutConfig;
 import project.connection.LobbyRequestSender;
 import project.view.lobby.communication.User;
 
@@ -31,62 +31,80 @@ public class LogInController implements Initializable {
   private Label logInPageErrorMessage;
 
   @FXML
-  private Button quitGameButton;
+  private Button logInButton;
+
+  @FXML
+  private Button quitButton;
 
   /**
    * The logic of handling log in. The methods check if the user has input both username and user
    * password or not
    */
-  @FXML
-  protected void onLogInButtonClick() throws UnirestException {
-    String userNameStr = userName.getText();
-    String userPasswordStr = userPassword.getText();
-    // retrieve the parsed JSONObject from the response
-    LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
-    JSONObject logInResponseJson = lobbyRequestSender
-        .sendLogInRequest(userNameStr, userPasswordStr);
 
-    // extract fields from the object, in case of failing to extract "access_token",
-    // update the error message
-    try {
-      // set up the permanent refresh_token for user
-      String accessToken = logInResponseJson.getString("access_token");
-      String refreshToken = logInResponseJson.getString("refresh_token");
-      String authority = lobbyRequestSender.sendAuthorityRequest(accessToken);
-      User curUser = new User(userNameStr, accessToken, refreshToken, authority);
-      App.setUser(curUser);
+  private EventHandler<ActionEvent> createOnLogInClick() {
+    return actionEvent -> {
+      // extract fields from the object, in case of failing to extract "access_token",
+      // update the error message
+      boolean serviceLogIn = false;
+      try {
+        String userNameStr = userName.getText();
+        String userPasswordStr = userPassword.getText();
+        // retrieve the parsed JSONObject from the response
+        LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+        JSONObject logInResponseJson = lobbyRequestSender
+            .sendLogInRequest(userNameStr, userPasswordStr);
+        // set up the permanent refresh_token for user
+        String accessToken = logInResponseJson.getString("access_token");
+        String refreshToken = logInResponseJson.getString("refresh_token");
+        String authority = lobbyRequestSender.sendAuthorityRequest(accessToken);
+        User curUser = new User(userNameStr, accessToken, refreshToken, authority);
+        // bind the user to the scope of App running lifecycle
+        App.setUser(curUser);
+        if (authority.equals("ROLE_SERVICE")) {
+          serviceLogIn = true;
+          throw new RuntimeException("");
+        }
+        // display the lobby page, the role of the user will be used inside to
+        // decide whether to display admin zone button or not
+        App.loadNewSceneToPrimaryStage("lobby_page.fxml", new LobbyController());
 
-      // if user is player, display admin_lobby_page
-      GameBoardLayoutConfig config = App.getGuiLayouts();
-      if (App.getUser().getAuthority().equals("ROLE_ADMIN")
-              || App.getUser().getAuthority().equals("ROLE_PLAYER")) {
+      } catch (Exception e) {
+        if (!serviceLogIn) {
+          logInPageErrorMessage.setText("Please enter both valid username and password");
+        } else {
+          logInPageErrorMessage.setText("Service Role can not log in LS! Try again");
+        }
 
-        App.loadNewSceneToPrimaryStage("admin_lobby_page.fxml", new LobbyController());
-
-      } else {
-
-        // TODO: player lobby page without the admin page button
-        // otherwise, player_lobby_page
-        // App.setRoot("player_lobby_page");
-        //App.setRoot("LobbyService");
+        userName.setText("");
+        userPassword.setText("");
       }
-
-    } catch (Exception e) {
-      logInPageErrorMessage.setText("Please enter both valid username and password");
-      userName.setText("");
-      userPassword.setText("");
-    }
+    };
   }
 
-  @FXML
-  protected void onQuitGameButtonClick() {
-    Stage curStage = (Stage) quitGameButton.getScene().getWindow();
-    curStage.close();
+  private EventHandler<ActionEvent> createOnQuitClick() {
+    return actionEvent -> {
+      Button quitButton = (Button) actionEvent.getSource();
+      Stage curWindow = (Stage) quitButton.getScene().getWindow();
+      curWindow.close();
+    };
+  }
+
+  // Mainly for debug usage
+  private void setDefaultLogInInfo() {
+    //String name = "ruoyuplayer";
+    String name = "ruoyu";
+    String password = "abc123_ABC123";
+
+    //String name = "splendorbase";
+    //String password = "laaPhie*aiN0";
+    userName.setText(name);
+    userPassword.setText(password);
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    userName.setText("ruoyu");
-    userPassword.setText("abc123_ABC123");
+    setDefaultLogInInfo();
+    logInButton.setOnAction(createOnLogInClick());
+    quitButton.setOnAction(createOnQuitClick());
   }
 }

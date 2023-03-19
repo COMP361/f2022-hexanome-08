@@ -69,8 +69,8 @@ public class GameRequestSender {
   /**
    * Send a save game request to our game service backend.
    *
-   * @param gameId gameId
-   * @param savegame savegame
+   * @param gameId      gameId
+   * @param savegame    savegame
    * @param accessToken accessToken
    */
   public void sendSaveGameRequest(long gameId, Savegame savegame, String accessToken) {

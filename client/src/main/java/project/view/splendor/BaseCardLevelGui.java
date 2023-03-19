@@ -21,6 +21,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import project.App;
+import project.GameBoardLayoutConfig;
 import project.controllers.popupcontrollers.CardActionController;
 import project.controllers.popupcontrollers.DeckActionController;
 
@@ -92,30 +93,24 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
    * This method creates a CardActionController for a set of specific actions [so a pop up
    * can appear to display to the user those actions].
    *
-   * @param gameId ID of current game
+   * @param gameId     ID of current game
    * @param allActions list of Actions which you will be pairing to a card *using "clickOn" event.
    * @return Returns a list of Event Handlers. (event type is a pop up when clicked on).
    */
   public EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
-                                                            List<ActionIdPair> allActions) {
+                                                           List<ActionIdPair> allActions) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
-      try {
-        App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(gameId, allActions, null), 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("card_action.fxml",
+          new CardActionController(gameId, allActions, null), config.getCardActionWidth(), config.getCardActionHeight());
     };
   }
 
   private EventHandler<MouseEvent> createClickOnDeckHandler(long gameId, String actionId) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
-      try {
-        App.loadPopUpWithController("deck_action.fxml",
-            new DeckActionController(gameId, actionId, coverRectangle), 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("deck_action.fxml",
+          new DeckActionController(gameId, actionId, coverRectangle), config.getDeckActionWidth(), config.getDeckActionHeight());
     };
   }
 
@@ -177,7 +172,6 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
       }
     }
   }
-
 
 
   @Override

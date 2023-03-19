@@ -11,7 +11,6 @@ import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.Extension;
 import ca.mcgill.comp361.splendormodel.model.NobleCard;
 import ca.mcgill.comp361.splendormodel.model.Position;
-import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import ca.mcgill.comp361.splendormodel.model.TableTop;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -27,6 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import project.App;
 import project.GameBoardLayoutConfig;
+import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 
 /**
  * Display the baseboardGUI.
@@ -46,12 +46,13 @@ public class BaseBoardGui implements BoardGui {
    * What the baseBoardGUI has.
    *
    * @param playerBoardAnchorPane playerBoardAnchorPane
-   * @param gameId gameId
-   * @param coverRectangle coverRectangle
+   * @param gameId                gameId
+   * @param coverRectangle        coverRectangle
    */
   public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     this.gameId = gameId;
-    nobleBoardGui = new NobleBoardGui(100, 100, 5);
+    nobleBoardGui = new NobleBoardGui(config.getNobleWidth(), config.getNobleHeight(), config.getNobleSpace());
     tokenBankGui = new TokenBankGui(gameId);
     this.playerBoardAnchorPane = playerBoardAnchorPane;
     this.baseCardBoard = new VBox();
@@ -99,6 +100,18 @@ public class BaseBoardGui implements BoardGui {
         playerBoardAnchorPane.getChildren().add(tokenBankGui);
       });
     } else { //means there are only return token actions
+      ReturnTokenAction firstAction = (ReturnTokenAction) returnTokenActionMap.values().iterator().next();
+      int amountToReturn = firstAction.getExtraTokenCount();
+      System.out.println("amount to return: " + amountToReturn);
+      String msg = "Please return: " + amountToReturn;
+      String title = "Return Tokens";
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("lobby_warn.fxml",
+            new LobbyWarnPopUpController(msg, title),
+            360,
+            170);
+      });
+
       Platform.runLater(() -> {
         tokenBankGui.setupReturnToken(returnTokenActionMap,
             bankBalance,  //this is an empty bank map
@@ -114,7 +127,7 @@ public class BaseBoardGui implements BoardGui {
     // there in the action map at this point (or empty)
     Map<String, Action> reservePurchaseActions = playerActionMap.entrySet()
         .stream().filter(e -> e.getValue() instanceof ReserveAction
-                    ||
+            ||
             e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 

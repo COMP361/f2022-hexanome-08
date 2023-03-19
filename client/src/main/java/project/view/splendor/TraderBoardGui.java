@@ -26,12 +26,12 @@ public class TraderBoardGui extends VBox implements BoardGui {
   // the map that is used to look find the correct power GUI group, hardcoded
   private final Map<PowerEffect, Group> powerEffectGroupMap = new HashMap<>();
 
-  private Map<String, Integer> nameToArmCodeMap;
+  private final Map<String, Integer> nameToArmCodeMap;
 
   /**
    * Constructor.
    *
-   * @param gameId gameId to associate to this traderBoard.
+   * @param gameId           gameId to associate to this traderBoard.
    * @param nameToArmCodeMap maps player names to arms/powers.
    */
   public TraderBoardGui(long gameId, Map<String, Integer> nameToArmCodeMap) {
@@ -82,7 +82,6 @@ public class TraderBoardGui extends VBox implements BoardGui {
         // otherwise, do nothing
       }
     }
-
 
 
   }

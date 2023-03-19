@@ -26,8 +26,8 @@ public class DeckActionController implements Initializable {
   /**
    * DeckActionController.
    *
-   * @param gameId gameId
-   * @param actionId actionId
+   * @param gameId         gameId
+   * @param actionId       actionId
    * @param coverRectangle coverRectangle
    */
   public DeckActionController(long gameId, String actionId, Rectangle coverRectangle) {
@@ -50,16 +50,8 @@ public class DeckActionController implements Initializable {
     };
   }
 
-  //private EventHandler<ActionEvent> createOnClickBackHandler() {
-  //  return event -> {
-  //    Stage curWindow = (Stage) goBackButton.getScene().getWindow();
-  //    curWindow.close();
-  //  };
-  //}
-
   @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    //goBackButton.setOnAction(createOnClickBackHandler());
+  public void initialize(URL url, ResourceBundle resourceBundle) {;
     reserveButton.setOnAction(createOnClickReserveHandler());
   }
 }

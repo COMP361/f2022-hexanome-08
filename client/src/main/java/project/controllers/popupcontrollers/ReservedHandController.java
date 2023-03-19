@@ -6,7 +6,6 @@ import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.NobleCard;
 import ca.mcgill.comp361.splendormodel.model.Position;
 import ca.mcgill.comp361.splendormodel.model.ReservedHand;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +33,6 @@ public class ReservedHandController implements Initializable {
   private final List<ImageView> playerCards = new ArrayList<>();
   private final List<ImageView> playerNobles = new ArrayList<>();
   private final Map<String, Action> playerActions;
-  private final Rectangle coverRectangle;
   @FXML
   private HBox reservedDevCardsHbox;
   @FXML
@@ -43,12 +41,10 @@ public class ReservedHandController implements Initializable {
   /**
    * Controller for the ReservedHand.
    *
-   * @param reservedHand reservedHand
-   * @param playerActions playerActions
-   * @param coverRectangle coverRectangle
+   * @param reservedHand   reservedHand
+   * @param playerActions  playerActions
    */
-  public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions,
-                                Rectangle coverRectangle, long gameId) {
+  public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions, long gameId) {
     Map<String, Action> purchaseActions = playerActions.entrySet()
         .stream().filter(e -> e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -56,8 +52,6 @@ public class ReservedHandController implements Initializable {
     Map<Position, List<ActionIdPair>> positionToActionMap =
         getPositionActionsInReservedHand(purchaseActions);
 
-
-    this.coverRectangle = coverRectangle;
     List<NobleCard> reservedNobles = reservedHand.getNobleCards();
     List<DevelopmentCard> reservedCards = reservedHand.getDevelopmentCards();
     // initialize the list of image views from player's reserved hand
@@ -114,16 +108,13 @@ public class ReservedHandController implements Initializable {
 
 
   private EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
-      List<ActionIdPair> allActions) {
+                                                            List<ActionIdPair> allActions) {
     return event -> {
-      try {
-        ImageView imageView = (ImageView) event.getSource();
-        Stage window = (Stage) imageView.getScene().getWindow();
-        App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(gameId, allActions, window), 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+
+      ImageView imageView = (ImageView) event.getSource();
+      Stage window = (Stage) imageView.getScene().getWindow();
+      App.loadPopUpWithController("card_action.fxml",
+          new CardActionController(gameId, allActions, window), 360, 170);
     };
   }
 

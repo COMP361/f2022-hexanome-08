@@ -15,6 +15,7 @@ public class SessionGuiManager extends VBox {
 
 
   private SessionGuiManager() {
+
   }
 
 
@@ -33,19 +34,11 @@ public class SessionGuiManager extends VBox {
   /**
    * Clean up everything after loading into another page.
    */
-  public static void clearSessionsRecorded() {
+  public void clearSessionsRecorded() {
     Platform.runLater(() -> {
       sessionsVbox.getChildren().clear();
     });
     sessionIdGuiMap.clear();
-  }
-
-  public static void removeSessionGui(SessionGui newSessionGui) {
-    sessionsVbox.getChildren().remove(newSessionGui);
-  }
-
-  public static void removeSessionIdGuiMap(Long sessionId) {
-    sessionIdGuiMap.remove(sessionId);
   }
 
   /**
@@ -53,7 +46,7 @@ public class SessionGuiManager extends VBox {
    *
    * @param newSessionGui newSessionGui
    */
-  public static void addSessionGui(SessionGui newSessionGui) {
+  public void addSessionGui(SessionGui newSessionGui) {
     Platform.runLater(() -> {
       sessionsVbox.getChildren().add(newSessionGui);
     });

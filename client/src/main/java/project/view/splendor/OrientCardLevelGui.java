@@ -87,23 +87,15 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
   private EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
                                                             List<ActionIdPair> allActions) {
     return event -> {
-      try {
-        App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(gameId, allActions, null), 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("card_action.fxml",
+          new CardActionController(gameId, allActions, null), 360, 170);
     };
   }
 
   private EventHandler<MouseEvent> createClickOnDeckHandler(long gameId, String actionId) {
     return event -> {
-      try {
-        App.loadPopUpWithController("deck_action.fxml",
-            new DeckActionController(gameId, actionId, coverRectangle), 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("deck_action.fxml",
+          new DeckActionController(gameId, actionId, coverRectangle), 360, 170);
     };
   }
 
