@@ -198,8 +198,8 @@ public class TokenBankGui extends HBox {
         EnumMap<Colour, Integer> comb = returnTokenAction.getTokens();
         // if any combination matches,
         System.out.println("Action Id:" + actionId);
-        System.out.println("Current choice: " + comb);
-        System.out.println("Action Combo: " + currentChoiceComb);
+        System.out.println("Current choice: " + currentChoiceComb);
+        System.out.println("Action Combo: " + comb);
 
         if (comb.equals(currentChoiceComb)) {
           return actionId;
