@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.*;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -441,9 +442,13 @@ public class ActionGenerator {
     }
 
     if (cardEffect.equals(CardEffect.BURN_CARD)) {
+      Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
+      logger.info("Generating cascade actions");
       List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
       Colour burnColourPrice = null;
       EnumMap<Colour, Integer> cardPrice = purchasedCard.getPrice();
+      logger.info("Purchased card: " + purchasedCard.getCardName());
+      logger.info("price " + cardPrice);
       for (Colour colour : cardPrice.keySet()) {
         if (cardPrice.get(colour) > 0) {
           burnColourPrice = colour;
@@ -452,22 +457,24 @@ public class ActionGenerator {
       }
       // iterate to find the card in player's hand to find which card colour to burn
       Colour finalBurnColourPrice = burnColourPrice;
+      logger.info("Colour: " + finalBurnColourPrice);
       List<Integer> pairedCardIndices = IntStream.range(0, cardsInHand.size())
           .filter(i -> cardsInHand.get(i).isPaired())
           .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
           .boxed()
           .collect(Collectors.toList());
-
+      logger.info("Paired Burnable Cards: " + pairedCardIndices.size());
       // if there is no paired card to use
       if (pairedCardIndices.size() == 0) {
         List<Integer> sameColourCardsIndices = IntStream.range(0, cardsInHand.size())
             .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
             .boxed()
             .collect(Collectors.toList());
-
+        logger.info("Burnable Cards: " + sameColourCardsIndices.size());
         for (int i : sameColourCardsIndices) {
           Position position = new Position(0, i);
           DevelopmentCard card = cardsInHand.get(i);
+          logger.info("burnable card " + i +": name: " + card.getCardName());
           cascadeActions.add(new CardExtraAction(card, cardEffect, position));
         }
       }

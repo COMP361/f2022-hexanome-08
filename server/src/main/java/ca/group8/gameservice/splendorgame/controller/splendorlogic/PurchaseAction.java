@@ -14,6 +14,8 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -96,8 +98,11 @@ public class PurchaseAction extends Action {
       CardEffect curEffect = cardEffects.get(0);
       //String playerName = playerInGame.getName();
       if (curEffect.equals(CardEffect.BURN_CARD)) {
+        Logger logger = LoggerFactory.getLogger(ActionInterpreter.class);
+        logger.info("PA: is burn card");
         actionInterpreter.setStashedCard(curCard);
         EnumMap<Colour, Integer> priceOfBurnCard = curCard.getPrice();
+        logger.info("PA price: " + priceOfBurnCard);
         actionInterpreter.setBurnCardInfo(priceOfBurnCard);
         actionGenerator.updateCascadeActions(playerInGame, curCard, curEffect);
       } else {
