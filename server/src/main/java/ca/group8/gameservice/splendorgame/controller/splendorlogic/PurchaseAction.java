@@ -99,12 +99,8 @@ public class PurchaseAction extends Action {
       //String playerName = playerInGame.getName();
       if (curEffect.equals(CardEffect.BURN_CARD)) {
         Logger logger = LoggerFactory.getLogger(ActionInterpreter.class);
-        logger.info("PA: is burn card");
         actionInterpreter.setStashedCard(curCard);
         EnumMap<Colour, Integer> priceOfBurnCard = curCard.getPrice();
-        logger.info("PA price: " + priceOfBurnCard);
-        actionInterpreter.setBurnCardInfo(priceOfBurnCard);
-        actionGenerator.updateCascadeActions(playerInGame, curCard, curEffect);
         if (cardPosition.getX() != 0) {
           // remove card from board
           OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
@@ -114,6 +110,8 @@ public class PurchaseAction extends Action {
         } else { //means this is a reserved card, so remove from player's ReserveHand
           playerInGame.getReservedHand().removeDevelopmentCard(curCard);
         }
+        actionInterpreter.setBurnCardInfo(priceOfBurnCard);
+        actionGenerator.updateCascadeActions(playerInGame, curCard, curEffect);
       } else {
         // FREE, SATCHEL, RESERVE_NOBLE, DOUBLE_GOLD in here
         playerInGame.payTokensToBuy(goldCardsRequired, tokensToBePaid);
