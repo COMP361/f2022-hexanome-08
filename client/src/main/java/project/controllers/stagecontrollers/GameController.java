@@ -71,7 +71,6 @@ public class GameController implements Initializable {
       App.getGuiLayouts().getAppWidth(),
       App.getGuiLayouts().getAppHeight());
   private final long gameId;
-  private final Session curSession;
   private final Map<Integer, BaseCardLevelGui> baseCardGuiMap = new HashMap<>();
   private final Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap = new HashMap<>();
   private final Map<String, Integer> nameToArmCodeMap = new HashMap<>();
@@ -101,16 +100,24 @@ public class GameController implements Initializable {
   private List<String> sortedPlayerNames = new ArrayList<>();
   private Thread playerInfoThread;
   private Thread mainGameUpdateThread;
+  
+  private String viewerName = null;
+  
+  private boolean inWatchMode = false;
 
   /**
    * GameController for the main page.
    *
    * @param gameId     gameId
-   * @param curSession curSession
    */
-  public GameController(long gameId, Session curSession) {
+  public GameController(long gameId, String viewerName) {
     this.gameId = gameId;
-    this.curSession = curSession;
+    // set up for indicating this is a watch game or not
+    if (viewerName != null) {
+      this.viewerName = viewerName; 
+    } else {
+      inWatchMode = true;
+    }
     this.playerInfoThread = null;
     this.mainGameUpdateThread = null;
   }
@@ -127,7 +134,7 @@ public class GameController implements Initializable {
   private EventHandler<ActionEvent> createOpenMyReserveCardClick() {
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
-      String curPlayerName = App.getUser().getUsername();
+      String curPlayerName = viewerName;
       String playerStatsJson = sender.sendGetAllPlayerInfoRequest(gameId, "").getBody();
       Gson gsonParser = SplendorDevHelper.getInstance().getGson();
       PlayerStates playerStates = gsonParser.fromJson(playerStatsJson, PlayerStates.class);
@@ -136,7 +143,7 @@ public class GameController implements Initializable {
       ReservedHand reservedHand = playerInGame.getReservedHand();
       String gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
       GameInfo gameInfo = gsonParser.fromJson(gameInfoJson, GameInfo.class);
-      String playerName = App.getUser().getUsername();
+      String playerName = viewerName;
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
       App.loadPopUpWithController("my_reserved_cards.fxml",
@@ -156,7 +163,7 @@ public class GameController implements Initializable {
   private EventHandler<ActionEvent> createOpenMyPurchaseCardClick() {
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
-      String curPlayerName = App.getUser().getUsername();
+      String curPlayerName = viewerName;
       String playerStatsJson = sender.sendGetAllPlayerInfoRequest(gameId, "").getBody();
       Gson gsonParser = SplendorDevHelper.getInstance().getGson();
       PlayerStates playerStates = gsonParser.fromJson(playerStatsJson, PlayerStates.class);
@@ -165,7 +172,7 @@ public class GameController implements Initializable {
       PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
       String gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
       GameInfo gameInfo = gsonParser.fromJson(gameInfoJson, GameInfo.class);
-      String playerName = App.getUser().getUsername();
+      String playerName = viewerName;
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
       App.loadPopUpWithController("my_development_cards.fxml",
@@ -281,8 +288,6 @@ public class GameController implements Initializable {
   // For setup initial playerInfoGuis to display for the first time
   private void setupAllPlayerInfoGui(int initTokenAmount) {
     GameBoardLayoutConfig config = App.getGuiLayouts();
-    User curUser = App.getUser();
-
     int playerCount = sortedPlayerNames.size();
     PlayerPosition[] playerPositions = PlayerPosition.values();
     // iterate through the players we have (sorted, add their GUI accordingly)
@@ -293,10 +298,13 @@ public class GameController implements Initializable {
         // decide player names based on player position (sorted above)
         String playerName;
         if (position.equals(PlayerPosition.BOTTOM)) {
-          playerName = curUser.getUsername();
-          // allow user to click on my cards/reserved cards
-          myCardButton.setOnAction(createOpenMyPurchaseCardClick());
-          myReservedCardsButton.setOnAction(createOpenMyReserveCardClick());
+          playerName = viewerName;
+          if (!inWatchMode) {
+            // allow user to click on my cards/reserved cards
+            // if not in watch mode
+            myCardButton.setOnAction(createOpenMyPurchaseCardClick());
+            myReservedCardsButton.setOnAction(createOpenMyReserveCardClick());
+          }
         } else {
           playerName = sortedPlayerNames.get(2);
         }
@@ -373,7 +381,7 @@ public class GameController implements Initializable {
 
   private void showClaimNoblePopUp(GameInfo curGameInfo) {
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(App.getUser().getUsername());
+        .get(viewerName);
     // return true if EVERY ACTION in playerActionMap is ClaimNobleAction
     boolean allClaimNobleActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof ClaimNobleAction);
@@ -404,7 +412,7 @@ public class GameController implements Initializable {
   private void showPairingCardPopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(App.getUser().getUsername());
+        .get(viewerName);
     boolean allPairActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.SATCHEL));
@@ -414,7 +422,7 @@ public class GameController implements Initializable {
       String playerStatesJson = response.getBody();
       PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
           .fromJson(playerStatesJson, PlayerStates.class);
-      PlayerInGame playerInGame = playerStates.getOnePlayerInGame(App.getUser().getUsername());
+      PlayerInGame playerInGame = playerStates.getOnePlayerInGame(viewerName);
       PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
       // also assign the pending action button some functionality
       pendingActionButton.setDisable(false);
@@ -443,7 +451,7 @@ public class GameController implements Initializable {
   private void showFreeCardPopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(App.getUser().getUsername());
+        .get(viewerName);
     boolean allFreeActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.FREE_CARD));
@@ -473,7 +481,7 @@ public class GameController implements Initializable {
   private void showReserveNoblePopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(App.getUser().getUsername());
+        .get(viewerName);
     boolean allReserveNobleActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.RESERVE_NOBLE));
@@ -509,8 +517,13 @@ public class GameController implements Initializable {
     // First, check what extensions are we playing
     List<Extension> extensions = curGameInfo.getExtensions();
     TableTop tableTop = curGameInfo.getTableTop();
-    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(App.getUser().getUsername());
+    Map<String, Action> playerActionMap;
+    if (inWatchMode) {
+      // if in watch mode, we always have empty action map
+      playerActionMap = new HashMap<>();
+    } else {
+      playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
+    }
     // generate BoardGui based on extension type
     for (Extension extension : extensions) {
       switch (extension) {
@@ -566,7 +579,7 @@ public class GameController implements Initializable {
   private void resetPendingActionButton(GameInfo curGameInfo) {
     // always get the action map from game info
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(App.getUser().getUsername());
+        .get(viewerName);
     // player has finished one's pending action, set the button back to greyed out
     if (playerActionMap.isEmpty()) {
       pendingActionButton.setDisable(true);
@@ -611,24 +624,27 @@ public class GameController implements Initializable {
             GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
             // if the game is over, load the game over pop up page
             showFinishGamePopUp(curGameInfo);
-            // internally, check if the player has empty action map, if so
-            // disable this pending action button
-            resetPendingActionButton(curGameInfo);
+            // these additional things can only happen if not in watch mode
+            if (!inWatchMode) {
+              // internally, check if the player has empty action map, if so
+              // disable this pending action button
+              resetPendingActionButton(curGameInfo);
 
-            // TODO: <<<<< START OF OPTIONAL SECTION >>>>>>>>>
-            // TODO: <<<<< This section contains the method that contains optional pop ups>>>>>>>>>
-            // TODO: <<<<< conditions are check internally in method for readability      >>>>>>>>>
+              // TODO: <<<<< START OF OPTIONAL SECTION >>>>>>>>>
+              // TODO: <<<<< This section contains the method that contains optional pop ups>>>>>>>>>
+              // TODO: <<<<< conditions are check internally in method for readability      >>>>>>>>>
 
-            // optionally, show the claim noble pop up, condition is checked inside method
-            showClaimNoblePopUp(curGameInfo);
-            // optionally, show the pairing card pop up, condition is checked inside method
-            showPairingCardPopUp(curGameInfo);
-            // optionally, show the taking a free card pop up, condition is checked inside method
-            showFreeCardPopUp(curGameInfo);
-            // optionally, show the taking a reserve noble pop up, condition is checked inside method
-            showReserveNoblePopUp(curGameInfo);
+              // optionally, show the claim noble pop up, condition is checked inside method
+              showClaimNoblePopUp(curGameInfo);
+              // optionally, show the pairing card pop up, condition is checked inside method
+              showPairingCardPopUp(curGameInfo);
+              // optionally, show the taking a free card pop up, condition is checked inside method
+              showFreeCardPopUp(curGameInfo);
+              // optionally, show the taking a reserve noble pop up, condition is checked inside method
+              showReserveNoblePopUp(curGameInfo);
 
-            // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
+              // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
+            }
 
             // ALWAYS, reset all game boards gui based on the new game info
             resetAllGameBoards(curGameInfo);
@@ -666,9 +682,11 @@ public class GameController implements Initializable {
   }
 
   private void setupSaveGameButton(GameInfo curGameInfo) {
+    // for all mode, these two should be like this
     saveButton.setDisable(true);
     quitButton.setOnAction(createClickOnQuitButtonEvent());
-    if (App.getUser().getUsername().equals(curGameInfo.getCreator())) {
+    // and not in watch mode
+    if (viewerName.equals(curGameInfo.getCreator()) && !inWatchMode) {
       // if the current user is the creator, activate the save button, otherwise it
       // greyed out
       saveButton.setDisable(false);
@@ -681,7 +699,7 @@ public class GameController implements Initializable {
     List<String> tmpPlayerNames = new ArrayList<>(playerNames);
     // sort the player names and store it to this game controller
     if (sortedPlayerNames.isEmpty()) {
-      while (!tmpPlayerNames.get(0).equals(App.getUser().getUsername())) {
+      while (!tmpPlayerNames.get(0).equals(viewerName)) {
         String popPlayerName = tmpPlayerNames.remove(0);
         tmpPlayerNames.add(popPlayerName);
       }
@@ -693,14 +711,26 @@ public class GameController implements Initializable {
   public void initialize(URL url, ResourceBundle resourceBundle) {
     // initially, there is no pending action at all!
     pendingActionButton.setDisable(true);
+    // ban the purchase cards and reserve cards button from the watcher
+    if (inWatchMode) {
+      myCardButton.setDisable(true);
+      myReservedCardsButton.setDisable(true);
+    }
 
     GameRequestSender gameRequestSender = App.getGameRequestSender();
-    HttpResponse<String> firstGameInfoResponse = null;
-    firstGameInfoResponse = gameRequestSender.sendGetGameInfoRequest(gameId, "");
+    HttpResponse<String> firstGameInfoResponse = 
+        gameRequestSender.sendGetGameInfoRequest(gameId, "");
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
+    // information about viewer's perspective
+    if (viewerName == null) {
+      viewerName = curGameInfo.getFirstPlayerName();
+      // from now on, we can safely trust this viewerName as someone in the game
+    }
+
     // only enable the save game button for the creator of the game
     setupSaveGameButton(curGameInfo);
+    
     // sort player names based on different client views
     sortAllPlayerNames(curGameInfo);
 

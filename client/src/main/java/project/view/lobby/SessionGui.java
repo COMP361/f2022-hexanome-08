@@ -103,27 +103,26 @@ public class SessionGui extends HBox {
 
   private EventHandler<ActionEvent> createWatchGameHandler() {
     return event -> {
-      // just load the board to this user, nothing else should be done
-      //try {
-      //  App.setRoot("splendor_base_game_board");
-      //} catch (IOException e) {
-      //  throw new RuntimeException(e);
-      //}
+      // we are loading a game play page for a watcher, who has only access to QUIT the game
+      // the board is updating pretending this watcher is the first player name
+      // but there is no functionality provided to one but the quit button
+      App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
+      App.loadNewSceneToPrimaryStage("splendor_base_game_board.fxml",
+          new GameController(curSessionId, null));
+      lobbyUpdateThread.interrupt();
     };
   }
 
   private EventHandler<ActionEvent> createPlayGameHandler() {
     return event -> {
       // display the GUI with some basic information needed
-      // 0. sessionId needs to be passed to this controller, the other info
-      // I can get from based on this sessionId (gameId)
-      GameBoardLayoutConfig config = App.getGuiLayouts();
       // whenever the user clicks play button, we will reset the game request sender to
       // send correct REST requests to our backend in a right path name (splendorbase, city...)
       App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
 
+      // pass a meaningful username, so that we know that person can play
       App.loadNewSceneToPrimaryStage("splendor_base_game_board.fxml",
-          new GameController(curSessionId, curSession));
+          new GameController(curSessionId, App.getUser().getUsername()));
       // when we click Play, we need to stop the lobby thread from keep monitoring
       // the changes
       lobbyUpdateThread.interrupt();

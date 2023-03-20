@@ -47,13 +47,11 @@ public class AbstractLobbyController implements Initializable {
         sessionUpdateThread.interrupt();
         sessionUpdateThread = null;
       }
+      // stop the refresh token thread as well
       if (refreshTokenThread != null) {
         refreshTokenThread.interrupt();
         refreshTokenThread = null;
       }
-
-      // stop the token updating thread (might change a user)
-      App.setRefreshTokenThreadRunning(false);
 
       // Reset the App user to null
       App.setUser(null);
