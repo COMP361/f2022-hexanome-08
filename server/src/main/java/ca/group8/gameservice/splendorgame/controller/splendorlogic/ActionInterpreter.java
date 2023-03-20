@@ -275,11 +275,13 @@ public class ActionInterpreter {
         List<String> allPlayers = gameInfo.getPlayerNames();
         // if the current player is the last player, this game is over
         String lastPlayerName = allPlayers.get(allPlayers.size() - 1);
+
         if (playerName.equals(lastPlayerName)) {
           if (winners.isEmpty()) { // this is the first and last winner
             winners.add(playerName);
             // game is over!
             gameInfo.setFinished();
+            logger.info(playerName + " won the game!!!");
           } else {
             // we have several potential winners
             winners.add(playerName);
@@ -287,6 +289,7 @@ public class ActionInterpreter {
             decideWinners(winners);
             // game is over!
             gameInfo.setFinished();
+            logger.info(playerName + " won the game!!!");
           }
         } else {
           // add the winner
