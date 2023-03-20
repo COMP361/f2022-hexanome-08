@@ -49,29 +49,6 @@ public class LobbyController extends AbstractLobbyController {
   @FXML
   private Button settingButton;
 
-
-
-  @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    super.initialize(url, resourceBundle);
-    // for lobby page, bind action to setting and admin button
-    pageSpecificActionBind();
-
-    // everytime we assign a new lobby controller, clean
-    // the previous sessions
-    SessionGuiManager.getInstance().clearSessionsRecorded();
-
-    // assign function to the "Create" button
-    createSessionButton.setOnAction(createClickOnCreateButton());
-
-    // get all possible game names (including saved games) from LS
-    setUpAvailableGameNames();
-
-    // Set up the thread to keep updating sessions
-    sessionUpdateThread = createSessionGuiUpdateThread();
-    sessionUpdateThread.start();
-  }
-
   private EventHandler<ActionEvent> createClickOnCreateButton() {
     return event -> {
       LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
@@ -114,11 +91,9 @@ public class LobbyController extends AbstractLobbyController {
 
   private Thread createSessionGuiUpdateThread() {
     return new Thread(() -> {
-
       LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
-
       try {
         while (!Thread.currentThread().isInterrupted()) {
           int responseCode = 408;
@@ -129,18 +104,19 @@ public class LobbyController extends AbstractLobbyController {
           }
           while (responseCode == 408) {
             try {
-              System.out.println("Waiting for a meaningful response");
               longPullResponse = lobbyRequestSender.sendGetAllSessionDetailRequest(hashedResponse);
             } catch (UnirestException e) {
               e.printStackTrace();
               throw new RuntimeException(e);
             }
             responseCode = longPullResponse.getStatus();
+            // before continuing to next iteration or exit the loop, if interrupted, finish
+            if (Thread.currentThread().isInterrupted()) {
+              throw new InterruptedException("Lobby Thread: " + Thread.currentThread().getName() +
+                  " terminated");
+            }
           }
 
-          if (Thread.currentThread().isInterrupted()) {
-            throw new InterruptedException("Interrupted Lobby Thread");
-          }
 
           if (responseCode == 200) {
             // long pulling ends in success, we obtain the list of new sessions
@@ -231,6 +207,28 @@ public class LobbyController extends AbstractLobbyController {
         App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
       });
     }
+  }
+
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    super.initialize(url, resourceBundle);
+    // for lobby page, bind action to setting and admin button
+    pageSpecificActionBind();
+
+    // everytime we assign a new lobby controller, clean
+    // the previous sessions
+    SessionGuiManager.getInstance().clearSessionsRecorded();
+
+    // assign function to the "Create" button
+    createSessionButton.setOnAction(createClickOnCreateButton());
+
+    // get all possible game names (including saved games) from LS
+    setUpAvailableGameNames();
+
+    // Set up the thread to keep updating sessions
+    initializeSessionUpdateThread(createSessionGuiUpdateThread());
+    sessionUpdateThread.setDaemon(true);
+    sessionUpdateThread.start();
   }
 
 

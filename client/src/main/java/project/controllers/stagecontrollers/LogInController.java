@@ -66,9 +66,17 @@ public class LogInController implements Initializable {
           serviceLogIn = true;
           throw new RuntimeException("");
         }
+
+        // at the same time, spawn a thread that keeps refreshing this player's access token
+        App.setRefreshTokenThreadRunning(true);
+        Thread refreshTokenThread = createRefreshTokenThread();
+        refreshTokenThread.setDaemon(true);
+        refreshTokenThread.start();
+        LobbyController lobbyController = new LobbyController();
+        lobbyController.initializeRefreshTokenThread(refreshTokenThread);
         // display the lobby page, the role of the user will be used inside to
         // decide whether to display admin zone button or not
-        App.loadNewSceneToPrimaryStage("lobby_page.fxml", new LobbyController());
+        App.loadNewSceneToPrimaryStage("lobby_page.fxml", lobbyController);
 
       } catch (Exception e) {
         if (!serviceLogIn) {
@@ -95,12 +103,32 @@ public class LogInController implements Initializable {
     userPassword.setText(password);
   }
 
+  private Thread createRefreshTokenThread() {
+    return new Thread(()-> {
+      System.out.println(Thread.currentThread().getName() + ", the refresh token thread starts!");
+      System.out.println("Refreshing for " + App.getUser().getUsername());
+      while (!Thread.currentThread().isInterrupted()) {
+        // refresh every 10 minutes
+        try {
+          Thread.sleep(600000);
+          App.refreshUserToken(App.getUser());
+        } catch (InterruptedException e) {
+          System.out.println(Thread.currentThread().getName() + " is dead!");
+          break;
+        }
+      }
+    });
+  }
+
+
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     setDefaultLogInInfo();
     logInButton.setOnAction(createOnLogInClick());
     // guarantee to execute the termination of program in javafx thread
     quitButton.setOnAction(event -> {
+      // before quiting, also terminate the refresh token thread
       Platform.runLater(Platform::exit);
       //Map<Thread, StackTraceElement[]> allThreads = Thread.getAllStackTraces();
       //System.out.println("Number of running threads: " + allThreads.size());

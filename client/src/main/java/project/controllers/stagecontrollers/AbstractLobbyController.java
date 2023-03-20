@@ -19,7 +19,21 @@ public class AbstractLobbyController implements Initializable {
   @FXML
   protected Button logOutButton;
 
-  protected Thread sessionUpdateThread;
+  protected Thread sessionUpdateThread = null;
+
+  protected Thread refreshTokenThread = null;
+
+  protected void initializeSessionUpdateThread(Thread sessionUpdateThread) {
+    if (this.sessionUpdateThread == null) {
+      this.sessionUpdateThread = sessionUpdateThread;
+    }
+  }
+
+  protected void initializeRefreshTokenThread(Thread refreshTokenThread) {
+    if (this.refreshTokenThread == null) {
+      this.refreshTokenThread = refreshTokenThread;
+    }
+  }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -29,9 +43,18 @@ public class AbstractLobbyController implements Initializable {
 
     logOutButton.setOnAction(event -> {
       // before leaving the lobby page, make sure to stop the update thread
-      //System.out.println("Interrupting lobby thread:" + sessionUpdateThread.getName());
-      sessionUpdateThread.interrupt();
-      //System.out.println(sessionUpdateThread.isAlive());
+      if (sessionUpdateThread != null) {
+        sessionUpdateThread.interrupt();
+        sessionUpdateThread = null;
+      }
+      if (refreshTokenThread != null) {
+        refreshTokenThread.interrupt();
+        refreshTokenThread = null;
+      }
+
+      // stop the token updating thread (might change a user)
+      App.setRefreshTokenThreadRunning(false);
+
       // Reset the App user to null
       App.setUser(null);
 

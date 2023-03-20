@@ -16,6 +16,7 @@ import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import ca.mcgill.comp361.splendormodel.model.TableTop;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -133,12 +134,7 @@ public class GameController implements Initializable {
       // every time button click, we have up-to-date information
       PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
       ReservedHand reservedHand = playerInGame.getReservedHand();
-      String gameInfoJson;
-      try {
-        gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
-      } catch (UnirestException e) {
-        throw new RuntimeException(e);
-      }
+      String gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
       GameInfo gameInfo = gsonParser.fromJson(gameInfoJson, GameInfo.class);
       String playerName = App.getUser().getUsername();
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
@@ -167,12 +163,7 @@ public class GameController implements Initializable {
       // every time button click, we have up-to-date information
       PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
       PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
-      String gameInfoJson;
-      try {
-        gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
-      } catch (UnirestException e) {
-        throw new RuntimeException(e);
-      }
+      String gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
       GameInfo gameInfo = gsonParser.fromJson(gameInfoJson, GameInfo.class);
       String playerName = App.getUser().getUsername();
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
@@ -241,17 +232,18 @@ public class GameController implements Initializable {
       GameRequestSender gameRequestSender = App.getGameRequestSender();
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
-      try {
-        while (!Thread.currentThread().isInterrupted()) {
+
+      while (!Thread.currentThread().isInterrupted()) {
+        try {
           int responseCode = 408;
           while (responseCode == 408) {
             longPullResponse =
                 gameRequestSender.sendGetAllPlayerInfoRequest(gameId, hashedResponse);
             responseCode = longPullResponse.getStatus();
-          }
-
-          if (Thread.currentThread().isInterrupted()) {
-            throw new InterruptedException("PlayerInfo update thread interrupted");
+            if (Thread.currentThread().isInterrupted()) {
+              throw new InterruptedException("PlayerInfo Thread: " + Thread.currentThread().getName() +
+                  " terminated");
+            }
           }
 
           if (responseCode == 200) {
@@ -274,10 +266,12 @@ public class GameController implements Initializable {
             }
 
           }
+
+        } catch (InterruptedException e) {
+          System.out.println(Thread.currentThread().getName() + " is dead!");
+          break;
         }
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-        System.out.println(e.getMessage());
+
       }
 
     });
@@ -592,25 +586,22 @@ public class GameController implements Initializable {
 
   private Thread generateGameInfoUpdateThread() {
     GameRequestSender gameRequestSender = App.getGameRequestSender();
-    User curUser = App.getUser(); // at this point, user will not be Null
     return new Thread(() -> {
-      // basic stuff needed for a long pull
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
-      try {
-        while (!Thread.currentThread().isInterrupted()) {
-          // always do one, just in case
-          // after this, curUser.getAccessToken() will for sure have a valid token
-          App.refreshUserToken(curUser);
+
+      while (!Thread.currentThread().isInterrupted()) {
+        // basic stuff needed for a long pull
+        try {
           int responseCode = 408;
           while (responseCode == 408) {
             longPullResponse = gameRequestSender.sendGetGameInfoRequest(gameId, hashedResponse);
             responseCode = longPullResponse.getStatus();
+            if (Thread.currentThread().isInterrupted()) {
+              throw new InterruptedException("GameInfo Thread: " + Thread.currentThread().getName() +
+                  " terminated");
+            }
           }
-          if (Thread.currentThread().isInterrupted()) {
-            throw new InterruptedException("game info update thread is interrupted");
-          }
-
           if (responseCode == 200) {
             // update the MD5 hash of previous response
             hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
@@ -645,10 +636,12 @@ public class GameController implements Initializable {
             highlightPlayerInfoGui(curGameInfo);
 
           }
+        } catch (InterruptedException e) {
+          System.out.println(Thread.currentThread().getName() + " is dead!");
+          break;
         }
-      } catch (InterruptedException | UnirestException e) {
-        System.out.println(e.getMessage());
       }
+
 
     });
   }
@@ -703,11 +696,7 @@ public class GameController implements Initializable {
 
     GameRequestSender gameRequestSender = App.getGameRequestSender();
     HttpResponse<String> firstGameInfoResponse = null;
-    try {
-      firstGameInfoResponse = gameRequestSender.sendGetGameInfoRequest(gameId, "");
-    } catch (UnirestException e) {
-      throw new RuntimeException(e.getMessage());
-    }
+    firstGameInfoResponse = gameRequestSender.sendGetGameInfoRequest(gameId, "");
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
     // only enable the save game button for the creator of the game
@@ -727,10 +716,13 @@ public class GameController implements Initializable {
 
     // start thread to update player info
     playerInfoThread = generateAllPlayerInfoUpdateThread();
+    // creating the thread as daemon to terminate them correctly
+    playerInfoThread.setDaemon(true);
     playerInfoThread.start();
 
     // start thread to update game info
     mainGameUpdateThread = generateGameInfoUpdateThread();
+    mainGameUpdateThread.setDaemon(true);
     mainGameUpdateThread.start();
 
   }
