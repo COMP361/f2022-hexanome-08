@@ -491,7 +491,7 @@ public class ActionGenerator {
       for (int i = 0; i < orientCardsToFree.length; i++) {
         Position position = new Position(freeLevel, i);
         DevelopmentCard curCard = orientCardsToFree[i];
-        if (curCard.getPrestigePoints() >= 0){
+        if (curCard.getPrestigePoints() >= 0) {
           // only create the action if it's not dummy card
           cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
         }
@@ -501,73 +501,74 @@ public class ActionGenerator {
         CardExtraAction extraAction = (CardExtraAction) action;
         logger.warn("Looking at card: " + extraAction.getCurCard().getCardName());
         //logger.warn(String.valueOf(cascadeActions
-    }
-
-    if (cardEffect.equals(CardEffect.BURN_CARD)) {
-      List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
-      Colour burnColourPrice = null;
-      EnumMap<Colour, Integer> cardPrice = purchasedCard.getPrice();
-      for (Colour colour : cardPrice.keySet()) {
-        if (cardPrice.get(colour) > 0) {
-          burnColourPrice = colour;
-          break;
-        }
       }
-      // iterate to find the card in player's hand to find which card colour to burn
-      Colour finalBurnColourPrice = burnColourPrice;
-      List<Integer> pairedCardIndices = IntStream.range(0, cardsInHand.size())
-          .filter(i -> cardsInHand.get(i).isPaired())
-          .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
-          .boxed()
-          .collect(Collectors.toList());
 
-      // if there is no paired card to use
-      if (pairedCardIndices.size() == 0) {
-        List<Integer> sameColourCardsIndices = IntStream.range(0, cardsInHand.size())
+      if (cardEffect.equals(CardEffect.BURN_CARD)) {
+        List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
+        Colour burnColourPrice = null;
+        EnumMap<Colour, Integer> cardPrice = purchasedCard.getPrice();
+        for (Colour colour : cardPrice.keySet()) {
+          if (cardPrice.get(colour) > 0) {
+            burnColourPrice = colour;
+            break;
+          }
+        }
+        // iterate to find the card in player's hand to find which card colour to burn
+        Colour finalBurnColourPrice = burnColourPrice;
+        List<Integer> pairedCardIndices = IntStream.range(0, cardsInHand.size())
+            .filter(i -> cardsInHand.get(i).isPaired())
             .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
             .boxed()
             .collect(Collectors.toList());
 
-        for (int i : sameColourCardsIndices) {
+        // if there is no paired card to use
+        if (pairedCardIndices.size() == 0) {
+          List<Integer> sameColourCardsIndices = IntStream.range(0, cardsInHand.size())
+              .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
+              .boxed()
+              .collect(Collectors.toList());
+
+          for (int i : sameColourCardsIndices) {
+            Position position = new Position(0, i);
+            DevelopmentCard card = cardsInHand.get(i);
+            cascadeActions.add(new CardExtraAction(card, cardEffect, position));
+          }
+        }
+        // if there is 1 or more than 1 paired card to use
+        if (pairedCardIndices.size() >= 1) {
+          for (int i : pairedCardIndices) {
+            Position position = new Position(0, i);
+            DevelopmentCard card = cardsInHand.get(i);
+            cascadeActions.add(new CardExtraAction(card, cardEffect, position));
+          }
+        }
+      }
+
+      if (cardEffect.equals(CardEffect.SATCHEL)) {
+        List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
+        List<Integer> unpairedCardsIndices = IntStream.range(0, cardsInHand.size())
+            .filter(i -> !cardsInHand.get(i).isPaired())
+            .boxed()
+            .collect(Collectors.toList());
+        for (int i : unpairedCardsIndices) {
           Position position = new Position(0, i);
           DevelopmentCard card = cardsInHand.get(i);
           cascadeActions.add(new CardExtraAction(card, cardEffect, position));
         }
-      }
-      // if there is 1 or more than 1 paired card to use
-      if (pairedCardIndices.size() >= 1) {
-        for (int i : pairedCardIndices) {
-          Position position = new Position(0, i);
-          DevelopmentCard card = cardsInHand.get(i);
-          cascadeActions.add(new CardExtraAction(card, cardEffect, position));
-        }
-      }
-    }
 
-    if (cardEffect.equals(CardEffect.SATCHEL)) {
-      List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
-      List<Integer> unpairedCardsIndices = IntStream.range(0, cardsInHand.size())
-          .filter(i -> !cardsInHand.get(i).isPaired())
-          .boxed()
-          .collect(Collectors.toList());
-      for (int i : unpairedCardsIndices) {
-        Position position = new Position(0, i);
-        DevelopmentCard card = cardsInHand.get(i);
-        cascadeActions.add(new CardExtraAction(card, cardEffect, position));
       }
 
-    }
+      Map<String, Action> actionMap = new HashMap<>();
+      Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+      for (Action action : cascadeActions) {
+        String actionJson = gsonParser.toJson(action, CardExtraAction.class);
+        String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();
+        actionMap.put(actionId, action);
+      }
 
-    Map<String, Action> actionMap = new HashMap<>();
-    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
-    for (Action action : cascadeActions) {
-      String actionJson = gsonParser.toJson(action, CardExtraAction.class);
-      String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();
-      actionMap.put(actionId, action);
+      String playerName = playerInGame.getName();
+      playerActionMaps.put(playerName, actionMap);
     }
-
-    String playerName = playerInGame.getName();
-    playerActionMaps.put(playerName, actionMap);
   }
 
   /**
