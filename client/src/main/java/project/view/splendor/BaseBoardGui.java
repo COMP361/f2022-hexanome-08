@@ -126,23 +126,22 @@ public class BaseBoardGui implements BoardGui {
     // set up and add base card GUI, only purchase and reserve actions are
     // there in the action map at this point (or empty)
     Map<String, Action> reservePurchaseActions = playerActionMap.entrySet()
-        .stream().filter(e -> e.getValue() instanceof ReserveAction
-            ||
-            e.getValue() instanceof PurchaseAction)
+        .stream().filter(e ->
+            e.getValue() instanceof ReserveAction || e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-    //TODO: REMOVE AFTER
-    for(String actionId: playerActionMap.keySet()) {
-      Action action = playerActionMap.get(actionId);
-      if (action instanceof PurchaseAction) {
-        PurchaseAction purchaseAction = (PurchaseAction) action;
-        System.out.println("Look at action: " + actionId);
-        System.out.println("card price: " + purchaseAction.getCurCard().getPrice());
-        System.out.println("card position: " + purchaseAction.getCardPosition());
-        System.out.println("tokens need to be paid: " +purchaseAction.getTokensToBePaid());
-      }
-
-    }
+    ////TODO: REMOVE AFTER
+    //for(String actionId: playerActionMap.keySet()) {
+    //  Action action = playerActionMap.get(actionId);
+    //  if (action instanceof PurchaseAction) {
+    //    PurchaseAction purchaseAction = (PurchaseAction) action;
+    //    System.out.println("Look at action: " + actionId);
+    //    System.out.println("card price: " + purchaseAction.getCurCard().getPrice());
+    //    System.out.println("card position: " + purchaseAction.getCardPosition());
+    //    System.out.println("tokens need to be paid: " +purchaseAction.getTokensToBePaid());
+    //  }
+    //
+    //}
 
 
     Map<Position, List<ActionIdPair>> positionToActionMap =

@@ -36,6 +36,8 @@ public class FreeCardPopUpController extends ActionSelectionSender implements In
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    //TODO: The server has taken care of preventing generating FREE_CARD
+    // action generation if it's dummy card
     int cardsAvailableToFree = playerActionMap.size();
     ImageView[] sortedImageViews = new ImageView[cardsAvailableToFree];
     for (String actionId : playerActionMap.keySet()) {

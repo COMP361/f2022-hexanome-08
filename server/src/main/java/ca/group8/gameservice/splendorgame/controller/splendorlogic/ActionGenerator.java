@@ -64,6 +64,7 @@ public class ActionGenerator {
 
 
   // Translate all dev cards on base/orient board to reserve actions
+  // NOTE: A dummy card has prestige points = -1
   private List<Action> cardsToReserveAction(BaseBoard baseBoard,
                                             OrientBoard orientBoard,
                                             PlayerInGame curPlayerInfo) {
@@ -74,12 +75,18 @@ public class ActionGenerator {
         DevelopmentCard[] baseLevelCards = baseBoard.getLevelCardsOnBoard(level);
         DevelopmentCard[] orientLevelCards = orientBoard.getLevelCardsOnBoard(level);
         // generate reserve action for the first card of deck, not poped yet
-        DevelopmentCard baseCardFromDeck = baseBoard.getDecks().get(level).get(0);
-        DevelopmentCard orientCardFromDeck = orientBoard.getDecks().get(level).get(0);
-        // the Y index as -1 to represent the deck position
-        result.add(new ReserveAction(new Position(level, -1), baseCardFromDeck));
-        result.add(new ReserveAction(new Position(level, -1), orientCardFromDeck));
+        if (!baseBoard.getDecks().get(level).isEmpty()) {
+          DevelopmentCard baseCardFromDeck = baseBoard.getDecks().get(level).get(0);
+          result.add(new ReserveAction(new Position(level, -1), baseCardFromDeck));
+        }
 
+        if (!orientBoard.getDecks().get(level).isEmpty()) {
+          DevelopmentCard orientCardFromDeck = orientBoard.getDecks().get(level).get(0);
+          // the Y index as -1 to represent the deck position
+          result.add(new ReserveAction(new Position(level, -1), orientCardFromDeck));
+        }
+
+        //TODO: Note, a card might be dummy in here!!!!
         for (int cardIndex = 0; cardIndex < baseLevelCards.length; cardIndex++) {
           Position cardPosition = new Position(level, cardIndex);
           DevelopmentCard card = baseLevelCards[cardIndex];
@@ -473,15 +480,27 @@ public class ActionGenerator {
       for (int i = 0; i < baseCardsToFree.length; i++) {
         Position position = new Position(freeLevel, i);
         DevelopmentCard curCard = baseCardsToFree[i];
-        cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+        if (curCard.getPrestigePoints() >= 0) {
+          // only create the action if it's not dummy card
+          cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+        }
+
       }
 
       DevelopmentCard[] orientCardsToFree = orientBoard.getLevelCardsOnBoard(freeLevel);
       for (int i = 0; i < orientCardsToFree.length; i++) {
         Position position = new Position(freeLevel, i);
         DevelopmentCard curCard = orientCardsToFree[i];
-        cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+        if (curCard.getPrestigePoints() >= 0){
+          // only create the action if it's not dummy card
+          cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+        }
       }
+      Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
+      for (Action action : cascadeActions) {
+        CardExtraAction extraAction = (CardExtraAction) action;
+        logger.warn("Looking at card: " + extraAction.getCurCard().getCardName());
+        //logger.warn(String.valueOf(cascadeActions
     }
 
     if (cardEffect.equals(CardEffect.BURN_CARD)) {
@@ -722,135 +741,5 @@ public class ActionGenerator {
   public TableTop getTableTop() {
     return tableTop;
   }
-
-  //EVERYTHING AFTER THIS IS OLD CODE (not up to date based on M6 model)
-  /*
-   * 1. create a new map -- DONE
-   * - get player wealth
-   * - get flag
-   * 2. Get list of cards from Base Board (baseBoardCards)
-   * 3. Iterate through baseBoardCards -->
-   * 3a. call getPosition() on base board object, and pass in the card
-   * 3b. verify if you can purchase card --> If yes, create purchase card action [PARAM: WEALTH]
-   * 3c. verify if you can reserve card
-   * 4. return the map
-   */
-  /*
-  //TODO
-  private static List<Action> cardsToActions(GameInfo gameInfo, PlayerInGame player) {
-    List<Action> actionOptions = new ArrayList<>();
-    EnumMap<Colour, Integer> wealth = player.getWealth();
-    boolean canReserve = !player.getReservedHand().isFull();
-   /*
-    Map<Integer, List<BaseCard>> baseBoardCards =
-        gameInfo.getTableTop().getBaseBoard().getBaseCardsOnBoard();
-
-    for (int level : baseBoardCards.keySet()) {
-      List<BaseCard> cardsPerLevel = baseBoardCards.get(level);
-      for (int cardIndex = 0; cardIndex < cardsPerLevel.size(); cardIndex++) {
-        Position cardPosition = new Position(level, cardIndex);
-        BaseCard curBaseCard = cardsPerLevel.get(cardIndex);
-        //start of purchase card verification
-        //this creates a goldCounter, to see if gold tokens are needed
-        int goldCounter = 0;
-        EnumMap<Colour, Integer> cardPrice = curBaseCard.getPrice();
-        for (Colour col : Colour.values()) {
-          if (col.equals(Colour.GOLD)) {
-            continue;
-          }
-          if (cardPrice.get(col) != 0) {
-            if (cardPrice.get(col) > wealth.get(col)) {
-              goldCounter += cardPrice.get(col) - wealth.get(col);
-            }
-          }
-        }
-
-        //checks if you can purchase (with or without gold tokens)
-        if (goldCounter <= player.getTokenHand().getGoldTokenNumber()) {
-          //create new purchase action option & add it to the actionList.
-          actionOptions.add(new PurchaseAction(cardPosition, curBaseCard, goldCounter));
-
-        }
-        //verify if player can reserve card
-        if (canReserve) {
-          actionOptions.add(new ReserveAction(cardPosition, curBaseCard));
-        }
-      }
-    }
-
-
-
-    return actionOptions;
-  }
-   */
-
-  /*
-   * Generate the hash -> Actions map provided: gameId, playerName (implicitly in PlayerInGame).
-   * will be called everytime GET games/{gameId}/players/{playerName}/actions
-   * will replace the previous Action Map every time
-   */
-  /*
-  public void generateActions(long gameId, GameInfo gameInfo, PlayerInGame player) {
-
-    // TODO: Player Identity will be verified before calling generateActions with access_token
-    //  no need to check it here (we can safely assume player is valid before calling this)
-    String curPlayerName = gameInfo.getCurrentPlayer();
-    String askedActionsPlayerName = player.getName();
-    Map<String, Action> hashActionMap = new HashMap<>();
-    if ((!gameInfo.isFinished()) && (curPlayerName.equals(askedActionsPlayerName))) {
-      // only generate the actions if the game is NOT finished and
-      // the player asked for actions IS the current turn player
-
-      // adding cardActions
-      for (Action action : cardsToActions(gameInfo, player)) {
-        String actionMd5 = DigestUtils.md5Hex(new Gson().toJson(action)).toUpperCase();
-        hashActionMap.put(actionMd5, action);
-      }
-      EnumMap<Colour, Integer> playerTokens = player.getTokenHand().getAllTokens();
-      TakeTokenAction takeTokenAction = new TakeTokenAction(playerTokens);
-      String takeTokenActionMd5 =
-          DigestUtils.md5Hex(new Gson().toJson(takeTokenAction)).toUpperCase();
-
-      // add the take token actions (card unrelated actions)
-      hashActionMap.put(takeTokenActionMd5, takeTokenAction);
-    }
-
-    /*
-    // once the hash -> Action map is ready, we add it for this specific player
-    if (!actionLookUpMap.containsKey(gameId)) {
-      // if the gameId is not recorded, means we have no players' actions, thus we are adding
-      // the first player
-      Map<String, Map<String, Action>> playerSpecificActionsMap = new HashMap<>();
-      playerSpecificActionsMap.put(askedActionsPlayerName, hashActionMap);
-      actionLookUpMap.put(gameId, playerSpecificActionsMap);
-    } else {
-      // otherwise, we must have at least one player name stored in the map, therefore we
-      // can for sure get the Map<String, Map<String, Action>>
-      // then either overwrites or adding new action map
-      Map<String, Map<String, Action>> playerSpecificActionsMap = actionLookUpMap.get(gameId);
-      playerSpecificActionsMap.put(askedActionsPlayerName, hashActionMap);
-    }
-
-  }
-
- */
-
-
-  /*
-   * Find the (potentially, might be empty map) previously generated hash -> Action map
-   * when receive POST request on games/{gameId}/players/{playerName}/actions/{actionId}
-   * first call this method to find the map, then with {actionId} provided, we can find the
-   * right Action to execute.
-   */
-  /*
-  public Map<String, Action> lookUpActions(long gameId, String playerName) {
-    // whether player is in the game or not will be checked in RestController class
-    // if this is an empty map, then there is no need to look up actionMd5, just reply
-    // with a bad_request
-    return this.actionLookUpMap.get(gameId).get(playerName);
-  }
-
-   */
-
 
 }
