@@ -193,6 +193,9 @@ public class CardExtraAction extends Action {
       // reset the player action, so we know this free is over
       associatedActionInterpreter.getActionGenerator()
           .getPlayerActionMaps().put(curPlayer.getName(), new HashMap<>());
+      // set free level to 0 to avoid infinite loop
+      associatedActionInterpreter.setFreeCardLevel(0);
+
       //if it is an orient card
     } else {
       ActionGenerator actionGenerator = associatedActionInterpreter.getActionGenerator();

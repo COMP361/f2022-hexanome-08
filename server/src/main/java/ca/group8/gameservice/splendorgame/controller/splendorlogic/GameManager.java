@@ -13,8 +13,6 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
@@ -191,17 +189,22 @@ public class GameManager {
         .collect(Collectors.toList());
 
     // randomly shuffle the playerNames
-    Collections.shuffle(playerNames);
+
     if (!launcherInfo.getSavegame().isEmpty()) {
       String saveGameId = launcherInfo.getSavegame();
-      String creator = launcherInfo.getCreator();
+
       Map<String, SavedGameState> savedGames;
       try {
         savedGames = readSavedGameDataFromFile();
         SavedGameState savedGame = savedGames.get(saveGameId);
-        // rename the player names in this savedGameState
-        savedGame.renamePlayers(playerNames, creator);
         GameInfo newGameInfo = savedGame.getGameInfo();
+        //TODO: ONLY shuffle the names if it's not exact match
+        String creator = launcherInfo.getCreator();
+        if (newGameInfo.getPlayerNames().equals(playerNames)) {
+          // rename the player names in this savedGameState
+          Collections.shuffle(playerNames);
+          savedGame.renamePlayers(playerNames, creator);
+        }
         PlayerStates newPlayerStates = savedGame.getPlayerStates();
 
 
