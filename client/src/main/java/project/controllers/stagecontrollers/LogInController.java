@@ -110,7 +110,7 @@ public class LogInController implements Initializable {
       while (!Thread.currentThread().isInterrupted()) {
         // refresh every 10 minutes
         try {
-          Thread.sleep(600000);
+          Thread.sleep(550000);
           App.refreshUserToken(App.getUser());
         } catch (InterruptedException e) {
           System.out.println(Thread.currentThread().getName() + " is dead!");
