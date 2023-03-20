@@ -452,13 +452,6 @@ public class GameController implements Initializable {
     for(String actionId : playerActionMap.keySet()){
     }
     if (!playerActionMap.isEmpty() && allBurnActions) {
-      HttpResponse<String> response =
-          App.getGameRequestSender().sendGetAllPlayerInfoRequest(gameId, "");
-      String playerStatesJson = response.getBody();
-      PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
-          .fromJson(playerStatesJson, PlayerStates.class);
-      PlayerInGame playerInGame = playerStates.getOnePlayerInGame(App.getUser().getUsername());
-      PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
       // also assign the pending action button some functionality
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
