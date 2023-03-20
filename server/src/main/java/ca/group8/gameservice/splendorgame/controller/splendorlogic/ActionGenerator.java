@@ -168,6 +168,22 @@ public class ActionGenerator {
         int goldCardsNeeded = 0;
         final Position cardPosition = new Position(level, cardIndex);
         DevelopmentCard card = orientLevelCards[cardIndex];
+
+        //if orient card is a burn card
+        if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
+          Colour cardsColour = null;
+          for (Colour color : card.getPrice().keySet()){
+            if (card.getPrice().get(color) == 2) {
+              cardsColour = color;
+              if ( curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
+                result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
+              }
+              break;
+            }
+          }
+          continue;
+        }
+
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
@@ -225,6 +241,8 @@ public class ActionGenerator {
           }
         }
 
+        //no gold cards ever required for burn, therefore always set to 0
+        //set card price to its original price (no discounts on burn cards)
         if (!hasSatchel) {
           result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
         } else {
@@ -245,6 +263,22 @@ public class ActionGenerator {
         //x coordinate = 0, means this is a card in the reserve hand!
         final Position cardPosition = new Position(0, cardIndex);
         DevelopmentCard card = reservedCards[cardIndex];
+
+        //if is burn card
+        if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
+          Colour cardsColour = null;
+          for (Colour color : card.getPrice().keySet()){
+            if (card.getPrice().get(color) == 2) {
+              cardsColour = color;
+              if ( curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
+                result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
+              }
+              break;
+            }
+          }
+          continue;
+        }
+
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought

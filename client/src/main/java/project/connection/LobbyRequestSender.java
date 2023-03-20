@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import project.App;
 import project.view.lobby.communication.GameParameters;
 import project.view.lobby.communication.Player;
 import project.view.lobby.communication.Savegame;
@@ -336,6 +337,8 @@ public class LobbyRequestSender {
       result = new Gson().fromJson(responseJson, Player.class);
       if (response.getStatus() != 200) {
         String msg = "Unable to perform GET one player request to LS";
+        msg += "\n Error from LS: " + response.getBody();
+        msg += App.getUser().getAccessToken();
         throw new UnirestException(msg);
       }
     } catch (UnirestException e) {

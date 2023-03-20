@@ -40,12 +40,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
-import project.controllers.popupcontrollers.ActOnNoblePopUpController;
-import project.controllers.popupcontrollers.FreeCardPopUpController;
-import project.controllers.popupcontrollers.GameOverPopUpController;
-import project.controllers.popupcontrollers.PurchaseHandController;
-import project.controllers.popupcontrollers.ReservedHandController;
-import project.controllers.popupcontrollers.SaveGamePopUpController;
+import project.controllers.popupcontrollers.*;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 import project.view.splendor.BaseBoardGui;
@@ -446,6 +441,46 @@ public class GameController implements Initializable {
       });
     }
   }
+  //TODO: take out prints
+  private void showBurnCardPopUp(GameInfo curGameInfo) {
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(App.getUser().getUsername());
+    boolean allBurnActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof CardExtraAction
+            && ((CardExtraAction) action).getCardEffect().equals(CardEffect.BURN_CARD));
+    for(String actionId : playerActionMap.keySet()){
+    }
+    if (!playerActionMap.isEmpty() && allBurnActions) {
+      HttpResponse<String> response =
+          App.getGameRequestSender().sendGetAllPlayerInfoRequest(gameId, "");
+      String playerStatesJson = response.getBody();
+      PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
+          .fromJson(playerStatesJson, PlayerStates.class);
+      PlayerInGame playerInGame = playerStates.getOnePlayerInGame(App.getUser().getUsername());
+      PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
+      // also assign the pending action button some functionality
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("free_card_pop_up.fxml",
+              new BurnCardController(gameId, playerActionMap),
+              800,
+              600);
+        });
+      });
+
+      // do a pop up right now
+      Platform.runLater(() -> {
+
+        App.loadPopUpWithController("free_card_pop_up.fxml",
+            new BurnCardController(gameId, playerActionMap),
+            800,
+            600);
+      });
+    }
+  }
+
 
 
   private void showFreeCardPopUp(GameInfo curGameInfo) {
@@ -634,14 +669,16 @@ public class GameController implements Initializable {
               // TODO: <<<<< This section contains the method that contains optional pop ups>>>>>>>>>
               // TODO: <<<<< conditions are check internally in method for readability      >>>>>>>>>
 
-              // optionally, show the claim noble pop up, condition is checked inside method
-              showClaimNoblePopUp(curGameInfo);
-              // optionally, show the pairing card pop up, condition is checked inside method
-              showPairingCardPopUp(curGameInfo);
-              // optionally, show the taking a free card pop up, condition is checked inside method
-              showFreeCardPopUp(curGameInfo);
-              // optionally, show the taking a reserve noble pop up, condition is checked inside method
-              showReserveNoblePopUp(curGameInfo);
+            // optionally, show the claim noble pop up, condition is checked inside method
+            showClaimNoblePopUp(curGameInfo);
+            // optionally, show the pairing card pop up, condition is checked inside method
+            showPairingCardPopUp(curGameInfo);
+            // optionally, show the taking a free card pop up, condition is checked inside method
+            showFreeCardPopUp(curGameInfo);
+            // optionally, show the taking a free card pop up, condition is checked inside method
+            showBurnCardPopUp(curGameInfo);
+            // optionally, show the taking a reserve noble pop up, condition is checked inside method
+            showReserveNoblePopUp(curGameInfo);
 
               // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
             }
@@ -718,7 +755,7 @@ public class GameController implements Initializable {
     }
 
     GameRequestSender gameRequestSender = App.getGameRequestSender();
-    HttpResponse<String> firstGameInfoResponse = 
+    HttpResponse<String> firstGameInfoResponse =
         gameRequestSender.sendGetGameInfoRequest(gameId, "");
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
@@ -730,7 +767,7 @@ public class GameController implements Initializable {
 
     // only enable the save game button for the creator of the game
     setupSaveGameButton(curGameInfo);
-    
+
     // sort player names based on different client views
     sortAllPlayerNames(curGameInfo);
 

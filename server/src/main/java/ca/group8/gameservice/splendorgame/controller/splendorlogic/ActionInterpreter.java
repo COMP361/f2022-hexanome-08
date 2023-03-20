@@ -369,11 +369,14 @@ public class ActionInterpreter {
    * @param cardPrice cardPrice
    */
   public void setBurnCardInfo(EnumMap<Colour, Integer> cardPrice) {
+    Logger logger = LoggerFactory.getLogger(ActionInterpreter.class);
+    logger.info("AI: burn card price: "+cardPrice);
     //set colour and cards to burn
     burnCardCount = 2;
     for (Colour colour : cardPrice.keySet()) {
       if (cardPrice.get(colour) > 0) {
         burnCardColour = colour;
+        logger.info("AI: Colour: "+colour);
         break;
       }
     }
