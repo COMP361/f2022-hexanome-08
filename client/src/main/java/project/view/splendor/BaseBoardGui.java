@@ -100,7 +100,7 @@ public class BaseBoardGui implements BoardGui {
         playerBoardAnchorPane.getChildren().add(tokenBankGui);
       });
     } else { //means there are only return token actions
-      ReturnTokenAction firstAction = (ReturnTokenAction) returnTokenActionMap.values().iterator().next();
+      ReturnTokenAction firstAction = returnTokenActionMap.values().iterator().next();
       int amountToReturn = firstAction.getExtraTokenCount();
       System.out.println("amount to return: " + amountToReturn);
       String msg = "Please return: " + amountToReturn;
@@ -130,6 +130,20 @@ public class BaseBoardGui implements BoardGui {
             ||
             e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+    //TODO: REMOVE AFTER
+    for(String actionId: playerActionMap.keySet()) {
+      Action action = playerActionMap.get(actionId);
+      if (action instanceof PurchaseAction) {
+        PurchaseAction purchaseAction = (PurchaseAction) action;
+        System.out.println("Look at action: " + actionId);
+        System.out.println("card price: " + purchaseAction.getCurCard().getPrice());
+        System.out.println("card position: " + purchaseAction.getCardPosition());
+        System.out.println("tokens need to be paid: " +purchaseAction.getTokensToBePaid());
+      }
+
+    }
+
 
     Map<Position, List<ActionIdPair>> positionToActionMap =
         getPositionActions(reservePurchaseActions);

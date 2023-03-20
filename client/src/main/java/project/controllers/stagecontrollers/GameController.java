@@ -375,8 +375,7 @@ public class GameController implements Initializable {
   }
 
   private void showClaimNoblePopUp(GameInfo curGameInfo) {
-    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(viewerName);
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
     // return true if EVERY ACTION in playerActionMap is ClaimNobleAction
     boolean allClaimNobleActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof ClaimNobleAction);
@@ -406,8 +405,7 @@ public class GameController implements Initializable {
 
   private void showPairingCardPopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
-    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(viewerName);
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
     boolean allPairActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.SATCHEL));
@@ -444,8 +442,7 @@ public class GameController implements Initializable {
   //TODO: take out prints
   private void showBurnCardPopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
-    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(App.getUser().getUsername());
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
     boolean allBurnActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.BURN_CARD));
@@ -662,16 +659,16 @@ public class GameController implements Initializable {
               // TODO: <<<<< This section contains the method that contains optional pop ups>>>>>>>>>
               // TODO: <<<<< conditions are check internally in method for readability      >>>>>>>>>
 
-            // optionally, show the claim noble pop up, condition is checked inside method
-            showClaimNoblePopUp(curGameInfo);
-            // optionally, show the pairing card pop up, condition is checked inside method
-            showPairingCardPopUp(curGameInfo);
-            // optionally, show the taking a free card pop up, condition is checked inside method
-            showFreeCardPopUp(curGameInfo);
-            // optionally, show the taking a free card pop up, condition is checked inside method
-            showBurnCardPopUp(curGameInfo);
-            // optionally, show the taking a reserve noble pop up, condition is checked inside method
-            showReserveNoblePopUp(curGameInfo);
+              // optionally, show the claim noble pop up, condition is checked inside method
+              showClaimNoblePopUp(curGameInfo);
+              // optionally, show the pairing card pop up, condition is checked inside method
+              showPairingCardPopUp(curGameInfo);
+              // optionally, show the taking a free card pop up, condition is checked inside method
+              showFreeCardPopUp(curGameInfo);
+              // optionally, show the taking a free card pop up, condition is checked inside method
+              showBurnCardPopUp(curGameInfo);
+              // optionally, show the taking a reserve noble pop up, condition is checked inside method
+              showReserveNoblePopUp(curGameInfo);
 
               // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
             }
