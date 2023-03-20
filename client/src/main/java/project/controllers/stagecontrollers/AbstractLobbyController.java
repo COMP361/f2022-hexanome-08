@@ -19,6 +19,8 @@ public class AbstractLobbyController implements Initializable {
   @FXML
   protected Button logOutButton;
 
+  protected Thread sessionUpdateThread;
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     // regular display set up for all users (admin or player)
@@ -26,6 +28,10 @@ public class AbstractLobbyController implements Initializable {
     userNameLabel.setText("Current user: " + App.getUser().getUsername());
 
     logOutButton.setOnAction(event -> {
+      // before leaving the lobby page, make sure to stop the update thread
+      //System.out.println("Interrupting lobby thread:" + sessionUpdateThread.getName());
+      sessionUpdateThread.interrupt();
+      //System.out.println(sessionUpdateThread.isAlive());
       // Reset the App user to null
       App.setUser(null);
 

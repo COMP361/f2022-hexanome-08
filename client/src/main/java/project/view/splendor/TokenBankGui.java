@@ -270,7 +270,6 @@ public class TokenBankGui extends HBox {
     // iterate through all five regular tokens
     for (int i = 0; i < 5; i++) {
       Group curGroup = (Group) allChildren.get(i);
-      Colour curColour = colours[i];
       Button plusButton = (Button) curGroup.getChildren().get(1);
       Button minusButton = (Button) curGroup.getChildren().get(2);
       Label displayLabel = (Label) curGroup.getChildren().get(curGroup.getChildren().size() - 2);
@@ -325,15 +324,6 @@ public class TokenBankGui extends HBox {
                                EnumMap<Colour, Integer> bankMap,
                                double layoutX, double layoutY, boolean firstSetup) {
     this.returnTokenActionMap = returnTokenActionMap;
-
-    //TODO DEBUG -- DELETE LATER
-    for (String actionId : returnTokenActionMap.keySet()) {
-      ReturnTokenAction action = returnTokenActionMap.get(actionId);
-      System.out.println("Return Action ID: " + actionId
-          + ", tokens to return: " + action.getExtraTokenCount());
-
-    }
-    // set the layout of the GUI
     setLayoutX(layoutX);
     setLayoutY(layoutY);
     bindActionToButtonAndLabel();

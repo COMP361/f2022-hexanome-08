@@ -1,7 +1,9 @@
 package project.controllers.stagecontrollers;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -81,14 +83,6 @@ public class LogInController implements Initializable {
     };
   }
 
-  private EventHandler<ActionEvent> createOnQuitClick() {
-    return actionEvent -> {
-      Button quitButton = (Button) actionEvent.getSource();
-      Stage curWindow = (Stage) quitButton.getScene().getWindow();
-      curWindow.close();
-    };
-  }
-
   // Mainly for debug usage
   private void setDefaultLogInInfo() {
     //String name = "ruoyuplayer";
@@ -105,6 +99,14 @@ public class LogInController implements Initializable {
   public void initialize(URL url, ResourceBundle resourceBundle) {
     setDefaultLogInInfo();
     logInButton.setOnAction(createOnLogInClick());
-    quitButton.setOnAction(createOnQuitClick());
+    // guarantee to execute the termination of program in javafx thread
+    quitButton.setOnAction(event -> {
+      Platform.runLater(Platform::exit);
+      //Map<Thread, StackTraceElement[]> allThreads = Thread.getAllStackTraces();
+      //System.out.println("Number of running threads: " + allThreads.size());
+      //for (Thread thread : allThreads.keySet()) {
+      //  System.out.println("Thread name: " + thread.getName() + ", Thread ID: " + thread.getId());
+      //}
+    });
   }
 }

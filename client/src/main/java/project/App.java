@@ -28,8 +28,8 @@ import project.view.lobby.communication.User;
  */
 public class App extends Application {
 
-  private static final String mode = "ruoyu_server";
-  //private static final String mode = "local_host";
+  //private static final String mode = "ruoyu_server";
+  private static final String mode = "local_host";
   //private static final String mode = "same_wifi";
   private static final String wifiIp = "10.122.126.253";
   private static final Colour[] allColours = new Colour[] {
@@ -46,8 +46,46 @@ public class App extends Application {
   private static User user;
   private static GameBoardLayoutConfig guiLayouts;
 
+  // the boolean variables that notify all threads at run time, when should they stop
+  private static volatile boolean gameThreadsRunning = false;
+
+  private static volatile boolean lobbyThreadRunning = false;
+
   public static void main(String[] args) {
     launch();
+  }
+
+  /**
+   * Override the start() method to launch the whole project.
+   *
+   * @param stage The default stage to display
+   * @throws IOException when fxml not found
+   */
+  @Override
+  public void start(Stage stage) throws IOException {
+    System.setProperty("com.apple.macos.useScreenMenuBar", "true");
+    primaryStage = stage;
+    try {
+      FileReader f = new FileReader(Objects.requireNonNull(
+          App.class.getClassLoader().getResource("appConfig.json")).getFile());
+      JsonReader jfReader = new JsonReader(f);
+      guiLayouts = new Gson().fromJson(jfReader, GameBoardLayoutConfig.class);
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    FXMLLoader startPageLoader = new FXMLLoader(App.class.getResource("start_page.fxml"));
+    // assign controller of log in page
+    startPageLoader.setController(new LogInController());
+    primaryStage.setTitle("Welcome to Splendor!");
+    primaryStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
+    primaryStage.setFullScreenExitHint("");
+    primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+    //primaryStage.setFullScreen(true);
+    Scene scene = new Scene(startPageLoader.load(),
+        guiLayouts.getAppWidth(),
+        guiLayouts.getAppHeight());
+    primaryStage.setScene(scene);
+    primaryStage.show();
   }
 
   private static String getWifiIp() throws IOException {
@@ -235,36 +273,21 @@ public class App extends Application {
     return playerImage;
   }
 
-  /**
-   * Override the start() method to launch the whole project.
-   *
-   * @param stage The default stage to display
-   * @throws IOException when fxml not found
-   */
-  @Override
-  public void start(Stage stage) throws IOException {
-    System.setProperty("com.apple.macos.useScreenMenuBar", "true");
-    primaryStage = stage;
-    try {
-      FileReader f = new FileReader(Objects.requireNonNull(
-          App.class.getClassLoader().getResource("appConfig.json")).getFile());
-      JsonReader jfReader = new JsonReader(f);
-      guiLayouts = new Gson().fromJson(jfReader, GameBoardLayoutConfig.class);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    FXMLLoader startPageLoader = new FXMLLoader(App.class.getResource("start_page.fxml"));
-    // assign controller of log in page
-    startPageLoader.setController(new LogInController());
-    primaryStage.setTitle("Welcome to Splendor!");
-    primaryStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
-    primaryStage.setFullScreenExitHint("");
-    primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-    //primaryStage.setFullScreen(true);
-    Scene scene = new Scene(startPageLoader.load(),
-        guiLayouts.getAppWidth(),
-        guiLayouts.getAppHeight());
-    primaryStage.setScene(scene);
-    primaryStage.show();
+  public static boolean isGameThreadsRunning() {
+    return gameThreadsRunning;
   }
+
+  public static void setGameThreadsRunning(boolean gameThreadsRunning) {
+    App.gameThreadsRunning = gameThreadsRunning;
+  }
+
+  public static boolean isLobbyThreadRunning() {
+    return lobbyThreadRunning;
+  }
+
+  public static void setLobbyThreadRunning(boolean lobbyThreadRunning) {
+    App.lobbyThreadRunning = lobbyThreadRunning;
+  }
+
+
 }

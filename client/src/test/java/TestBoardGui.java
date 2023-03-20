@@ -101,6 +101,48 @@ public class TestBoardGui {
     // Print the output string
     System.out.println("Output:\n" + output.toString());
   }
+  private volatile boolean shouldStop = false;
+  @Test
+  public void testThreadTerminating() {
+
+    Thread thread = new Thread(() -> {
+      while (!shouldStop) {
+        // Do some work here
+      }
+    });
+    thread.start();
+
+    // Wait for the thread to start
+    try {
+      Thread.sleep(1000); // Sleep for 1 second
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    // Print information about all running threads
+    Map<Thread, StackTraceElement[]> allThreads = Thread.getAllStackTraces();
+    System.out.println("Number of running threads: " + allThreads.size());
+    for (Thread t : allThreads.keySet()) {
+      System.out.println("Thread name: " + t.getName() + ", Thread ID: " + t.getId());
+    }
+
+    // Request that the thread stop running
+    shouldStop = true;
+
+    // Wait for the thread to exit
+    //try {
+    //  thread.join();
+    //} catch (InterruptedException e) {
+    //  e.printStackTrace();
+    //}
+
+    // Print information about all running threads
+    allThreads = Thread.getAllStackTraces();
+    System.out.println("Number of running threads: " + allThreads.size());
+    for (Thread t : allThreads.keySet()) {
+      System.out.println("Thread name: " + t.getName() + ", Thread ID: " + t.getId());
+    }
+  }
 }
 
 

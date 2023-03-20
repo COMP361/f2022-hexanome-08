@@ -67,24 +67,6 @@ public class LobbyRequestSender {
     return response;
   }
 
-  /**
-   * Send a long poll get request to get detail on
-   * 1 session (whether ppl joined in the session or left).
-   *
-   * @param sessionId            session id
-   * @param hashPreviousResponse previous response payload body hashed with MD5
-   * @throws UnirestException in case unirest failed to send a request
-   * @returna response of the sessions details as String
-   */
-  public HttpResponse<String> sendGetOneSessionDetailRequest(
-      Long sessionId, String hashPreviousResponse) throws UnirestException {
-    if (hashPreviousResponse.equals("")) {
-      return Unirest.get(lobbyUrl + "/api/sessions/" + sessionId.toString()).asString();
-    } else {
-      return Unirest.get(lobbyUrl + "/api/sessions/" + sessionId.toString())
-          .queryString("hash", hashPreviousResponse).asString();
-    }
-  }
 
   /**
    * send a log in request to LS.
@@ -185,7 +167,6 @@ public class LobbyRequestSender {
    * Used to get all available games in LS.
    *
    * @return A list of Game
-   * @throws UnirestException in case unirest failed to send a request
    */
   public List<GameParameters> sendAllGamesRequest() {
     try {

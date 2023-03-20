@@ -21,6 +21,7 @@ import javafx.scene.control.ScrollPane;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.connection.LobbyRequestSender;
+import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.view.lobby.SessionGui;
 import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.GameParameters;
@@ -48,7 +49,7 @@ public class LobbyController extends AbstractLobbyController {
   @FXML
   private Button settingButton;
 
-  private Thread sessionUpdateThread;
+
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -79,6 +80,17 @@ public class LobbyController extends AbstractLobbyController {
 
       // Get the current game display name in the choice box
       String displayGameName = gameChoices.getValue();
+      // if there is no registered game, we throw a popup to player
+      if (displayGameName == null) {
+        App.loadPopUpWithController("lobby_warn.fxml",
+            new LobbyWarnPopUpController(
+                "Please choose a option of game first!" +
+                    "\nIf there is no game, ask the admin in person\nto create one!",
+                "NO GAME CHOSEN"),
+            360,
+            170);
+        return;
+      }
       String gameName = gameNameMapping.get(displayGameName);
       String saveGameId = "";
       // display name can be a game service name or a saved id, do that check
@@ -117,6 +129,7 @@ public class LobbyController extends AbstractLobbyController {
           }
           while (responseCode == 408) {
             try {
+              System.out.println("Waiting for a meaningful response");
               longPullResponse = lobbyRequestSender.sendGetAllSessionDetailRequest(hashedResponse);
             } catch (UnirestException e) {
               e.printStackTrace();
@@ -193,6 +206,10 @@ public class LobbyController extends AbstractLobbyController {
     // Available games to choose from ChoiceBox (Note, this includes save game ids)
     ObservableList<String> gameOptionsList = FXCollections.observableArrayList(gameDisplayNames);
     gameChoices.setItems(gameOptionsList);
+    // default, base game (if there is any game registered)
+    if (!gameOptionsList.isEmpty()) {
+      gameChoices.setValue(gameOptionsList.get(0));
+    }
   }
 
   private void pageSpecificActionBind() {
