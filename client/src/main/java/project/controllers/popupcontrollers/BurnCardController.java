@@ -59,9 +59,12 @@ public class BurnCardController extends ActionSelectionSender implements Initial
       } else {
         satchelMark.setFill(Color.WHITESMOKE);
       }
+      satchelMark.setWidth(5);
+      satchelMark.setHeight(100);
       HBox curPairedCard = new HBox(cardImageView, satchelMark);
       cardSatchelPairHbox[imageViewInsertIndex] = curPairedCard;
-      curPairedCard.setOnMouseClicked(createOnActionSelectionClick(actionId));
+      // bind the action to image view
+      cardImageView.setOnMouseClicked(createOnActionSelectionClick(actionId));
       counter++;
     }
     // add all sorted, function assigned image views to the HBox

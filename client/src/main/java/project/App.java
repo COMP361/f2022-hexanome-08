@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
+import project.controllers.popupcontrollers.GameOverPopUpController;
 import project.controllers.stagecontrollers.LogInController;
 import project.view.lobby.communication.User;
 
@@ -187,9 +188,15 @@ public class App extends Application {
     // establish a relationship between two window (popup and primary)
     newStage.initOwner(primaryStage);
     // block user from clicking on the main stage
+    if (controller instanceof GameOverPopUpController) {
+      // ban the close button on the game over pop up
+      newStage.initStyle(StageStyle.UNDECORATED);
+    } else {
+      // disable the full screen (green one) button for mac
+      newStage.initStyle(StageStyle.UTILITY);
+    }
     newStage.initModality(Modality.WINDOW_MODAL);
-    // disable the full screen (green one) button for mac
-    newStage.initStyle(StageStyle.UTILITY);
+
     // show the popup window
     newStage.show();
   }
