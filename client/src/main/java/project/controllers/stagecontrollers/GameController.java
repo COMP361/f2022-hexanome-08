@@ -256,6 +256,8 @@ public class GameController implements Initializable {
             PlayerStates playerStates =
                 splendorParser.fromJson(responseInJsonString, PlayerStates.class);
 
+            System.out.println(playerStates.getPlayersInfo());
+
             // clear the previous GUI
             clearAllPlayerInfoGui();
 
