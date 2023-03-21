@@ -203,7 +203,6 @@ public class GameManager {
         if (!newGameInfo.getPlayerNames().equals(playerNames)) {
           // rename the player names in this savedGameState
           Collections.shuffle(playerNames);
-          logger.warn(String.valueOf("New player names:" + playerNames));
           savedGame.renamePlayers(playerNames, creator);
         }
         PlayerStates newPlayerStates = savedGame.getPlayerStates();
