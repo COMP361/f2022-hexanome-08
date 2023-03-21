@@ -19,7 +19,6 @@ public class DeckActionController implements Initializable {
 
   private final long gameId;
   private final String actionId;
-  private final Rectangle coverRectangle;
   @FXML
   private Button reserveButton;
 
@@ -28,12 +27,10 @@ public class DeckActionController implements Initializable {
    *
    * @param gameId         gameId
    * @param actionId       actionId
-   * @param coverRectangle coverRectangle
    */
-  public DeckActionController(long gameId, String actionId, Rectangle coverRectangle) {
+  public DeckActionController(long gameId, String actionId) {
     this.gameId = gameId;
     this.actionId = actionId;
-    this.coverRectangle = coverRectangle;
   }
 
 
@@ -45,7 +42,6 @@ public class DeckActionController implements Initializable {
       String accessToken = App.getUser().getAccessToken();
       sender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
       Stage curWindow = (Stage) reserveButton.getScene().getWindow();
-      coverRectangle.setVisible(false);
       curWindow.close();
     };
   }

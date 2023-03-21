@@ -61,10 +61,6 @@ import project.view.splendor.VerticalPlayerInfoGui;
  */
 public class GameController implements Initializable {
 
-
-  private final Rectangle coverRectangle = new Rectangle(
-      App.getGuiLayouts().getAppWidth(),
-      App.getGuiLayouts().getAppHeight());
   private final long gameId;
   private final Map<Integer, BaseCardLevelGui> baseCardGuiMap = new HashMap<>();
   private final Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap = new HashMap<>();
@@ -171,7 +167,7 @@ public class GameController implements Initializable {
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
       App.loadPopUpWithController("my_development_cards.fxml",
-          new PurchaseHandController(gameId, purchasedHand, playerActions, coverRectangle),
+          new PurchaseHandController(gameId, purchasedHand, playerActions),
           800,
           600);
 
@@ -425,7 +421,7 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("my_development_cards.fxml",
               new PurchaseHandController(gameId,
-                  purchasedHand, playerActionMap, coverRectangle),
+                  purchasedHand, playerActionMap),
               800,
               600);
         });
@@ -435,7 +431,7 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("my_development_cards.fxml",
             new PurchaseHandController(gameId,
-                purchasedHand, playerActionMap, coverRectangle),
+                purchasedHand, playerActionMap),
             800,
             600);
       });
@@ -555,14 +551,12 @@ public class GameController implements Initializable {
     for (Extension extension : extensions) {
       switch (extension) {
         case BASE:
-          BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane,
-              gameId, coverRectangle);
+          BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane, gameId);
           baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
           extensionBoardGuiMap.put(extension, baseBoardGui);
           break;
         case ORIENT:
-          OrientBoardGui orientBoardGui = new OrientBoardGui(playerBoardAnchorPane,
-              gameId, coverRectangle);
+          OrientBoardGui orientBoardGui = new OrientBoardGui(playerBoardAnchorPane, gameId);
           orientBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
           extensionBoardGuiMap.put(extension, orientBoardGui);
           break;
@@ -578,8 +572,7 @@ public class GameController implements Initializable {
           extensionBoardGuiMap.put(extension, traderBoardGui);
           break;
         case CITY:
-          CityBoardGui cityBoardGui = new CityBoardGui(playerBoardAnchorPane,
-              gameId, coverRectangle);
+          CityBoardGui cityBoardGui = new CityBoardGui(playerBoardAnchorPane, gameId);
           cityBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
           extensionBoardGuiMap.put(extension, cityBoardGui);
           break;

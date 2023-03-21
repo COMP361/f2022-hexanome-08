@@ -40,23 +40,20 @@ public class BaseBoardGui implements BoardGui {
   private final AnchorPane playerBoardAnchorPane;
 
   private final long gameId;
-  private final Rectangle coverRectangle;
 
   /**
    * What the baseBoardGUI has.
    *
    * @param playerBoardAnchorPane playerBoardAnchorPane
    * @param gameId                gameId
-   * @param coverRectangle        coverRectangle
    */
-  public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
+  public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId) {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     this.gameId = gameId;
     nobleBoardGui = new NobleBoardGui(config.getNobleWidth(), config.getNobleHeight(), config.getNobleSpace());
     tokenBankGui = new TokenBankGui(gameId);
     this.playerBoardAnchorPane = playerBoardAnchorPane;
     this.baseCardBoard = new VBox();
-    this.coverRectangle = coverRectangle;
   }
 
 
@@ -151,7 +148,7 @@ public class BaseBoardGui implements BoardGui {
       DevelopmentCard[] cardsOnBoard = baseBoard.getLevelCardsOnBoard(i);
       List<DevelopmentCard> deck = baseBoard.getDecks().get(i);
       BaseCardLevelGui baseCardLevelGui =
-          new BaseCardLevelGui(i, cardsOnBoard, deck, coverRectangle);
+          new BaseCardLevelGui(i, cardsOnBoard, deck);
       baseCardLevelGui.setup();
       baseCardLevelGui.bindActionToCardAndDeck(positionToActionMap, gameId);
       baseCardLevelGuiMap.put(i, baseCardLevelGui);

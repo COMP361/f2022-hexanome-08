@@ -43,7 +43,6 @@ public class PurchaseHandController implements Initializable {
   private final Map<Colour, List<DevelopmentCard>> colourCardsMap;
   private final List<NobleCard> nobleCards;
   private final Map<String, Action> playerActions;
-  private final Rectangle coverRectangle;
   private final long gameId;
   @FXML
   // each index represent the group of displaying all cards of one colour
@@ -62,11 +61,9 @@ public class PurchaseHandController implements Initializable {
    *
    * @param purchasedHand  purchasedHand
    * @param playerActions  playerActions
-   * @param coverRectangle coverRectangle
    */
   public PurchaseHandController(long gameId, PurchasedHand purchasedHand,
-                                Map<String, Action> playerActions,
-                                Rectangle coverRectangle) {
+                                Map<String, Action> playerActions) {
     // organize all dev cards (including gold colour ones) into colour map
     this.gameId = gameId;
     List<DevelopmentCard> allCardsInHand = purchasedHand.getDevelopmentCards();
@@ -74,7 +71,6 @@ public class PurchaseHandController implements Initializable {
     this.colourGroupMap = new HashMap<>();
     this.nobleCards = purchasedHand.getNobleCards();
     this.playerActions = playerActions;
-    this.coverRectangle = coverRectangle;
   }
 
 
