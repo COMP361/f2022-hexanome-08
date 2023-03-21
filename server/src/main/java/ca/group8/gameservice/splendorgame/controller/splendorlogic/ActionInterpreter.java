@@ -11,9 +11,11 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.NobleCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
+import ca.group8.gameservice.splendorgame.model.splendormodel.ReservedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
@@ -55,21 +57,6 @@ public class ActionInterpreter {
     this.actionGenerator = new ActionGenerator(playerActionMaps, tableTop);
   }
 
-  ///**
-  // * After parsing the object from json, we need to relink the references.
-  // * between this action interpreter and the other game states information.
-  // *
-  // * @param gameInfo     a game info instance
-  // * @param playerStates player states instance
-  // */
-  //public void relinkReferences(GameInfo gameInfo, PlayerStates playerStates) {
-  //  this.playerStates = playerStates;
-  //  this.gameInfo = gameInfo;
-  //  Map<String, Map<String, Action>> playerActionMaps = gameInfo.getPlayerActionMaps();
-  //  TableTop tableTop = gameInfo.getTableTop();
-  //  this.actionGenerator = new ActionGenerator(playerActionMaps, tableTop);
-  //}
-
   /**
    * TODO: Fix this description at the end
    * This method will get called if POST on games/{gameId}/players/{playerName}/actions/{actionId}.
@@ -102,71 +89,58 @@ public class ActionInterpreter {
     // the action has been executed, and the player's action map is possibly empty now, check!
     actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
     if (actionMap.isEmpty()) {
-      // if anything might have changed, let the client side know immediately
-      //playerStatesManager.touch();
-      //gameInfoManger.touch();
-      // if the current player's action map is empty, we do end turn check
-      // and then set to next player's turn
 
       // nobles check (all nobles the player can unlock)
       BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
-
-      List<Integer> nobleIndices = new ArrayList<>();
+      List<Position> noblePositions = new ArrayList<>();
+      List<NobleCard> noblesUnlocked = new ArrayList<>();
+      // first check the nobles unlocked on base board
       List<NobleCard> allNobles = baseBoard.getNobles();
       for (int i = 0; i < allNobles.size(); i++) {
         NobleCard nobleCard = allNobles.get(i);
         if (nobleCard.canVisit(playerInGame)) {
-          nobleIndices.add(i);
+          noblePositions.add(new Position(0,i));
+          noblesUnlocked.add(nobleCard);
         }
       }
 
-      // TODO: Fix this later (unlock one in hand and one on board)
-      PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
-      if (!nobleVisited) {
-        // if the player unlocked one noble, added it to player hand,
-        // remove it from baseboard
-        if (nobleIndices.size() == 1) {
-          NobleCard nobleCard = allNobles.get(nobleIndices.get(0));
-          baseBoard.removeNoble(nobleCard);
-          purchasedHand.addNobleCard(nobleCard);
-          int noblePoints = nobleCard.getPrestigePoints();
-          playerInGame.changePrestigePoints(noblePoints);
-          nobleVisited = true;
-        }
-
-        if (nobleIndices.size() > 1) {
-          actionGenerator.updateClaimNobleActions(nobleIndices, playerInGame);
-          // we do not want to continue the other condition checks
-          nobleVisited = true;
-          return;
-        }
-      }
-
-
-      // checking any noble unlocked from reserved hand
-      List<Integer> noblesInReserveHandIndices = new ArrayList<>();
+      // then check the nobles unlocked in hand
       List<NobleCard> nobleCardsInHand = playerInGame.getReservedHand().getNobleCards();
       for (int i = 0; i < nobleCardsInHand.size(); i++) {
         NobleCard nobleCard = nobleCardsInHand.get(i);
         if (nobleCard.canVisit(playerInGame)) {
-          noblesInReserveHandIndices.add(i);
+          // use -1 to indicate that it is from hand
+          noblePositions.add(new Position(-1, i));
+          noblesUnlocked.add(nobleCard);
         }
       }
 
-      if (!nobleVisited) {
+      // now based on how many nobles we unlocked, generate actions (optionally)
+      PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
+      if (!nobleVisited && noblesUnlocked.size() > 0) {
         // if the player unlocked one noble, added it to player hand,
-        // remove it from baseboard
-        if (noblesInReserveHandIndices.size() == 1) {
-          NobleCard nobleCard = nobleCardsInHand.get(noblesInReserveHandIndices.get(0));
-          playerInGame.getReservedHand().removeNoble(nobleCard);
+        // remove it from baseboard / reserve hand, based on position
+        if (noblesUnlocked.size() == 1) {
+          Position noblePosition = noblePositions.get(0);
+          NobleCard nobleCard = noblesUnlocked.get(0);
+          // -1, from reserved hand, remove it from there
+          if (noblePosition.getX() < 0) {
+            ReservedHand reservedHand = playerInGame.getReservedHand();
+            reservedHand.removeNoble(nobleCard);
+          } else {
+            // otherwise, remove from based board
+            baseBoard.removeNoble(nobleCard);
+          }
+
           purchasedHand.addNobleCard(nobleCard);
           int noblePoints = nobleCard.getPrestigePoints();
           playerInGame.changePrestigePoints(noblePoints);
           nobleVisited = true;
         }
 
-        if (noblesInReserveHandIndices.size() > 1) {
-          actionGenerator.updateClaimNobleActions(noblesInReserveHandIndices, playerInGame);
+        // unlocked more than one noble
+        else {
+          actionGenerator.updateClaimNobleActions(noblePositions, noblesUnlocked, playerInGame);
           // we do not want to continue the other condition checks
           nobleVisited = true;
           return;

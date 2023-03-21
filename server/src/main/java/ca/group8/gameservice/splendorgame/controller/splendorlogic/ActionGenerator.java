@@ -14,6 +14,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
+import ca.group8.gameservice.splendorgame.model.splendormodel.ReservedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
 import com.google.common.collect.Sets;
@@ -603,18 +604,17 @@ public class ActionGenerator {
   /**
    * Update the actions of which noble to claim.
    *
-   * @param nobleIndices nobleIndices
+   * @param noblePositions noblePositions
    * @param playerInGame playerInGame
    */
-  public void updateClaimNobleActions(List<Integer> nobleIndices, PlayerInGame playerInGame) {
-    BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
-    List<Action> result = new ArrayList<>();
-    for (int i : nobleIndices) {
-      NobleCard nobleCard = baseBoard.getNobles().get(i);
-      Position noblePosition = new Position(0, i);
-      result.add(new ClaimNobleAction(nobleCard, noblePosition));
-    }
+  public void updateClaimNobleActions(List<Position> noblePositions, List<NobleCard> noblesUnlocked,
+                                      PlayerInGame playerInGame) {
 
+    assert noblePositions.size() == noblesUnlocked.size();
+    List<Action> result = new ArrayList<>();
+    for (int i = 0; i < noblePositions.size(); i++) {
+      result.add(new ClaimNobleAction(noblesUnlocked.get(i), noblePositions.get(i)));
+    }
     Map<String, Action> actionMap = new HashMap<>();
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     for (Action action : result) {

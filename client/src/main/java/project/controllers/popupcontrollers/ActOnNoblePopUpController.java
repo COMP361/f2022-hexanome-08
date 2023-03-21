@@ -59,7 +59,7 @@ public class ActOnNoblePopUpController extends ActionSelectionSender implements 
       Image nobleImage = new Image(App.getNoblePath(nobleCard.getCardName()));
       ImageView nobleImageView = new ImageView(nobleImage);
       nobleImageView.setFitHeight(100);
-      nobleImageView.setFitWidth(80);
+      nobleImageView.setFitWidth(100);
       nobleImageView.setOnMouseClicked(createOnActionSelectionClick(actionId));
       availableNoblesHbox.getChildren().add(nobleImageView);
     }
