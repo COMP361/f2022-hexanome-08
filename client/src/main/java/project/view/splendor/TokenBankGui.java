@@ -65,8 +65,6 @@ public class TokenBankGui extends HBox {
       String playerName = App.getUser().getUsername();
       String accessToken = App.getUser().getAccessToken();
       sender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
-      //Map<Colour, Text> bankTokenBankMap = getColourTokenBankMap();
-      //Map<Colour, Integer> playerDecision = getTakeTokenDecision();
       Map<Colour, Label> playerNewDecisions = getColourTokenTakeMap();
       for (Colour c : playerNewDecisions.keySet()) {
         if (!c.equals(Colour.GOLD)) {
@@ -155,6 +153,24 @@ public class TokenBankGui extends HBox {
     return result;
   }
 
+  // given a colour, return the max number of token allowed to be added to there
+  private int getUpperbound(Colour boundColour) {
+    List<Integer> allowedAmount = new ArrayList<>();
+    // if it's return, then we get the upper bound from return token action map
+    if (returnTokenActionMap.isEmpty()) {
+      for (TakeTokenAction takeTokenAction : takeTokenActionMap.values()) {
+        EnumMap<Colour, Integer> curColourComb = takeTokenAction.getTokens();
+        allowedAmount.add(curColourComb.get(boundColour));
+      }
+    } else {
+      for (ReturnTokenAction returnTokenAction : returnTokenActionMap.values()) {
+        EnumMap<Colour, Integer> curColourComb = returnTokenAction.getTokens();
+        allowedAmount.add(curColourComb.get(boundColour));
+      }
+    }
+    return Collections.max(allowedAmount);
+  }
+
 
   // return "" if found no action id matching
   private String tokenCombMatchedActionId() {
@@ -193,13 +209,7 @@ public class TokenBankGui extends HBox {
                                                            Colour boundColour,
                                                            Button boundPlusButton) {
     return event -> {
-      List<Integer> allowedAmount = new ArrayList<>();
-      for (TakeTokenAction takeTokenAction : takeTokenActionMap.values()) {
-        EnumMap<Colour, Integer> curColourComb = takeTokenAction.getTokens();
-        allowedAmount.add(curColourComb.get(boundColour));
-      }
-      int upperBound = Collections.max(allowedAmount);
-
+      int upperBound = getUpperbound(boundColour);
       int curNum = Integer.parseInt(displayZone.getText());
       // can always decrease as long as > 0
       if (curNum > 0) {
@@ -226,16 +236,11 @@ public class TokenBankGui extends HBox {
 
   private EventHandler<ActionEvent> createTakeTokenHandler(Label displayZone, Colour boundColour) {
     return event -> {
-      List<Integer> allowedAmount = new ArrayList<>();
-      for (TakeTokenAction takeTokenAction : takeTokenActionMap.values()) {
-        EnumMap<Colour, Integer> curColourComb = takeTokenAction.getTokens();
-        allowedAmount.add(curColourComb.get(boundColour));
-      }
+      int upperBound = getUpperbound(boundColour);
       int curNum = Integer.parseInt(displayZone.getText());
       Button plusButton = (Button) event.getSource();
       // at beginning, verify the curNum is < than the max num allowed so that we can re-enable it
       plusButton.setDisable(true);
-      int upperBound = Collections.max(allowedAmount);
       if (curNum < upperBound) {
         plusButton.setDisable(false);
       }
@@ -285,12 +290,13 @@ public class TokenBankGui extends HBox {
       if (takeTokenActionMap.isEmpty() && returnTokenActionMap.isEmpty()) {
         plusButton.setDisable(true);
         minusButton.setDisable(true);
+      } else {
+        plusButton.setOnAction(createTakeTokenHandler(displayLabel, colours[i]));
+        minusButton.setOnAction(createBackTokenHandler(displayLabel, colours[i], plusButton));
       }
-      plusButton.setOnAction(createTakeTokenHandler(displayLabel, colours[i]));
-      minusButton.setOnAction(createBackTokenHandler(displayLabel, colours[i], plusButton));
     }
     Button confirmButton = getConfirmButton();
-    if (returnTokenActionMap.size() != 0) {
+    if (!returnTokenActionMap.isEmpty()) {
       confirmButton.setText("Return");
     } else {
       confirmButton.setText("Confirm");
@@ -305,18 +311,14 @@ public class TokenBankGui extends HBox {
    * @param bankMap    the enum map of price
    * @param layoutX    layout x
    * @param layoutY    layout y
-   * @param firstSetup whether it's first set up or not
    */
   public void setup(Map<String, TakeTokenAction> takeTokenActionMap,
-                    EnumMap<Colour, Integer> bankMap,
-                    double layoutX, double layoutY, boolean firstSetup) {
+                    EnumMap<Colour, Integer> bankMap, double layoutX, double layoutY) {
     this.takeTokenActionMap = takeTokenActionMap;
     // set the layout of the GUI
-    if (firstSetup) {
-      setLayoutX(layoutX);
-      setLayoutY(layoutY);
-      bindActionToButtonAndLabel();
-    }
+    setLayoutX(layoutX);
+    setLayoutY(layoutY);
+    bindActionToButtonAndLabel();
     setColourTokenBankMap(bankMap);
   }
 
@@ -329,8 +331,7 @@ public class TokenBankGui extends HBox {
    * @param layoutY    layout y
    */
   public void setupReturnToken(Map<String, ReturnTokenAction> returnTokenActionMap,
-                               EnumMap<Colour, Integer> bankMap,
-                               double layoutX, double layoutY) {
+                               EnumMap<Colour, Integer> bankMap, double layoutX, double layoutY) {
     this.returnTokenActionMap = returnTokenActionMap;
     setLayoutX(layoutX);
     setLayoutY(layoutY);

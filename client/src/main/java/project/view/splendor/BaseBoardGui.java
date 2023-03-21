@@ -92,8 +92,7 @@ public class BaseBoardGui implements BoardGui {
         tokenBankGui.setup(takeTokenActionMap,
             bankBalance,
             config.getTokenBankLayoutX(),
-            config.getTokenBankLayoutY(),
-            true);
+            config.getTokenBankLayoutY());
         playerBoardAnchorPane.getChildren().add(tokenBankGui);
       });
     } else { //means there are only return token actions
