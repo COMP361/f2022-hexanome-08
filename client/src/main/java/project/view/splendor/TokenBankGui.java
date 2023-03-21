@@ -184,10 +184,7 @@ public class TokenBankGui extends HBox {
           return actionId;
         }
       }
-    }
-
-    //check for matches with existing return actions
-    if (returnTokenActionMap.size() > 0) {
+    } else if (returnTokenActionMap.size() > 0) { //check for matches with existing return actions
       for (String actionId : returnTokenActionMap.keySet()) {
         ReturnTokenAction returnTokenAction = returnTokenActionMap.get(actionId);
         EnumMap<Colour, Integer> comb = returnTokenAction.getTokens();
