@@ -502,8 +502,9 @@ public class ActionGenerator {
         logger.warn("Looking at card: " + extraAction.getCurCard().getCardName());
         //logger.warn(String.valueOf(cascadeActions
       }
+    }
 
-      if (cardEffect.equals(CardEffect.BURN_CARD)) {
+    if (cardEffect.equals(CardEffect.BURN_CARD)) {
         List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
         Colour burnColourPrice = null;
         EnumMap<Colour, Integer> cardPrice = purchasedCard.getPrice();
@@ -544,7 +545,7 @@ public class ActionGenerator {
         }
       }
 
-      if (cardEffect.equals(CardEffect.SATCHEL)) {
+    if (cardEffect.equals(CardEffect.SATCHEL)) {
         List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
         List<Integer> unpairedCardsIndices = IntStream.range(0, cardsInHand.size())
             .filter(i -> !cardsInHand.get(i).isPaired())
@@ -558,18 +559,18 @@ public class ActionGenerator {
 
       }
 
-      Map<String, Action> actionMap = new HashMap<>();
-      Gson gsonParser = SplendorDevHelper.getInstance().getGson();
-      for (Action action : cascadeActions) {
-        String actionJson = gsonParser.toJson(action, CardExtraAction.class);
-        String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();
-        actionMap.put(actionId, action);
-      }
-
-      String playerName = playerInGame.getName();
-      playerActionMaps.put(playerName, actionMap);
+    Map<String, Action> actionMap = new HashMap<>();
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+    for (Action action : cascadeActions) {
+      String actionJson = gsonParser.toJson(action, CardExtraAction.class);
+      String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();
+      actionMap.put(actionId, action);
     }
+
+    String playerName = playerInGame.getName();
+    playerActionMaps.put(playerName, actionMap);
   }
+
 
   /**
    * updateBonusTokenPowerActions.
