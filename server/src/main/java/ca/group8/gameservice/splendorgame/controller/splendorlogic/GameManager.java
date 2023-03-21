@@ -203,11 +203,11 @@ public class GameManager {
         if (!newGameInfo.getPlayerNames().equals(playerNames)) {
           // rename the player names in this savedGameState
           Collections.shuffle(playerNames);
+          logger.warn(String.valueOf("New player names:" + playerNames));
           savedGame.renamePlayers(playerNames, creator);
         }
         PlayerStates newPlayerStates = savedGame.getPlayerStates();
-
-
+        logger.warn("Player states map:" + String.valueOf(newPlayerStates.getPlayersInfo()));
         // put the renamed objects to manager
         activeGames.put(gameId, newGameInfo);
         activePlayers.put(gameId, newPlayerStates);

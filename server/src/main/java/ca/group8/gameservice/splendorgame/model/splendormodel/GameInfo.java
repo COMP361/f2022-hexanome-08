@@ -115,7 +115,6 @@ public class GameInfo implements BroadcastContent {
    */
   public void renamePlayers(List<String> playerNames, String creator) {
     if (!playerNames.equals(this.playerNames)) {
-      //Collections.shuffle(playerNames);
       this.playerNames = playerNames;
       this.creator = creator;
       this.firstPlayerName = playerNames.get(0);

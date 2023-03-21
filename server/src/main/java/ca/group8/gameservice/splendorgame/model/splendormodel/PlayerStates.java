@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * PlayerStates class that store a Map of player names to their game states in a specific game.
@@ -53,10 +55,15 @@ public class PlayerStates implements BroadcastContent {
   public void renamePlayers(List<String> newNames) {
     List<String> oldNames = new ArrayList<>(playersInfo.keySet());
     List<String> newNamesCopy = new ArrayList<>(newNames);
+    Logger logger = LoggerFactory.getLogger(PlayerStates.class);
+
     if (!newNames.equals(oldNames)) {
       Map<String, PlayerInGame> newPlayerMap = new HashMap<>();
       for (String oldName : playersInfo.keySet()) {
         // if any oldName match a new name, remove this old name from newNameCopy list
+        logger.warn("Old names: " + oldNames);
+        logger.warn("New names: " + newNames);
+        logger.warn("New names copy: " + newNamesCopy);
         if (newNames.contains(oldName)) {
           newPlayerMap.put(oldName, playersInfo.get(oldName));
           newNamesCopy.remove(oldName);
@@ -72,6 +79,7 @@ public class PlayerStates implements BroadcastContent {
 
       // in the end, overwrite the previous map
       playersInfo = newPlayerMap;
+      logger.warn("new players info: " + playersInfo);
     }
   }
 
