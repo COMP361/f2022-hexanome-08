@@ -81,6 +81,7 @@ public class ActionInterpreter {
       TraderBoard board = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
       Power power = board.getPlayerOnePower(playerName, PowerEffect.EXTRA_TOKEN);
       if (actionChosen instanceof PurchaseAction && power.isUnlocked()) {
+        logger.info("BonusTokenStashed set to true for " +  playerName);
         bonusTokenStashed = true;
       }
     }
@@ -212,10 +213,11 @@ public class ActionInterpreter {
         if (traderBoard.getPlayerOnePower(playerName, PowerEffect.EXTRA_TOKEN).isUnlocked()) {
           if (bonusTokenStashed) {
             bonusTokenStashed = false;
+            logger.info("Update actions called and BonusTokenStashed set to false for " +  playerName);
             actionGenerator.updateBonusTokenPowerActions(playerInGame);
           }
         }
-        bonusTokenStashed = false;
+        //bonusTokenStashed = false;
 
       }
 

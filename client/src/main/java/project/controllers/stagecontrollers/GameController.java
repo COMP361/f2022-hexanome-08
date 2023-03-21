@@ -537,7 +537,9 @@ public class GameController implements Initializable {
     boolean allBonusTokenActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof BonusTokenPowerAction);
 
+    System.out.println("We've reached right before the if statement in showBonusTokenPopUp");
     if (!playerActionMap.isEmpty() && allBonusTokenActions) {
+      System.out.println("All actions in action map recieved by client are bonus token actions");
       // enable player to continue their pending action even they close the window
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
