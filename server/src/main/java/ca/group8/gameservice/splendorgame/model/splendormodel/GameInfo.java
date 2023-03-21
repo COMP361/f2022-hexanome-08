@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * The class that contains basic game information on the board, supports long polling.
@@ -111,21 +112,43 @@ public class GameInfo implements BroadcastContent {
    * Call this method to rename the player names if the ones who want to play now does not.
    * match with the ones who saved this game before.
    *
-   * @param playerNames the current player names who want to play this game
+   * @param newPlayerNames the current player names who want to play this game
    */
-  public void renamePlayers(List<String> playerNames, String creator) {
-    if (!playerNames.equals(this.playerNames)) {
-      this.playerNames = playerNames;
+  public void renamePlayers(List<String> newPlayerNames, String creator) {
+    if (!newPlayerNames.equals(this.playerNames)) {
+      this.playerNames = newPlayerNames;
       this.creator = creator;
-      this.firstPlayerName = playerNames.get(0);
-      this.currentPlayer = this.firstPlayerName;
+      List<String> freshPlayerNames = new ArrayList<>();
+      for (String newName : newPlayerNames) {
+        if (!playerNames.contains(newName)) {
+          freshPlayerNames.add(newName);
+        }
+      }
+
+      // the old first player is not in here, randomly choose one from
+      // the fresh player names, otherwise do not need to change
+      // the old names
+      if (!newPlayerNames.contains(firstPlayerName)) {
+        int randomIndex = new Random().nextInt(freshPlayerNames.size());
+        firstPlayerName = freshPlayerNames.get(randomIndex);
+
+      }
+
+      if (!newPlayerNames.contains(currentPlayer)) {
+        currentPlayer = firstPlayerName;
+      }
+
+      // re-sort the order of names
+      newPlayerNames.remove(firstPlayerName);
+      newPlayerNames.add(0, firstPlayerName);
+
       // rename all boards if necessary (base and orient do not need updates)
       for (Extension extension : tableTop.getGameBoards().keySet()) {
-        tableTop.getBoard(extension).renamePlayers(playerNames);
+        tableTop.getBoard(extension).renamePlayers(newPlayerNames);
       }
       // rename action map names
       Map<String, Map<String, Action>> newActionMap = new HashMap<>();
-      for (String newName : playerNames) {
+      for (String newName : newPlayerNames) {
         newActionMap.put(newName, new HashMap<>());
       }
       playerActionMaps = newActionMap;

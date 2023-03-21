@@ -17,7 +17,6 @@ public class PlayerTest {
   PlayerInGame player2 = new PlayerInGame("Julia");
   List<CardEffect> purchaseEffects = new ArrayList<>();
 
-
 //  @Test
 //  void testIsEmpty(){
 //    assert(player.isEmpty());

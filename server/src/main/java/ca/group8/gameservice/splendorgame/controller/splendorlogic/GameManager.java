@@ -206,7 +206,6 @@ public class GameManager {
           savedGame.renamePlayers(playerNames, creator);
         }
         PlayerStates newPlayerStates = savedGame.getPlayerStates();
-        logger.warn("Player states map:" + String.valueOf(newPlayerStates.getPlayersInfo()));
         // put the renamed objects to manager
         activeGames.put(gameId, newGameInfo);
         activePlayers.put(gameId, newPlayerStates);
