@@ -68,7 +68,6 @@ public class LogInController implements Initializable {
         }
 
         // at the same time, spawn a thread that keeps refreshing this player's access token
-        App.setRefreshTokenThreadRunning(true);
         Thread refreshTokenThread = createRefreshTokenThread();
         refreshTokenThread.setDaemon(true);
         refreshTokenThread.start();

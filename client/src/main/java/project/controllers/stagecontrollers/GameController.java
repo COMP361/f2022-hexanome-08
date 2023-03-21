@@ -252,8 +252,6 @@ public class GameController implements Initializable {
             PlayerStates playerStates =
                 splendorParser.fromJson(responseInJsonString, PlayerStates.class);
 
-            System.out.println(playerStates.getPlayersInfo());
-
             // clear the previous GUI
             clearAllPlayerInfoGui();
 
@@ -590,7 +588,7 @@ public class GameController implements Initializable {
       // implicitly handle the threading stopping logic and loading back to lobby
       Platform.runLater(() -> {
         App.loadPopUpWithController("game_over.fxml",
-            new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
+            new GameOverPopUpController(mainGameUpdateThread, playerInfoThread, false),
             360, 170);
       });
     }
@@ -698,7 +696,7 @@ public class GameController implements Initializable {
   private EventHandler<ActionEvent> createClickOnQuitButtonEvent() {
     return event -> {
       App.loadPopUpWithController("quit_game.fxml",
-          new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
+          new GameOverPopUpController(mainGameUpdateThread, playerInfoThread, true),
           360, 170);
     };
   }

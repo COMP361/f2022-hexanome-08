@@ -47,13 +47,6 @@ public class App extends Application {
   private static User user;
   private static GameBoardLayoutConfig guiLayouts;
 
-  // the boolean variables that notify all threads at run time, when should they stop
-  private static volatile boolean gameThreadsRunning = false;
-
-  private static volatile boolean lobbyThreadRunning = false;
-
-  private static volatile boolean refreshTokenThreadRunning = false;
-
   public static void main(String[] args) {
     launch();
   }
@@ -190,7 +183,12 @@ public class App extends Application {
     // block user from clicking on the main stage
     if (controller instanceof GameOverPopUpController) {
       // ban the close button on the game over pop up
-      newStage.initStyle(StageStyle.UNDECORATED);
+      GameOverPopUpController gameOverPopUpController = (GameOverPopUpController) controller;
+      if (!gameOverPopUpController.isOptionToCancel()) {
+        newStage.initStyle(StageStyle.UNDECORATED);
+      } else {
+        newStage.initStyle(StageStyle.UTILITY);
+      }
     } else {
       // disable the full screen (green one) button for mac
       newStage.initStyle(StageStyle.UTILITY);
@@ -280,30 +278,6 @@ public class App extends Application {
       playerImage = new Image(defaultImageUrl);
     }
     return playerImage;
-  }
-
-  public static boolean isGameThreadsRunning() {
-    return gameThreadsRunning;
-  }
-
-  public static void setGameThreadsRunning(boolean gameThreadsRunning) {
-    App.gameThreadsRunning = gameThreadsRunning;
-  }
-
-  public static boolean isLobbyThreadRunning() {
-    return lobbyThreadRunning;
-  }
-
-  public static void setLobbyThreadRunning(boolean lobbyThreadRunning) {
-    App.lobbyThreadRunning = lobbyThreadRunning;
-  }
-
-  public static boolean isRefreshTokenThreadRunning() {
-    return refreshTokenThreadRunning;
-  }
-
-  public static void setRefreshTokenThreadRunning(boolean refreshTokenThreadRunning) {
-    App.refreshTokenThreadRunning = refreshTokenThreadRunning;
   }
 
 }

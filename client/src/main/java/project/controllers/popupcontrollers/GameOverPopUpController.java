@@ -18,12 +18,15 @@ public class GameOverPopUpController implements Initializable {
 
   private final Thread mainGameUpdateThread;
   private final Thread playerInfoThread;
+  private final boolean optionToCancel;
   @FXML
   private Button byeButton;
 
-  public GameOverPopUpController(Thread mainGameUpdateThread, Thread playerInfoThread) {
+  public GameOverPopUpController(Thread mainGameUpdateThread, Thread playerInfoThread,
+                                 boolean optionToCancel) {
     this.mainGameUpdateThread = mainGameUpdateThread;
     this.playerInfoThread = playerInfoThread;
+    this.optionToCancel = optionToCancel;
   }
 
   /**
@@ -45,6 +48,10 @@ public class GameOverPopUpController implements Initializable {
       Stage window = (Stage) button.getScene().getWindow();
       window.close();
     };
+  }
+  // indicate whether to have the close button in the pop up or not
+  public boolean isOptionToCancel() {
+    return optionToCancel;
   }
 
   @Override
