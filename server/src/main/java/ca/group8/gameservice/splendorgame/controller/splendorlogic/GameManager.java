@@ -200,7 +200,7 @@ public class GameManager {
         GameInfo newGameInfo = savedGame.getGameInfo();
         //TODO: ONLY shuffle the names if it's not exact match
         String creator = launcherInfo.getCreator();
-        if (newGameInfo.getPlayerNames().equals(playerNames)) {
+        if (!newGameInfo.getPlayerNames().equals(playerNames)) {
           // rename the player names in this savedGameState
           Collections.shuffle(playerNames);
           savedGame.renamePlayers(playerNames, creator);
