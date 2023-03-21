@@ -17,6 +17,7 @@ public class BonusTokenPowerAction extends Action {
   private final PlayerInGame player;
 
   public BonusTokenPowerAction(PlayerInGame player, Colour colour) {
+    super.type = this.getClass().getSimpleName();
     this.player = player;
     this.colour = colour;
   }

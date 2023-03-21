@@ -76,7 +76,7 @@ public class App extends Application {
     primaryStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     primaryStage.setFullScreenExitHint("");
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-    primaryStage.setFullScreen(true);
+    //primaryStage.setFullScreen(true);
     Scene scene = new Scene(startPageLoader.load(),
         guiLayouts.getAppWidth(),
         guiLayouts.getAppHeight());
@@ -217,7 +217,7 @@ public class App extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    primaryStage.setFullScreen(true);
+    //primaryStage.setFullScreen(true);
   }
 
   /**

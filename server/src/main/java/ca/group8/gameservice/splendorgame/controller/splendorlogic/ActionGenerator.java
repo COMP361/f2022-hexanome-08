@@ -598,6 +598,8 @@ public class ActionGenerator {
       actionMap.put(actionId, action);
     }
     String playerName = player.getName();
+    Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
+    logger.warn("Bonous token Action map is: " + String.valueOf(actionMap.values()));
     playerActionMaps.put(playerName, actionMap);
   }
 

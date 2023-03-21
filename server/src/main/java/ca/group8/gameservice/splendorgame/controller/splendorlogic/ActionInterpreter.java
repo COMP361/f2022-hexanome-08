@@ -215,6 +215,7 @@ public class ActionInterpreter {
             bonusTokenStashed = false;
             logger.info("Update actions called and BonusTokenStashed set to false for " +  playerName);
             actionGenerator.updateBonusTokenPowerActions(playerInGame);
+            return;
           }
         }
         //bonusTokenStashed = false;
