@@ -41,14 +41,18 @@
   "cityWidth": 200,
   "cityHeight": 100,
   "citySpace": 10,
-  "cardActionWidth": 360,
-  "cardActionHeight": 180,
+  "smallPopUpWidth": 360,
+  "smallPopUpHeight": 170,
   "deckActionWidth": 360,
-  "deckActionHeight": 180,
+  "deckActionHeight": 170,
   "exitGameWidth": 300,
   "exitGameHeight": 150,
   "purchaseConfirmWidth": 360,
   "purchaseConfirmHeight": 170,
   "reserveWidth": 360,
-  "reserveHeight": 170
+  "reserveHeight": 170,
+  "lobbyWarnWidth": 360,
+  "lobbyWarnHeight": 170
+
+
 }

@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.paint.Color;
 import project.App;
+import project.GameBoardLayoutConfig;
 import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.controllers.stagecontrollers.AdminPageController;
 import project.view.lobby.communication.Player;
@@ -39,6 +40,7 @@ public class PlayerLobbyGuiController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     // set up text for player
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     String name = player.getName();
     String role = player.getRole().toString();
     String labelContent = String.format("User name: %s \nUser role: %s\n", name, role);
@@ -71,8 +73,8 @@ public class PlayerLobbyGuiController implements Initializable {
         String error = "Could not update user's new colour choice!\nPlease try again";
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(error, errorTitle),
-            360,
-            170);
+            config.getLobbyWarnWidth(),
+                config.getLobbyWarnHeight());
       }
     });
 
@@ -98,8 +100,8 @@ public class PlayerLobbyGuiController implements Initializable {
 
       App.loadPopUpWithController("lobby_warn.fxml",
           new LobbyWarnPopUpController(msg, title),
-          360,
-          170);
+              config.getLobbyWarnWidth(),
+              config.getLobbyWarnHeight());
       passwordField.clear();
     });
 
@@ -121,8 +123,8 @@ public class PlayerLobbyGuiController implements Initializable {
 
       App.loadPopUpWithController("lobby_warn.fxml",
           new LobbyWarnPopUpController(msg, title),
-          360,
-          170);
+              config.getLobbyWarnWidth(),
+              config.getLobbyWarnHeight());
     });
 
 

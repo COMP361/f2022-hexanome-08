@@ -77,8 +77,8 @@ public class ReservedHandController implements Initializable {
       if (actions != null) {
         cardImageView.setOnMouseClicked(createClickOnCardHandler(gameId, actions)); //TODO);
       }
-      cardImageView.setFitWidth(80);
-      cardImageView.setFitHeight(100);
+      cardImageView.setFitWidth(100);
+      cardImageView.setFitHeight(150);
       playerCards.add(cardImageView);
     }
 

@@ -54,6 +54,8 @@ public class GameBoardLayoutConfig {
   private double purchaseConfirmHeight;
   private double reserveWidth;
   private double reserveHeight;
+  private double lobbyWarnWidth;
+  private double lobbyWarnHeight;
 
   public double getAppWidth() {
     return appWidth;
@@ -436,5 +438,21 @@ public class GameBoardLayoutConfig {
 
   public void setReserveHeight(double reserveHeight) {
     this.reserveHeight = reserveHeight;
+  }
+
+  public double getLobbyWarnWidth() {
+    return lobbyWarnWidth;
+  }
+
+  public double getLobbyWarnHeight() {
+    return lobbyWarnHeight;
+  }
+
+  public void setLobbyWarnWidth(double lobbyWarnWidth) {
+    this.lobbyWarnWidth = lobbyWarnWidth;
+  }
+
+  public void setLobbyWarnHeight(double lobbyWarnHeight) {
+    this.lobbyWarnHeight = lobbyWarnHeight;
   }
 }
