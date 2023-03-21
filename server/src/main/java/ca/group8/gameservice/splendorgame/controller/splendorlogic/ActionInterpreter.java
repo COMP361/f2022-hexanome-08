@@ -120,6 +120,7 @@ public class ActionInterpreter {
         }
       }
 
+      // TODO: Fix this later (unlock one in hand and one on board)
       PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
       if (!nobleVisited) {
         // if the player unlocked one noble, added it to player hand,

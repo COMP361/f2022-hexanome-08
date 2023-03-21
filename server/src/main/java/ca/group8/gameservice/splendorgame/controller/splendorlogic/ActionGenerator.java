@@ -358,10 +358,8 @@ public class ActionGenerator {
     boolean hasTwoPlusOnePower = false;
     String playerName = curPlayerInfo.getName();
     if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
-      TraderBoard traderBoard = (TraderBoard) tableTop
-              .getBoard(Extension.TRADING_POST);
-      hasTwoPlusOnePower = traderBoard
-              .getPlayerOnePower(playerName, PowerEffect.TWO_PLUS_ONE)
+      TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
+      hasTwoPlusOnePower = traderBoard.getPlayerOnePower(playerName, PowerEffect.TWO_PLUS_ONE)
               .isUnlocked();
     }
     // if bank has only 2 token or less left to be taken
@@ -379,21 +377,26 @@ public class ActionGenerator {
     for (Colour colour : tokenLeft.keySet()) {
       EnumMap<Colour, Integer> twoSameColourTokens = new EnumMap<>(rawMap);
       if (tokenLeft.get(colour) >= 4) {
+        // template map set up, might or might not be translated into one action
         twoSameColourTokens.put(colour, 2);
-        result.add(new TakeTokenAction(twoSameColourTokens));
-      }
-
-      // generate more cases if the player has the 2+1 power on
-      if (hasTwoPlusOnePower) {
-        List<Colour> otherColours = tokenLeft.keySet()
-            .stream()
-            .filter(c -> !c.equals(colour))
-            .collect(Collectors.toList());
-        for (Colour colour2 : otherColours) {
-          EnumMap<Colour, Integer> twoPlusOneTokens = new EnumMap<>(twoSameColourTokens);
-          if (tokenLeft.get(colour2) >= 1) {
-            twoPlusOneTokens.put(colour2, 1);
-            result.add(new TakeTokenAction(twoPlusOneTokens));
+        // if we do not have the power, then adding comb of 2 is fine when num >= 4
+        if (!hasTwoPlusOnePower) {
+          result.add(new TakeTokenAction(twoSameColourTokens));
+        }
+        // if we have this power on, then:
+        // 1. we generate ONLY 2+1 if bank allows
+        // 2. we generate ONLY 2 if bank allows
+        else {
+          List<Colour> otherColours = tokenLeft.keySet()
+              .stream()
+              .filter(c -> !c.equals(colour))
+              .collect(Collectors.toList());
+          for (Colour colour2 : otherColours) {
+            EnumMap<Colour, Integer> twoPlusOneTokens = new EnumMap<>(twoSameColourTokens);
+            if (tokenLeft.get(colour2) >= 1) {
+              twoPlusOneTokens.put(colour2, 1);
+              result.add(new TakeTokenAction(twoPlusOneTokens));
+            }
           }
         }
       }
