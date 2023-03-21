@@ -2,6 +2,7 @@ package project.controllers.stagecontrollers;
 
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
+import ca.mcgill.comp361.splendormodel.actions.BonusTokenPowerAction;
 import ca.mcgill.comp361.splendormodel.actions.CardExtraAction;
 import ca.mcgill.comp361.splendormodel.actions.ClaimNobleAction;
 import ca.mcgill.comp361.splendormodel.model.CardEffect;
@@ -529,6 +530,35 @@ public class GameController implements Initializable {
     }
   }
 
+  private void showBonusTokenPopUp(GameInfo curGameInfo) {
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(viewerName);
+    boolean allBonusTokenActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof BonusTokenPowerAction);
+
+    if (!playerActionMap.isEmpty() && allBonusTokenActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("bonus_token_pop_up.fxml",
+              new BonusTokenPopUpController(gameId, playerActionMap),
+              360,
+              170);
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("bonus_token_pop_up.fxml",
+            new BonusTokenPopUpController(gameId, playerActionMap),
+            360,
+            170);
+      });
+    }
+  }
+
   private void resetAllGameBoards(GameInfo curGameInfo) {
     // clear up all children in playerBoardAnchorPane
     for (BoardGui boardGui : extensionBoardGuiMap.values()) {
@@ -662,7 +692,8 @@ public class GameController implements Initializable {
               showBurnCardPopUp(curGameInfo);
               // optionally, show the taking a reserve noble pop up, condition is checked inside method
               showReserveNoblePopUp(curGameInfo);
-
+              // optionally, show the take a token for free pop up, condition is checked inside method
+              showBonusTokenPopUp(curGameInfo);
               // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
             }
 

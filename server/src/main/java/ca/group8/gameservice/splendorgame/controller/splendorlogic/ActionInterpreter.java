@@ -89,7 +89,6 @@ public class ActionInterpreter {
     // the action has been executed, and the player's action map is possibly empty now, check!
     actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
     if (actionMap.isEmpty()) {
-
       // nobles check (all nobles the player can unlock)
       BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
       List<Position> noblePositions = new ArrayList<>();
@@ -165,7 +164,6 @@ public class ActionInterpreter {
       }
 
       // extra end turn check for extensions
-      // TODO: Later
       if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
         // possible to generate power actions
         TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);

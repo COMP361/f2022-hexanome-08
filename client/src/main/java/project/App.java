@@ -76,7 +76,7 @@ public class App extends Application {
     primaryStage.getIcons().add(new Image("project/pictures/back/splendor-icon.jpg"));
     primaryStage.setFullScreenExitHint("");
     primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-    //primaryStage.setFullScreen(true);
+    primaryStage.setFullScreen(true);
     Scene scene = new Scene(startPageLoader.load(),
         guiLayouts.getAppWidth(),
         guiLayouts.getAppHeight());
@@ -217,7 +217,7 @@ public class App extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    //primaryStage.setFullScreen(true);
+    primaryStage.setFullScreen(true);
   }
 
   /**
@@ -268,6 +268,10 @@ public class App extends Application {
   public static String getBaseCardPath(String cardName, int level) {
     assert level >= 1 && level <= 3;
     return String.format("project/pictures/level%d/%s.png", level, cardName);
+  }
+
+  public static String getTokenPath(Colour colour) {
+    return String.format("project/pictures/token/%s_tokens.png",colour.toString().toLowerCase());
   }
 
   public static Image getPlayerImage(String playerName) {

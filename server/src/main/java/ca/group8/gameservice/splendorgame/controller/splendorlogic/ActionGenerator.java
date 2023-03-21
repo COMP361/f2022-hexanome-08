@@ -586,7 +586,7 @@ public class ActionGenerator {
     EnumMap<Colour, Integer> rawMap = SplendorDevHelper.getInstance().getRawTokenColoursMap();
     EnumMap<Colour, Integer> bankTokens = tableTop.getBank().getAllTokens();
     for (Colour colour : rawMap.keySet()) {
-      if (bankTokens.get(colour) > 0) {
+      if (bankTokens.get(colour) > 0 && !colour.equals(Colour.GOLD)) {
         actions.add(new BonusTokenPowerAction(player, colour));
       }
     }
