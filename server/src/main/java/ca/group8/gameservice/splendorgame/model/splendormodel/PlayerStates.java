@@ -59,7 +59,7 @@ public class PlayerStates implements BroadcastContent {
 
     if (!newNames.equals(oldNames)) {
       Map<String, PlayerInGame> newPlayerMap = new HashMap<>();
-      for (String oldName : playersInfo.keySet()) {
+      for (String oldName : oldNames) {
         // if any oldName match a new name, remove this old name from newNameCopy list
         logger.warn("Old names: " + oldNames);
         logger.warn("New names: " + newNames);
