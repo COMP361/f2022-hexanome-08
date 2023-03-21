@@ -5,8 +5,13 @@ import ca.mcgill.comp361.splendormodel.actions.TakeTokenAction;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -73,32 +78,6 @@ public class TokenBankGui extends HBox {
       getConfirmButton().setDisable(true);
     };
 
-  }
-
-
-  // check whether is a valid take over all different colours
-  // use for confirmation button
-  private boolean banFromTaking(int uniqueColourTakenCount) {
-    // 3 of each different colour
-    //      1. if the colour has remaining (>0)
-    // 2 of same colour:
-    //      1. if the colour has remaining (>0)
-    //      2. if the colour has at least 4 left
-    int totalTokenTakeCount = 0;
-    for (Colour c : this.getTakeTokenDecision().keySet()) {
-      int curColourTake = this.getTakeTokenDecision().get(c);
-      if (curColourTake > 0) {
-        totalTokenTakeCount += curColourTake;
-      }
-    }
-
-    if (uniqueColourTakenCount == 3) {
-      return totalTokenTakeCount == 3;
-    } else if (uniqueColourTakenCount == 1) {
-      return totalTokenTakeCount == 2;
-    } else {
-      return false;
-    }
   }
 
   // the Label stores the number of player current take token decision (contains no gold colour)
@@ -186,13 +165,13 @@ public class TokenBankGui extends HBox {
         EnumMap<Colour, Integer> comb = takeTokenAction.getTokens();
         // if any combination matches,
         if (comb.equals(currentChoiceComb)) {
-          //System.out.println("Action Id:" + actionId);
-          //System.out.println("Current choice: " + comb);
-          //System.out.println("Action Combo: " + currentChoiceComb);
           return actionId;
         }
       }
-    } else if (returnTokenActionMap.size() > 0) { //check for matches with existing return actions
+    }
+
+    //check for matches with existing return actions
+    if (returnTokenActionMap.size() > 0) {
       for (String actionId : returnTokenActionMap.keySet()) {
         ReturnTokenAction returnTokenAction = returnTokenActionMap.get(actionId);
         EnumMap<Colour, Integer> comb = returnTokenAction.getTokens();
@@ -210,13 +189,26 @@ public class TokenBankGui extends HBox {
   }
 
 
-  private EventHandler<ActionEvent> createBackTokenHandler(Label displayZone) {
+  private EventHandler<ActionEvent> createBackTokenHandler(Label displayZone,
+                                                           Colour boundColour,
+                                                           Button boundPlusButton) {
     return event -> {
+      List<Integer> allowedAmount = new ArrayList<>();
+      for (TakeTokenAction takeTokenAction : takeTokenActionMap.values()) {
+        EnumMap<Colour, Integer> curColourComb = takeTokenAction.getTokens();
+        allowedAmount.add(curColourComb.get(boundColour));
+      }
+      int upperBound = Collections.max(allowedAmount);
+
       int curNum = Integer.parseInt(displayZone.getText());
       // can always decrease as long as > 0
       if (curNum > 0) {
         // then we can have this Label being changed
         curNum -= 1;
+        boundPlusButton.setDisable(true);
+        if (curNum < upperBound) {
+          boundPlusButton.setDisable(false);
+        }
         String newNum = curNum + "";
         getConfirmButton().setDisable(true);
         displayZone.setText(newNum);
@@ -232,16 +224,32 @@ public class TokenBankGui extends HBox {
     };
   }
 
-  private EventHandler<ActionEvent> createTakeTokenHandler(Label displayZone) {
+  private EventHandler<ActionEvent> createTakeTokenHandler(Label displayZone, Colour boundColour) {
     return event -> {
-
+      List<Integer> allowedAmount = new ArrayList<>();
+      for (TakeTokenAction takeTokenAction : takeTokenActionMap.values()) {
+        EnumMap<Colour, Integer> curColourComb = takeTokenAction.getTokens();
+        allowedAmount.add(curColourComb.get(boundColour));
+      }
       int curNum = Integer.parseInt(displayZone.getText());
+      Button plusButton = (Button) event.getSource();
+      // at beginning, verify the curNum is < than the max num allowed so that we can re-enable it
+      plusButton.setDisable(true);
+      int upperBound = Collections.max(allowedAmount);
+      if (curNum < upperBound) {
+        plusButton.setDisable(false);
+      }
       if (tokenCombMatchedActionId().equals("")) {
         // means we did not find a match yet, allow user to keep taking
         curNum += 1;
         String newNum = curNum + "";
         displayZone.setText(newNum);
         // the after effect of +1
+        // do the same check as we did at beginning, disable and re-enable the plus
+        plusButton.setDisable(true);
+        if (curNum < upperBound) {
+          plusButton.setDisable(false);
+        }
         if (!tokenCombMatchedActionId().equals("")) {
           Button confirmButton = getConfirmButton();
           // do not allow taking anymore, activate confirm button
@@ -256,6 +264,7 @@ public class TokenBankGui extends HBox {
         String actionId = tokenCombMatchedActionId();
         confirmButton.setOnAction(createConfirmTakeTokenHandler(actionId));
       }
+
 
 
     };
@@ -277,8 +286,8 @@ public class TokenBankGui extends HBox {
         plusButton.setDisable(true);
         minusButton.setDisable(true);
       }
-      plusButton.setOnAction(createTakeTokenHandler(displayLabel));
-      minusButton.setOnAction(createBackTokenHandler(displayLabel));
+      plusButton.setOnAction(createTakeTokenHandler(displayLabel, colours[i]));
+      minusButton.setOnAction(createBackTokenHandler(displayLabel, colours[i], plusButton));
     }
     Button confirmButton = getConfirmButton();
     if (returnTokenActionMap.size() != 0) {
@@ -318,11 +327,10 @@ public class TokenBankGui extends HBox {
    * @param bankMap    the enum map of price
    * @param layoutX    layout x
    * @param layoutY    layout y
-   * @param firstSetup whether it's first set up or not
    */
   public void setupReturnToken(Map<String, ReturnTokenAction> returnTokenActionMap,
                                EnumMap<Colour, Integer> bankMap,
-                               double layoutX, double layoutY, boolean firstSetup) {
+                               double layoutX, double layoutY) {
     this.returnTokenActionMap = returnTokenActionMap;
     setLayoutX(layoutX);
     setLayoutY(layoutY);

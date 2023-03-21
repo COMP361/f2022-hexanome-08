@@ -113,8 +113,7 @@ public class BaseBoardGui implements BoardGui {
         tokenBankGui.setupReturnToken(returnTokenActionMap,
             bankBalance,  //this is an empty bank map
             config.getTokenBankLayoutX(),
-            config.getTokenBankLayoutY(),
-            true);
+            config.getTokenBankLayoutY());
         playerBoardAnchorPane.getChildren().add(tokenBankGui);
       });
     }
@@ -127,19 +126,6 @@ public class BaseBoardGui implements BoardGui {
             e.getValue() instanceof ReserveAction || e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-    ////TODO: REMOVE AFTER
-    //for(String actionId: playerActionMap.keySet()) {
-    //  Action action = playerActionMap.get(actionId);
-    //  if (action instanceof PurchaseAction) {
-    //    PurchaseAction purchaseAction = (PurchaseAction) action;
-    //    System.out.println("Look at action: " + actionId);
-    //    System.out.println("card price: " + purchaseAction.getCurCard().getPrice());
-    //    System.out.println("card position: " + purchaseAction.getCardPosition());
-    //    System.out.println("tokens need to be paid: " +purchaseAction.getTokensToBePaid());
-    //  }
-    //
-    //}
-
 
     Map<Position, List<ActionIdPair>> positionToActionMap =
         getPositionActions(reservePurchaseActions);
@@ -147,8 +133,7 @@ public class BaseBoardGui implements BoardGui {
     for (int i = 3; i >= 1; i--) {
       DevelopmentCard[] cardsOnBoard = baseBoard.getLevelCardsOnBoard(i);
       List<DevelopmentCard> deck = baseBoard.getDecks().get(i);
-      BaseCardLevelGui baseCardLevelGui =
-          new BaseCardLevelGui(i, cardsOnBoard, deck);
+      BaseCardLevelGui baseCardLevelGui = new BaseCardLevelGui(i, cardsOnBoard, deck);
       baseCardLevelGui.setup();
       baseCardLevelGui.bindActionToCardAndDeck(positionToActionMap, gameId);
       baseCardLevelGuiMap.put(i, baseCardLevelGui);
