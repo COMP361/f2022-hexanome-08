@@ -111,15 +111,15 @@ public class AdminPageController extends AbstractLobbyController {
         msg = "Player was added to the Lobby Service database!";
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(msg, title),
-                config.getLobbyWarnWidth(),
-                config.getLobbyWarnHeight());
+                config.getSmallPopUpWidth(),
+                config.getSmallPopUpHeight());
       } catch (UnirestException e) {
         title = "Add New Player Error";
         msg = "Player could not be added to the Lobby Service database";
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(msg, title),
-                config.getLobbyWarnWidth(),
-                config.getLobbyWarnHeight());
+                config.getSmallPopUpWidth(),
+                config.getSmallPopUpHeight());
 
       }
     });

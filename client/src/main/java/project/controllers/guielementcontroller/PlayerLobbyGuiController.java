@@ -73,8 +73,8 @@ public class PlayerLobbyGuiController implements Initializable {
         String error = "Could not update user's new colour choice!\nPlease try again";
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(error, errorTitle),
-            config.getLobbyWarnWidth(),
-                config.getLobbyWarnHeight());
+            config.getSmallPopUpWidth(),
+                config.getSmallPopUpHeight());
       }
     });
 
@@ -100,8 +100,8 @@ public class PlayerLobbyGuiController implements Initializable {
 
       App.loadPopUpWithController("lobby_warn.fxml",
           new LobbyWarnPopUpController(msg, title),
-              config.getLobbyWarnWidth(),
-              config.getLobbyWarnHeight());
+              config.getSmallPopUpWidth(),
+              config.getSmallPopUpHeight());
       passwordField.clear();
     });
 
@@ -123,8 +123,8 @@ public class PlayerLobbyGuiController implements Initializable {
 
       App.loadPopUpWithController("lobby_warn.fxml",
           new LobbyWarnPopUpController(msg, title),
-              config.getLobbyWarnWidth(),
-              config.getLobbyWarnHeight());
+              config.getSmallPopUpWidth(),
+              config.getSmallPopUpHeight());
     });
 
 
