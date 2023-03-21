@@ -35,7 +35,6 @@ import project.controllers.popupcontrollers.DeckActionController;
 public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
   private final int level;
-  private final Rectangle coverRectangle;
   private DevelopmentCard[] cards;
   private List<DevelopmentCard> deck;
 
@@ -46,12 +45,10 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
    * @param cards a list of cards (fixed length of 4)
    * @param deck  a list of cards (change length based on level)
    */
-  public BaseCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck,
-                          Rectangle coverRectangle) {
+  public BaseCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck) {
     this.level = level;
     this.cards = cards;
     this.deck = deck;
-    this.coverRectangle = coverRectangle;
     FXMLLoader fxmlLoader =
         new FXMLLoader(getClass().getResource("/project/base_card_template.fxml"));
     fxmlLoader.setRoot(this);
@@ -118,7 +115,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       App.loadPopUpWithController("deck_action.fxml",
-          new DeckActionController(gameId, actionId, coverRectangle), config.getDeckActionWidth(), config.getDeckActionHeight());
+          new DeckActionController(gameId, actionId), config.getDeckActionWidth(), config.getDeckActionHeight());
     };
   }
 

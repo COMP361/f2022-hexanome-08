@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
+import project.controllers.popupcontrollers.GameOverPopUpController;
 import project.controllers.stagecontrollers.LogInController;
 import project.view.lobby.communication.User;
 
@@ -29,8 +30,8 @@ import project.view.lobby.communication.User;
 public class App extends Application {
 
   //private static final String mode = "ruoyu_server";
-  //private static final String mode = "local_host";
-  private static final String mode = "same_wifi";
+  private static final String mode = "local_host";
+  //private static final String mode = "same_wifi";
   private static final String wifiIp = "10.122.126.253";
   private static final Colour[] allColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
@@ -187,9 +188,15 @@ public class App extends Application {
     // establish a relationship between two window (popup and primary)
     newStage.initOwner(primaryStage);
     // block user from clicking on the main stage
+    if (controller instanceof GameOverPopUpController) {
+      // ban the close button on the game over pop up
+      newStage.initStyle(StageStyle.UNDECORATED);
+    } else {
+      // disable the full screen (green one) button for mac
+      newStage.initStyle(StageStyle.UTILITY);
+    }
     newStage.initModality(Modality.WINDOW_MODAL);
-    // disable the full screen (green one) button for mac
-    newStage.initStyle(StageStyle.UTILITY);
+
     // show the popup window
     newStage.show();
   }

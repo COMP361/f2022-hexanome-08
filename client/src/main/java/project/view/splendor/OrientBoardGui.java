@@ -26,7 +26,6 @@ import project.GameBoardLayoutConfig;
 public class OrientBoardGui implements BoardGui {
 
   private final AnchorPane playerBoardAnchorPane;
-  private final Rectangle coverRectangle;
   private final long gameId;
   private final Map<Integer, OrientCardLevelGui> orientCardLevelGuiMap = new HashMap<>();
   private final VBox orientCardsBoard;
@@ -36,13 +35,11 @@ public class OrientBoardGui implements BoardGui {
    *
    * @param playerBoardAnchorPane playerBoardAnchorPane
    * @param gameId                gameID
-   * @param coverRectangle        coverRectangle
    */
-  public OrientBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
+  public OrientBoardGui(AnchorPane playerBoardAnchorPane, long gameId) {
     this.gameId = gameId;
     this.playerBoardAnchorPane = playerBoardAnchorPane;
     this.orientCardsBoard = new VBox();
-    this.coverRectangle = coverRectangle;
   }
 
   @Override
@@ -65,7 +62,7 @@ public class OrientBoardGui implements BoardGui {
       DevelopmentCard[] cardsOnBoard = orientBoard.getLevelCardsOnBoard(i);
       List<DevelopmentCard> deck = orientBoard.getDecks().get(i);
       OrientCardLevelGui orientBoardGui =
-          new OrientCardLevelGui(i, cardsOnBoard, deck, coverRectangle);
+          new OrientCardLevelGui(i, cardsOnBoard, deck);
       orientBoardGui.setup();
       orientBoardGui.bindActionToCardAndDeck(positionToActionMap, gameId);
       orientCardLevelGuiMap.put(i, orientBoardGui);

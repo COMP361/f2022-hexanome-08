@@ -13,6 +13,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import project.App;
 
@@ -33,37 +35,41 @@ public class BurnCardController extends ActionSelectionSender implements Initial
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    System.out.println("initialize");
-    int cardsAvailableToFree = playerActionMap.size();
-    ImageView[] sortedImageViews = new ImageView[cardsAvailableToFree];
+    int cardsAvailableToBurn = playerActionMap.size();
+    HBox[] cardSatchelPairHbox = new HBox[cardsAvailableToBurn];
     int counter = 0;
-    System.out.println("action map size: " + playerActionMap.size());
     for (String actionId : playerActionMap.keySet()) {
       Action action = playerActionMap.get(actionId);
       CardExtraAction cardExtraAction = (CardExtraAction) action;
       DevelopmentCard card = (DevelopmentCard) cardExtraAction.getCurCard();
-      //Position cardPosition = cardExtraAction.getCardPosition();//remove
       String cardImagePath;
       int imageViewInsertIndex;
       if (card.isBaseCard()) {
         cardImagePath = App.getBaseCardPath(card.getCardName(), card.getLevel());
-        imageViewInsertIndex = counter;
       } else {
         cardImagePath = App.getOrientCardPath(card.getCardName(), card.getLevel());
-        imageViewInsertIndex = counter;
       }
-      System.out.println("imagepath: " + cardImagePath);
+      imageViewInsertIndex = counter;
       ImageView cardImageView = new ImageView(new Image(cardImagePath));
       cardImageView.setFitHeight(100);
       cardImageView.setFitWidth(80);
-      sortedImageViews[imageViewInsertIndex] = cardImageView;
+      Rectangle satchelMark = new Rectangle();
+      if (card.isPaired()) {
+        satchelMark.setFill(Color.BLUE);
+      } else {
+        satchelMark.setFill(Color.WHITESMOKE);
+      }
+      satchelMark.setWidth(5);
+      satchelMark.setHeight(100);
+      HBox curPairedCard = new HBox(cardImageView, satchelMark);
+      cardSatchelPairHbox[imageViewInsertIndex] = curPairedCard;
+      // bind the action to image view
       cardImageView.setOnMouseClicked(createOnActionSelectionClick(actionId));
       counter++;
     }
     // add all sorted, function assigned image views to the HBox
-    freeCardsHbox.getChildren().addAll(sortedImageViews);
+    freeCardsHbox.getChildren().addAll(cardSatchelPairHbox);
     title.setText("Choose one card to burn");
-
   }
 
 }

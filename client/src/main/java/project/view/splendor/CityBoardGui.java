@@ -21,9 +21,6 @@ public class CityBoardGui implements BoardGui {
   private final AnchorPane playerBoardAnchorPane;
 
   private final long gameId;
-
-  private final Rectangle coverRectangle;
-
   private final CitiesGui citiesGui;
 
   private final VBox cityCardBoard;
@@ -33,14 +30,12 @@ public class CityBoardGui implements BoardGui {
    *
    * @param playerBoardAnchorPane playerBoardAnchorPane
    * @param gameId                gameId
-   * @param coverRectangle        coverRectangle
    */
-  public CityBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
+  public CityBoardGui(AnchorPane playerBoardAnchorPane, long gameId) {
     this.gameId = gameId;
     GameBoardLayoutConfig config = App.getGuiLayouts();
     citiesGui = new CitiesGui(config.getCityWidth(), config.getCityHeight(), config.getCitySpace());
     this.playerBoardAnchorPane = playerBoardAnchorPane;
-    this.coverRectangle = coverRectangle;
     this.cityCardBoard = new VBox();
   }
 

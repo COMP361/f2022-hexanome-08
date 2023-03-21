@@ -43,7 +43,6 @@ public class PurchaseHandController implements Initializable {
   private final Map<Colour, List<DevelopmentCard>> colourCardsMap;
   private final List<NobleCard> nobleCards;
   private final Map<String, Action> playerActions;
-  private final Rectangle coverRectangle;
   private final long gameId;
   @FXML
   // each index represent the group of displaying all cards of one colour
@@ -62,11 +61,9 @@ public class PurchaseHandController implements Initializable {
    *
    * @param purchasedHand  purchasedHand
    * @param playerActions  playerActions
-   * @param coverRectangle coverRectangle
    */
   public PurchaseHandController(long gameId, PurchasedHand purchasedHand,
-                                Map<String, Action> playerActions,
-                                Rectangle coverRectangle) {
+                                Map<String, Action> playerActions) {
     // organize all dev cards (including gold colour ones) into colour map
     this.gameId = gameId;
     List<DevelopmentCard> allCardsInHand = purchasedHand.getDevelopmentCards();
@@ -74,7 +71,6 @@ public class PurchaseHandController implements Initializable {
     this.colourGroupMap = new HashMap<>();
     this.nobleCards = purchasedHand.getNobleCards();
     this.playerActions = playerActions;
-    this.coverRectangle = coverRectangle;
   }
 
 
@@ -187,37 +183,6 @@ public class PurchaseHandController implements Initializable {
     }
   }
 
-  //private List<HBox> generateCardSatchelPairWithActions(
-  //    List<DevelopmentCard> oneColourCards, Map<Position,
-  //    List<ActionIdPair>> positionToActionMap) {
-  //  List<HBox> result = new ArrayList<>();
-  //  for (DevelopmentCard card : oneColourCards) {
-  //    Rectangle satchelMark = new Rectangle();
-  //    // Colour will be assigned differently if the card is linked
-  //    if (card.isPaired()) {
-  //      satchelMark.setFill(Color.BLUE);
-  //    } else {
-  //      satchelMark.setFill(Color.WHITESMOKE);
-  //    }
-  //    Image img;
-  //    // has some effect -> orient
-  //    if (!card.isBaseCard()) {
-  //      img = new Image(App.getOrientCardPath(card.getCardName(), card.getLevel()));
-  //    } else { // otherwise, base
-  //      img = new Image(App.getBaseCardPath(card.getCardName(), card.getLevel()));
-  //    }
-  //    ImageView imgV = new ImageView(img);
-  //    imgV.setFitWidth(100);
-  //    imgV.setFitHeight(150);
-  //    satchelMark.setWidth(20);
-  //    satchelMark.setHeight(150);
-  //    HBox container = new HBox(imgV, satchelMark);
-  //    result.add(container);
-  //  }
-  //  return result;
-  //
-  //
-  //}
 
   private EventHandler<MouseEvent> createClickOnCardToPair(long gameId,
                                                            List<ActionIdPair> satchelAction) {
@@ -297,14 +262,14 @@ public class PurchaseHandController implements Initializable {
     for (Colour c : colourGroupMap.keySet()) {
       if (colourCardsMap.containsKey(c)) {
         List<DevelopmentCard> cardsOfOneColour = colourCardsMap.get(c);
-        //TODO: assign actions to image views with playerActions, depending on what kind of
-        // actions (only CardExtraAction of Satchel can happen in this purchase hand,
-        // only for normal
-        // cards with RED, WHITE, BLUE, GREEN, BLACK colours)
-        // Bind actions to image view during generateCardSatchelPair(...) method
-        for (DevelopmentCard card : cardsOfOneColour) {
-          System.out.println(card.getCardName());
-        }
+        ////TODO: assign actions to image views with playerActions, depending on what kind of
+        //// actions (only CardExtraAction of Satchel can happen in this purchase hand,
+        //// only for normal
+        //// cards with RED, WHITE, BLUE, GREEN, BLACK colours)
+        //// Bind actions to image view during generateCardSatchelPair(...) method
+        //for (DevelopmentCard card : cardsOfOneColour) {
+        //  System.out.println(card.getCardName());
+        //}
 
         List<HBox> allPairs = generateCardSatchelPair(cardsOfOneColour, positionSatchelActionMap);
         addCardSatchelPairToColourGroup(allPairs, colourGroupMap.get(c));

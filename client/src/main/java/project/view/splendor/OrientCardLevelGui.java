@@ -32,7 +32,6 @@ import project.controllers.popupcontrollers.DeckActionController;
  */
 public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui {
   private final int level;
-  private final Rectangle coverRectangle;
   private DevelopmentCard[] cards;
   private List<DevelopmentCard> deck;
 
@@ -42,12 +41,10 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
    * @param level provides the level of the Orient Cards.
    * @param cards provides the list of cards you want displayed in the GUI.
    */
-  public OrientCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck,
-                            Rectangle coverRectangle) {
+  public OrientCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck) {
     this.level = level;
     this.cards = cards;
     this.deck = deck;
-    this.coverRectangle = coverRectangle;
     FXMLLoader fxmlLoader =
         new FXMLLoader(getClass().getResource("/project/orient_card_template.fxml"));
     fxmlLoader.setRoot(this);
@@ -104,7 +101,7 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
   private EventHandler<MouseEvent> createClickOnDeckHandler(long gameId, String actionId) {
     return event -> {
       App.loadPopUpWithController("deck_action.fxml",
-          new DeckActionController(gameId, actionId, coverRectangle), 360, 170);
+          new DeckActionController(gameId, actionId), 360, 170);
     };
   }
 
