@@ -1,5 +1,6 @@
 package project;
 
+import ca.mcgill.comp361.splendormodel.model.CityCard;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
@@ -272,6 +273,10 @@ public class App extends Application {
 
   public static String getTokenPath(Colour colour) {
     return String.format("project/pictures/token/%s_tokens.png",colour.toString().toLowerCase());
+  }
+
+  public static String getCityPath(CityCard cityCard) {
+    return String.format("project/pictures/cities/%s.png", cityCard.getCardName());
   }
 
   public static Image getPlayerImage(String playerName) {

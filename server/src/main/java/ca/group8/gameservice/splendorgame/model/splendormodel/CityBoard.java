@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * class that holds info about city board.
@@ -27,15 +28,29 @@ public class CityBoard extends Board {
     // initialize city to each player as null at the beginning
     playerNames.forEach(name -> playerCities.put(name, null));
 
+    // randomly got 3 city card names in this format: "city[1-7]_[1-2]" for 3 times
+    String[] cityNames = new String[3];
+    for (int i = 0; i < cityNames.length; i++) {
+      // randomly got one number from 1 -> 7
+      int prefix = new Random().nextInt(7) + 1;
+      // randomly got one number from 1 -> 2
+      int suffix = new Random().nextInt(1) + 1;
+      cityNames[i] = String.format("city%s_%s", prefix, suffix);
+    }
+
     // can not test generateCityCards() because JSON parsing has random order issue
     List<CityCard> allCards = super.generateCityCards();
-    // randomly get exactly 3 city cards on board (the rule)
-    // TODO: Fix the fact that we might draw 2 city cards: city1_1 and city1_2
-    // this should NOT BE allowed!
-    Collections.shuffle(allCards);
-    List<CityCard> cityCardsInUse = allCards.subList(0, 3);
+    // now we have the 3 random names, we can use them to get the cards
+    // out of all city cards
     for (int i = 0; i < allCityCards.length; i++) {
-      allCityCards[i] = cityCardsInUse.get(i);
+      for (CityCard cityCard : allCards) {
+        if (cityCard.getCardName().equals(cityNames[i])) {
+          // store the card with the matching random name
+          // then break it immediately
+          allCityCards[i] = cityCard;
+          break;
+        }
+      }
     }
   }
 

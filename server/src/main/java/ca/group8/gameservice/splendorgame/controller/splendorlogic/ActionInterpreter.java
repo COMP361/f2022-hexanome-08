@@ -229,13 +229,25 @@ public class ActionInterpreter {
       if (hasCityExtension) {
         // city winning check, can the player unlock a city or not.
         CityBoard cityBoard = (CityBoard) tableTop.getBoard(Extension.CITY);
+        List<CityCard> unlockedCityCards = new ArrayList<>();
         for (CityCard cityCard : cityBoard.getAllCityCards()) {
-          // unlock the first city card that's available to unlock
+          // check how many city cards we can unlock
           if (cityCard.canUnlock(playerInGame)) {
-            cityBoard.assignCityCard(playerName, cityCard);
-            break;
+            unlockedCityCards.add(cityCard);
           }
         }
+
+        if (unlockedCityCards.size() == 1) {
+          // if unlocked only one, then there is no option to choose
+          cityBoard.assignCityCard(playerName,unlockedCityCards.get(0));
+        } else if (unlockedCityCards.size() > 1) {
+          actionGenerator.updateClaimCityActions(unlockedCityCards, playerName);
+          // update claim city actions, let player do further move
+          return;
+        }
+        // if there is no unlocked city card, no need to do anything, just check
+        // the winning condition
+
         // if the player has one city card, then one wins
         playerWonTheGame = cityBoard.getPlayerCities().get(playerName) != null;
       } else {

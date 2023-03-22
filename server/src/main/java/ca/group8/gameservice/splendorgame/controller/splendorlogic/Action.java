@@ -26,6 +26,7 @@ import io.github.isharipov.gson.adapters.JsonType;
         @JsonSubtype(clazz = CardExtraAction.class, name = "CardExtraAction"),
         @JsonSubtype(clazz = ClaimNobleAction.class, name = "ClaimNobleAction"),
         @JsonSubtype(clazz = BonusTokenPowerAction.class, name = "BonusTokenPowerAction"),
+        @JsonSubtype(clazz = ClaimCityAction.class, name = "ClaimCityAction"),
         @JsonSubtype(clazz = ReserveAction.class, name = "ReserveAction"),
         @JsonSubtype(clazz = TakeTokenAction.class, name = "TakeTokenAction"),
         @JsonSubtype(clazz = ReturnTokenAction.class, name = "ReturnTokenAction")

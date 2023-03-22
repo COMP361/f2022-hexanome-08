@@ -4,6 +4,7 @@ package project.controllers.stagecontrollers;
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.BonusTokenPowerAction;
 import ca.mcgill.comp361.splendormodel.actions.CardExtraAction;
+import ca.mcgill.comp361.splendormodel.actions.ClaimCityAction;
 import ca.mcgill.comp361.splendormodel.actions.ClaimNobleAction;
 import ca.mcgill.comp361.splendormodel.model.CardEffect;
 import ca.mcgill.comp361.splendormodel.model.Colour;
@@ -472,8 +473,7 @@ public class GameController implements Initializable {
 
   private void showFreeCardPopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
-    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(viewerName);
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
     boolean allFreeActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.FREE_CARD));
@@ -502,8 +502,7 @@ public class GameController implements Initializable {
 
   private void showReserveNoblePopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
-    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(viewerName);
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
     boolean allReserveNobleActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.RESERVE_NOBLE));
@@ -532,14 +531,11 @@ public class GameController implements Initializable {
 
   private void showBonusTokenPopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
-    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
-        .get(viewerName);
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
     boolean allBonusTokenActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof BonusTokenPowerAction);
 
-    System.out.println("We've reached right before the if statement in showBonusTokenPopUp");
     if (!playerActionMap.isEmpty() && allBonusTokenActions) {
-      System.out.println("All actions in action map recieved by client are bonus token actions");
       // enable player to continue their pending action even they close the window
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
@@ -559,6 +555,35 @@ public class GameController implements Initializable {
             170);
       });
     }
+  }
+
+  private void showClaimCityPopUp(GameInfo curGameInfo) {
+    // generate special pop up for city card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
+    boolean allClaimCityActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof ClaimCityAction);
+
+    if (!playerActionMap.isEmpty() && allClaimCityActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("claim_city_pop_up.fxml",
+              new ClaimCityPopUpController(gameId, playerActionMap),
+              300,
+              400);
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("claim_city_pop_up.fxml",
+            new ClaimCityPopUpController(gameId, playerActionMap),
+            300,
+            400);
+      });
+    }
+
   }
 
   private void resetAllGameBoards(GameInfo curGameInfo) {
@@ -696,6 +721,8 @@ public class GameController implements Initializable {
               showReserveNoblePopUp(curGameInfo);
               // optionally, show the take a token for free pop up, condition is checked inside method
               showBonusTokenPopUp(curGameInfo);
+              // optionally, show the claiming a city pop up, condition is checked inside method
+              showClaimCityPopUp(curGameInfo);
               // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
             }
 

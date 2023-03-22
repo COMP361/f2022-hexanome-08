@@ -5,6 +5,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.CityCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
@@ -737,6 +738,22 @@ public class ActionGenerator {
       actionMap.put(actionId, action);
     }
     String playerName = playerInGame.getName();
+    playerActionMaps.put(playerName, actionMap);
+  }
+
+  public void updateClaimCityActions(List<CityCard> unlockedCityCards, String playerName) {
+    List<ClaimCityAction> claimCityActions = new ArrayList<>();
+    for (CityCard unlockedCityCard : unlockedCityCards) {
+      claimCityActions.add(new ClaimCityAction(unlockedCityCard));
+    }
+
+    Map<String, Action> actionMap = new HashMap<>();
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+    for (Action action : claimCityActions) {
+      String actionJson = gsonParser.toJson(action, ClaimCityAction.class);
+      String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();
+      actionMap.put(actionId, action);
+    }
     playerActionMaps.put(playerName, actionMap);
   }
 
