@@ -20,6 +20,8 @@ In order to keep a clean running environment, we will need the help from docker.
 3. `mvn clean spring-boot:run -P test` under our server folder. The `-P test` argument is used to use a different property file to skip checkstyle/javadoc for testing purpose.
 4. `mvn clean javafx:run` or click the run button in client folder. (I prefer the button)
 5. You should be able to see a running instance of client.
+** ipconfig getifaddr en0 to get ip address on mac
+
 
 ### M5 prep
 1. Run code with a coverage report: the button on top right with a shield shape.
