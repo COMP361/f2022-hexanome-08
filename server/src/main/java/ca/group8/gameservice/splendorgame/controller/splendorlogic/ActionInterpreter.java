@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 public class ActionInterpreter {
 
   private boolean nobleVisited = false;
+  private boolean unlockedCity = false;
   private int freeCardLevel = 0;
   private int burnCardCount = 0;
   private Colour burnCardColour = null;
@@ -227,27 +228,33 @@ public class ActionInterpreter {
       boolean playerWonTheGame;
       boolean hasCityExtension = tableTop.getGameBoards().containsKey(Extension.CITY);
       if (hasCityExtension) {
-        // city winning check, can the player unlock a city or not.
+        // the city winning check is only needed if player did not unlock any city
         CityBoard cityBoard = (CityBoard) tableTop.getBoard(Extension.CITY);
-        List<CityCard> unlockedCityCards = new ArrayList<>();
-        for (CityCard cityCard : cityBoard.getAllCityCards()) {
-          // check how many city cards we can unlock
-          if (cityCard.canUnlock(playerInGame)) {
-            unlockedCityCards.add(cityCard);
+        if (!unlockedCity) {
+          // city winning check, can the player unlock a city or not.
+          List<CityCard> unlockedCityCards = new ArrayList<>();
+          for (CityCard cityCard : cityBoard.getAllCityCards()) {
+            // check how many city cards we can unlock
+            if (cityCard != null && cityCard.canUnlock(playerInGame)) {
+              unlockedCityCards.add(cityCard);
+            }
+          }
+
+          if (unlockedCityCards.size() > 0) {
+            unlockedCity = true;
+            if (unlockedCityCards.size() == 1) {
+              // if unlocked only one, then there is no option to choose
+              cityBoard.assignCityCard(playerName,unlockedCityCards.get(0));
+            } else {
+              actionGenerator.updateClaimCityActions(unlockedCityCards, playerName);
+              // update claim city actions, let player do further move
+              return;
+            }
           }
         }
 
-        if (unlockedCityCards.size() == 1) {
-          // if unlocked only one, then there is no option to choose
-          cityBoard.assignCityCard(playerName,unlockedCityCards.get(0));
-        } else if (unlockedCityCards.size() > 1) {
-          actionGenerator.updateClaimCityActions(unlockedCityCards, playerName);
-          // update claim city actions, let player do further move
-          return;
-        }
-        // if there is no unlocked city card, no need to do anything, just check
-        // the winning condition
-
+        // if there is no unlocked city card, no need to do anything,
+        // just check the winning condition
         // if the player has one city card, then one wins
         playerWonTheGame = cityBoard.getPlayerCities().get(playerName) != null;
       } else {
@@ -256,41 +263,26 @@ public class ActionInterpreter {
         playerWonTheGame = points >= 15;
       }
 
-      // the boolean value will be decided differently based on whether we play
-      // with city extension or not
+      // the boolean value will be decided differently based on
+      // whether we play with city extension or not
+      // In here, we only decide the current player should be added to winners or not
       if (playerWonTheGame) {
-        List<String> winners = gameInfo.getWinners();
-        List<String> allPlayers = gameInfo.getPlayerNames();
-        // if the current player is the last player, this game is over
-        String lastPlayerName = allPlayers.get(allPlayers.size() - 1);
+        gameInfo.addWinner(playerName);
+      }
 
-        if (playerName.equals(lastPlayerName)) {
-          if (winners.isEmpty()) { // this is the first and last winner
-            winners.add(playerName);
-            // game is over!
-            gameInfo.setFinished();
-            logger.info(playerName + " won the game!!!");
-          } else {
-            // we have several potential winners
-            winners.add(playerName);
-            // choose and set all winners (might have tie)
-            decideWinners(winners);
-            // game is over!
-            gameInfo.setFinished();
-            logger.info(playerName + " won the game!!!");
-          }
-        } else {
-          // add the winner
-          winners.add(playerName);
-          // and can not say the game is finished
-        }
+      List<String> allPlayers = gameInfo.getPlayerNames();
+      String lastPlayerName = allPlayers.get(allPlayers.size() - 1);
+      // after adding the player, we decide should we set the gameInfo state to finished or
+      // not only if we are currently at last player && the winner list is not empty
+      // we announce that the game is over
+      if (playerName.equals(lastPlayerName) && !gameInfo.getWinners().isEmpty()) {
+        gameInfo.setFinished();
       }
 
       // set next turn
-      // TODO: before changing to next player, reset everything
       // the flags to default values
       nobleVisited = false;
-
+      unlockedCity = false;
       // if the game is not finished, set next player
       if (!gameInfo.isFinished()) {
         gameInfo.setNextPlayer();

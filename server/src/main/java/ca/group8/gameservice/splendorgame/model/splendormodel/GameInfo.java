@@ -82,6 +82,10 @@ public class GameInfo implements BroadcastContent {
     return new ArrayList<>(winners);
   }
 
+  public void addWinner(String playerName) {
+    winners.add(playerName);
+  }
+
   public void setWinners(List<String> winners) {
     this.winners = winners;
   }

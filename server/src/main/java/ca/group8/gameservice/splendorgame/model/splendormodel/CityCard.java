@@ -58,7 +58,7 @@ public class CityCard extends Card {
       enoughGems = diffPrice.values().stream().anyMatch(count -> count >= anyColourCount);
     }
 
-    return enoughGems && super.getPrestigePoints() == playerInGame.getPrestigePoints();
+    return enoughGems && super.getPrestigePoints() <= playerInGame.getPrestigePoints();
 
   }
 

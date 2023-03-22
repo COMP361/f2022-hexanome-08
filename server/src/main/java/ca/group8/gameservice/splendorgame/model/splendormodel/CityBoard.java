@@ -3,6 +3,7 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -30,12 +31,18 @@ public class CityBoard extends Board {
 
     // randomly got 3 city card names in this format: "city[1-7]_[1-2]" for 3 times
     String[] cityNames = new String[3];
-    for (int i = 0; i < cityNames.length; i++) {
+    HashSet<Integer> prefixSet = new HashSet<>();
+    // add 3 unique random prefix number in here
+    while(prefixSet.size() < 3) {
       // randomly got one number from 1 -> 7
-      int prefix = new Random().nextInt(7) + 1;
+      prefixSet.add(new Random().nextInt(7) + 1);
+    }
+    List<Integer> uniquePrefixes = new ArrayList<>(prefixSet);
+
+    for (int i = 0; i < cityNames.length; i++) {
       // randomly got one number from 1 -> 2
       int suffix = new Random().nextInt(1) + 1;
-      cityNames[i] = String.format("city%s_%s", prefix, suffix);
+      cityNames[i] = String.format("city%s_%s", uniquePrefixes.get(i), suffix);
     }
 
     // can not test generateCityCards() because JSON parsing has random order issue

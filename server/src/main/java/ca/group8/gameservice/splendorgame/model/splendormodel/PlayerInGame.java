@@ -111,9 +111,9 @@ public class PlayerInGame {
           Logger logger  = LoggerFactory.getLogger(PlayerInGame.class);
           int oldValue = totalGems.get(colour);
           totalGems.put(colour, oldValue + card.getGemNumber());
-          logger.warn("Player name:" + name);
-          logger.warn("Colour " + colour);
-          logger.warn("TotalGems: " + totalGems);
+          //logger.warn("Player name:" + name);
+          //logger.warn("Colour " + colour);
+          //logger.warn("TotalGems: " + totalGems);
         }
       }
     }
