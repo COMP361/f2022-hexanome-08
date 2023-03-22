@@ -5,10 +5,12 @@ import ca.mcgill.comp361.splendormodel.model.Colour;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +20,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.apache.commons.io.FileUtils;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
 import project.controllers.popupcontrollers.GameOverPopUpController;
@@ -62,11 +65,11 @@ public class App extends Application {
   public void start(Stage stage) throws IOException {
     System.setProperty("com.apple.macos.useScreenMenuBar", "true");
     primaryStage = stage;
+    File gameConfigFile = new File("appConfig.json");
+
     try {
-      FileReader f = new FileReader(Objects.requireNonNull(
-          App.class.getClassLoader().getResource("appConfig.json")).getFile());
-      JsonReader jfReader = new JsonReader(f);
-      guiLayouts = new Gson().fromJson(jfReader, GameBoardLayoutConfig.class);
+      String gameConfigString = FileUtils.readFileToString(gameConfigFile, StandardCharsets.UTF_8);
+      guiLayouts = new Gson().fromJson(gameConfigString, GameBoardLayoutConfig.class);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
