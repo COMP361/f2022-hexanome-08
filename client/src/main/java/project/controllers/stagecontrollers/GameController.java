@@ -425,8 +425,7 @@ public class GameController implements Initializable {
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
           App.loadPopUpWithController("my_development_cards.fxml",
-              new PurchaseHandController(gameId,
-                  purchasedHand, playerActionMap, coverRectangle),
+              new PurchaseHandController(gameId, purchasedHand, playerActionMap),
                   config.getLargePopUpWidth(),
                   config.getLargePopUpHeight());
         });
@@ -435,8 +434,7 @@ public class GameController implements Initializable {
       // do a pop up right now
       Platform.runLater(() -> {
         App.loadPopUpWithController("my_development_cards.fxml",
-            new PurchaseHandController(gameId,
-                purchasedHand, playerActionMap, coverRectangle),
+            new PurchaseHandController(gameId, purchasedHand, playerActionMap),
                 config.getLargePopUpWidth(),
                 config.getLargePopUpHeight());
       });
