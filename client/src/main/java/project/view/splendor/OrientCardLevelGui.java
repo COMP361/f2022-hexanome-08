@@ -101,7 +101,9 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
   private EventHandler<MouseEvent> createClickOnDeckHandler(long gameId, String actionId) {
     return event -> {
       App.loadPopUpWithController("deck_action.fxml",
-          new DeckActionController(gameId, actionId), 360, 170);
+          new DeckActionController(gameId, actionId),
+          App.getGuiLayouts().getSmallPopUpWidth(),
+          App.getGuiLayouts().getSmallPopUpHeight());
     };
   }
 

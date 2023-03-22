@@ -38,10 +38,12 @@ public class BurnCardController extends ActionSelectionSender implements Initial
     int cardsAvailableToBurn = playerActionMap.size();
     HBox[] cardSatchelPairHbox = new HBox[cardsAvailableToBurn];
     int counter = 0;
+    System.out.println("Trying to burn....");
     for (String actionId : playerActionMap.keySet()) {
       Action action = playerActionMap.get(actionId);
       CardExtraAction cardExtraAction = (CardExtraAction) action;
       DevelopmentCard card = (DevelopmentCard) cardExtraAction.getCurCard();
+      System.out.println("Need to burn colour: " +card.getGemColour());
       String cardImagePath;
       int imageViewInsertIndex;
       if (card.isBaseCard()) {
@@ -67,7 +69,7 @@ public class BurnCardController extends ActionSelectionSender implements Initial
       cardImageView.setOnMouseClicked(createOnActionSelectionClick(actionId));
       counter++;
     }
-    // add all sorted, function assigned image views to the HBox
+    // add all sorted, function assigned image views to the ImageView
     freeCardsHbox.getChildren().addAll(cardSatchelPairHbox);
     title.setText("Choose one card to burn");
   }

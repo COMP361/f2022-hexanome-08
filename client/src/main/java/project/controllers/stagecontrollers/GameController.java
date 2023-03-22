@@ -450,8 +450,6 @@ public class GameController implements Initializable {
     boolean allBurnActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
             && ((CardExtraAction) action).getCardEffect().equals(CardEffect.BURN_CARD));
-    for(String actionId : playerActionMap.keySet()){
-    }
     if (!playerActionMap.isEmpty() && allBurnActions) {
       // also assign the pending action button some functionality
       pendingActionButton.setDisable(false);
