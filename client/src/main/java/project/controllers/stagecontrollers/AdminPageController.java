@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import project.App;
+import project.GameBoardLayoutConfig;
 import project.connection.LobbyRequestSender;
 import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.view.lobby.PlayerLobbyGui;
@@ -71,6 +72,7 @@ public class AdminPageController extends AbstractLobbyController {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     super.initialize(url, resourceBundle);
     // for admin page, bind action to setting and lobby button
     pageSpecificActionBind();
@@ -109,15 +111,15 @@ public class AdminPageController extends AbstractLobbyController {
         msg = "Player was added to the Lobby Service database!";
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(msg, title),
-            360,
-            170);
+                config.getSmallPopUpWidth(),
+                config.getSmallPopUpHeight());
       } catch (UnirestException e) {
         title = "Add New Player Error";
         msg = "Player could not be added to the Lobby Service database";
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(msg, title),
-            360,
-            170);
+                config.getSmallPopUpWidth(),
+                config.getSmallPopUpHeight());
 
       }
     });

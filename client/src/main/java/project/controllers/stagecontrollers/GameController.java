@@ -125,6 +125,7 @@ public class GameController implements Initializable {
   //  App.setRoot("admin_lobby_page");
   //}
   private EventHandler<ActionEvent> createOpenMyReserveCardClick() {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
       String curPlayerName = viewerName;
@@ -141,7 +142,8 @@ public class GameController implements Initializable {
 
       App.loadPopUpWithController("my_reserved_cards.fxml",
           new ReservedHandController(reservedHand, playerActions, gameId),
-          800, 600);
+              config.getLargePopUpWidth(),
+              config.getLargePopUpHeight());
 
     };
   }
@@ -154,6 +156,7 @@ public class GameController implements Initializable {
    * @return the event defined to handle the assign controller and send requests.
    */
   private EventHandler<ActionEvent> createOpenMyPurchaseCardClick() {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
       String curPlayerName = viewerName;
@@ -170,8 +173,8 @@ public class GameController implements Initializable {
 
       App.loadPopUpWithController("my_development_cards.fxml",
           new PurchaseHandController(gameId, purchasedHand, playerActions),
-          800,
-          600);
+              config.getLargePopUpWidth(),
+              config.getLargePopUpHeight());
 
     };
   }
@@ -373,6 +376,7 @@ public class GameController implements Initializable {
   }
 
   private void showClaimNoblePopUp(GameInfo curGameInfo) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
     // return true if EVERY ACTION in playerActionMap is ClaimNobleAction
     boolean allClaimNobleActions = playerActionMap.values().stream()
@@ -385,8 +389,8 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("noble_action_pop_up.fxml",
               new ActOnNoblePopUpController(gameId, playerActionMap, false),
-              360,
-              170);
+                  config.getSmallPopUpWidth(),
+                  config.getSmallPopUpHeight());
         });
       });
 
@@ -394,14 +398,15 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("noble_action_pop_up.fxml",
             new ActOnNoblePopUpController(gameId, playerActionMap, false),
-            360,
-            170);
+                config.getSmallPopUpWidth(),
+                config.getSmallPopUpHeight());
       });
 
     }
   }
 
   private void showPairingCardPopUp(GameInfo curGameInfo) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     // generate special pop up for pairing card
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
     boolean allPairActions = playerActionMap.values().stream()
@@ -421,9 +426,9 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("my_development_cards.fxml",
               new PurchaseHandController(gameId,
-                  purchasedHand, playerActionMap),
-              800,
-              600);
+                  purchasedHand, playerActionMap, coverRectangle),
+                  config.getLargePopUpWidth(),
+                  config.getLargePopUpHeight());
         });
       });
 
@@ -431,14 +436,15 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("my_development_cards.fxml",
             new PurchaseHandController(gameId,
-                purchasedHand, playerActionMap),
-            800,
-            600);
+                purchasedHand, playerActionMap, coverRectangle),
+                config.getLargePopUpWidth(),
+                config.getLargePopUpHeight());
       });
     }
   }
   //TODO: take out prints
   private void showBurnCardPopUp(GameInfo curGameInfo) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     // generate special pop up for pairing card
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
     boolean allBurnActions = playerActionMap.values().stream()
@@ -453,8 +459,8 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("free_card_pop_up.fxml",
               new BurnCardController(gameId, playerActionMap),
-              800,
-              600);
+                  config.getLargePopUpWidth(),
+                  config.getLargePopUpHeight());
         });
       });
 
@@ -463,8 +469,8 @@ public class GameController implements Initializable {
 
         App.loadPopUpWithController("free_card_pop_up.fxml",
             new BurnCardController(gameId, playerActionMap),
-            800,
-            600);
+                config.getLargePopUpWidth(),
+                config.getLargePopUpHeight());
       });
     }
   }
@@ -472,6 +478,7 @@ public class GameController implements Initializable {
 
 
   private void showFreeCardPopUp(GameInfo curGameInfo) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     // generate special pop up for pairing card
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
     boolean allFreeActions = playerActionMap.values().stream()
@@ -484,8 +491,8 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("free_card_pop_up.fxml",
               new FreeCardPopUpController(gameId, playerActionMap),
-              720,
-              170);
+              config.getSelectFreeCardWidth(),
+                  config.getSelectFreeCardHeight());
         });
       });
 
@@ -493,8 +500,8 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("free_card_pop_up.fxml",
             new FreeCardPopUpController(gameId, playerActionMap),
-            720,
-            170);
+                config.getSelectFreeCardWidth(),
+                config.getSelectFreeCardHeight());
       });
     }
   }
@@ -502,6 +509,7 @@ public class GameController implements Initializable {
 
   private void showReserveNoblePopUp(GameInfo curGameInfo) {
     // generate special pop up for pairing card
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
     boolean allReserveNobleActions = playerActionMap.values().stream()
         .allMatch(action -> action instanceof CardExtraAction
@@ -514,8 +522,8 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("noble_action_pop_up.fxml",
              new ActOnNoblePopUpController(gameId, playerActionMap,true),
-              360,
-              170);
+                  config.getSmallPopUpWidth(),
+                  config.getSmallPopUpHeight());
         });
       });
 
@@ -523,8 +531,8 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("noble_action_pop_up.fxml",
             new ActOnNoblePopUpController(gameId, playerActionMap,true),
-            360,
-            170);
+                config.getSmallPopUpWidth(),
+                config.getSmallPopUpHeight());
       });
     }
   }
@@ -639,6 +647,7 @@ public class GameController implements Initializable {
 
 
   private void showFinishGamePopUp(GameInfo curGameInfo) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     // the current game is finished (either done by Save OR GameOver)
     if (curGameInfo.isFinished()) {
       // should load a game over page (jump back to lobby after they click the button)
@@ -649,7 +658,8 @@ public class GameController implements Initializable {
                 playerInfoThread,
                 curGameInfo.getWinners(),
                 false),
-            360, 170);
+            config.getSmallPopUpWidth(),
+            config.getSmallPopUpHeight());
       });
     }
   }
@@ -747,23 +757,25 @@ public class GameController implements Initializable {
 
   // interrupt the game update thread to save resources
   private EventHandler<ActionEvent> createClickOnSaveButtonEvent(GameInfo gameInfo, long gameId) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       App.loadPopUpWithController("save_game.fxml",
           new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
-          360,
-          170);
+              config.getSmallPopUpWidth(),
+              config.getSmallPopUpHeight());
     };
   }
 
   // interrupt the game update thread to save resources
   private EventHandler<ActionEvent> createClickOnQuitButtonEvent() {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       App.loadPopUpWithController("quit_game.fxml",
           new GameOverPopUpController(mainGameUpdateThread,
               playerInfoThread,
               new ArrayList<>(),
               true),
-          360, 170);
+          config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
     };
   }
 
