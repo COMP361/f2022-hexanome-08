@@ -51,6 +51,7 @@ public class CityBoardGui implements BoardGui {
       cityCardBoard.setLayoutY(config.getPacBoardLayoutY());
       playerBoardAnchorPane.getChildren().add(cityCardBoard);
     });
+
   }
 
 
