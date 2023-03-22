@@ -546,7 +546,7 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("bonus_token_pop_up.fxml",
               new BonusTokenPopUpController(gameId, playerActionMap),
-              360,
+              600,
               170);
         });
       });
@@ -555,7 +555,7 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("bonus_token_pop_up.fxml",
             new BonusTokenPopUpController(gameId, playerActionMap),
-            360,
+            600,
             170);
       });
     }
