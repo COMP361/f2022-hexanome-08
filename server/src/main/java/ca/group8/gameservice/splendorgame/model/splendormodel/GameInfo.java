@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The class that contains basic game information on the board, supports long polling.
@@ -115,44 +117,44 @@ public class GameInfo implements BroadcastContent {
    * @param newPlayerNames the current player names who want to play this game
    */
   public void renamePlayers(List<String> newPlayerNames, String creator) {
-    if (!newPlayerNames.equals(this.playerNames)) {
-      this.playerNames = newPlayerNames;
-      this.creator = creator;
-      List<String> freshPlayerNames = new ArrayList<>();
-      for (String newName : newPlayerNames) {
-        if (!playerNames.contains(newName)) {
-          freshPlayerNames.add(newName);
-        }
+    this.creator = creator;
+    List<String> freshPlayerNames = new ArrayList<>();
+    for (String newName : newPlayerNames) {
+      if (!playerNames.contains(newName)) {
+        freshPlayerNames.add(newName);
       }
-
-      // the old first player is not in here, randomly choose one from
-      // the fresh player names, otherwise do not need to change
-      // the old names
-      if (!newPlayerNames.contains(firstPlayerName)) {
-        int randomIndex = new Random().nextInt(freshPlayerNames.size());
-        firstPlayerName = freshPlayerNames.get(randomIndex);
-
-      }
-
-      if (!newPlayerNames.contains(currentPlayer)) {
-        currentPlayer = firstPlayerName;
-      }
-
-      // re-sort the order of names
-      newPlayerNames.remove(firstPlayerName);
-      newPlayerNames.add(0, firstPlayerName);
-
-      // rename all boards if necessary (base and orient do not need updates)
-      for (Extension extension : tableTop.getGameBoards().keySet()) {
-        tableTop.getBoard(extension).renamePlayers(newPlayerNames);
-      }
-      // rename action map names
-      Map<String, Map<String, Action>> newActionMap = new HashMap<>();
-      for (String newName : newPlayerNames) {
-        newActionMap.put(newName, new HashMap<>());
-      }
-      playerActionMaps = newActionMap;
     }
+    Logger logger = LoggerFactory.getLogger(GameInfo.class);
+    // the old first player is not in here, randomly choose one from
+    // the fresh player names, otherwise do not need to change
+    // the old names
+    logger.warn("new player names: " + newPlayerNames);
+    logger.warn("fresh player names: " + freshPlayerNames);
+    if (!newPlayerNames.contains(firstPlayerName)) {
+      int randomIndex = new Random().nextInt(freshPlayerNames.size());
+      firstPlayerName = freshPlayerNames.get(randomIndex);
+
+    }
+
+    if (!newPlayerNames.contains(currentPlayer)) {
+      currentPlayer = firstPlayerName;
+    }
+
+    // re-sort the order of names (new player names are now sorted)
+    newPlayerNames.remove(firstPlayerName);
+    newPlayerNames.add(0, firstPlayerName);
+    playerNames = newPlayerNames;
+
+    // rename all boards if necessary (base and orient do not need updates)
+    for (Extension extension : tableTop.getGameBoards().keySet()) {
+      tableTop.getBoard(extension).renamePlayers(newPlayerNames);
+    }
+    // rename action map names
+    Map<String, Map<String, Action>> newActionMap = new HashMap<>();
+    for (String newName : newPlayerNames) {
+      newActionMap.put(newName, new HashMap<>());
+    }
+    playerActionMaps = newActionMap;
   }
 
   @Override

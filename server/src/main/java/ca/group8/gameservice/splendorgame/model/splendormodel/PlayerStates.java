@@ -56,16 +56,11 @@ public class PlayerStates implements BroadcastContent {
     List<String> oldNames = new ArrayList<>(playersInfo.keySet());
     List<String> newNamesCopy = new ArrayList<>(newNames);
     List<String> assignedPlayers = new ArrayList<>();
-    Logger logger = LoggerFactory.getLogger(PlayerStates.class);
-
     if (!newNames.equals(oldNames)) {
       Map<String, PlayerInGame> newPlayerMap = new HashMap<>();
       // for the old names, find their old data and assign it to them
       for (String oldName : oldNames) {
         // if any oldName match a new name, remove this old name from newNameCopy list
-        logger.warn("Old names: " + oldNames);
-        logger.warn("New names: " + newNames);
-        logger.warn("New names copy: " + newNamesCopy);
         if (newNames.contains(oldName)) {
           newPlayerMap.put(oldName, playersInfo.get(oldName));
           newNamesCopy.remove(oldName);
@@ -95,7 +90,6 @@ public class PlayerStates implements BroadcastContent {
 
       // in the end, overwrite the previous map
       playersInfo = newPlayerMap;
-      logger.warn("new players info: " + playersInfo);
     }
   }
 

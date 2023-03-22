@@ -75,23 +75,38 @@ public class CityBoard extends Board {
    * Call this method to rename the player names if the ones who want to play now does not.
    * match with the ones who saved this game before.
    *
-   * @param playerNames the current player names who want to play this game
+   * @param newNames the current player names who want to play this game
    */
   @Override
-  public void renamePlayers(List<String> playerNames) {
-    List<String> curNames = new ArrayList<>(playerCities.keySet());
-    // only update if names are different
-    if (!playerNames.equals(curNames)) {
-      int nameIndex = 0;
-      Map<String, CityCard> newCityMap = new HashMap<>();
-      for (String curName : playerCities.keySet()) {
-        CityCard curCard = playerCities.get(curName);
-        String newName = playerNames.get(nameIndex);
-        nameIndex += 1;
-        newCityMap.put(newName, curCard);
+  public void renamePlayers(List<String> newNames) {
+    List<String> oldNames = new ArrayList<>(playerCities.keySet());
+    List<String> newNamesCopy = new ArrayList<>(newNames);
+    List<String> assignedPlayers = new ArrayList<>();
+    Map<String, CityCard> newCityMap = new HashMap<>();
+    // for the old names, find their old data and assign it to them
+    for (String oldName : oldNames) {
+      // if any oldName match a new name, remove this old name from newNameCopy list
+      if (newNames.contains(oldName)) {
+        newCityMap.put(oldName, playerCities.get(oldName));
+        newNamesCopy.remove(oldName);
+        assignedPlayers.add(oldName);
       }
-      playerCities = newCityMap;
-
     }
+
+    int counter = 0;
+    for (String otherPlayerName : playerCities.keySet()) {
+      if (!assignedPlayers.contains(otherPlayerName)) {
+        CityCard oldCityCard = playerCities.get(otherPlayerName);
+        String newName = newNamesCopy.get(counter);
+        newCityMap.put(newName, oldCityCard);
+        counter += 1;
+      }
+      // finish assign all new players, end it
+      if (counter >= newNames.size()) {
+        break;
+      }
+    }
+    playerCities = newCityMap;
+
   }
 }

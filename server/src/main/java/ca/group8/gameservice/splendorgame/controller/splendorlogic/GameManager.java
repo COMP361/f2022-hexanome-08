@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -178,9 +179,7 @@ public class GameManager {
       throws ModelAccessException {
     // if we have a non-empty savegame id, then we load
     // the game content rather than creating new objects.
-    logger.info("Trying to launch a game");
     gameLauncherInfos.put(gameId, launcherInfo);
-
     // get all player names
     List<String> playerNames = launcherInfo
         .getPlayers()
@@ -189,20 +188,21 @@ public class GameManager {
         .collect(Collectors.toList());
 
     // randomly shuffle the playerNames
-
     if (!launcherInfo.getSavegame().isEmpty()) {
       String saveGameId = launcherInfo.getSavegame();
-
       Map<String, SavedGameState> savedGames;
       try {
         savedGames = readSavedGameDataFromFile();
         SavedGameState savedGame = savedGames.get(saveGameId);
         GameInfo newGameInfo = savedGame.getGameInfo();
-        //TODO: ONLY shuffle the names if it's not exact match
+        //TODO: ONLY shuffle the names if the names in the set do not match
         String creator = launcherInfo.getCreator();
-        if (!newGameInfo.getPlayerNames().equals(playerNames)) {
+        HashSet<String> oldNamesSet = new HashSet<>(newGameInfo.getPlayerNames());
+        HashSet<String> newNamesSet = new HashSet<>(playerNames);
+        if (!oldNamesSet.equals(newNamesSet)) {
           // rename the player names in this savedGameState
-          Collections.shuffle(playerNames);
+          // if the elements does not match exactly, need to
+          // rename the players
           savedGame.renamePlayers(playerNames, creator);
         }
         PlayerStates newPlayerStates = savedGame.getPlayerStates();
