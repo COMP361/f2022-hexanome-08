@@ -96,10 +96,15 @@ public class AdminPageController extends AbstractLobbyController {
       String title;
       String username = userName.getText();
       String password = userPassword.getText();
-      String pref_colour = newUserColourPicker.getValue().toString();
-      //pref_colour = pref_colour.substring(2,8);
+      Color prefColour = newUserColourPicker.getValue();
+      // Convert the color to a 16-byte encoded string
+      String colorString = String.format("%02X%02X%02X%02X",
+          (int) (prefColour.getRed() * 255),
+          (int) (prefColour.getGreen() * 255),
+          (int) (prefColour.getBlue() * 255),
+          (int) (prefColour.getOpacity() * 255));
       Role role = Role.valueOf("ROLE_" + rolesChoiceBox.getValue().toUpperCase(Locale.ROOT));
-      Player new_player = new Player(username, pref_colour, password,role);
+      Player new_player = new Player(username, colorString, password,role);
       //passing in name of player who we are adding
 
       try {
