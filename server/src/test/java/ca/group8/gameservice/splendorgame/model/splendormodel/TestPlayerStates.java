@@ -39,6 +39,6 @@ public class TestPlayerStates {
 
     @Test
     void isEmpty() {
-        assert (p1.isEmpty() == false);
+        assert (!p1.isEmpty());
     }
 }

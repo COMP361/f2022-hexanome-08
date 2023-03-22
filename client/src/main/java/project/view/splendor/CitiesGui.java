@@ -4,6 +4,7 @@ import ca.mcgill.comp361.splendormodel.model.CityCard;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import project.App;
 
 /**
  * It shows the CitiesGui display.
@@ -52,12 +53,13 @@ public class CitiesGui extends VBox {
     setLayoutY(layoutY);
     setSpacing(citySpace);
     for (CityCard city : allCities) {
-      String cityName = city.getCardName();
-      Image img = new Image(String.format("project/pictures/cities/%s.png", cityName));
-      ImageView imgv = new ImageView(img);
-      imgv.setFitWidth(cityWidth);
-      imgv.setFitHeight(cityHeight);
-      this.getChildren().add(imgv);
+      if (city != null) {
+        Image img = new Image(App.getCityPath(city));
+        ImageView imgv = new ImageView(img);
+        imgv.setFitWidth(cityWidth);
+        imgv.setFitHeight(cityHeight);
+        this.getChildren().add(imgv);
+      }
     }
   }
 }

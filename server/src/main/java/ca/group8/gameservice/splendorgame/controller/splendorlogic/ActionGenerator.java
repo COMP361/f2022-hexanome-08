@@ -3,7 +3,9 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.CityCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
@@ -12,6 +14,8 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
+import ca.group8.gameservice.splendorgame.model.splendormodel.ReservedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
 import com.google.common.collect.Sets;
@@ -25,6 +29,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -60,6 +66,7 @@ public class ActionGenerator {
 
 
   // Translate all dev cards on base/orient board to reserve actions
+  // NOTE: A dummy card has prestige points = -1
   private List<Action> cardsToReserveAction(BaseBoard baseBoard,
                                             OrientBoard orientBoard,
                                             PlayerInGame curPlayerInfo) {
@@ -70,12 +77,18 @@ public class ActionGenerator {
         DevelopmentCard[] baseLevelCards = baseBoard.getLevelCardsOnBoard(level);
         DevelopmentCard[] orientLevelCards = orientBoard.getLevelCardsOnBoard(level);
         // generate reserve action for the first card of deck, not poped yet
-        DevelopmentCard baseCardFromDeck = baseBoard.getDecks().get(level).get(0);
-        DevelopmentCard orientCardFromDeck = orientBoard.getDecks().get(level).get(0);
-        // the Y index as -1 to represent the deck position
-        result.add(new ReserveAction(new Position(level, -1), baseCardFromDeck));
-        result.add(new ReserveAction(new Position(level, -1), orientCardFromDeck));
+        if (!baseBoard.getDecks().get(level).isEmpty()) {
+          DevelopmentCard baseCardFromDeck = baseBoard.getDecks().get(level).get(0);
+          result.add(new ReserveAction(new Position(level, -1), baseCardFromDeck));
+        }
 
+        if (!orientBoard.getDecks().get(level).isEmpty()) {
+          DevelopmentCard orientCardFromDeck = orientBoard.getDecks().get(level).get(0);
+          // the Y index as -1 to represent the deck position
+          result.add(new ReserveAction(new Position(level, -1), orientCardFromDeck));
+        }
+
+        //TODO: Note, a card might be dummy in here!!!!
         for (int cardIndex = 0; cardIndex < baseLevelCards.length; cardIndex++) {
           Position cardPosition = new Position(level, cardIndex);
           DevelopmentCard card = baseLevelCards[cardIndex];
@@ -127,7 +140,7 @@ public class ActionGenerator {
           continue; // this card can not be bought
         }
         // always generate reserve actions for base cards for index 0,1,2,3
-        EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        EnumMap<Colour, Integer> tokensPaid = new EnumMap<>(card.getPrice());
         for (Colour c : totalGems.keySet()) {
           if (c.equals(Colour.GOLD)) {
             continue;
@@ -164,12 +177,34 @@ public class ActionGenerator {
         int goldCardsNeeded = 0;
         final Position cardPosition = new Position(level, cardIndex);
         DevelopmentCard card = orientLevelCards[cardIndex];
+
+        //if orient card is a burn card
+        if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
+          Colour cardsColour = null;
+          for (Colour color : card.getPrice().keySet()){
+            if (card.getPrice().get(color) == 2) {
+              cardsColour = color;
+              if ( curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
+                result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
+              }
+              break;
+            }
+          }
+          continue;
+        }
+
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
         }
         // always generate reserve actions for base cards for index 0,1,2,3
-        EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        //EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        EnumMap<Colour, Integer> tokensPaid = new EnumMap<>(card.getPrice());
+
+
+        // calculating the regular colour (RED,BLUE.... EXCLUDING GOLD) gem discount
+        // and modify the tokens that we actually need to pay before taking account
+        // of any gold token
         for (Colour c : totalGems.keySet()) {
           if (c.equals(Colour.GOLD)) {
             continue;
@@ -187,6 +222,9 @@ public class ActionGenerator {
           }
         }
 
+        //TODO: gold token needed can contain gold tokens (actual token)
+        // or gold gem (from double_gold) even we say it's "gold gem",
+        // but we treat it as gold token needed in here!
         if (goldTokenNeeded > 0) {
           int goldTokensInHand = totalTokens.get(Colour.GOLD);
           if (goldTokensInHand >= goldTokenNeeded) {
@@ -198,7 +236,30 @@ public class ActionGenerator {
         } else {
           tokensPaid.put(Colour.GOLD, 0);
         }
-        result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+        PurchasedHand purchasedHand = curPlayerInfo.getPurchasedHand();
+        List<DevelopmentCard> cardsInHand = purchasedHand.getDevelopmentCards();
+        boolean hasSatchel = card.getPurchaseEffects().contains(CardEffect.SATCHEL);
+        boolean hasCardToPair = false;
+        for (DevelopmentCard developmentCard : cardsInHand) {
+          // if a card is not gold, not paired, has gem num at least 1, means we can pair something
+          // so that the satchel we are about to buy is allowed to be bought
+          if(!developmentCard.getGemColour().equals(Colour.GOLD) &&
+              developmentCard.getGemNumber() >= 1 && !developmentCard.isPaired()) {
+            hasCardToPair = true;
+            break;
+          }
+        }
+
+        //no gold cards ever required for burn, therefore always set to 0
+        //set card price to its original price (no discounts on burn cards)
+        if (!hasSatchel) {
+          result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+        } else {
+          if (hasCardToPair) {
+            result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+          }
+        }
+
       }
     }
 
@@ -211,12 +272,29 @@ public class ActionGenerator {
         //x coordinate = 0, means this is a card in the reserve hand!
         final Position cardPosition = new Position(0, cardIndex);
         DevelopmentCard card = reservedCards[cardIndex];
+
+        //if is burn card
+        if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
+          Colour cardsColour = null;
+          for (Colour color : card.getPrice().keySet()){
+            if (card.getPrice().get(color) == 2) {
+              cardsColour = color;
+              if ( curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
+                result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
+              }
+              break;
+            }
+          }
+          continue;
+        }
+
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
         }
         // always generate reserve actions for base cards for index 0,1,2,3
-        EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        //EnumMap<Colour, Integer> tokensPaid = card.getPrice();
+        EnumMap<Colour, Integer> tokensPaid = new EnumMap<>(card.getPrice());
         for (Colour c : totalGems.keySet()) {
           if (c.equals(Colour.GOLD)) {
             continue;
@@ -245,7 +323,30 @@ public class ActionGenerator {
         } else {
           tokensPaid.put(Colour.GOLD, 0);
         }
-        result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+
+        PurchasedHand purchasedHand = curPlayerInfo.getPurchasedHand();
+        List<DevelopmentCard> cardsInHand = purchasedHand.getDevelopmentCards();
+        boolean hasSatchel = card.getPurchaseEffects().contains(CardEffect.SATCHEL);
+        boolean hasCardToPair = false;
+        for (DevelopmentCard developmentCard : cardsInHand) {
+          // if a card is not gold, not paired, has gem num at least 1, means we can pair something
+          // so that the satchel we are about to buy is allowed to be bought
+          if(!developmentCard.getGemColour().equals(Colour.GOLD) &&
+              developmentCard.getGemNumber() >= 1 && !developmentCard.isPaired()) {
+            hasCardToPair = true;
+            break;
+          }
+        }
+
+        if (!hasSatchel) {
+          result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+        } else {
+          if (hasCardToPair) {
+            result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+          }
+        }
+
+        //result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
       }
     }
 
@@ -259,10 +360,8 @@ public class ActionGenerator {
     boolean hasTwoPlusOnePower = false;
     String playerName = curPlayerInfo.getName();
     if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
-      TraderBoard traderBoard = (TraderBoard) tableTop
-              .getBoard(Extension.TRADING_POST);
-      hasTwoPlusOnePower = traderBoard
-              .getPlayerOnePower(playerName, PowerEffect.TWO_PLUS_ONE)
+      TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
+      hasTwoPlusOnePower = traderBoard.getPlayerOnePower(playerName, PowerEffect.TWO_PLUS_ONE)
               .isUnlocked();
     }
     // if bank has only 2 token or less left to be taken
@@ -280,21 +379,26 @@ public class ActionGenerator {
     for (Colour colour : tokenLeft.keySet()) {
       EnumMap<Colour, Integer> twoSameColourTokens = new EnumMap<>(rawMap);
       if (tokenLeft.get(colour) >= 4) {
+        // template map set up, might or might not be translated into one action
         twoSameColourTokens.put(colour, 2);
-        result.add(new TakeTokenAction(twoSameColourTokens));
-      }
-
-      // generate more cases if the player has the 2+1 power on
-      if (hasTwoPlusOnePower) {
-        List<Colour> otherColours = tokenLeft.keySet()
-            .stream()
-            .filter(c -> !c.equals(colour))
-            .collect(Collectors.toList());
-        for (Colour colour2 : otherColours) {
-          EnumMap<Colour, Integer> twoPlusOneTokens = new EnumMap<>(twoSameColourTokens);
-          if (tokenLeft.get(colour2) >= 1) {
-            twoPlusOneTokens.put(colour2, 1);
-            result.add(new TakeTokenAction(twoPlusOneTokens));
+        // if we do not have the power, then adding comb of 2 is fine when num >= 4
+        if (!hasTwoPlusOnePower) {
+          result.add(new TakeTokenAction(twoSameColourTokens));
+        }
+        // if we have this power on, then:
+        // 1. we generate ONLY 2+1 if bank allows
+        // 2. we generate ONLY 2 if bank allows
+        else {
+          List<Colour> otherColours = tokenLeft.keySet()
+              .stream()
+              .filter(c -> !c.equals(colour))
+              .collect(Collectors.toList());
+          for (Colour colour2 : otherColours) {
+            EnumMap<Colour, Integer> twoPlusOneTokens = new EnumMap<>(twoSameColourTokens);
+            if (tokenLeft.get(colour2) >= 1) {
+              twoPlusOneTokens.put(colour2, 1);
+              result.add(new TakeTokenAction(twoPlusOneTokens));
+            }
           }
         }
       }
@@ -381,71 +485,84 @@ public class ActionGenerator {
       for (int i = 0; i < baseCardsToFree.length; i++) {
         Position position = new Position(freeLevel, i);
         DevelopmentCard curCard = baseCardsToFree[i];
-        cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+        if (curCard.getPrestigePoints() >= 0) {
+          // only create the action if it's not dummy card
+          cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+        }
+
       }
 
       DevelopmentCard[] orientCardsToFree = orientBoard.getLevelCardsOnBoard(freeLevel);
       for (int i = 0; i < orientCardsToFree.length; i++) {
         Position position = new Position(freeLevel, i);
         DevelopmentCard curCard = orientCardsToFree[i];
-        cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+        if (curCard.getPrestigePoints() >= 0) {
+          // only create the action if it's not dummy card
+          cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+        }
+      }
+      Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
+      for (Action action : cascadeActions) {
+        CardExtraAction extraAction = (CardExtraAction) action;
+        logger.warn("Looking at card: " + extraAction.getCurCard().getCardName());
+        //logger.warn(String.valueOf(cascadeActions
       }
     }
 
     if (cardEffect.equals(CardEffect.BURN_CARD)) {
-      List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
-      Colour burnColourPrice = null;
-      EnumMap<Colour, Integer> cardPrice = purchasedCard.getPrice();
-      for (Colour colour : cardPrice.keySet()) {
-        if (cardPrice.get(colour) > 0) {
-          burnColourPrice = colour;
-          break;
+        List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
+        Colour burnColourPrice = null;
+        EnumMap<Colour, Integer> cardPrice = purchasedCard.getPrice();
+        for (Colour colour : cardPrice.keySet()) {
+          if (cardPrice.get(colour) > 0) {
+            burnColourPrice = colour;
+            break;
+          }
         }
-      }
-      // iterate to find the card in player's hand to find which card colour to burn
-      Colour finalBurnColourPrice = burnColourPrice;
-      List<Integer> pairedCardIndices = IntStream.range(0, cardsInHand.size())
-          .filter(i -> cardsInHand.get(i).isPaired())
-          .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
-          .boxed()
-          .collect(Collectors.toList());
-
-      // if there is no paired card to use
-      if (pairedCardIndices.size() == 0) {
-        List<Integer> sameColourCardsIndices = IntStream.range(0, cardsInHand.size())
+        // iterate to find the card in player's hand to find which card colour to burn
+        Colour finalBurnColourPrice = burnColourPrice;
+        List<Integer> pairedCardIndices = IntStream.range(0, cardsInHand.size())
+            .filter(i -> cardsInHand.get(i).isPaired())
             .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
             .boxed()
             .collect(Collectors.toList());
 
-        for (int i : sameColourCardsIndices) {
-          Position position = new Position(0, i);
-          DevelopmentCard card = cardsInHand.get(i);
-          cascadeActions.add(new CardExtraAction(card, cardEffect, position));
+        // if there is no paired card to use
+        if (pairedCardIndices.size() == 0) {
+          List<Integer> sameColourCardsIndices = IntStream.range(0, cardsInHand.size())
+              .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
+              .boxed()
+              .collect(Collectors.toList());
+
+          for (int i : sameColourCardsIndices) {
+            Position position = new Position(0, i);
+            DevelopmentCard card = cardsInHand.get(i);
+            cascadeActions.add(new CardExtraAction(card, cardEffect, position));
+          }
+        }
+        // if there is 1 or more than 1 paired card to use
+        if (pairedCardIndices.size() >= 1) {
+          for (int i : pairedCardIndices) {
+            Position position = new Position(0, i);
+            DevelopmentCard card = cardsInHand.get(i);
+            cascadeActions.add(new CardExtraAction(card, cardEffect, position));
+          }
         }
       }
-      // if there is 1 or more than 1 paired card to use
-      if (pairedCardIndices.size() >= 1) {
-        for (int i : pairedCardIndices) {
-          Position position = new Position(0, i);
-          DevelopmentCard card = cardsInHand.get(i);
-          cascadeActions.add(new CardExtraAction(card, cardEffect, position));
-        }
-      }
-    }
 
     if (cardEffect.equals(CardEffect.SATCHEL)) {
-      List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
-      List<Integer> unpairedCardsIndices = IntStream.range(0, cardsInHand.size())
-          .filter(i -> !cardsInHand.get(i).isPaired())
-          .boxed()
-          .collect(Collectors.toList());
-      for (int i : unpairedCardsIndices) {
-        Position position = new Position(0, i);
-        DevelopmentCard card = cardsInHand.get(i);
-        cascadeActions.add(new CardExtraAction(card, cardEffect, position));
-      }
+        List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
+        List<Integer> unpairedCardsIndices = IntStream.range(0, cardsInHand.size())
+            .filter(i -> !cardsInHand.get(i).isPaired())
+            .boxed()
+            .collect(Collectors.toList());
+        for (int i : unpairedCardsIndices) {
+          Position position = new Position(0, i);
+          DevelopmentCard card = cardsInHand.get(i);
+          cascadeActions.add(new CardExtraAction(card, cardEffect, position));
+        }
 
-    }
+      }
 
     Map<String, Action> actionMap = new HashMap<>();
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
@@ -459,6 +576,7 @@ public class ActionGenerator {
     playerActionMaps.put(playerName, actionMap);
   }
 
+
   /**
    * updateBonusTokenPowerActions.
    *
@@ -469,7 +587,7 @@ public class ActionGenerator {
     EnumMap<Colour, Integer> rawMap = SplendorDevHelper.getInstance().getRawTokenColoursMap();
     EnumMap<Colour, Integer> bankTokens = tableTop.getBank().getAllTokens();
     for (Colour colour : rawMap.keySet()) {
-      if (bankTokens.get(colour) > 0) {
+      if (bankTokens.get(colour) > 0 && !colour.equals(Colour.GOLD)) {
         actions.add(new BonusTokenPowerAction(player, colour));
       }
     }
@@ -481,24 +599,25 @@ public class ActionGenerator {
       actionMap.put(actionId, action);
     }
     String playerName = player.getName();
+    Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
+    logger.warn("Bonous token Action map is: " + String.valueOf(actionMap.values()));
     playerActionMaps.put(playerName, actionMap);
   }
 
   /**
    * Update the actions of which noble to claim.
    *
-   * @param nobleIndices nobleIndices
+   * @param noblePositions noblePositions
    * @param playerInGame playerInGame
    */
-  public void updateClaimNobleActions(List<Integer> nobleIndices, PlayerInGame playerInGame) {
-    BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
-    List<Action> result = new ArrayList<>();
-    for (int i : nobleIndices) {
-      NobleCard nobleCard = baseBoard.getNobles().get(i);
-      Position noblePosition = new Position(0, i);
-      result.add(new ClaimNobleAction(nobleCard, noblePosition));
-    }
+  public void updateClaimNobleActions(List<Position> noblePositions, List<NobleCard> noblesUnlocked,
+                                      PlayerInGame playerInGame) {
 
+    assert noblePositions.size() == noblesUnlocked.size();
+    List<Action> result = new ArrayList<>();
+    for (int i = 0; i < noblePositions.size(); i++) {
+      result.add(new ClaimNobleAction(noblesUnlocked.get(i), noblePositions.get(i)));
+    }
     Map<String, Action> actionMap = new HashMap<>();
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     for (Action action : result) {
@@ -524,7 +643,8 @@ public class ActionGenerator {
         put(Colour.BLACK, 0);
         put(Colour.GREEN, 0);
         put(Colour.WHITE, 0);
-      }};
+        put(Colour.GOLD, 0);
+    }};
 
     // generate all combinations based extra token count
     if (extraTokenCount == 1) {
@@ -571,7 +691,6 @@ public class ActionGenerator {
       for (Colour c : rawMap.keySet()) {
         EnumMap<Colour, Integer> curMap = new EnumMap<>(rawMap);
         curMap.put(c, 2);
-        allCombos.add(curMap);
         List<Colour> otherColours = curMap.keySet().stream()
             .filter(c2 -> !c2.equals(c))
             .collect(Collectors.toList());
@@ -583,27 +702,46 @@ public class ActionGenerator {
       }
     }
 
+    Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
+    String sizeBefore = Integer.toString(allCombos.size());
+    logger.info("Size before" + sizeBefore);
+    List<EnumMap<Colour,Integer>> allCombinations = allCombos.stream().filter(c -> c.get(Colour.GOLD)==0).collect(Collectors.toList());
+    String sizeAfter = Integer.toString(allCombinations.size());
+    logger.info("Size after" + sizeAfter);
     // after all combinations, we generate the actions
     EnumMap<Colour, Integer> playerTokens = playerInGame.getTokenHand().getAllTokens();
     List<Action> returnTokenActions = new ArrayList<>();
-    for (EnumMap<Colour, Integer> combo : allCombos) {
+    for (EnumMap<Colour, Integer> combo : allCombinations) {
       boolean isValid = true;
+      logger.warn("Looking at comb: " + combo);
       for (Colour colour : combo.keySet()) {
+        // skip the condition check for gold token
+        if (colour.equals(Colour.GOLD) || colour.equals(Colour.ORIENT)) {
+          continue;
+        }
+        logger.warn("Cur colour: " + colour);
         if (playerTokens.get(colour) < combo.get(colour)) {
+          logger.warn("No enough token to return");
+          logger.warn("Player tokens: " + playerTokens.get(colour));
+          logger.warn("Combo tokens: " + playerTokens.get(colour));
+
           isValid = false;
         }
         // if the return went over the initial value, we do not allow it as well
         int upperBound = tableTop.getBank().getInitialValue();
         EnumMap<Colour, Integer> bankBalance = tableTop.getBank().getAllTokens();
         if (bankBalance.get(colour) + combo.get(colour) > upperBound) {
+          logger.warn("After return: " + bankBalance.get(colour) + combo.get(colour));
+          logger.warn("Upper bound: " + upperBound);
           isValid = false;
         }
       }
       if (isValid) {
+        combo.put(Colour.GOLD,0);
         returnTokenActions.add(new ReturnTokenAction(combo, extraTokenCount));
       }
     }
-
+    logger.warn("All return tokens on server side: " + returnTokenActions);
     Map<String, Action> actionMap = new HashMap<>();
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     for (Action action : returnTokenActions) {
@@ -615,6 +753,22 @@ public class ActionGenerator {
     playerActionMaps.put(playerName, actionMap);
   }
 
+  public void updateClaimCityActions(List<CityCard> unlockedCityCards, String playerName) {
+    List<ClaimCityAction> claimCityActions = new ArrayList<>();
+    for (CityCard unlockedCityCard : unlockedCityCards) {
+      claimCityActions.add(new ClaimCityAction(unlockedCityCard));
+    }
+
+    Map<String, Action> actionMap = new HashMap<>();
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+    for (Action action : claimCityActions) {
+      String actionJson = gsonParser.toJson(action, ClaimCityAction.class);
+      String actionId = DigestUtils.md5Hex(actionJson).toUpperCase();
+      actionMap.put(actionId, action);
+    }
+    playerActionMaps.put(playerName, actionMap);
+  }
+
 
   public Map<String, Map<String, Action>> getPlayerActionMaps() {
     return playerActionMaps;
@@ -623,135 +777,5 @@ public class ActionGenerator {
   public TableTop getTableTop() {
     return tableTop;
   }
-
-  //EVERYTHING AFTER THIS IS OLD CODE (not up to date based on M6 model)
-  /*
-   * 1. create a new map -- DONE
-   * - get player wealth
-   * - get flag
-   * 2. Get list of cards from Base Board (baseBoardCards)
-   * 3. Iterate through baseBoardCards -->
-   * 3a. call getPosition() on base board object, and pass in the card
-   * 3b. verify if you can purchase card --> If yes, create purchase card action [PARAM: WEALTH]
-   * 3c. verify if you can reserve card
-   * 4. return the map
-   */
-  /*
-  //TODO
-  private static List<Action> cardsToActions(GameInfo gameInfo, PlayerInGame player) {
-    List<Action> actionOptions = new ArrayList<>();
-    EnumMap<Colour, Integer> wealth = player.getWealth();
-    boolean canReserve = !player.getReservedHand().isFull();
-   /*
-    Map<Integer, List<BaseCard>> baseBoardCards =
-        gameInfo.getTableTop().getBaseBoard().getBaseCardsOnBoard();
-
-    for (int level : baseBoardCards.keySet()) {
-      List<BaseCard> cardsPerLevel = baseBoardCards.get(level);
-      for (int cardIndex = 0; cardIndex < cardsPerLevel.size(); cardIndex++) {
-        Position cardPosition = new Position(level, cardIndex);
-        BaseCard curBaseCard = cardsPerLevel.get(cardIndex);
-        //start of purchase card verification
-        //this creates a goldCounter, to see if gold tokens are needed
-        int goldCounter = 0;
-        EnumMap<Colour, Integer> cardPrice = curBaseCard.getPrice();
-        for (Colour col : Colour.values()) {
-          if (col.equals(Colour.GOLD)) {
-            continue;
-          }
-          if (cardPrice.get(col) != 0) {
-            if (cardPrice.get(col) > wealth.get(col)) {
-              goldCounter += cardPrice.get(col) - wealth.get(col);
-            }
-          }
-        }
-
-        //checks if you can purchase (with or without gold tokens)
-        if (goldCounter <= player.getTokenHand().getGoldTokenNumber()) {
-          //create new purchase action option & add it to the actionList.
-          actionOptions.add(new PurchaseAction(cardPosition, curBaseCard, goldCounter));
-
-        }
-        //verify if player can reserve card
-        if (canReserve) {
-          actionOptions.add(new ReserveAction(cardPosition, curBaseCard));
-        }
-      }
-    }
-
-
-
-    return actionOptions;
-  }
-   */
-
-  /*
-   * Generate the hash -> Actions map provided: gameId, playerName (implicitly in PlayerInGame).
-   * will be called everytime GET games/{gameId}/players/{playerName}/actions
-   * will replace the previous Action Map every time
-   */
-  /*
-  public void generateActions(long gameId, GameInfo gameInfo, PlayerInGame player) {
-
-    // TODO: Player Identity will be verified before calling generateActions with access_token
-    //  no need to check it here (we can safely assume player is valid before calling this)
-    String curPlayerName = gameInfo.getCurrentPlayer();
-    String askedActionsPlayerName = player.getName();
-    Map<String, Action> hashActionMap = new HashMap<>();
-    if ((!gameInfo.isFinished()) && (curPlayerName.equals(askedActionsPlayerName))) {
-      // only generate the actions if the game is NOT finished and
-      // the player asked for actions IS the current turn player
-
-      // adding cardActions
-      for (Action action : cardsToActions(gameInfo, player)) {
-        String actionMd5 = DigestUtils.md5Hex(new Gson().toJson(action)).toUpperCase();
-        hashActionMap.put(actionMd5, action);
-      }
-      EnumMap<Colour, Integer> playerTokens = player.getTokenHand().getAllTokens();
-      TakeTokenAction takeTokenAction = new TakeTokenAction(playerTokens);
-      String takeTokenActionMd5 =
-          DigestUtils.md5Hex(new Gson().toJson(takeTokenAction)).toUpperCase();
-
-      // add the take token actions (card unrelated actions)
-      hashActionMap.put(takeTokenActionMd5, takeTokenAction);
-    }
-
-    /*
-    // once the hash -> Action map is ready, we add it for this specific player
-    if (!actionLookUpMap.containsKey(gameId)) {
-      // if the gameId is not recorded, means we have no players' actions, thus we are adding
-      // the first player
-      Map<String, Map<String, Action>> playerSpecificActionsMap = new HashMap<>();
-      playerSpecificActionsMap.put(askedActionsPlayerName, hashActionMap);
-      actionLookUpMap.put(gameId, playerSpecificActionsMap);
-    } else {
-      // otherwise, we must have at least one player name stored in the map, therefore we
-      // can for sure get the Map<String, Map<String, Action>>
-      // then either overwrites or adding new action map
-      Map<String, Map<String, Action>> playerSpecificActionsMap = actionLookUpMap.get(gameId);
-      playerSpecificActionsMap.put(askedActionsPlayerName, hashActionMap);
-    }
-
-  }
-
- */
-
-
-  /*
-   * Find the (potentially, might be empty map) previously generated hash -> Action map
-   * when receive POST request on games/{gameId}/players/{playerName}/actions/{actionId}
-   * first call this method to find the map, then with {actionId} provided, we can find the
-   * right Action to execute.
-   */
-  /*
-  public Map<String, Action> lookUpActions(long gameId, String playerName) {
-    // whether player is in the game or not will be checked in RestController class
-    // if this is an empty map, then there is no need to look up actionMd5, just reply
-    // with a bad_request
-    return this.actionLookUpMap.get(gameId).get(playerName);
-  }
-
-   */
-
 
 }

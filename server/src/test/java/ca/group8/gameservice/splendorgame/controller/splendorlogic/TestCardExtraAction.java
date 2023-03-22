@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
@@ -65,7 +66,7 @@ public class TestCardExtraAction {
     CardExtraAction freeCard = new CardExtraAction(devCard,CardEffect.FREE_CARD,
         new Position(1,0));
     freeCard.freeCardActionHelper(gameInfo.getTableTop(),playerInGame,actionInterpreter);
-    assertFalse(b1.getLevelCardsOnBoard(1)[0].equals(devCard));
+    assertNotEquals(b1.getLevelCardsOnBoard(1)[0], devCard);
   }
 
   //@Test

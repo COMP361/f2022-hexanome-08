@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.Test;
@@ -109,7 +110,6 @@ public class TestGameManager{
     // observe the player actions after loading the file
     GameInfo gameInfo = savedGameState.getGameInfo();
     PlayerStates playerStates = savedGameState.getPlayerStates();
-    ActionInterpreter actionInterpreter = savedGameState.getActionInterpreter();
     System.out.println();
 
   }

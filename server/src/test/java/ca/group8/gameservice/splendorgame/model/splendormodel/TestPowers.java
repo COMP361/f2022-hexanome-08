@@ -4,8 +4,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -98,6 +102,36 @@ public class TestPowers {
 
   }
 
+  @org.junit.Test
+  public void test() {
+    Map<String,Integer> playersInfo = new HashMap<>();
+    playersInfo.put("ruoyu", 1);
+    playersInfo.put("julia", 3);
+    playersInfo.put("pengyu", 12);
+
+    List<String> oldNames = new ArrayList<>(playersInfo.keySet());
+    List<String> newNames = Arrays.asList("ruoyu", "muzhi", "eden");
+    List<String> newNamesCopy = new ArrayList<>(newNames);
+    if (!newNames.equals(oldNames)) {
+      Map<String, Integer> newPlayerMap = new HashMap<>();
+      for (String oldName : playersInfo.keySet()) {
+        // if any oldName match a new name, remove this old name from newNameCopy list
+        if (newNames.contains(oldName)) {
+          newPlayerMap.put(oldName, playersInfo.get(oldName));
+          newNamesCopy.remove(oldName);
+        } else {
+          int randomNewNameIndex = new Random().nextInt(newNamesCopy.size());
+          String newName = newNamesCopy.get(randomNewNameIndex);
+          Integer newPlayerInGame = playersInfo.get(oldName);
+          newPlayerMap.put(newName, newPlayerInGame);
+          newNamesCopy.remove(newName);
+        }
+      }
+      System.out.println(newPlayerMap);
+      // in the end, overwrite the previous map
+      playersInfo = newPlayerMap;
+    }
+  }
   //@Test
   //void TestUnlock() {
   //  TwoPlusOnePower power = new TwoPlusOnePower();

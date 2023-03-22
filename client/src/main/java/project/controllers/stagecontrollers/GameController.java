@@ -2,7 +2,10 @@ package project.controllers.stagecontrollers;
 
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
+import ca.mcgill.comp361.splendormodel.actions.BonusTokenPowerAction;
 import ca.mcgill.comp361.splendormodel.actions.CardExtraAction;
+import ca.mcgill.comp361.splendormodel.actions.ClaimCityAction;
+import ca.mcgill.comp361.splendormodel.actions.ClaimNobleAction;
 import ca.mcgill.comp361.splendormodel.model.CardEffect;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.Extension;
@@ -15,8 +18,8 @@ import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import ca.mcgill.comp361.splendormodel.model.TableTop;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -39,10 +42,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
-import project.controllers.popupcontrollers.GameOverPopUpController;
-import project.controllers.popupcontrollers.PurchaseHandController;
-import project.controllers.popupcontrollers.ReservedHandController;
-import project.controllers.popupcontrollers.SaveGamePopUpController;
+import project.controllers.popupcontrollers.*;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
 import project.view.splendor.BaseBoardGui;
@@ -63,12 +63,7 @@ import project.view.splendor.VerticalPlayerInfoGui;
  */
 public class GameController implements Initializable {
 
-
-  private final Rectangle coverRectangle = new Rectangle(
-      App.getGuiLayouts().getAppWidth(),
-      App.getGuiLayouts().getAppHeight());
   private final long gameId;
-  private final Session curSession;
   private final Map<Integer, BaseCardLevelGui> baseCardGuiMap = new HashMap<>();
   private final Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap = new HashMap<>();
   private final Map<String, Integer> nameToArmCodeMap = new HashMap<>();
@@ -84,6 +79,10 @@ public class GameController implements Initializable {
   private Button myCardButton;
   @FXML
   private Button saveButton;
+
+  @FXML
+  private Button pendingActionButton;
+
   @FXML
   private Button myReservedCardsButton;
   @FXML
@@ -94,16 +93,24 @@ public class GameController implements Initializable {
   private List<String> sortedPlayerNames = new ArrayList<>();
   private Thread playerInfoThread;
   private Thread mainGameUpdateThread;
+  
+  private String viewerName = null;
+  
+  private boolean inWatchMode = false;
 
   /**
    * GameController for the main page.
    *
-   * @param gameId gameId
-   * @param curSession curSession
+   * @param gameId     gameId
    */
-  public GameController(long gameId, Session curSession) {
+  public GameController(long gameId, String viewerName) {
     this.gameId = gameId;
-    this.curSession = curSession;
+    // set up for indicating this is a watch game or not
+    if (viewerName != null) {
+      this.viewerName = viewerName; 
+    } else {
+      inWatchMode = true;
+    }
     this.playerInfoThread = null;
     this.mainGameUpdateThread = null;
   }
@@ -118,33 +125,25 @@ public class GameController implements Initializable {
   //  App.setRoot("admin_lobby_page");
   //}
   private EventHandler<ActionEvent> createOpenMyReserveCardClick() {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
-      String curPlayerName = App.getUser().getUsername();
+      String curPlayerName = viewerName;
       String playerStatsJson = sender.sendGetAllPlayerInfoRequest(gameId, "").getBody();
       Gson gsonParser = SplendorDevHelper.getInstance().getGson();
       PlayerStates playerStates = gsonParser.fromJson(playerStatsJson, PlayerStates.class);
       // every time button click, we have up-to-date information
       PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
       ReservedHand reservedHand = playerInGame.getReservedHand();
-      String gameInfoJson;
-      try {
-        gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
-      } catch (UnirestException e) {
-        throw new RuntimeException(e);
-      }
+      String gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
       GameInfo gameInfo = gsonParser.fromJson(gameInfoJson, GameInfo.class);
-      String playerName = App.getUser().getUsername();
+      String playerName = viewerName;
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
-      try {
-        App.loadPopUpWithController("my_reserved_cards.fxml",
-            new ReservedHandController(reservedHand, playerActions, coverRectangle, gameId),
-            coverRectangle, 800, 600);
-
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("my_reserved_cards.fxml",
+          new ReservedHandController(reservedHand, playerActions, gameId),
+              config.getLargePopUpWidth(),
+              config.getLargePopUpHeight());
 
     };
   }
@@ -157,55 +156,48 @@ public class GameController implements Initializable {
    * @return the event defined to handle the assign controller and send requests.
    */
   private EventHandler<ActionEvent> createOpenMyPurchaseCardClick() {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
-      String curPlayerName = App.getUser().getUsername();
+      String curPlayerName = viewerName;
       String playerStatsJson = sender.sendGetAllPlayerInfoRequest(gameId, "").getBody();
       Gson gsonParser = SplendorDevHelper.getInstance().getGson();
       PlayerStates playerStates = gsonParser.fromJson(playerStatsJson, PlayerStates.class);
       // every time button click, we have up-to-date information
       PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
       PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
-      String gameInfoJson;
-      try {
-        gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
-      } catch (UnirestException e) {
-        throw new RuntimeException(e);
-      }
+      String gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
       GameInfo gameInfo = gsonParser.fromJson(gameInfoJson, GameInfo.class);
-      String playerName = App.getUser().getUsername();
+      String playerName = viewerName;
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
-      try {
-        App.loadPopUpWithController("my_development_cards.fxml",
-            new PurchaseHandController(gameId, purchasedHand, playerActions, coverRectangle),
-            coverRectangle,
-            800,
-            600);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("my_development_cards.fxml",
+          new PurchaseHandController(gameId, purchasedHand, playerActions),
+              config.getLargePopUpWidth(),
+              config.getLargePopUpHeight());
 
     };
   }
 
-  private List<String> sortPlayerNames(String curPlayerName, List<String> allPlayerNames) {
-    while (!allPlayerNames.get(0).equals(curPlayerName)) {
-      String tmpPlayerName = allPlayerNames.remove(0);
-      allPlayerNames.add(tmpPlayerName);
-    }
-    return new ArrayList<>(allPlayerNames);
-  }
 
-  //private Map<PlayerPosition, String> setPlayerToPosition(String curPlayerName,
-  //                                                        List<String> allPlayerNames) {
-  //  Map<PlayerPosition, String> resultMap = new HashMap<>();
-  //  List<String> orderedNames = sortPlayerNames(curPlayerName, allPlayerNames);
-  //  for (int i = 0; i < orderedNames.size(); i++) {
-  //    resultMap.put(PlayerPosition.values()[i], orderedNames.get(i));
-  //  }
-  //  return resultMap;
-  //}
+  private void clearAllPlayerInfoGui() {
+    if (!nameToPlayerInfoGuiMap.isEmpty()) {
+      for (PlayerInfoGui playerInfoGui : nameToPlayerInfoGuiMap.values()) {
+        Platform.runLater(() -> {
+          ObservableList<Node> mainBoardChildren = playerBoardAnchorPane.getChildren();
+          if (playerInfoGui instanceof VerticalPlayerInfoGui) {
+            mainBoardChildren.remove((VerticalPlayerInfoGui) playerInfoGui);
+          }
+          if (playerInfoGui instanceof HorizontalPlayerInfoGui) {
+            mainBoardChildren.remove((HorizontalPlayerInfoGui) playerInfoGui);
+          }
+
+        });
+      }
+      // clean the map
+      nameToPlayerInfoGuiMap.clear();
+    }
+  }
 
 
   /**
@@ -228,8 +220,11 @@ public class GameController implements Initializable {
       // TODO: Add updating number of noble reserved and number of dev cards reserved
       playerInfoGui.setNewPrestigePoints(newPoints);
       playerInfoGui.setNewTokenInHand(newTokenInHand);
-      System.out.println(App.getUser().getUsername() + " has tokens in hand: " + newTokenInHand);
-      System.out.println(App.getUser().getUsername() + " has gems in hand: " + gemsInHand);
+      System.out.println("Someone made a move:");
+      System.out.println(playerName + " has tokens in hand: " + newTokenInHand);
+      System.out.println(playerName + " has gems in hand: " + gemsInHand);
+      System.out.println("Update finish");
+      System.out.println();
       playerInfoGui.setGemsInHand(gemsInHand);
     });
   }
@@ -240,17 +235,18 @@ public class GameController implements Initializable {
       GameRequestSender gameRequestSender = App.getGameRequestSender();
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
-      try {
-        while (!Thread.currentThread().isInterrupted()) {
+
+      while (!Thread.currentThread().isInterrupted()) {
+        try {
           int responseCode = 408;
           while (responseCode == 408) {
             longPullResponse =
                 gameRequestSender.sendGetAllPlayerInfoRequest(gameId, hashedResponse);
             responseCode = longPullResponse.getStatus();
-          }
-
-          if (Thread.currentThread().isInterrupted()) {
-            throw new InterruptedException("PlayerInfo update thread interrupted");
+            if (Thread.currentThread().isInterrupted()) {
+              throw new InterruptedException("PlayerInfo Thread: " + Thread.currentThread().getName() +
+                  " terminated");
+            }
           }
 
           if (responseCode == 200) {
@@ -260,22 +256,9 @@ public class GameController implements Initializable {
             Gson splendorParser = SplendorDevHelper.getInstance().getGson();
             PlayerStates playerStates =
                 splendorParser.fromJson(responseInJsonString, PlayerStates.class);
-            if (!nameToPlayerInfoGuiMap.isEmpty()) {
-              for (PlayerInfoGui playerInfoGui : nameToPlayerInfoGuiMap.values()) {
-                Platform.runLater(() -> {
-                  ObservableList<Node> mainBoardChildren = playerBoardAnchorPane.getChildren();
-                  if (playerInfoGui instanceof VerticalPlayerInfoGui) {
-                    mainBoardChildren.remove((VerticalPlayerInfoGui) playerInfoGui);
-                  }
-                  if (playerInfoGui instanceof HorizontalPlayerInfoGui) {
-                    mainBoardChildren.remove((HorizontalPlayerInfoGui) playerInfoGui);
-                  }
 
-                });
-              }
-              // clean the map
-              nameToPlayerInfoGuiMap.clear();
-            }
+            // clear the previous GUI
+            clearAllPlayerInfoGui();
 
             // set up GUI
             setupAllPlayerInfoGui(0);
@@ -286,10 +269,12 @@ public class GameController implements Initializable {
             }
 
           }
+
+        } catch (InterruptedException e) {
+          System.out.println(Thread.currentThread().getName() + " is dead!");
+          break;
         }
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-        System.out.println(e.getMessage());
+
       }
 
     });
@@ -299,8 +284,6 @@ public class GameController implements Initializable {
   // For setup initial playerInfoGuis to display for the first time
   private void setupAllPlayerInfoGui(int initTokenAmount) {
     GameBoardLayoutConfig config = App.getGuiLayouts();
-    User curUser = App.getUser();
-
     int playerCount = sortedPlayerNames.size();
     PlayerPosition[] playerPositions = PlayerPosition.values();
     // iterate through the players we have (sorted, add their GUI accordingly)
@@ -311,10 +294,13 @@ public class GameController implements Initializable {
         // decide player names based on player position (sorted above)
         String playerName;
         if (position.equals(PlayerPosition.BOTTOM)) {
-          playerName = curUser.getUsername();
-          // allow user to click on my cards/reserved cards
-          myCardButton.setOnAction(createOpenMyPurchaseCardClick());
-          myReservedCardsButton.setOnAction(createOpenMyReserveCardClick());
+          playerName = viewerName;
+          if (!inWatchMode) {
+            // allow user to click on my cards/reserved cards
+            // if not in watch mode
+            myCardButton.setOnAction(createOpenMyPurchaseCardClick());
+            myReservedCardsButton.setOnAction(createOpenMyReserveCardClick());
+          }
         } else {
           playerName = sortedPlayerNames.get(2);
         }
@@ -387,32 +373,332 @@ public class GameController implements Initializable {
         }
       }
     });
-    //// at this point, the map can not be empty, safely get the playerGui
-    //nameToPlayerInfoGuiMap.get(firstPlayer).setHighlight(true);
   }
 
-  //
+  private void showClaimNoblePopUp(GameInfo curGameInfo) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
+    // return true if EVERY ACTION in playerActionMap is ClaimNobleAction
+    boolean allClaimNobleActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof ClaimNobleAction);
+
+    if (!playerActionMap.isEmpty() && allClaimNobleActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("noble_action_pop_up.fxml",
+              new ActOnNoblePopUpController(gameId, playerActionMap, false),
+                  config.getSmallPopUpWidth(),
+                  config.getSmallPopUpHeight());
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("noble_action_pop_up.fxml",
+            new ActOnNoblePopUpController(gameId, playerActionMap, false),
+                config.getSmallPopUpWidth(),
+                config.getSmallPopUpHeight());
+      });
+
+    }
+  }
+
+  private void showPairingCardPopUp(GameInfo curGameInfo) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
+    boolean allPairActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof CardExtraAction
+            && ((CardExtraAction) action).getCardEffect().equals(CardEffect.SATCHEL));
+    if (!playerActionMap.isEmpty() && allPairActions) {
+      HttpResponse<String> response =
+          App.getGameRequestSender().sendGetAllPlayerInfoRequest(gameId, "");
+      String playerStatesJson = response.getBody();
+      PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
+          .fromJson(playerStatesJson, PlayerStates.class);
+      PlayerInGame playerInGame = playerStates.getOnePlayerInGame(viewerName);
+      PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
+      // also assign the pending action button some functionality
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("my_development_cards.fxml",
+              new PurchaseHandController(gameId, purchasedHand, playerActionMap),
+                  config.getLargePopUpWidth(),
+                  config.getLargePopUpHeight());
+        });
+      });
+
+      // do a pop up right now
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("my_development_cards.fxml",
+            new PurchaseHandController(gameId, purchasedHand, playerActionMap),
+                config.getLargePopUpWidth(),
+                config.getLargePopUpHeight());
+      });
+    }
+  }
+  //TODO: take out prints
+  private void showBurnCardPopUp(GameInfo curGameInfo) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
+    boolean allBurnActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof CardExtraAction
+            && ((CardExtraAction) action).getCardEffect().equals(CardEffect.BURN_CARD));
+    if (!playerActionMap.isEmpty() && allBurnActions) {
+      // also assign the pending action button some functionality
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("free_card_pop_up.fxml",
+              new BurnCardController(gameId, playerActionMap),
+                  config.getLargePopUpWidth(),
+                  config.getLargePopUpHeight());
+        });
+      });
+
+      // do a pop up right now
+      Platform.runLater(() -> {
+
+        App.loadPopUpWithController("free_card_pop_up.fxml",
+            new BurnCardController(gameId, playerActionMap),
+                config.getLargePopUpWidth(),
+                config.getLargePopUpHeight());
+      });
+    }
+  }
+
+
+
+  private void showFreeCardPopUp(GameInfo curGameInfo) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
+    boolean allFreeActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof CardExtraAction
+            && ((CardExtraAction) action).getCardEffect().equals(CardEffect.FREE_CARD));
+    if (!playerActionMap.isEmpty() && allFreeActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("free_card_pop_up.fxml",
+              new FreeCardPopUpController(gameId, playerActionMap),
+              config.getSelectFreeCardWidth(),
+                  config.getSelectFreeCardHeight());
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("free_card_pop_up.fxml",
+            new FreeCardPopUpController(gameId, playerActionMap),
+                config.getSelectFreeCardWidth(),
+                config.getSelectFreeCardHeight());
+      });
+    }
+  }
+
+
+  private void showReserveNoblePopUp(GameInfo curGameInfo) {
+    // generate special pop up for pairing card
+    GameBoardLayoutConfig config = App.getGuiLayouts();
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
+    boolean allReserveNobleActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof CardExtraAction
+            && ((CardExtraAction) action).getCardEffect().equals(CardEffect.RESERVE_NOBLE));
+
+    if (!playerActionMap.isEmpty() && allReserveNobleActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("noble_action_pop_up.fxml",
+             new ActOnNoblePopUpController(gameId, playerActionMap,true),
+                  config.getSmallPopUpWidth(),
+                  config.getSmallPopUpHeight());
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("noble_action_pop_up.fxml",
+            new ActOnNoblePopUpController(gameId, playerActionMap,true),
+                config.getSmallPopUpWidth(),
+                config.getSmallPopUpHeight());
+      });
+    }
+  }
+
+  private void showBonusTokenPopUp(GameInfo curGameInfo) {
+    // generate special pop up for pairing card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
+    boolean allBonusTokenActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof BonusTokenPowerAction);
+
+    if (!playerActionMap.isEmpty() && allBonusTokenActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("bonus_token_pop_up.fxml",
+              new BonusTokenPopUpController(gameId, playerActionMap),
+              600,
+              170);
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("bonus_token_pop_up.fxml",
+            new BonusTokenPopUpController(gameId, playerActionMap),
+            600,
+            170);
+      });
+    }
+  }
+
+  private void showClaimCityPopUp(GameInfo curGameInfo) {
+    // generate special pop up for city card
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
+    boolean allClaimCityActions = playerActionMap.values().stream()
+        .allMatch(action -> action instanceof ClaimCityAction);
+
+    if (!playerActionMap.isEmpty() && allClaimCityActions) {
+      // enable player to continue their pending action even they close the window
+      pendingActionButton.setDisable(false);
+      pendingActionButton.setOnAction(event -> {
+        Platform.runLater(() -> {
+          App.loadPopUpWithController("claim_city_pop_up.fxml",
+              new ClaimCityPopUpController(gameId, playerActionMap),
+              300,
+              400);
+        });
+      });
+
+      // also, show a popup immediately
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("claim_city_pop_up.fxml",
+            new ClaimCityPopUpController(gameId, playerActionMap),
+            300,
+            400);
+      });
+    }
+
+  }
+
+  private void resetAllGameBoards(GameInfo curGameInfo) {
+    // clear up all children in playerBoardAnchorPane
+    for (BoardGui boardGui : extensionBoardGuiMap.values()) {
+      Platform.runLater(boardGui::clearContent);
+    }
+
+    // First, check what extensions are we playing
+    List<Extension> extensions = curGameInfo.getExtensions();
+    TableTop tableTop = curGameInfo.getTableTop();
+    Map<String, Action> playerActionMap;
+    if (inWatchMode) {
+      // if in watch mode, we always have empty action map
+      playerActionMap = new HashMap<>();
+    } else {
+      playerActionMap = curGameInfo.getPlayerActionMaps().get(viewerName);
+    }
+    // generate BoardGui based on extension type
+    for (Extension extension : extensions) {
+      switch (extension) {
+        case BASE:
+          BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane, gameId);
+          baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+          extensionBoardGuiMap.put(extension, baseBoardGui);
+          break;
+        case ORIENT:
+          OrientBoardGui orientBoardGui = new OrientBoardGui(playerBoardAnchorPane, gameId);
+          orientBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+          extensionBoardGuiMap.put(extension, orientBoardGui);
+          break;
+        case TRADING_POST:
+          GameBoardLayoutConfig config = App.getGuiLayouts();
+          TraderBoardGui traderBoardGui = new TraderBoardGui(gameId, nameToArmCodeMap);
+          traderBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+          traderBoardGui.setLayoutX(config.getPacBoardLayoutX());
+          traderBoardGui.setLayoutY(config.getPacBoardLayoutY());
+          Platform.runLater(() -> {
+            playerBoardAnchorPane.getChildren().add(traderBoardGui);
+          });
+          extensionBoardGuiMap.put(extension, traderBoardGui);
+          break;
+        case CITY:
+          CityBoardGui cityBoardGui = new CityBoardGui(playerBoardAnchorPane, gameId);
+          cityBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
+          extensionBoardGuiMap.put(extension, cityBoardGui);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+
+  private void showFinishGamePopUp(GameInfo curGameInfo) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
+    // the current game is finished (either done by Save OR GameOver)
+    if (curGameInfo.isFinished()) {
+      // should load a game over page (jump back to lobby after they click the button)
+      // implicitly handle the threading stopping logic and loading back to lobby
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("game_over.fxml",
+            new GameOverPopUpController(mainGameUpdateThread,
+                playerInfoThread,
+                curGameInfo.getWinners(),
+                false),
+            config.getSmallPopUpWidth(),
+            config.getSmallPopUpHeight());
+      });
+    }
+  }
+
+  private void resetPendingActionButton(GameInfo curGameInfo) {
+    // always get the action map from game info
+    Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps()
+        .get(viewerName);
+    // player has finished one's pending action, set the button back to greyed out
+    if (playerActionMap.isEmpty()) {
+      pendingActionButton.setDisable(true);
+    }
+  }
+
+  private void highlightPlayerInfoGui(GameInfo curGameInfo) {
+    // highlight players accordingly
+    String curTurnPlayerName = curGameInfo.getCurrentPlayer();
+    if (!nameToPlayerInfoGuiMap.isEmpty()) {
+      for (String name : nameToPlayerInfoGuiMap.keySet()) {
+        nameToPlayerInfoGuiMap.get(name).setHighlight(name.equals(curTurnPlayerName));
+      }
+    }
+  }
+
+
   private Thread generateGameInfoUpdateThread() {
     GameRequestSender gameRequestSender = App.getGameRequestSender();
-    User curUser = App.getUser(); // at this point, user will not be Null
     return new Thread(() -> {
-      // basic stuff needed for a long pull
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
-      try {
-        while (!Thread.currentThread().isInterrupted()) {
-          // always do one, just in case
-          // after this, curUser.getAccessToken() will for sure have a valid token
-          App.refreshUserToken(curUser);
+
+      while (!Thread.currentThread().isInterrupted()) {
+        // basic stuff needed for a long pull
+        try {
           int responseCode = 408;
           while (responseCode == 408) {
             longPullResponse = gameRequestSender.sendGetGameInfoRequest(gameId, hashedResponse);
             responseCode = longPullResponse.getStatus();
+            if (Thread.currentThread().isInterrupted()) {
+              throw new InterruptedException("GameInfo Thread: " + Thread.currentThread().getName() +
+                  " terminated");
+            }
           }
-          if (Thread.currentThread().isInterrupted()) {
-            throw new InterruptedException("game info update thread is interrupted");
-          }
-
           if (responseCode == 200) {
             // update the MD5 hash of previous response
             hashedResponse = DigestUtils.md5Hex(longPullResponse.getBody());
@@ -420,205 +706,147 @@ public class GameController implements Initializable {
             String responseInJsonString = longPullResponse.getBody();
             Gson gsonParser = SplendorDevHelper.getInstance().getGson();
             GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
+            // if the game is over, load the game over pop up page
+            showFinishGamePopUp(curGameInfo);
+            // these additional things can only happen if not in watch mode
+            if (!inWatchMode) {
+              // internally, check if the player has empty action map, if so
+              // disable this pending action button
+              resetPendingActionButton(curGameInfo);
 
-            // the current game is finished (either done by Save OR GameOver)
-            if (curGameInfo.isFinished()) {
-              // should load a game over page (jump back to lobby after they click the button)
-              // implicitly handle the threading stopping logic and loading back to lobby
-              Platform.runLater(() -> {
-                try {
-                  App.loadPopUpWithController("game_over.fxml",
-                      new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
-                      coverRectangle, 360, 170);
-                } catch (IOException e) {
-                  throw new RuntimeException(e);
-                }
-              });
-            }
-            //TODO: For this game application, we always play BASE + ORIENT, thus
-            // we do not worry about NOT having their GUI set up
+              // TODO: <<<<< START OF OPTIONAL SECTION >>>>>>>>>
+              // TODO: <<<<< This section contains the method that contains optional pop ups>>>>>>>>>
+              // TODO: <<<<< conditions are check internally in method for readability      >>>>>>>>>
 
-            // Step 0. who's turn is it update (highlight feature)
-
-            // Step 1. update base board gui
-
-            // Step 2. update orient board gui
-
-            // Step 3. (optionally) update extension board gui
-
-            // TODO: Step 4. update MyPurchaseHand and MyReserveHand
-
-
-            //previously, here we checked what extensions are active --> moved this code closer to
-            //where the extensions variable is actually used.
-            TableTop tableTop = curGameInfo.getTableTop();
-            // always get the action map from game info
-            String playerName = curUser.getUsername();
-            Map<String, Action> playerActionMap = curGameInfo.getPlayerActionMaps().get(playerName);
-            boolean allPairActions = playerActionMap.values().stream()
-                .allMatch(action -> action instanceof CardExtraAction
-                    && ((CardExtraAction) action).getCardEffect().equals(CardEffect.SATCHEL));
-
-
-            if (!playerActionMap.isEmpty() && allPairActions) {
-              HttpResponse<String> response =
-                  gameRequestSender.sendGetAllPlayerInfoRequest(gameId, "");
-              String playerStatesJson = response.getBody();
-              PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
-                  .fromJson(playerStatesJson, PlayerStates.class);
-              PlayerInGame playerInGame = playerStates.getOnePlayerInGame(playerName);
-              PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
-              Platform.runLater(() -> {
-                try {
-                  App.loadPopUpWithController("my_development_cards.fxml",
-                      new PurchaseHandController(gameId,
-                          purchasedHand, playerActionMap, coverRectangle), coverRectangle,
-                      800,
-                      600);
-                } catch (IOException e) {
-                  throw new RuntimeException(e);
-                }
-              });
+              // optionally, show the claim noble pop up, condition is checked inside method
+              showClaimNoblePopUp(curGameInfo);
+              // optionally, show the pairing card pop up, condition is checked inside method
+              showPairingCardPopUp(curGameInfo);
+              // optionally, show the taking a free card pop up, condition is checked inside method
+              showFreeCardPopUp(curGameInfo);
+              // optionally, show the taking a free card pop up, condition is checked inside method
+              showBurnCardPopUp(curGameInfo);
+              // optionally, show the taking a reserve noble pop up, condition is checked inside method
+              showReserveNoblePopUp(curGameInfo);
+              // optionally, show the take a token for free pop up, condition is checked inside method
+              showBonusTokenPopUp(curGameInfo);
+              // optionally, show the claiming a city pop up, condition is checked inside method
+              showClaimCityPopUp(curGameInfo);
+              // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
             }
 
-            // TODO: After one purchase, the server side did not set next player properly
-            System.out.println("Current turn: " + curGameInfo.getCurrentPlayer());
-            System.out.println("Player: " + playerName + playerActionMap.values());
-            // clear up all children in playerBoardAnchorPane
-            for (BoardGui boardGui : extensionBoardGuiMap.values()) {
-              Platform.runLater(boardGui::clearContent);
-            }
+            // ALWAYS, reset all game boards gui based on the new game info
+            resetAllGameBoards(curGameInfo);
+            //ALWAYS, highlight the correct player gui based on the new game info
+            highlightPlayerInfoGui(curGameInfo);
 
-            // First, check what extensions are we playing
-            List<Extension> extensions = curGameInfo.getExtensions();
-
-            // generate BoardGui based on extension type
-            for (Extension extension : extensions) {
-              switch (extension) {
-                case BASE:
-                  BaseBoardGui baseBoardGui = new BaseBoardGui(playerBoardAnchorPane,
-                      gameId, coverRectangle);
-                  baseBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
-                  extensionBoardGuiMap.put(extension, baseBoardGui);
-                  break;
-                case ORIENT:
-                  OrientBoardGui orientBoardGui = new OrientBoardGui(playerBoardAnchorPane,
-                      gameId, coverRectangle);
-                  orientBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
-                  extensionBoardGuiMap.put(extension, orientBoardGui);
-                  break;
-                case TRADING_POST:
-                  GameBoardLayoutConfig config = App.getGuiLayouts();
-                  TraderBoardGui traderBoardGui = new TraderBoardGui(gameId, nameToArmCodeMap);
-                  traderBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
-                  traderBoardGui.setLayoutX(config.getPacBoardLayoutX());
-                  traderBoardGui.setLayoutY(config.getPacBoardLayoutY());
-                  Platform.runLater(() -> {
-                    playerBoardAnchorPane.getChildren().add(traderBoardGui);
-                  });
-                  extensionBoardGuiMap.put(extension, traderBoardGui);
-                  break;
-                case CITY:
-                  System.out.println("\nThis is city DLC\n");
-                  CityBoardGui cityBoardGui = new CityBoardGui(playerBoardAnchorPane,
-                      gameId, coverRectangle);
-                  cityBoardGui.initialGuiActionSetup(tableTop, playerActionMap);
-                  extensionBoardGuiMap.put(extension, cityBoardGui);
-                  break;
-                default: break;
-              }
-            }
-
-            // highlight players accordingly
-            String curTurnPlayerName = curGameInfo.getCurrentPlayer();
-            if (!nameToPlayerInfoGuiMap.isEmpty()) {
-              for (String name : nameToPlayerInfoGuiMap.keySet()) {
-                nameToPlayerInfoGuiMap.get(name).setHighlight(name.equals(curTurnPlayerName));
-              }
-            }
           }
+        } catch (InterruptedException e) {
+          System.out.println(Thread.currentThread().getName() + " is dead!");
+          break;
         }
-      } catch (InterruptedException | UnirestException e) {
-        System.out.println(e.getMessage());
       }
+
 
     });
   }
 
   // interrupt the game update thread to save resources
   private EventHandler<ActionEvent> createClickOnSaveButtonEvent(GameInfo gameInfo, long gameId) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
-      try {
-        App.loadPopUpWithController("save_game.fxml",
-            new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
-            coverRectangle,
-            360,
-            170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("save_game.fxml",
+          new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
+              config.getSmallPopUpWidth(),
+              config.getSmallPopUpHeight());
     };
   }
 
   // interrupt the game update thread to save resources
   private EventHandler<ActionEvent> createClickOnQuitButtonEvent() {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
-      try {
-        App.loadPopUpWithController("quit_game.fxml",
-            new GameOverPopUpController(mainGameUpdateThread, playerInfoThread),
-            coverRectangle, 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("quit_game.fxml",
+          new GameOverPopUpController(mainGameUpdateThread,
+              playerInfoThread,
+              new ArrayList<>(),
+              true),
+          config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
     };
   }
 
-  @Override
-  // TODO: This method contains what's gonna happen after clicking "play" on the board
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    // the shaded shape that is used to prevent player to mess around with
-    // actions when we do not allow them to click on things that are
-    // not in pop up window
-
-    GameRequestSender gameRequestSender = App.getGameRequestSender();
-    HttpResponse<String> firstGameInfoResponse = null;
-    try {
-      firstGameInfoResponse = gameRequestSender.sendGetGameInfoRequest(gameId, "");
-    } catch (UnirestException e) {
-      System.out.println(e.getMessage());
-    }
-    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
-    GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
-    //lastTurnPlayerName = curGameInfo.getFirstPlayerName();
+  private void setupSaveGameButton(GameInfo curGameInfo) {
+    // for all mode, these two should be like this
     saveButton.setDisable(true);
     quitButton.setOnAction(createClickOnQuitButtonEvent());
-    if (App.getUser().getUsername().equals(curGameInfo.getCreator())) {
+    // and not in watch mode
+    if (viewerName.equals(curGameInfo.getCreator()) && !inWatchMode) {
       // if the current user is the creator, activate the save button, otherwise it
       // greyed out
       saveButton.setDisable(false);
       saveButton.setOnAction(createClickOnSaveButtonEvent(curGameInfo, gameId));
     }
+  }
 
+  private void sortAllPlayerNames(GameInfo curGameInfo) {
     List<String> playerNames = curGameInfo.getPlayerNames();
     List<String> tmpPlayerNames = new ArrayList<>(playerNames);
     // sort the player names and store it to this game controller
     if (sortedPlayerNames.isEmpty()) {
-      sortedPlayerNames = sortPlayerNames(App.getUser().getUsername(), tmpPlayerNames);
+      while (!tmpPlayerNames.get(0).equals(viewerName)) {
+        String popPlayerName = tmpPlayerNames.remove(0);
+        tmpPlayerNames.add(popPlayerName);
+      }
+      sortedPlayerNames = new ArrayList<>(tmpPlayerNames);
     }
+  }
+
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    // initially, there is no pending action at all!
+    pendingActionButton.setDisable(true);
+    // ban the purchase cards and reserve cards button from the watcher
+    if (inWatchMode) {
+      myCardButton.setDisable(true);
+      myReservedCardsButton.setDisable(true);
+    }
+
+    GameRequestSender gameRequestSender = App.getGameRequestSender();
+    HttpResponse<String> firstGameInfoResponse =
+        gameRequestSender.sendGetGameInfoRequest(gameId, "");
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+    GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
+    // information about viewer's perspective
+    if (viewerName == null) {
+      viewerName = curGameInfo.getFirstPlayerName();
+      // from now on, we can safely trust this viewerName as someone in the game
+    }
+
+    // only enable the save game button for the creator of the game
+    setupSaveGameButton(curGameInfo);
+
+    // sort player names based on different client views
+    sortAllPlayerNames(curGameInfo);
 
     // if we are playing the Trading Extension, initialize the map of player name
     // to their arm code index
     List<Extension> extensionsPlaying = curGameInfo.getExtensions();
+    List<String> playerNames = curGameInfo.getPlayerNames();
     if (extensionsPlaying.contains(Extension.TRADING_POST)) {
       for (int i = 1; i <= playerNames.size(); i++) {
         nameToArmCodeMap.put(playerNames.get(i - 1), i);
       }
     }
 
+    // start thread to update player info
     playerInfoThread = generateAllPlayerInfoUpdateThread();
+    // creating the thread as daemon to terminate them correctly
+    playerInfoThread.setDaemon(true);
     playerInfoThread.start();
 
+    // start thread to update game info
     mainGameUpdateThread = generateGameInfoUpdateThread();
+    mainGameUpdateThread.setDaemon(true);
     mainGameUpdateThread.start();
 
   }

@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class PlayerInGame {
     // remove tokens (after discount_ for this payment from playerHand
     tokenHand.removeToken(paidTokens);
 
-    List<DevelopmentCard> allDevCards = purchasedHand.getDevelopmentCards();
+    List<DevelopmentCard> allDevCards = new ArrayList<>(purchasedHand.getDevelopmentCards());
     while (goldCardsRequired > 0) {
       for (DevelopmentCard card : allDevCards) {
         if (card.getGemColour().equals(Colour.GOLD)) {
@@ -83,7 +84,7 @@ public class PlayerInGame {
   /**
    * Amount can be negative, as to minus.
    *
-   * @param amount amount
+   * @param amount amountNotSetter
    */
   public void changePrestigePoints(int amount) {
     prestigePoints += amount;
@@ -95,7 +96,8 @@ public class PlayerInGame {
 
   /**
    * Returns map of total gems (out of all dev cards) a player has.
-   * Guarantee to return a map with only RED, BLUE, WHITE, BLACK AND GREEN
+   * Guarantee to return a map with only RED, BLUE, WHITE, BLACK AND GREEN and gold
+   * for the purpose of double_gold card in orient
    */
   public EnumMap<Colour, Integer> getTotalGems() {
     EnumMap<Colour, Integer> totalGems = SplendorDevHelper.getInstance().getRawTokenColoursMap();
@@ -107,10 +109,11 @@ public class PlayerInGame {
         Colour colour = card.getGemColour();
         if (!colour.equals(Colour.ORIENT)) {
           Logger logger  = LoggerFactory.getLogger(PlayerInGame.class);
-          logger.warn("Colour " + colour);
-          logger.warn("TotalGems: " + totalGems);
           int oldValue = totalGems.get(colour);
           totalGems.put(colour, oldValue + card.getGemNumber());
+          //logger.warn("Player name:" + name);
+          //logger.warn("Colour " + colour);
+          //logger.warn("TotalGems: " + totalGems);
         }
       }
     }
@@ -127,11 +130,7 @@ public class PlayerInGame {
     //logger.info("All gems as a enum map: " + gems);
 
     for (Colour colour : SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet()) {
-      if (colour.equals(Colour.GOLD)) {
-        wealth.put(colour, tokenHand.getAllTokens().get(colour));
-      } else {
-        wealth.put(colour, tokenHand.getAllTokens().get(colour) + gems.get(colour));
-      }
+      wealth.put(colour, tokenHand.getAllTokens().get(colour) + gems.get(colour));
     }
     return wealth;
   }

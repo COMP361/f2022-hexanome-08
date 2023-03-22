@@ -3,8 +3,10 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * class that holds info about city board.
@@ -27,15 +29,35 @@ public class CityBoard extends Board {
     // initialize city to each player as null at the beginning
     playerNames.forEach(name -> playerCities.put(name, null));
 
+    // randomly got 3 city card names in this format: "city[1-7]_[1-2]" for 3 times
+    String[] cityNames = new String[3];
+    HashSet<Integer> prefixSet = new HashSet<>();
+    // add 3 unique random prefix number in here
+    while(prefixSet.size() < 3) {
+      // randomly got one number from 1 -> 7
+      prefixSet.add(new Random().nextInt(7) + 1);
+    }
+    List<Integer> uniquePrefixes = new ArrayList<>(prefixSet);
+
+    for (int i = 0; i < cityNames.length; i++) {
+      // randomly got one number from 1 -> 2
+      int suffix = new Random().nextInt(1) + 1;
+      cityNames[i] = String.format("city%s_%s", uniquePrefixes.get(i), suffix);
+    }
+
     // can not test generateCityCards() because JSON parsing has random order issue
     List<CityCard> allCards = super.generateCityCards();
-    // randomly get exactly 3 city cards on board (the rule)
-    // TODO: Fix the fact that we might draw 2 city cards: city1_1 and city1_2
-    // this should NOT BE allowed!
-    Collections.shuffle(allCards);
-    List<CityCard> cityCardsInUse = allCards.subList(0, 3);
+    // now we have the 3 random names, we can use them to get the cards
+    // out of all city cards
     for (int i = 0; i < allCityCards.length; i++) {
-      allCityCards[i] = cityCardsInUse.get(i);
+      for (CityCard cityCard : allCards) {
+        if (cityCard.getCardName().equals(cityNames[i])) {
+          // store the card with the matching random name
+          // then break it immediately
+          allCityCards[i] = cityCard;
+          break;
+        }
+      }
     }
   }
 
@@ -75,23 +97,38 @@ public class CityBoard extends Board {
    * Call this method to rename the player names if the ones who want to play now does not.
    * match with the ones who saved this game before.
    *
-   * @param playerNames the current player names who want to play this game
+   * @param newNames the current player names who want to play this game
    */
   @Override
-  public void renamePlayers(List<String> playerNames) {
-    List<String> curNames = new ArrayList<>(playerCities.keySet());
-    // only update if names are different
-    if (!playerNames.equals(curNames)) {
-      int nameIndex = 0;
-      Map<String, CityCard> newCityMap = new HashMap<>();
-      for (String curName : playerCities.keySet()) {
-        CityCard curCard = playerCities.get(curName);
-        String newName = playerNames.get(nameIndex);
-        nameIndex += 1;
-        newCityMap.put(newName, curCard);
+  public void renamePlayers(List<String> newNames) {
+    List<String> oldNames = new ArrayList<>(playerCities.keySet());
+    List<String> newNamesCopy = new ArrayList<>(newNames);
+    List<String> assignedPlayers = new ArrayList<>();
+    Map<String, CityCard> newCityMap = new HashMap<>();
+    // for the old names, find their old data and assign it to them
+    for (String oldName : oldNames) {
+      // if any oldName match a new name, remove this old name from newNameCopy list
+      if (newNames.contains(oldName)) {
+        newCityMap.put(oldName, playerCities.get(oldName));
+        newNamesCopy.remove(oldName);
+        assignedPlayers.add(oldName);
       }
-      playerCities = newCityMap;
-
     }
+
+    int counter = 0;
+    for (String otherPlayerName : playerCities.keySet()) {
+      if (!assignedPlayers.contains(otherPlayerName)) {
+        CityCard oldCityCard = playerCities.get(otherPlayerName);
+        String newName = newNamesCopy.get(counter);
+        newCityMap.put(newName, oldCityCard);
+        counter += 1;
+      }
+      // finish assign all new players, end it
+      if (counter >= newNames.size()) {
+        break;
+      }
+    }
+    playerCities = newCityMap;
+
   }
 }

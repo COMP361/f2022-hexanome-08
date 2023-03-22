@@ -10,7 +10,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import project.App;
 import project.connection.GameRequestSender;
@@ -23,21 +22,18 @@ public class CardActionController implements Initializable {
   private final List<ActionIdPair> allActionsPair;
 
   private final long gameId;
-  //@FXML
-  //private Button goBackButton;
+  private final Stage window;
   @FXML
   private Button purchaseButton;
   @FXML
   private Button reserveButton;
 
-  private final Stage window;
-
   /**
    * CardActionController.
    *
-   * @param gameId gameId
+   * @param gameId         gameId
    * @param allActionsPair allActionsPair
-   * @param window the stage of the parent, can be null
+   * @param window         the stage of the parent, can be null
    */
   public CardActionController(long gameId, List<ActionIdPair> allActionsPair, Stage window) {
     this.gameId = gameId;
@@ -82,7 +78,5 @@ public class CardActionController implements Initializable {
         reserveButton.setOnAction(createOnClickButtonHandler(actionIdPair.getActionId()));
       }
     }
-
-    //goBackButton.setOnAction(createOnClickBackHandler());
   }
 }

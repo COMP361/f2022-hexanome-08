@@ -1,5 +1,8 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.actions.Action;
+import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
+import ca.mcgill.comp361.splendormodel.actions.ReserveAction;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.Position;
 import java.io.IOException;
@@ -7,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -28,7 +32,6 @@ import project.controllers.popupcontrollers.DeckActionController;
  */
 public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui {
   private final int level;
-  private final Rectangle coverRectangle;
   private DevelopmentCard[] cards;
   private List<DevelopmentCard> deck;
 
@@ -38,12 +41,10 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
    * @param level provides the level of the Orient Cards.
    * @param cards provides the list of cards you want displayed in the GUI.
    */
-  public OrientCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck,
-                            Rectangle coverRectangle) {
+  public OrientCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck) {
     this.level = level;
     this.cards = cards;
     this.deck = deck;
-    this.coverRectangle = coverRectangle;
     FXMLLoader fxmlLoader =
         new FXMLLoader(getClass().getResource("/project/orient_card_template.fxml"));
     fxmlLoader.setRoot(this);
@@ -78,8 +79,13 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
       DevelopmentCard card = cards[i];
       String curCardName = card.getCardName();
       int curCardLevel = card.getLevel();
-      String cardPath = App.getOrientCardPath(curCardName, curCardLevel);
-      Image cardImg = new Image(cardPath);
+      Image cardImg;
+      if (card.getPrestigePoints() >= 0) {
+        String cardPath = App.getOrientCardPath(curCardName, curCardLevel);
+        cardImg = new Image(cardPath);
+      } else {
+        cardImg = null;
+      }
       getOneCardGui(i).setImage(cardImg);
     }
   }
@@ -87,25 +93,17 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
   private EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
                                                             List<ActionIdPair> allActions) {
     return event -> {
-      try {
-        App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(gameId, allActions, null),
-            coverRectangle, 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("card_action.fxml",
+          new CardActionController(gameId, allActions, null), 360, 170);
     };
   }
 
   private EventHandler<MouseEvent> createClickOnDeckHandler(long gameId, String actionId) {
     return event -> {
-      try {
-        App.loadPopUpWithController("deck_action.fxml",
-            new DeckActionController(gameId, actionId, coverRectangle),
-            coverRectangle, 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("deck_action.fxml",
+          new DeckActionController(gameId, actionId),
+          App.getGuiLayouts().getSmallPopUpWidth(),
+          App.getGuiLayouts().getSmallPopUpHeight());
     };
   }
 
@@ -151,7 +149,7 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
     Map<Position, List<ActionIdPair>> curLevelMap = positionToActionMap.entrySet()
         .stream().filter(e -> e.getKey().getX() == level)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    List<ImageView> allCards = getAllCardsGui();
+    List<ImageView> allCardsImageViews = getAllCardsGui();
     for (Position position : curLevelMap.keySet()) {
       if (position.getY() == -1) {
         // assign reserve action to deck (deck is only clickable if player has such action)
@@ -161,8 +159,20 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
         deck.setOnMouseClicked(createClickOnDeckHandler(gameId, actionId));
       } else {
         List<ActionIdPair> allActions = curLevelMap.get(position);
-        allCards.get(position.getY())
-            .setOnMouseClicked(createClickOnCardHandler(gameId, allActions));
+        // get the card from the action of action id pair
+        Action action = allActions.get(0).getAction();
+        DevelopmentCard cardBindingActionTo;
+        if (action instanceof PurchaseAction) {
+          cardBindingActionTo = ((PurchaseAction) action).getCurCard();
+        } else {
+          cardBindingActionTo = ((ReserveAction) action).getCurCard();
+        }
+        // only bind the image view some actions if it's not dummy
+        if (cardBindingActionTo.getPrestigePoints() >= 0) {
+          // it's not a dummy card
+          allCardsImageViews.get(position.getY())
+              .setOnMouseClicked(createClickOnCardHandler(gameId, allActions));
+        }
       }
     }
   }

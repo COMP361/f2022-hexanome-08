@@ -11,9 +11,11 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.NobleCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
+import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Power;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PowerEffect;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
+import ca.group8.gameservice.splendorgame.model.splendormodel.ReservedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
 import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
@@ -32,13 +34,14 @@ import org.slf4j.LoggerFactory;
 public class ActionInterpreter {
 
   private boolean nobleVisited = false;
+  private boolean unlockedCity = false;
   private int freeCardLevel = 0;
   private int burnCardCount = 0;
   private Colour burnCardColour = null;
   private DevelopmentCard stashedCard = null;
-  private PlayerStates playerStates;
-  private GameInfo gameInfo;
-  private ActionGenerator actionGenerator;
+  private final PlayerStates playerStates;
+  private final GameInfo gameInfo;
+  private final ActionGenerator actionGenerator;
   private boolean bonusTokenStashed = false;
 
   /**
@@ -48,21 +51,6 @@ public class ActionInterpreter {
    * @param gameInfo     the relevant game info for this interpreter instance
    */
   public ActionInterpreter(GameInfo gameInfo, PlayerStates playerStates) {
-    this.playerStates = playerStates;
-    this.gameInfo = gameInfo;
-    Map<String, Map<String, Action>> playerActionMaps = gameInfo.getPlayerActionMaps();
-    TableTop tableTop = gameInfo.getTableTop();
-    this.actionGenerator = new ActionGenerator(playerActionMaps, tableTop);
-  }
-
-  /**
-   * After parsing the object from json, we need to relink the references.
-   * between this action interpreter and the other game states information.
-   *
-   * @param gameInfo     a game info instance
-   * @param playerStates player states instance
-   */
-  public void relinkReferences(GameInfo gameInfo, PlayerStates playerStates) {
     this.playerStates = playerStates;
     this.gameInfo = gameInfo;
     Map<String, Map<String, Action>> playerActionMaps = gameInfo.getPlayerActionMaps();
@@ -94,6 +82,7 @@ public class ActionInterpreter {
       TraderBoard board = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
       Power power = board.getPlayerOnePower(playerName, PowerEffect.EXTRA_TOKEN);
       if (actionChosen instanceof PurchaseAction && power.isUnlocked()) {
+        logger.info("BonusTokenStashed set to true for " +  playerName);
         bonusTokenStashed = true;
       }
     }
@@ -102,40 +91,57 @@ public class ActionInterpreter {
     // the action has been executed, and the player's action map is possibly empty now, check!
     actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
     if (actionMap.isEmpty()) {
-      // if anything might have changed, let the client side know immediately
-      //playerStatesManager.touch();
-      //gameInfoManger.touch();
-      // if the current player's action map is empty, we do end turn check
-      // and then set to next player's turn
-
       // nobles check (all nobles the player can unlock)
       BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
-
-      List<Integer> nobleIndices = new ArrayList<>();
+      List<Position> noblePositions = new ArrayList<>();
+      List<NobleCard> noblesUnlocked = new ArrayList<>();
+      // first check the nobles unlocked on base board
       List<NobleCard> allNobles = baseBoard.getNobles();
       for (int i = 0; i < allNobles.size(); i++) {
         NobleCard nobleCard = allNobles.get(i);
         if (nobleCard.canVisit(playerInGame)) {
-          nobleIndices.add(i);
+          noblePositions.add(new Position(0,i));
+          noblesUnlocked.add(nobleCard);
         }
       }
 
+      // then check the nobles unlocked in hand
+      List<NobleCard> nobleCardsInHand = playerInGame.getReservedHand().getNobleCards();
+      for (int i = 0; i < nobleCardsInHand.size(); i++) {
+        NobleCard nobleCard = nobleCardsInHand.get(i);
+        if (nobleCard.canVisit(playerInGame)) {
+          // use -1 to indicate that it is from hand
+          noblePositions.add(new Position(-1, i));
+          noblesUnlocked.add(nobleCard);
+        }
+      }
+
+      // now based on how many nobles we unlocked, generate actions (optionally)
       PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
-      if (!nobleVisited) {
+      if (!nobleVisited && noblesUnlocked.size() > 0) {
         // if the player unlocked one noble, added it to player hand,
-        // remove it from baseboard
-        if (nobleIndices.size() == 1) {
-          NobleCard nobleCard = allNobles.get(nobleIndices.get(0));
-          baseBoard.removeNoble(nobleCard);
+        // remove it from baseboard / reserve hand, based on position
+        if (noblesUnlocked.size() == 1) {
+          Position noblePosition = noblePositions.get(0);
+          NobleCard nobleCard = noblesUnlocked.get(0);
+          // -1, from reserved hand, remove it from there
+          if (noblePosition.getX() < 0) {
+            ReservedHand reservedHand = playerInGame.getReservedHand();
+            reservedHand.removeNoble(nobleCard);
+          } else {
+            // otherwise, remove from based board
+            baseBoard.removeNoble(nobleCard);
+          }
+
           purchasedHand.addNobleCard(nobleCard);
-          int oldPoints = playerInGame.getPrestigePoints();
           int noblePoints = nobleCard.getPrestigePoints();
-          playerInGame.changePrestigePoints(oldPoints + noblePoints);
+          playerInGame.changePrestigePoints(noblePoints);
           nobleVisited = true;
         }
 
-        if (nobleIndices.size() > 1) {
-          actionGenerator.updateClaimNobleActions(nobleIndices, playerInGame);
+        // unlocked more than one noble
+        else {
+          actionGenerator.updateClaimNobleActions(noblePositions, noblesUnlocked, playerInGame);
           // we do not want to continue the other condition checks
           nobleVisited = true;
           return;
@@ -160,7 +166,6 @@ public class ActionInterpreter {
       }
 
       // extra end turn check for extensions
-      // TODO: Later
       if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
         // possible to generate power actions
         TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
@@ -209,10 +214,12 @@ public class ActionInterpreter {
         if (traderBoard.getPlayerOnePower(playerName, PowerEffect.EXTRA_TOKEN).isUnlocked()) {
           if (bonusTokenStashed) {
             bonusTokenStashed = false;
+            logger.info("Update actions called and BonusTokenStashed set to false for " +  playerName);
             actionGenerator.updateBonusTokenPowerActions(playerInGame);
+            return;
           }
         }
-        bonusTokenStashed = false;
+        //bonusTokenStashed = false;
 
       }
 
@@ -221,15 +228,33 @@ public class ActionInterpreter {
       boolean playerWonTheGame;
       boolean hasCityExtension = tableTop.getGameBoards().containsKey(Extension.CITY);
       if (hasCityExtension) {
-        // city winning check, can the player unlock a city or not.
+        // the city winning check is only needed if player did not unlock any city
         CityBoard cityBoard = (CityBoard) tableTop.getBoard(Extension.CITY);
-        for (CityCard cityCard : cityBoard.getAllCityCards()) {
-          // unlock the first city card that's available to unlock
-          if (cityCard.canUnlock(playerInGame)) {
-            cityBoard.assignCityCard(playerName, cityCard);
-            break;
+        if (!unlockedCity) {
+          // city winning check, can the player unlock a city or not.
+          List<CityCard> unlockedCityCards = new ArrayList<>();
+          for (CityCard cityCard : cityBoard.getAllCityCards()) {
+            // check how many city cards we can unlock
+            if (cityCard != null && cityCard.canUnlock(playerInGame)) {
+              unlockedCityCards.add(cityCard);
+            }
+          }
+
+          if (unlockedCityCards.size() > 0) {
+            unlockedCity = true;
+            if (unlockedCityCards.size() == 1) {
+              // if unlocked only one, then there is no option to choose
+              cityBoard.assignCityCard(playerName,unlockedCityCards.get(0));
+            } else {
+              actionGenerator.updateClaimCityActions(unlockedCityCards, playerName);
+              // update claim city actions, let player do further move
+              return;
+            }
           }
         }
+
+        // if there is no unlocked city card, no need to do anything,
+        // just check the winning condition
         // if the player has one city card, then one wins
         playerWonTheGame = cityBoard.getPlayerCities().get(playerName) != null;
       } else {
@@ -238,38 +263,26 @@ public class ActionInterpreter {
         playerWonTheGame = points >= 15;
       }
 
-      // the boolean value will be decided differently based on whether we play
-      // with city extension or not
+      // the boolean value will be decided differently based on
+      // whether we play with city extension or not
+      // In here, we only decide the current player should be added to winners or not
       if (playerWonTheGame) {
-        List<String> winners = gameInfo.getWinners();
-        List<String> allPlayers = gameInfo.getPlayerNames();
-        // if the current player is the last player, this game is over
-        String lastPlayerName = allPlayers.get(allPlayers.size() - 1);
-        if (playerName.equals(lastPlayerName)) {
-          if (winners.isEmpty()) { // this is the first and last winner
-            winners.add(playerName);
-            // game is over!
-            gameInfo.setFinished();
-          } else {
-            // we have several potential winners
-            winners.add(playerName);
-            // choose and set all winners (might have tie)
-            decideWinners(winners);
-            // game is over!
-            gameInfo.setFinished();
-          }
-        } else {
-          // add the winner
-          winners.add(playerName);
-          // and can not say the game is finished
-        }
+        gameInfo.addWinner(playerName);
+      }
+
+      List<String> allPlayers = gameInfo.getPlayerNames();
+      String lastPlayerName = allPlayers.get(allPlayers.size() - 1);
+      // after adding the player, we decide should we set the gameInfo state to finished or
+      // not only if we are currently at last player && the winner list is not empty
+      // we announce that the game is over
+      if (playerName.equals(lastPlayerName) && !gameInfo.getWinners().isEmpty()) {
+        gameInfo.setFinished();
       }
 
       // set next turn
-      // TODO: before changing to next player, reset everything
       // the flags to default values
       nobleVisited = false;
-
+      unlockedCity = false;
       // if the game is not finished, set next player
       if (!gameInfo.isFinished()) {
         gameInfo.setNextPlayer();
@@ -339,11 +352,14 @@ public class ActionInterpreter {
    * @param cardPrice cardPrice
    */
   public void setBurnCardInfo(EnumMap<Colour, Integer> cardPrice) {
+    Logger logger = LoggerFactory.getLogger(ActionInterpreter.class);
+    logger.info("AI: burn card price: "+cardPrice);
     //set colour and cards to burn
     burnCardCount = 2;
     for (Colour colour : cardPrice.keySet()) {
       if (cardPrice.get(colour) > 0) {
         burnCardColour = colour;
+        logger.info("AI: Colour: "+colour);
         break;
       }
     }
@@ -353,8 +369,7 @@ public class ActionInterpreter {
     return burnCardColour;
   }
 
-  public void setBurnCardColour(
-      Colour burnCardColour) {
+  public void setBurnCardColour(Colour burnCardColour) {
     this.burnCardColour = burnCardColour;
   }
 

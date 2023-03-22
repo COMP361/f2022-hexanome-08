@@ -1,5 +1,8 @@
 package project.view.splendor;
 
+import ca.mcgill.comp361.splendormodel.actions.Action;
+import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
+import ca.mcgill.comp361.splendormodel.actions.ReserveAction;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.Position;
 import java.io.IOException;
@@ -7,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -21,6 +25,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import project.App;
+import project.GameBoardLayoutConfig;
 import project.controllers.popupcontrollers.CardActionController;
 import project.controllers.popupcontrollers.DeckActionController;
 
@@ -30,7 +35,6 @@ import project.controllers.popupcontrollers.DeckActionController;
 public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
 
   private final int level;
-  private final Rectangle coverRectangle;
   private DevelopmentCard[] cards;
   private List<DevelopmentCard> deck;
 
@@ -41,12 +45,10 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
    * @param cards a list of cards (fixed length of 4)
    * @param deck  a list of cards (change length based on level)
    */
-  public BaseCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck,
-                          Rectangle coverRectangle) {
+  public BaseCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck) {
     this.level = level;
     this.cards = cards;
     this.deck = deck;
-    this.coverRectangle = coverRectangle;
     FXMLLoader fxmlLoader =
         new FXMLLoader(getClass().getResource("/project/base_card_template.fxml"));
     fxmlLoader.setRoot(this);
@@ -77,13 +79,17 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
   }
 
   private void setUpCards(DevelopmentCard[] cards) {
-
     for (int i = 0; i < cards.length; i++) {
       DevelopmentCard card = cards[i];
       String curCardName = card.getCardName();
       int curCardLevel = card.getLevel();
-      String cardPath = App.getBaseCardPath(curCardName, curCardLevel);
-      Image cardImg = new Image(cardPath);
+      Image cardImg;
+      if (card.getPrestigePoints() >= 0) {
+        String cardPath = App.getBaseCardPath(curCardName, curCardLevel);
+        cardImg = new Image(cardPath);
+      } else {
+        cardImg = null;
+      }
       getOneCardGui(i).setImage(cardImg);
     }
   }
@@ -92,31 +98,26 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
    * This method creates a CardActionController for a set of specific actions [so a pop up
    * can appear to display to the user those actions].
    *
-   * @param gameId ID of current game
+   * @param gameId     ID of current game
    * @param allActions list of Actions which you will be pairing to a card *using "clickOn" event.
    * @return Returns a list of Event Handlers. (event type is a pop up when clicked on).
    */
   public EventHandler<MouseEvent> createClickOnCardHandler(long gameId,
-                                                            List<ActionIdPair> allActions) {
+                                                           List<ActionIdPair> allActions) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
-      try {
-        App.loadPopUpWithController("card_action.fxml",
-            new CardActionController(gameId, allActions, null),
-            coverRectangle, 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("card_action.fxml",
+          new CardActionController(gameId, allActions, null),
+          config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
     };
   }
 
   private EventHandler<MouseEvent> createClickOnDeckHandler(long gameId, String actionId) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
-      try {
-        App.loadPopUpWithController("deck_action.fxml",
-            new DeckActionController(gameId, actionId, coverRectangle), coverRectangle, 360, 170);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      App.loadPopUpWithController("deck_action.fxml",
+          new DeckActionController(gameId, actionId),
+          config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
     };
   }
 
@@ -163,22 +164,35 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     Map<Position, List<ActionIdPair>> curLevelMap = positionToActionMap.entrySet()
         .stream().filter(e -> e.getKey().getX() == level)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    List<ImageView> allCards = getAllCardsGui();
+    List<ImageView> allCardsImageViews = getAllCardsGui();
     for (Position position : curLevelMap.keySet()) {
       if (position.getY() == -1) {
         // assign reserve action to deck (deck is only clickable if player has such action)
         Group deck = (Group) this.getChildren().get(0);
         ActionIdPair actionIdPair = curLevelMap.get(position).get(0);
         String actionId = actionIdPair.getActionId();
+        // since we banned reserve action from generating on server side, it's fine in here
         deck.setOnMouseClicked(createClickOnDeckHandler(gameId, actionId));
       } else {
         List<ActionIdPair> allActions = curLevelMap.get(position);
-        allCards.get(position.getY())
-            .setOnMouseClicked(createClickOnCardHandler(gameId, allActions));
+        // get the card from the action of action id pair
+        Action action = allActions.get(0).getAction();
+        DevelopmentCard cardBindingActionTo;
+        if (action instanceof PurchaseAction) {
+          cardBindingActionTo = ((PurchaseAction) action).getCurCard();
+        } else {
+          cardBindingActionTo = ((ReserveAction) action).getCurCard();
+        }
+        // only bind the image view some actions if it's not dummy
+        if (cardBindingActionTo.getPrestigePoints() >= 0) {
+          // it's not a dummy card
+          allCardsImageViews.get(position.getY())
+              .setOnMouseClicked(createClickOnCardHandler(gameId, allActions));
+        }
+
       }
     }
   }
-
 
 
   @Override

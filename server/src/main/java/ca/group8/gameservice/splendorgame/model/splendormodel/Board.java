@@ -2,11 +2,14 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import io.github.isharipov.gson.adapters.JsonSubtype;
 import io.github.isharipov.gson.adapters.JsonType;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -60,15 +63,17 @@ public abstract class Board {
     JSONParser jsonParser = new JSONParser();
     List<NobleCard> resultCards = new ArrayList<>();
     // write unit tests
-    try (FileReader reader = new
-        FileReader(ResourceUtils.getFile("classpath:cardinfo_noblecard.json"))) {
-      Object obj = jsonParser.parse(reader);
+    try {
+      File nobleFile = new File("cardinfo_noblecard.json");
+      String nobleCardString = FileUtils.readFileToString(nobleFile, StandardCharsets.UTF_8);
+      Object obj = jsonParser.parse(nobleCardString);
       JSONArray cardList = (JSONArray) obj;
       for (Object o : cardList) {
-        NobleCard nb = parseNobleCard((JSONObject) o);
-        resultCards.add(nb);
+        NobleCard nobleCard = parseNobleCard((JSONObject) o);
+        resultCards.add(nobleCard);
       }
       return resultCards;
+
     } catch (ParseException | IOException e) {
       throw new RuntimeException(e);
     }
@@ -129,16 +134,17 @@ public abstract class Board {
   protected List<DevelopmentCard> generateDevelopmentCards(String fileName) {
     JSONParser jsonParser = new JSONParser();
     List<DevelopmentCard> resultCards = new ArrayList<>();
-    String curFileName = String.format("classpath:%s.json", fileName);
-    try (FileReader reader = new FileReader(ResourceUtils.getFile(curFileName))) {
-      Object obj = jsonParser.parse(reader);
+    File cardsFile = new File(String.format("%s.json", fileName));
+    try {
+      String cardsInString = FileUtils.readFileToString(cardsFile, StandardCharsets.UTF_8);
+      Object obj = jsonParser.parse(cardsInString);
       JSONArray cardList = (JSONArray) obj;
       for (Object o : cardList) {
         DevelopmentCard c = parseDevelopmentCard((JSONObject) o);
         resultCards.add(c);
       }
       return resultCards;
-    } catch (ParseException | IOException e) {
+    } catch (IOException | ParseException e) {
       throw new RuntimeException(e);
     }
   }
@@ -167,17 +173,19 @@ public abstract class Board {
 
   protected List<CityCard> generateCityCards() {
     JSONParser jsonParser = new JSONParser();
-    List<CityCard> resultCards = new ArrayList<>();
     // write unit tests
-    try (FileReader reader = new
-        FileReader(ResourceUtils.getFile("classpath:cardinfo_citycard.json"))) {
-      Object obj = jsonParser.parse(reader);
+    try {
+      List<CityCard> resultCards = new ArrayList<>();
+      File cityFile = new File("cardinfo_citycard.json");
+      String cityCardString = FileUtils.readFileToString(cityFile, StandardCharsets.UTF_8);
+      Object obj = jsonParser.parse(cityCardString);
       JSONArray cardList = (JSONArray) obj;
       for (Object o : cardList) {
         CityCard cityCard = parseCityObject((JSONObject) o);
         resultCards.add(cityCard);
       }
       return resultCards;
+
     } catch (ParseException | IOException e) {
       throw new RuntimeException(e);
     }

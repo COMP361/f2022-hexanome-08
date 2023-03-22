@@ -100,22 +100,37 @@ public class TraderBoard extends Board {
    * Call this method to rename the player names if the ones who want to play now does not.
    * match with the ones who saved this game before.
    *
-   * @param playerNames the current player names who want to play this game
+   * @param newNames the current player names who want to play this game
    */
   @Override
-  public void renamePlayers(List<String> playerNames) {
-    List<String> curNames = new ArrayList<>(allPlayerPowers.keySet());
-    // only update if names are different
-    if (!playerNames.equals(curNames)) {
-      int nameIndex = 0;
-      Map<String, Map<PowerEffect, Power>> newPowerMap = new HashMap<>();
-      for (String curName : allPlayerPowers.keySet()) {
-        Map<PowerEffect, Power> curPowerMap = allPlayerPowers.get(curName);
-        String newName = playerNames.get(nameIndex);
-        nameIndex += 1;
-        newPowerMap.put(newName, curPowerMap);
+  public void renamePlayers(List<String> newNames) {
+    List<String> oldNames = new ArrayList<>(allPlayerPowers.keySet());
+    List<String> newNamesCopy = new ArrayList<>(newNames);
+    List<String> assignedPlayers = new ArrayList<>();
+    Map<String, Map<PowerEffect, Power>> newPowerMap = new HashMap<>();
+    // for the old names, find their old data and assign it to them
+    for (String oldName : oldNames) {
+      // if any oldName match a new name, remove this old name from newNameCopy list
+      if (newNames.contains(oldName)) {
+        newPowerMap.put(oldName, allPlayerPowers.get(oldName));
+        newNamesCopy.remove(oldName);
+        assignedPlayers.add(oldName);
       }
-      allPlayerPowers = newPowerMap;
     }
+
+    int counter = 0;
+    for (String otherPlayerName : allPlayerPowers.keySet()) {
+      if (!assignedPlayers.contains(otherPlayerName)) {
+        Map<PowerEffect, Power> curPowerMap = allPlayerPowers.get(otherPlayerName);
+        String newName = newNamesCopy.get(counter);
+        newPowerMap.put(newName, curPowerMap);
+        counter += 1;
+      }
+      // finish assign all new players, end it
+      if (counter >= newNames.size()) {
+        break;
+      }
+    }
+    allPlayerPowers = newPowerMap;
   }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane fx:id="purchaseContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Text layoutX="179.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Take one token for free" textAlignment="CENTER" wrappingWidth="241.015625">
+            <font>
+                <Font name="System Bold" size="19.0" />
+            </font>
+        </Text>
+      <HBox fx:id="availableTokensHbox" layoutX="50.0" layoutY="50.0" prefHeight="100.0" prefWidth="500.0" />
+    </children>
+</Pane>

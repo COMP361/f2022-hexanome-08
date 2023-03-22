@@ -1,8 +1,11 @@
 package project.controllers.stagecontrollers;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import project.App;
-import project.GameBoardLayoutConfig;
 import project.connection.LobbyRequestSender;
 import project.view.lobby.communication.User;
 
@@ -31,66 +33,108 @@ public class LogInController implements Initializable {
   private Label logInPageErrorMessage;
 
   @FXML
-  private Button quitGameButton;
+  private Button logInButton;
+
+  @FXML
+  private Button quitButton;
 
   /**
    * The logic of handling log in. The methods check if the user has input both username and user
    * password or not
    */
-  @FXML
-  protected void onLogInButtonClick() throws UnirestException {
-    String userNameStr = userName.getText();
-    String userPasswordStr = userPassword.getText();
-    // retrieve the parsed JSONObject from the response
-    LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
-    JSONObject logInResponseJson = lobbyRequestSender
-        .sendLogInRequest(userNameStr, userPasswordStr);
 
-    // extract fields from the object, in case of failing to extract "access_token",
-    // update the error message
-    try {
-      // set up the permanent refresh_token for user
-      String accessToken = logInResponseJson.getString("access_token");
-      String refreshToken = logInResponseJson.getString("refresh_token");
-      String authority = lobbyRequestSender.sendAuthorityRequest(accessToken);
-      User curUser = new User(userNameStr, accessToken, refreshToken, authority);
-      App.setUser(curUser);
-
-      // if user is player, display admin_lobby_page
-      GameBoardLayoutConfig config = App.getGuiLayouts();
-      if (App.getUser().getAuthority().equals("ROLE_ADMIN")
-              ||
-          App.getUser().getAuthority().equals("ROLE_PLAYER")) {
-        if (App.getLobbyController() == null) {
-          App.setLobbyController(new LobbyController());
+  private EventHandler<ActionEvent> createOnLogInClick() {
+    return actionEvent -> {
+      // extract fields from the object, in case of failing to extract "access_token",
+      // update the error message
+      boolean serviceLogIn = false;
+      try {
+        String userNameStr = userName.getText();
+        String userPasswordStr = userPassword.getText();
+        // retrieve the parsed JSONObject from the response
+        LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+        JSONObject logInResponseJson = lobbyRequestSender
+            .sendLogInRequest(userNameStr, userPasswordStr);
+        // set up the permanent refresh_token for user
+        String accessToken = logInResponseJson.getString("access_token");
+        String refreshToken = logInResponseJson.getString("refresh_token");
+        String authority = lobbyRequestSender.sendAuthorityRequest(accessToken);
+        User curUser = new User(userNameStr, accessToken, refreshToken, authority);
+        // bind the user to the scope of App running lifecycle
+        App.setUser(curUser);
+        if (authority.equals("ROLE_SERVICE")) {
+          serviceLogIn = true;
+          throw new RuntimeException("");
         }
 
-        App.loadNewSceneToPrimaryStage(
-            "admin_lobby_page.fxml",
-            App.getLobbyController());
+        // at the same time, spawn a thread that keeps refreshing this player's access token
+        Thread refreshTokenThread = createRefreshTokenThread();
+        refreshTokenThread.setDaemon(true);
+        refreshTokenThread.start();
+        LobbyController lobbyController = new LobbyController();
+        lobbyController.initializeRefreshTokenThread(refreshTokenThread);
+        // display the lobby page, the role of the user will be used inside to
+        // decide whether to display admin zone button or not
+        App.loadNewSceneToPrimaryStage("lobby_page.fxml", lobbyController);
 
-      } else { // otherwise, player_lobby_page
-        // App.setRoot("player_lobby_page");
-        //App.setRoot("LobbyService");
+      } catch (Exception e) {
+        if (!serviceLogIn) {
+          logInPageErrorMessage.setText("Please enter both valid username and password");
+        } else {
+          logInPageErrorMessage.setText("Service Role can not log in LS! Try again");
+        }
+
+        userName.setText("");
+        userPassword.setText("");
       }
-      //lobbyRequestSender.getRemoteSessions();
-
-    } catch (Exception e) {
-      logInPageErrorMessage.setText("Please enter both valid username and password");
-      userName.setText("");
-      userPassword.setText("");
-    }
+    };
   }
 
-  @FXML
-  protected void onQuitGameButtonClick() {
-    Stage curStage = (Stage) quitGameButton.getScene().getWindow();
-    curStage.close();
+  // Mainly for debug usage
+  private void setDefaultLogInInfo() {
+    //String name = "ruoyuplayer";
+    String name = "ruoyu";
+    String password = "abc123_ABC123";
+
+    //String name = "splendorbase";
+    //String password = "laaPhie*aiN0";
+    userName.setText(name);
+    userPassword.setText(password);
   }
+
+  private Thread createRefreshTokenThread() {
+    return new Thread(()-> {
+      System.out.println(Thread.currentThread().getName() + ", the refresh token thread starts!");
+      System.out.println("Refreshing for " + App.getUser().getUsername());
+      while (!Thread.currentThread().isInterrupted()) {
+        // refresh the token, then go to sleep for 450 seconds
+        App.refreshUserToken(App.getUser());
+        System.out.println(App.getUser().getAccessToken());
+        try {
+          Thread.sleep(450000);
+        } catch (InterruptedException e) {
+          System.out.println(Thread.currentThread().getName() + " is dead!");
+          break;
+        }
+      }
+    });
+  }
+
+
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    //userName.setText("ruoyu");
-    //userPassword.setText("abc123_ABC123");
+    setDefaultLogInInfo();
+    logInButton.setOnAction(createOnLogInClick());
+    // guarantee to execute the termination of program in javafx thread
+    quitButton.setOnAction(event -> {
+      // before quiting, also terminate the refresh token thread
+      Platform.runLater(Platform::exit);
+      //Map<Thread, StackTraceElement[]> allThreads = Thread.getAllStackTraces();
+      //System.out.println("Number of running threads: " + allThreads.size());
+      //for (Thread thread : allThreads.keySet()) {
+      //  System.out.println("Thread name: " + thread.getName() + ", Thread ID: " + thread.getId());
+      //}
+    });
   }
 }

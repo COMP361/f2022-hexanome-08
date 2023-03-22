@@ -7,16 +7,12 @@ import ca.mcgill.comp361.splendormodel.model.PowerEffect;
 import ca.mcgill.comp361.splendormodel.model.TableTop;
 import ca.mcgill.comp361.splendormodel.model.TraderBoard;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import project.App;
 
@@ -30,12 +26,12 @@ public class TraderBoardGui extends VBox implements BoardGui {
   // the map that is used to look find the correct power GUI group, hardcoded
   private final Map<PowerEffect, Group> powerEffectGroupMap = new HashMap<>();
 
-  private Map<String, Integer> nameToArmCodeMap;
+  private final Map<String, Integer> nameToArmCodeMap;
 
   /**
    * Constructor.
    *
-   * @param gameId gameId to associate to this traderBoard.
+   * @param gameId           gameId to associate to this traderBoard.
    * @param nameToArmCodeMap maps player names to arms/powers.
    */
   public TraderBoardGui(long gameId, Map<String, Integer> nameToArmCodeMap) {
@@ -86,7 +82,6 @@ public class TraderBoardGui extends VBox implements BoardGui {
         // otherwise, do nothing
       }
     }
-
 
 
   }

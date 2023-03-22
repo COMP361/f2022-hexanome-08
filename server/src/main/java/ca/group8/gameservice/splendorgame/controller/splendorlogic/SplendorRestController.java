@@ -272,61 +272,6 @@ public class SplendorRestController {
     }
   }
 
-  ///**
-  // * TODO: send GET request to this location TWICE per turn, one at beginning, one at the end.
-  // * because we need to make sure everything on the board is not available for user to click
-  // * if it's not their turn
-  // *
-  // * This end point is only used to get the initial actionMap (Purchase, Reserve, TakeToken)
-  // * The cascade case will update the Map< String, Map< String, Action > > in GameInfo, which is
-  // * under long-polling control.
-  // * Therefore user can get updated action map to handle cascade action
-  // * without calling to this end point again.
-  // */
-  //@GetMapping(value = {"/splendortrade/api/games/{gameId}/players/{playerName}/actions",
-  //    "/splendorbase/api/games/{gameId}/players/{playerName}/actions",
-  //    "/splendorcity/api/games/{gameId}/players/{playerName}/actions"},
-  //    produces = "application/json; charset=utf-8")
-  //public ResponseEntity<String> getInitialActions(@PathVariable long gameId,
-  //                                                @PathVariable String playerName,
-  //                                                @RequestParam(value = "access_token")
-  //                                         String accessToken) {
-  //  try {
-  //    // check if anything is valid about this game id and the player with the access token
-  //    gameValidator.gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
-  //
-  //    // no exception happened, safely find the playerInGame and action generator for this player
-  //    ActionGenerator actionGenerator = gameManager
-  //        .getGameActionInterpreter(gameId)
-  //        .getActionGenerator();
-  //    PlayerInGame playerInGame = gameManager
-  //        .getPlayerStatesById(gameId)
-  //        .getOnePlayerInGame(playerName);
-  //    GameInfo gameInfo = gameManager.getGameById(gameId);
-  //    String curTurnPlayer = gameInfo.getCurrentPlayer();
-  //    Map<String, Action> actionMap = new HashMap<>();
-  //
-  //    // only update the action map differently if the player who asks for the action map
-  //    // is indeed the current turn player, otherwise just return empty map
-  //    if (playerName.equals(curTurnPlayer)) {
-  //      // use these action generator and player in game to set up initial actions for this player
-  //      actionGenerator.setInitialActions(playerInGame);
-  //
-  //      // serialize the action map and send it back to client
-  //      actionMap = actionGenerator.getPlayerActionMaps().get(playerName);
-  //    }
-  //
-  //    Type actionMapType = new TypeToken<Map<String, Action>>() {
-  //    }.getType();
-  //    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
-  //    String actionMapJson = gsonParser.toJson(actionMap, actionMapType);
-  //    return ResponseEntity.status(HttpStatus.OK).body(actionMapJson);
-  //  } catch (ModelAccessException e) {
-  //    logger.error(e.getMessage());
-  //    // something went wrong, reply with a bad request
-  //    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-  //  }
-  //}
 
 
   /**
@@ -350,6 +295,16 @@ public class SplendorRestController {
       ActionInterpreter actionInterpreter = gameManager.getGameActionInterpreter(gameId);
       actionInterpreter.interpretAction(actionId, playerName);
 
+      BroadcastContentManager<PlayerStates> playerStatesManager =
+          allPlayerInfoBroadcastContentManager.get(gameId);
+
+      BroadcastContentManager<GameInfo> gameInfoManger =
+          gameInfoBroadcastContentManager.get(gameId);
+      // if anything might have changed, let the client side know immediately
+      //
+      playerStatesManager.touch();
+      gameInfoManger.touch();
+
       // end of turn check
       GameInfo curGame = gameManager.getGameById(gameId);
       if (curGame.isFinished()) {
@@ -361,67 +316,12 @@ public class SplendorRestController {
         gameInfoBroadcastContentManager.remove(gameId);
         allPlayerInfoBroadcastContentManager.remove(gameId);
       }
-
-      BroadcastContentManager<PlayerStates> playerStatesManager =
-          allPlayerInfoBroadcastContentManager.get(gameId);
-
-      BroadcastContentManager<GameInfo> gameInfoManger =
-          gameInfoBroadcastContentManager.get(gameId);
-
-      // if anything might have changed, let the client side know immediately
-      playerStatesManager.touch();
-      gameInfoManger.touch();
-
-
       return ResponseEntity.status(HttpStatus.OK).body(null);
     } catch (ModelAccessException e) {
       logger.warn(e.getMessage());
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
-    //try {
-    //  gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
-    //
-    //  // if the client accidentally sends a request to server to ask for updates on inventory,
-    //  // it will be wrong because the player is not supposed to have updates on inventory
-    //  // outside out their turn
-    //  GameInfo gameInfo = splendorGameManager.getGameById(gameId);
-    //  if (!isPlayerTurn(playerName, gameInfo)) {
-    //    throw new ModelAccessException("It is not this player's turn, no POST request should be"
-    //        + "sent to this resource location yet!");
-    //  }
-    //
-    //  Action newAction;
-    //  //if (userAction == null) {
-    //  //  // the actions provided from GET is not changed, we just need the actionId to retrieve
-    //  //  // the action from actionGenerator map
-    //  //  newAction = splendorActionListGenerator.lookUpActions(gameId, playerName).get(actionId);
-    //  //
-    //  //} else {
-    //  //  // otherwise, we interpret based on this newly generated action userAction
-    //  //  newAction = userAction;
-    //  //}
-    //  //newAction = splendorActionListGenerator.lookUpActions(gameId, playerName).get(actionId);
-    //
-    //  PlayerInGame playerInGame = splendorGameManager
-    //      .getPlayerStatesById(gameId)
-    //      .getPlayersInfo()
-    //      .get(playerName);
-    //  // interpret this action regardless is modified by user or not
-    //
-    //  actionInterpreter.interpretAction(actionId, playerName);
-    //
-    //  // notify the async updates
-    //  // TODO: When things that might affect the long polling content we want
-    //  //  in this case, actions were executed, then we want to touch the managers so that
-    //  //  we can have our result back
-    //  allPlayerInfoBroadcastContentManager.get(gameId).touch();
-    //  gameInfoBroadcastContentManager.get(gameId).touch();
-    //  return ResponseEntity.status(HttpStatus.OK).body(null);
-    //
-    //} catch (ModelAccessException | UnirestException e) {
-    //  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    //}
   }
 
 }

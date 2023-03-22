@@ -47,7 +47,7 @@ public class TestReturnTokenAction {
     Map<Colour,Integer> colours = SplendorDevHelper.getInstance().getRawTokenColoursMap();
     for (Colour colour : colours.keySet()) {
       if (colour==Colour.RED) {
-        returnValue.put(colour.RED,2);
+        returnValue.put(Colour.RED,2);
         playerTokens.put(colour,3);
         tokensToTake.put(colour,3);
       } else if (colour==Colour.GREEN) {

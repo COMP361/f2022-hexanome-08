@@ -5,6 +5,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,6 +17,7 @@ public class BonusTokenPowerAction extends Action {
   private final PlayerInGame player;
 
   public BonusTokenPowerAction(PlayerInGame player, Colour colour) {
+    super.type = this.getClass().getSimpleName();
     this.player = player;
     this.colour = colour;
   }
@@ -29,14 +31,8 @@ public class BonusTokenPowerAction extends Action {
     Map<Colour, Integer> bankTokens = curTableTop.getBank().getAllTokens();
     int oldBankTokenCount = bankTokens.get(colour);
     bankTokens.put(colour, oldBankTokenCount - 1);
-  }
-
-  public Card getCurCard() {
-    return null;
-  }
-
-  public Position getCardPosition() throws NullPointerException {
-    return null;
+    // GO TO NEXT TURN
+    actionListGenerator.getPlayerActionMaps().put(playerInGame.getName(),new HashMap<>());
   }
 
   public Colour getColour() {

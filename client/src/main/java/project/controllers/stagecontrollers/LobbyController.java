@@ -15,13 +15,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.connection.LobbyRequestSender;
+import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.view.lobby.SessionGui;
 import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.GameParameters;
@@ -33,7 +33,7 @@ import project.view.lobby.communication.User;
 /**
  * login GUI controller.
  */
-public class LobbyController implements Initializable {
+public class LobbyController extends AbstractLobbyController {
 
   private final Map<String, Savegame> allSaveGamesMap = new HashMap<>();
   @FXML
@@ -43,6 +43,12 @@ public class LobbyController implements Initializable {
   @FXML
   private Button createSessionButton;
 
+  @FXML
+  private Button adminZoneButton;
+
+  @FXML
+  private Button settingButton;
+
   private EventHandler<ActionEvent> createClickOnCreateButton() {
     return event -> {
       LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
@@ -51,6 +57,17 @@ public class LobbyController implements Initializable {
 
       // Get the current game display name in the choice box
       String displayGameName = gameChoices.getValue();
+      // if there is no registered game, we throw a popup to player
+      if (displayGameName == null) {
+        App.loadPopUpWithController("lobby_warn.fxml",
+            new LobbyWarnPopUpController(
+                "Please choose a option of game first!" +
+                    "\nIf there is no game, ask the admin in person\nto create one!",
+                "NO GAME CHOSEN"),
+            360,
+            170);
+        return;
+      }
       String gameName = gameNameMapping.get(displayGameName);
       String saveGameId = "";
       // display name can be a game service name or a saved id, do that check
@@ -72,37 +89,11 @@ public class LobbyController implements Initializable {
   }
 
 
-  //@FXML
-  //protected void onLogOutFromLobbyMenu() throws IOException {
-  //  // clean up local lobby session cache before logging out
-  //  App.setUser(null);
-  //  App.setRoot("start_page");
-  //}
-  //
-  //@FXML
-  //public void joinGameDev() throws IOException {
-  //  // TODO: For debug usage
-  //  App.setRoot("splendor_base_game_board");
-  //}
-
-
-  private void createAndAddSessionGui(Session curSession, Long sessionId, User user) {
-    // create the new GUI
-    SessionGui curSessionGui = new SessionGui(curSession, sessionId, user);
-    // set up the session gui
-    curSessionGui.setup();
-    SessionGuiManager.addSessionGui(curSessionGui);
-
-  }
-
-
-  private Thread createUpdateGuiThread() {
+  private Thread createSessionGuiUpdateThread() {
     return new Thread(() -> {
-
       LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
-
       try {
         while (!Thread.currentThread().isInterrupted()) {
           int responseCode = 408;
@@ -119,11 +110,13 @@ public class LobbyController implements Initializable {
               throw new RuntimeException(e);
             }
             responseCode = longPullResponse.getStatus();
+            // before continuing to next iteration or exit the loop, if interrupted, finish
+            if (Thread.currentThread().isInterrupted()) {
+              throw new InterruptedException("Lobby Thread: " + Thread.currentThread().getName() +
+                  " terminated");
+            }
           }
 
-          if (Thread.currentThread().isInterrupted()) {
-            throw new InterruptedException("Interrupted Lobby Thread");
-          }
 
           if (responseCode == 200) {
             // long pulling ends in success, we obtain the list of new sessions
@@ -132,15 +125,21 @@ public class LobbyController implements Initializable {
             SessionList sessionList =
                 new Gson().fromJson(longPullResponse.getBody(), SessionList.class);
             Map<Long, Session> sessionMap = sessionList.getSessions();
-            System.out.println(
-                "Session lists updated, we have sessions ids: " + sessionList.getSessionIds());
             // clear all old sessions and add the new ones
-            SessionGuiManager.clearSessionsRecorded();
+            SessionGuiManager.getInstance().clearSessionsRecorded();
             for (long sessionId : sessionMap.keySet()) {
               Session curSession = sessionMap.get(sessionId);
-              createAndAddSessionGui(curSession, sessionId, App.getUser());
+              // create the new GUI
+              SessionGui curSessionGui = new SessionGui(curSession, sessionId, App.getUser(), Thread.currentThread());
+              // set up the session gui
+              curSessionGui.setup();
+              SessionGuiManager.getInstance().addSessionGui(curSessionGui);
             }
           }
+          // change the order of session GUI based on username
+          // and update the color if it's launched
+          SessionGuiManager.getInstance().setupSessionGuiOrder();
+
           // update the content in scroll pane
           Platform.runLater(() -> {
             allSessionScrollPane.setContent(SessionGuiManager.getInstance());
@@ -154,18 +153,13 @@ public class LobbyController implements Initializable {
   }
 
 
-  @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    // everytime a lobby controller is initialized, kill all previous lobby thread
-    // and the game thread
-
-    SessionGuiManager.clearSessionsRecorded();
-    createSessionButton.setOnAction(createClickOnCreateButton());
+  private void setUpAvailableGameNames() {
     // Get all available games and pre-set the ChoiceBox
     // mainly about display on session info
     LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
     List<GameParameters> gameParameters = lobbyRequestSender.sendAllGamesRequest();
     List<String> gameDisplayNames = new ArrayList<>();
+    List<String> saveGameIds = new ArrayList<>();
 
     // map from display name to actual game name
     for (GameParameters g : gameParameters) {
@@ -179,27 +173,64 @@ public class LobbyController implements Initializable {
         // we have more than 1 saved game ids for this current service game
         for (Savegame savegame : savegames) {
           allSaveGamesMap.put(savegame.getSavegameid(), savegame);
-          gameDisplayNames.add(savegame.getSavegameid());
+          // adding all saved game ids to a separate list
+          saveGameIds.add(savegame.getSavegameid());
         }
       }
     }
-
+    gameDisplayNames.addAll(saveGameIds);
     // Available games to choose from ChoiceBox (Note, this includes save game ids)
     ObservableList<String> gameOptionsList = FXCollections.observableArrayList(gameDisplayNames);
     gameChoices.setItems(gameOptionsList);
+    // default, base game (if there is any game registered)
+    if (!gameOptionsList.isEmpty()) {
+      gameChoices.setValue(gameOptionsList.get(0));
+    }
+  }
+
+  private void pageSpecificActionBind() {
+    settingButton.setOnAction(event -> {
+      // before leaving the lobby page, make sure to stop the update thread
+      sessionUpdateThread.interrupt();
+      App.loadNewSceneToPrimaryStage("setting_page.fxml", new SettingPageController());
+    });
+
+    adminZoneButton.setVisible(false);
+    // potentially enable admin zone button functionality
+    String role = App.getUser().getAuthority();
+    // only set up for admin role
+    if (role.equals("ROLE_ADMIN")) {
+      adminZoneButton.setVisible(true);
+      adminZoneButton.setOnAction(event -> {
+        // before leaving the lobby page, make sure to stop the update thread
+        sessionUpdateThread.interrupt();
+        App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
+      });
+    }
+  }
+
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    super.initialize(url, resourceBundle);
+    // for lobby page, bind action to setting and admin button
+    pageSpecificActionBind();
+
+    // everytime we assign a new lobby controller, clean
+    // the previous sessions
+    SessionGuiManager.getInstance().clearSessionsRecorded();
+
+    // assign function to the "Create" button
+    createSessionButton.setOnAction(createClickOnCreateButton());
+
+    // get all possible game names (including saved games) from LS
+    setUpAvailableGameNames();
 
     // Set up the thread to keep updating sessions
-    Thread updateAddRemoveSessionThread;
-
-    if (App.getAppLobbyGuiThread() == null) {
-      updateAddRemoveSessionThread = createUpdateGuiThread();
-      App.setAppLobbyGuiThread(updateAddRemoveSessionThread);
-    } else {
-      updateAddRemoveSessionThread = App.getAppLobbyGuiThread();
-    }
-    System.out.println("Current Lobby Thread: " + App.getAppLobbyGuiThread().getName());
-    updateAddRemoveSessionThread.start();
-    //App.addLobbyThread(updateAddRemoveSessionThread);
+    initializeSessionUpdateThread(createSessionGuiUpdateThread());
+    sessionUpdateThread.setDaemon(true);
+    sessionUpdateThread.start();
   }
+
+
 }
 

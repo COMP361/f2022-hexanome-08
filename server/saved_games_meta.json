@@ -1,0 +1,67 @@
+[
+  {
+    "players": [
+      "young",
+      "ruoyu"
+    ],
+    "gamename": "splendorbase",
+    "savegameid": "1 step before the most complicate case"
+  },
+  {
+    "players": [
+      "ruoyu",
+      "young"
+    ],
+    "gamename": "splendorbase",
+    "savegameid": "unlock cat noble from reservehand"
+  },
+  {
+    "players": [
+      "ruoyu",
+      "muzhi"
+    ],
+    "gamename": "splendorbase",
+    "savegameid": "one step before win (muzhi vs ruoyu)"
+  },
+  {
+    "players": [
+      "ruoyu",
+      "muzhi"
+    ],
+    "gamename": "splendorbase",
+    "savegameid": "one step before burn 2"
+  },
+  {
+    "players": [
+      "julia",
+      "ruoyu"
+    ],
+    "gamename": "splendorbase",
+    "savegameid": "closer to test unlock 2 nobles"
+  },
+  {
+    "players": [
+      "julia",
+      "pengyu",
+      "ruoyu"
+    ],
+    "gamename": "splendortrade",
+    "savegameid": "bonus token power unlocked"
+  },
+  {
+    "players": [
+      "ruoyu",
+      "pengyu"
+    ],
+    "gamename": "splendortrade",
+    "savegameid": "one step before purchase using power"
+  },
+  {
+    "players": [
+      "julia",
+      "ruoyu"
+    ],
+    "gamename": "splendorcity",
+    "savegameid": "one step from unlocking 2 cities"
+  }
+]

@@ -98,7 +98,7 @@ public class TestOrientBoard {
     for (int level = 1; level <= 3; level++) {
       DevelopmentCard cardFromDeck = testLevelDecks.get(level).get(0);
       DevelopmentCard cardPoped = board.popLevelCardFromDeck(level);
-      assertTrue(cardFromDeck.equals(cardPoped));
+      assertEquals(cardFromDeck, cardPoped);
     }
   }
 

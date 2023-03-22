@@ -26,6 +26,8 @@ public class SessionGui extends HBox {
   private final User curUser;
   private Session curSession;
 
+  private final Thread lobbyUpdateThread;
+
 
   // TODO: Needs to add a field -> String saveGameId, constructed in constructor
   //private final String saveGameId;
@@ -33,16 +35,18 @@ public class SessionGui extends HBox {
   /**
    * This constructs a new SessionGUI.
    *
-   * @param curSession   provides the current Session object.
-   * @param curSessionId provides the current Session's ID.
-   * @param curUser      provides the current User object.
+   * @param curSession        provides the current Session object.
+   * @param curSessionId      provides the current Session's ID.
+   * @param curUser           provides the current User object.
+   * @param lobbyUpdateThread the thread that controls the lobby page GUI udpates
    */
-  public SessionGui(Session curSession, Long curSessionId, User curUser) {
+  public SessionGui(Session curSession, Long curSessionId, User curUser, Thread lobbyUpdateThread) {
     this.curSession = curSession;
     this.curSessionId = curSessionId;
     this.curUser = curUser;
+    this.lobbyUpdateThread = lobbyUpdateThread;
     FXMLLoader fxmlLoader = new FXMLLoader(getClass()
-        .getResource("/project/session_template.fxml"));
+        .getResource("/project/session_gui.fxml"));
     fxmlLoader.setRoot(this);
     try {
       fxmlLoader.load();
@@ -99,42 +103,29 @@ public class SessionGui extends HBox {
 
   private EventHandler<ActionEvent> createWatchGameHandler() {
     return event -> {
-      // just load the board to this user, nothing else should be done
-      //try {
-      //  App.setRoot("splendor_base_game_board");
-      //} catch (IOException e) {
-      //  throw new RuntimeException(e);
-      //}
+      // we are loading a game play page for a watcher, who has only access to QUIT the game
+      // the board is updating pretending this watcher is the first player name
+      // but there is no functionality provided to one but the quit button
+      App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
+      App.loadNewSceneToPrimaryStage("splendor_base_game_board.fxml",
+          new GameController(curSessionId, null));
+      lobbyUpdateThread.interrupt();
     };
   }
 
   private EventHandler<ActionEvent> createPlayGameHandler() {
     return event -> {
-      try {
-        // display the GUI with some basic information needed
-        // 0. sessionId needs to be passed to this controller, the other info
-        // I can get from based on this sessionId (gameId)
-        GameBoardLayoutConfig config = App.getGuiLayouts();
-        // whenever the user clicks play button, we will reset the game request sender to
-        // send correct REST requests to our backend in a right path name (splendorbase, city...)
-        App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
+      // display the GUI with some basic information needed
+      // whenever the user clicks play button, we will reset the game request sender to
+      // send correct REST requests to our backend in a right path name (splendorbase, city...)
+      App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
 
-        // passing Session as param of GameController param cuz it contains optionally
-        // the save game id, later will be used to save game
-        //App.loadPopUpWithController("splendor_base_game_board.fxml",
-        //    new GameController(curSessionId, curSession),
-        //    config.getAppWidth(),
-        //    config.getAppHeight());
-        App.loadNewSceneToPrimaryStage("splendor_base_game_board.fxml",
-            new GameController(curSessionId, curSession));
-        App.getAppLobbyGuiThread().interrupt();
-        App.setAppLobbyGuiThread(null);
-        Button playButton = (Button) event.getSource();
-        //Stage lobbyWindow = (Stage) playButton.getScene().getWindow();
-        //lobbyWindow.close();
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
+      // pass a meaningful username, so that we know that person can play
+      App.loadNewSceneToPrimaryStage("splendor_base_game_board.fxml",
+          new GameController(curSessionId, App.getUser().getUsername()));
+      // when we click Play, we need to stop the lobby thread from keep monitoring
+      // the changes
+      lobbyUpdateThread.interrupt();
     };
   }
 

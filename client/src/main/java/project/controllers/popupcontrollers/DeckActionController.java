@@ -19,21 +19,18 @@ public class DeckActionController implements Initializable {
 
   private final long gameId;
   private final String actionId;
-  private final Rectangle coverRectangle;
   @FXML
   private Button reserveButton;
 
   /**
    * DeckActionController.
    *
-   * @param gameId gameId
-   * @param actionId actionId
-   * @param coverRectangle coverRectangle
+   * @param gameId         gameId
+   * @param actionId       actionId
    */
-  public DeckActionController(long gameId, String actionId, Rectangle coverRectangle) {
+  public DeckActionController(long gameId, String actionId) {
     this.gameId = gameId;
     this.actionId = actionId;
-    this.coverRectangle = coverRectangle;
   }
 
 
@@ -45,21 +42,12 @@ public class DeckActionController implements Initializable {
       String accessToken = App.getUser().getAccessToken();
       sender.sendPlayerActionChoiceRequest(gameId, playerName, accessToken, actionId);
       Stage curWindow = (Stage) reserveButton.getScene().getWindow();
-      coverRectangle.setVisible(false);
       curWindow.close();
     };
   }
 
-  //private EventHandler<ActionEvent> createOnClickBackHandler() {
-  //  return event -> {
-  //    Stage curWindow = (Stage) goBackButton.getScene().getWindow();
-  //    curWindow.close();
-  //  };
-  //}
-
   @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    //goBackButton.setOnAction(createOnClickBackHandler());
+  public void initialize(URL url, ResourceBundle resourceBundle) {;
     reserveButton.setOnAction(createOnClickReserveHandler());
   }
 }

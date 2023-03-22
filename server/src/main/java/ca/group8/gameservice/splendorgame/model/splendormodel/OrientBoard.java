@@ -1,5 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +41,18 @@ public class OrientBoard extends Board {
    * @return a card taken from cardLevel deck
    */
   public DevelopmentCard popLevelCardFromDeck(int cardLevel) {
-    return decks.get(cardLevel).remove(0);
+    if (decks.get(cardLevel).isEmpty()) {
+      //TODO: everything about this dummy card is wrong!
+      return new DevelopmentCard(-1,
+          SplendorDevHelper.getInstance().getRawTokenColoursMap(),
+          "dummy_card",
+          -1,
+          Colour.ORIENT,
+          -1,
+          new ArrayList<>());
+    } else {
+      return decks.get(cardLevel).remove(0);
+    }
   }
 
   /**

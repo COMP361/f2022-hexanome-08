@@ -3,10 +3,13 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Handler;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,11 +20,13 @@ public class PlayerTest {
   PlayerInGame player2 = new PlayerInGame("Julia");
   List<CardEffect> purchaseEffects = new ArrayList<>();
 
+  @Test
+  public void testEquals(){
+    Set<String> list1 = new HashSet<>(Arrays.asList("a", "b"));
+    Set<String> list2 = new HashSet<>(Arrays.asList("b", "a"));
+    System.out.println(list2.equals(list1));
 
-//  @Test
-//  void testIsEmpty(){
-//    assert(player.isEmpty());
-//  }
+  }
 /*
   @Test
   public void testGetters(){

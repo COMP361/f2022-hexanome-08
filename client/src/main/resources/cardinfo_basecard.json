@@ -88,11 +88,11 @@
         "cardName":"b6",
         "prestigePoints":0,
         "price":{
-            "BLUE":1,
-            "BLACK":0,
+            "BLUE":0,
+            "BLACK":1,
             "RED":3,
             "GREEN":1,
-            "WHITE":1
+            "WHITE":0
         },
         "purchaseEffects":[
 
@@ -1242,7 +1242,7 @@
     },
     {
         "cardName":"b4",
-        "prestigePoints":3,
+        "prestigePoints":4,
         "price":{
             "BLUE":0,
             "BLACK":3,

@@ -3,6 +3,7 @@ package project.view.splendor;
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;
 import ca.mcgill.comp361.splendormodel.actions.ReserveAction;
+import ca.mcgill.comp361.splendormodel.actions.ReturnTokenAction;
 import ca.mcgill.comp361.splendormodel.actions.TakeTokenAction;
 import ca.mcgill.comp361.splendormodel.model.BaseBoard;
 import ca.mcgill.comp361.splendormodel.model.Colour;
@@ -25,6 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import project.App;
 import project.GameBoardLayoutConfig;
+import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 
 /**
  * Display the baseboardGUI.
@@ -38,22 +40,20 @@ public class BaseBoardGui implements BoardGui {
   private final AnchorPane playerBoardAnchorPane;
 
   private final long gameId;
-  private final Rectangle coverRectangle;
 
   /**
    * What the baseBoardGUI has.
    *
    * @param playerBoardAnchorPane playerBoardAnchorPane
-   * @param gameId gameId
-   * @param coverRectangle coverRectangle
+   * @param gameId                gameId
    */
-  public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId, Rectangle coverRectangle) {
+  public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId) {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     this.gameId = gameId;
-    nobleBoardGui = new NobleBoardGui(100, 100, 5);
+    nobleBoardGui = new NobleBoardGui(config.getNobleWidth(), config.getNobleHeight(), config.getNobleSpace());
     tokenBankGui = new TokenBankGui(gameId);
     this.playerBoardAnchorPane = playerBoardAnchorPane;
     this.baseCardBoard = new VBox();
-    this.coverRectangle = coverRectangle;
   }
 
 
@@ -71,6 +71,8 @@ public class BaseBoardGui implements BoardGui {
     // set up and add bank GUI. need to consider the action map for all take token actions
     // since it's set up, not update, no return token action can be here
     Map<String, TakeTokenAction> takeTokenActionMap = new HashMap<>();
+    Map<String, ReturnTokenAction> returnTokenActionMap = new HashMap<>();
+
     for (String actionId : playerActionMap.keySet()) {
       Action action = playerActionMap.get(actionId);
       if (action instanceof TakeTokenAction) {
@@ -78,24 +80,51 @@ public class BaseBoardGui implements BoardGui {
         //System.out.println(takeTokenAction.getTokens());
         takeTokenActionMap.put(actionId, takeTokenAction);
       }
+      if (action instanceof ReturnTokenAction) {
+        ReturnTokenAction returnTokenAction = (ReturnTokenAction) action;
+        //System.out.println(takeTokenAction.getTokens());
+        returnTokenActionMap.put(actionId, returnTokenAction);
+      }
     }
     EnumMap<Colour, Integer> bankBalance = tableTop.getBank().getAllTokens();
-    Platform.runLater(() -> {
-      tokenBankGui.setup(takeTokenActionMap,
-          bankBalance,
-          config.getTokenBankLayoutX(),
-          config.getTokenBankLayoutY(),
-          true);
-      playerBoardAnchorPane.getChildren().add(tokenBankGui);
-    });
+    if (returnTokenActionMap.isEmpty()) {
+      Platform.runLater(() -> {
+        tokenBankGui.setup(takeTokenActionMap,
+            bankBalance,
+            config.getTokenBankLayoutX(),
+            config.getTokenBankLayoutY());
+        playerBoardAnchorPane.getChildren().add(tokenBankGui);
+      });
+    } else { //means there are only return token actions
+      ReturnTokenAction firstAction = returnTokenActionMap.values().iterator().next();
+      int amountToReturn = firstAction.getExtraTokenCount();
+      System.out.println("amount to return: " + amountToReturn);
+      String msg = "Please return: " + amountToReturn;
+      String title = "Return Tokens";
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("lobby_warn.fxml",
+            new LobbyWarnPopUpController(msg, title),
+            360,
+            170);
+      });
+
+      Platform.runLater(() -> {
+        tokenBankGui.setupReturnToken(returnTokenActionMap,
+            bankBalance,  //this is an empty bank map
+            config.getTokenBankLayoutX(),
+            config.getTokenBankLayoutY());
+        playerBoardAnchorPane.getChildren().add(tokenBankGui);
+      });
+    }
+
 
     // set up and add base card GUI, only purchase and reserve actions are
     // there in the action map at this point (or empty)
     Map<String, Action> reservePurchaseActions = playerActionMap.entrySet()
-        .stream().filter(e -> e.getValue() instanceof ReserveAction
-                    ||
-            e.getValue() instanceof PurchaseAction)
+        .stream().filter(e ->
+            e.getValue() instanceof ReserveAction || e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
 
     Map<Position, List<ActionIdPair>> positionToActionMap =
         getPositionActions(reservePurchaseActions);
@@ -103,8 +132,7 @@ public class BaseBoardGui implements BoardGui {
     for (int i = 3; i >= 1; i--) {
       DevelopmentCard[] cardsOnBoard = baseBoard.getLevelCardsOnBoard(i);
       List<DevelopmentCard> deck = baseBoard.getDecks().get(i);
-      BaseCardLevelGui baseCardLevelGui =
-          new BaseCardLevelGui(i, cardsOnBoard, deck, coverRectangle);
+      BaseCardLevelGui baseCardLevelGui = new BaseCardLevelGui(i, cardsOnBoard, deck);
       baseCardLevelGui.setup();
       baseCardLevelGui.bindActionToCardAndDeck(positionToActionMap, gameId);
       baseCardLevelGuiMap.put(i, baseCardLevelGui);
@@ -150,10 +178,10 @@ public class BaseBoardGui implements BoardGui {
       }
 
     }
-    for (Position position : positionToActionMap.keySet()) {
-      System.out.print("level + index: " + position.getX() + " " + position.getY());
-      System.out.println(" " + positionToActionMap.get(position).size());
-    }
+    //for (Position position : positionToActionMap.keySet()) {
+    //  System.out.print("level + index: " + position.getX() + " " + position.getY());
+    //  System.out.println(" " + positionToActionMap.get(position).size());
+    //}
     return positionToActionMap;
   }
 

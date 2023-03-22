@@ -8,6 +8,7 @@ public class GameBoardLayoutConfig {
   private double appHeight;
   private double nobleLayoutX;
   private double nobleLayoutY;
+  private double nobleSpace;
   private double tokenBankLayoutX;
   private double tokenBankLayoutY;
   private double topPlayerLayoutX;
@@ -40,16 +41,22 @@ public class GameBoardLayoutConfig {
   private double baseCardBoardHeight;
   private double pacWidth;
   private double pacHeight;
+  private double cityWidth;
+  private double cityHeight;
+  private double citySpace;
   private double cardActionWidth;
   private double cardActionHeight;
-  private double deckActionWidth;
-  private double deckActionHeight;
   private double exitGameWidth;
   private double exitGameHeight;
-  private double purchaseConfirmWidth;
-  private double purchaseConfirmHeight;
-  private double reserveWidth;
-  private double reserveHeight;
+  private double smallPopUpWidth;
+  private double smallPopUpHeight;
+  private double largePopUpWidth;
+  private double largePopUpHeight;
+  private double selectFreeCardWidth;
+  private double selectFreeCardHeight;
+
+  public GameBoardLayoutConfig() {
+  }
 
   public double getAppWidth() {
     return appWidth;
@@ -82,6 +89,10 @@ public class GameBoardLayoutConfig {
   public void setNobleLayoutY(double nobleLayoutY) {
     this.nobleLayoutY = nobleLayoutY;
   }
+
+  public double getNobleSpace() {return nobleSpace;}
+
+  public void setNobleSpace(double nobleSpace) {this.nobleSpace = nobleSpace;}
 
   public double getTokenBankLayoutX() {
     return tokenBankLayoutX;
@@ -210,6 +221,17 @@ public class GameBoardLayoutConfig {
   public void setPacBoardLayoutY(double powerAndCityBoardLayoutY) {
     this.pacBoardLayoutY = powerAndCityBoardLayoutY;
   }
+  public void setCityWidth(double cityWidth) {this.cityWidth = cityWidth;}
+
+  public void setCityHeight(double cityHeight) {this.cityHeight = cityHeight;}
+
+  public void setCitySpace(double citySpace) {this.citySpace = citySpace;}
+
+  public double getCityWidth() {return cityWidth;}
+
+  public double getCityHeight() {return cityHeight;}
+
+  public double getCitySpace() {return citySpace;}
 
   public double getNobleWidth() {
     return nobleWidth;
@@ -354,21 +376,12 @@ public class GameBoardLayoutConfig {
   public void setCardActionHeight(double cardActionHeight) {
     this.cardActionHeight = cardActionHeight;
   }
-
-  public double getDeckActionWidth() {
-    return deckActionWidth;
+  public double getSmallPopUpWidth() {
+    return smallPopUpWidth;
   }
 
-  public void setDeckActionWidth(double deckActionWidth) {
-    this.deckActionWidth = deckActionWidth;
-  }
-
-  public double getDeckActionHeight() {
-    return deckActionHeight;
-  }
-
-  public void setDeckActionHeight(double deckActionHeight) {
-    this.deckActionHeight = deckActionHeight;
+  public double getSmallPopUpHeight() {
+    return smallPopUpHeight;
   }
 
   public double getExitGameWidth() {
@@ -386,36 +399,20 @@ public class GameBoardLayoutConfig {
   public void setExitGameHeight(double exitGameHeight) {
     this.exitGameHeight = exitGameHeight;
   }
-
-  public double getPurchaseConfirmWidth() {
-    return purchaseConfirmWidth;
+  public double getLargePopUpWidth() {
+    return largePopUpWidth;
   }
 
-  public void setPurchaseConfirmWidth(double purchaseConfirmWidth) {
-    this.purchaseConfirmWidth = purchaseConfirmWidth;
+  public double getLargePopUpHeight() {
+    return largePopUpHeight;
   }
 
-  public double getPurchaseConfirmHeight() {
-    return purchaseConfirmHeight;
+  public double getSelectFreeCardWidth() {
+    return selectFreeCardWidth;
   }
 
-  public void setPurchaseConfirmHeight(double purchaseConfirmHeight) {
-    this.purchaseConfirmHeight = purchaseConfirmHeight;
+  public double getSelectFreeCardHeight() {
+    return selectFreeCardHeight;
   }
 
-  public double getReserveWidth() {
-    return reserveWidth;
-  }
-
-  public void setReserveWidth(double reserveWidth) {
-    this.reserveWidth = reserveWidth;
-  }
-
-  public double getReserveHeight() {
-    return reserveHeight;
-  }
-
-  public void setReserveHeight(double reserveHeight) {
-    this.reserveHeight = reserveHeight;
-  }
 }
