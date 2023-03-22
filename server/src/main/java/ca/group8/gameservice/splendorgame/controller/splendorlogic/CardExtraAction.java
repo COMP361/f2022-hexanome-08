@@ -281,10 +281,13 @@ public class CardExtraAction extends Action {
     Logger logger = LoggerFactory.getLogger(ActionInterpreter.class);
 
     //if you have finished burning cards
+    //TODO: NOTE, this new card is the one we want to (potentially)
+    // continue generate burn action on, not curCard!
+    DevelopmentCard newCard = associatedActionInterpreter.getStashedCard();
     if (burnNumber - gemNumber <= 0) {
       logger.info("Should be no gems left to burn: " +(burnNumber - gemNumber) );
       //take stashed card and add to player's hand
-      DevelopmentCard newCard = associatedActionInterpreter.getStashedCard();
+      newCard = associatedActionInterpreter.getStashedCard();
       curPlayer.getPurchasedHand().addDevelopmentCard(newCard);
 
       //add prestige points
@@ -295,7 +298,9 @@ public class CardExtraAction extends Action {
       actionGenerator.getPlayerActionMaps().put(curPlayer.getName(), new HashMap<>());
     } else {
       logger.info("Gems still Left to burn: " +(burnNumber - gemNumber) );
-      actionGenerator.updateCascadeActions(curPlayer,(DevelopmentCard) curCard, CardEffect.BURN_CARD);
+      // the curCard in CardExtraAction refer to the card that IS to be burnt
+      // not the card that we purchased by burning
+      actionGenerator.updateCascadeActions(curPlayer, newCard, CardEffect.BURN_CARD);
     }
   }
 

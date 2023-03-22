@@ -369,8 +369,7 @@ public class ActionInterpreter {
     return burnCardColour;
   }
 
-  public void setBurnCardColour(
-      Colour burnCardColour) {
+  public void setBurnCardColour(Colour burnCardColour) {
     this.burnCardColour = burnCardColour;
   }
 
