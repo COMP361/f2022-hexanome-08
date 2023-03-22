@@ -713,14 +713,26 @@ public class ActionGenerator {
     List<Action> returnTokenActions = new ArrayList<>();
     for (EnumMap<Colour, Integer> combo : allCombinations) {
       boolean isValid = true;
+      logger.warn("Looking at comb: " + combo);
       for (Colour colour : combo.keySet()) {
+        // skip the condition check for gold token
+        if (colour.equals(Colour.GOLD) || colour.equals(Colour.ORIENT)) {
+          continue;
+        }
+        logger.warn("Cur colour: " + colour);
         if (playerTokens.get(colour) < combo.get(colour)) {
+          logger.warn("No enough token to return");
+          logger.warn("Player tokens: " + playerTokens.get(colour));
+          logger.warn("Combo tokens: " + playerTokens.get(colour));
+
           isValid = false;
         }
         // if the return went over the initial value, we do not allow it as well
         int upperBound = tableTop.getBank().getInitialValue();
         EnumMap<Colour, Integer> bankBalance = tableTop.getBank().getAllTokens();
         if (bankBalance.get(colour) + combo.get(colour) > upperBound) {
+          logger.warn("After return: " + bankBalance.get(colour) + combo.get(colour));
+          logger.warn("Upper bound: " + upperBound);
           isValid = false;
         }
       }
@@ -729,7 +741,7 @@ public class ActionGenerator {
         returnTokenActions.add(new ReturnTokenAction(combo, extraTokenCount));
       }
     }
-
+    logger.warn("All return tokens on server side: " + returnTokenActions);
     Map<String, Action> actionMap = new HashMap<>();
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     for (Action action : returnTokenActions) {
