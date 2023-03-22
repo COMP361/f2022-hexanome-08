@@ -1,12 +1,15 @@
 package project.controllers.popupcontrollers;
 
+import ca.mcgill.comp361.splendormodel.model.GameInfo;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import project.App;
 import project.controllers.stagecontrollers.LobbyController;
@@ -18,14 +21,22 @@ public class GameOverPopUpController implements Initializable {
 
   private final Thread mainGameUpdateThread;
   private final Thread playerInfoThread;
+
+  private final List<String> winnerNames;
   private final boolean optionToCancel;
+
+  @FXML
+  private Label winnersLabel;
   @FXML
   private Button byeButton;
 
-  public GameOverPopUpController(Thread mainGameUpdateThread, Thread playerInfoThread,
+  public GameOverPopUpController(Thread mainGameUpdateThread,
+                                 Thread playerInfoThread,
+                                 List<String> winnerNames,
                                  boolean optionToCancel) {
     this.mainGameUpdateThread = mainGameUpdateThread;
     this.playerInfoThread = playerInfoThread;
+    this.winnerNames = winnerNames;
     this.optionToCancel = optionToCancel;
   }
 
@@ -57,6 +68,9 @@ public class GameOverPopUpController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     byeButton.setOnAction(clickOnQuitGameButton(mainGameUpdateThread, playerInfoThread));
+    if (!winnerNames.isEmpty() && !optionToCancel) {
+      winnersLabel.setText("Winners: " + winnerNames);
+    }
   }
 
 }

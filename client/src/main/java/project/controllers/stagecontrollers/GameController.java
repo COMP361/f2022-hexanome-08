@@ -645,7 +645,10 @@ public class GameController implements Initializable {
       // implicitly handle the threading stopping logic and loading back to lobby
       Platform.runLater(() -> {
         App.loadPopUpWithController("game_over.fxml",
-            new GameOverPopUpController(mainGameUpdateThread, playerInfoThread, false),
+            new GameOverPopUpController(mainGameUpdateThread,
+                playerInfoThread,
+                curGameInfo.getWinners(),
+                false),
             360, 170);
       });
     }
@@ -756,7 +759,10 @@ public class GameController implements Initializable {
   private EventHandler<ActionEvent> createClickOnQuitButtonEvent() {
     return event -> {
       App.loadPopUpWithController("quit_game.fxml",
-          new GameOverPopUpController(mainGameUpdateThread, playerInfoThread, true),
+          new GameOverPopUpController(mainGameUpdateThread,
+              playerInfoThread,
+              new ArrayList<>(),
+              true),
           360, 170);
     };
   }
