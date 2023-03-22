@@ -107,7 +107,8 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       App.loadPopUpWithController("card_action.fxml",
-          new CardActionController(gameId, allActions, null), config.getCardActionWidth(), config.getCardActionHeight());
+          new CardActionController(gameId, allActions, null),
+          config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
     };
   }
 
@@ -115,7 +116,8 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       App.loadPopUpWithController("deck_action.fxml",
-          new DeckActionController(gameId, actionId), config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
+          new DeckActionController(gameId, actionId),
+          config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
     };
   }
 
