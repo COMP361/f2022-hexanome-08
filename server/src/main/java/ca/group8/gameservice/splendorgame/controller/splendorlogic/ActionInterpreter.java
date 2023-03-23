@@ -100,7 +100,7 @@ public class ActionInterpreter {
       for (int i = 0; i < allNobles.size(); i++) {
         NobleCard nobleCard = allNobles.get(i);
         if (nobleCard.canVisit(playerInGame)) {
-          noblePositions.add(new Position(0,i));
+          noblePositions.add(new Position(0, i));
           noblesUnlocked.add(nobleCard);
         }
       }
@@ -137,10 +137,7 @@ public class ActionInterpreter {
           int noblePoints = nobleCard.getPrestigePoints();
           playerInGame.changePrestigePoints(noblePoints);
           nobleVisited = true;
-        }
-
-        // unlocked more than one noble
-        else {
+        } else { // unlocked more than one noble
           actionGenerator.updateClaimNobleActions(noblePositions, noblesUnlocked, playerInGame);
           // we do not want to continue the other condition checks
           nobleVisited = true;
@@ -214,7 +211,8 @@ public class ActionInterpreter {
         if (traderBoard.getPlayerOnePower(playerName, PowerEffect.EXTRA_TOKEN).isUnlocked()) {
           if (bonusTokenStashed) {
             bonusTokenStashed = false;
-            logger.info("Update actions called and BonusTokenStashed set to false for " +  playerName);
+            logger.info("Update actions called and BonusTokenStashed set to false for "
+                +  playerName);
             actionGenerator.updateBonusTokenPowerActions(playerInGame);
             return;
           }
@@ -244,7 +242,7 @@ public class ActionInterpreter {
             unlockedCity = true;
             if (unlockedCityCards.size() == 1) {
               // if unlocked only one, then there is no option to choose
-              cityBoard.assignCityCard(playerName,unlockedCityCards.get(0));
+              cityBoard.assignCityCard(playerName, unlockedCityCards.get(0));
             } else {
               actionGenerator.updateClaimCityActions(unlockedCityCards, playerName);
               // update claim city actions, let player do further move
@@ -353,13 +351,13 @@ public class ActionInterpreter {
    */
   public void setBurnCardInfo(EnumMap<Colour, Integer> cardPrice) {
     Logger logger = LoggerFactory.getLogger(ActionInterpreter.class);
-    logger.info("AI: burn card price: "+cardPrice);
+    logger.info("AI: burn card price: " + cardPrice);
     //set colour and cards to burn
     burnCardCount = 2;
     for (Colour colour : cardPrice.keySet()) {
       if (cardPrice.get(colour) > 0) {
         burnCardColour = colour;
-        logger.info("AI: Colour: "+colour);
+        logger.info("AI: Colour: " + colour);
         break;
       }
     }

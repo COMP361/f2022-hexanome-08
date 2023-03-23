@@ -117,7 +117,7 @@ public class ActionGenerator {
     if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
       TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
       hasDoubleGoldPower = traderBoard
-              .getPlayerOnePower(playerName, PowerEffect.DOUBLE_GOLD).isUnlocked();
+          .getPlayerOnePower(playerName, PowerEffect.DOUBLE_GOLD).isUnlocked();
     }
 
     EnumMap<Colour, Integer> totalGems = curPlayerInfo.getTotalGems(); // discount (dev cards)
@@ -181,10 +181,10 @@ public class ActionGenerator {
         //if orient card is a burn card
         if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
           Colour cardsColour = null;
-          for (Colour color : card.getPrice().keySet()){
+          for (Colour color : card.getPrice().keySet()) {
             if (card.getPrice().get(color) == 2) {
               cardsColour = color;
-              if ( curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
+              if (curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
                 result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
               }
               break;
@@ -243,8 +243,8 @@ public class ActionGenerator {
         for (DevelopmentCard developmentCard : cardsInHand) {
           // if a card is not gold, not paired, has gem num at least 1, means we can pair something
           // so that the satchel we are about to buy is allowed to be bought
-          if(!developmentCard.getGemColour().equals(Colour.GOLD) &&
-              developmentCard.getGemNumber() >= 1 && !developmentCard.isPaired()) {
+          if (!developmentCard.getGemColour().equals(Colour.GOLD)
+              && developmentCard.getGemNumber() >= 1 && !developmentCard.isPaired()) {
             hasCardToPair = true;
             break;
           }
@@ -276,10 +276,10 @@ public class ActionGenerator {
         //if is burn card
         if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
           Colour cardsColour = null;
-          for (Colour color : card.getPrice().keySet()){
+          for (Colour color : card.getPrice().keySet()) {
             if (card.getPrice().get(color) == 2) {
               cardsColour = color;
-              if ( curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
+              if (curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
                 result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
               }
               break;
@@ -331,8 +331,8 @@ public class ActionGenerator {
         for (DevelopmentCard developmentCard : cardsInHand) {
           // if a card is not gold, not paired, has gem num at least 1, means we can pair something
           // so that the satchel we are about to buy is allowed to be bought
-          if(!developmentCard.getGemColour().equals(Colour.GOLD) &&
-              developmentCard.getGemNumber() >= 1 && !developmentCard.isPaired()) {
+          if (!developmentCard.getGemColour().equals(Colour.GOLD)
+              && developmentCard.getGemNumber() >= 1 && !developmentCard.isPaired()) {
             hasCardToPair = true;
             break;
           }
@@ -362,7 +362,7 @@ public class ActionGenerator {
     if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
       TraderBoard traderBoard = (TraderBoard) tableTop.getBoard(Extension.TRADING_POST);
       hasTwoPlusOnePower = traderBoard.getPlayerOnePower(playerName, PowerEffect.TWO_PLUS_ONE)
-              .isUnlocked();
+          .isUnlocked();
     }
     // if bank has only 2 token or less left to be taken
     int regularTokenCount = bank.getRegularTokenCount();
@@ -384,11 +384,10 @@ public class ActionGenerator {
         // if we do not have the power, then adding comb of 2 is fine when num >= 4
         if (!hasTwoPlusOnePower) {
           result.add(new TakeTokenAction(twoSameColourTokens));
-        }
-        // if we have this power on, then:
-        // 1. we generate ONLY 2+1 if bank allows
-        // 2. we generate ONLY 2 if bank allows
-        else {
+        } else {
+          // if we have this power on, then:
+          // 1. we generate ONLY 2+1 if bank allows
+          // 2. we generate ONLY 2 if bank allows
           List<Colour> otherColours = tokenLeft.keySet()
               .stream()
               .filter(c -> !c.equals(colour))
@@ -459,9 +458,9 @@ public class ActionGenerator {
   /**
    * updateCascadeActions.
    *
-   * @param playerInGame playerInGame
+   * @param playerInGame  playerInGame
    * @param purchasedCard purchasedCard
-   * @param cardEffect cardEffect
+   * @param cardEffect    cardEffect
    */
   //TODO
   public void updateCascadeActions(PlayerInGame playerInGame, DevelopmentCard purchasedCard,
@@ -510,59 +509,59 @@ public class ActionGenerator {
     }
 
     if (cardEffect.equals(CardEffect.BURN_CARD)) {
-        List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
-        Colour burnColourPrice = null;
-        EnumMap<Colour, Integer> cardPrice = purchasedCard.getPrice();
-        for (Colour colour : cardPrice.keySet()) {
-          if (cardPrice.get(colour) > 0) {
-            burnColourPrice = colour;
-            break;
-          }
+      List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
+      Colour burnColourPrice = null;
+      EnumMap<Colour, Integer> cardPrice = purchasedCard.getPrice();
+      for (Colour colour : cardPrice.keySet()) {
+        if (cardPrice.get(colour) > 0) {
+          burnColourPrice = colour;
+          break;
         }
-        // iterate to find the card in player's hand to find which card colour to burn
-        Colour finalBurnColourPrice = burnColourPrice;
-        List<Integer> pairedCardIndices = IntStream.range(0, cardsInHand.size())
-            .filter(i -> cardsInHand.get(i).isPaired())
+      }
+      // iterate to find the card in player's hand to find which card colour to burn
+      Colour finalBurnColourPrice = burnColourPrice;
+      List<Integer> pairedCardIndices = IntStream.range(0, cardsInHand.size())
+          .filter(i -> cardsInHand.get(i).isPaired())
+          .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
+          .boxed()
+          .collect(Collectors.toList());
+
+      // if there is no paired card to use
+      if (pairedCardIndices.size() == 0) {
+        List<Integer> sameColourCardsIndices = IntStream.range(0, cardsInHand.size())
             .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
             .boxed()
             .collect(Collectors.toList());
 
-        // if there is no paired card to use
-        if (pairedCardIndices.size() == 0) {
-          List<Integer> sameColourCardsIndices = IntStream.range(0, cardsInHand.size())
-              .filter(i -> cardsInHand.get(i).getGemColour().equals(finalBurnColourPrice))
-              .boxed()
-              .collect(Collectors.toList());
-
-          for (int i : sameColourCardsIndices) {
-            Position position = new Position(0, i);
-            DevelopmentCard card = cardsInHand.get(i);
-            cascadeActions.add(new CardExtraAction(card, cardEffect, position));
-          }
-        }
-        // if there is 1 or more than 1 paired card to use
-        if (pairedCardIndices.size() >= 1) {
-          for (int i : pairedCardIndices) {
-            Position position = new Position(0, i);
-            DevelopmentCard card = cardsInHand.get(i);
-            cascadeActions.add(new CardExtraAction(card, cardEffect, position));
-          }
-        }
-      }
-
-    if (cardEffect.equals(CardEffect.SATCHEL)) {
-        List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
-        List<Integer> unpairedCardsIndices = IntStream.range(0, cardsInHand.size())
-            .filter(i -> !cardsInHand.get(i).isPaired())
-            .boxed()
-            .collect(Collectors.toList());
-        for (int i : unpairedCardsIndices) {
+        for (int i : sameColourCardsIndices) {
           Position position = new Position(0, i);
           DevelopmentCard card = cardsInHand.get(i);
           cascadeActions.add(new CardExtraAction(card, cardEffect, position));
         }
-
       }
+      // if there is 1 or more than 1 paired card to use
+      if (pairedCardIndices.size() >= 1) {
+        for (int i : pairedCardIndices) {
+          Position position = new Position(0, i);
+          DevelopmentCard card = cardsInHand.get(i);
+          cascadeActions.add(new CardExtraAction(card, cardEffect, position));
+        }
+      }
+    }
+
+    if (cardEffect.equals(CardEffect.SATCHEL)) {
+      List<DevelopmentCard> cardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
+      List<Integer> unpairedCardsIndices = IntStream.range(0, cardsInHand.size())
+          .filter(i -> !cardsInHand.get(i).isPaired())
+          .boxed()
+          .collect(Collectors.toList());
+      for (int i : unpairedCardsIndices) {
+        Position position = new Position(0, i);
+        DevelopmentCard card = cardsInHand.get(i);
+        cascadeActions.add(new CardExtraAction(card, cardEffect, position));
+      }
+
+    }
 
     Map<String, Action> actionMap = new HashMap<>();
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
@@ -608,7 +607,7 @@ public class ActionGenerator {
    * Update the actions of which noble to claim.
    *
    * @param noblePositions noblePositions
-   * @param playerInGame playerInGame
+   * @param playerInGame   playerInGame
    */
   public void updateClaimNobleActions(List<Position> noblePositions, List<NobleCard> noblesUnlocked,
                                       PlayerInGame playerInGame) {
@@ -633,7 +632,7 @@ public class ActionGenerator {
    * Update the player's action map to contain only ReturnTokenActions.
    *
    * @param extraTokenCount extraTokenCount
-   * @param playerInGame playerInGame
+   * @param playerInGame    playerInGame
    */
   public void updateReturnTokenActions(int extraTokenCount, PlayerInGame playerInGame) {
     List<EnumMap<Colour, Integer>> allCombos = new ArrayList<>();
@@ -644,7 +643,7 @@ public class ActionGenerator {
         put(Colour.GREEN, 0);
         put(Colour.WHITE, 0);
         put(Colour.GOLD, 0);
-    }};
+      }};
 
     // generate all combinations based extra token count
     if (extraTokenCount == 1) {
@@ -705,7 +704,8 @@ public class ActionGenerator {
     Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
     String sizeBefore = Integer.toString(allCombos.size());
     logger.info("Size before" + sizeBefore);
-    List<EnumMap<Colour,Integer>> allCombinations = allCombos.stream().filter(c -> c.get(Colour.GOLD)==0).collect(Collectors.toList());
+    List<EnumMap<Colour, Integer>> allCombinations =
+        allCombos.stream().filter(c -> c.get(Colour.GOLD) == 0).collect(Collectors.toList());
     String sizeAfter = Integer.toString(allCombinations.size());
     logger.info("Size after" + sizeAfter);
     // after all combinations, we generate the actions
@@ -737,7 +737,7 @@ public class ActionGenerator {
         }
       }
       if (isValid) {
-        combo.put(Colour.GOLD,0);
+        combo.put(Colour.GOLD, 0);
         returnTokenActions.add(new ReturnTokenAction(combo, extraTokenCount));
       }
     }
@@ -753,6 +753,12 @@ public class ActionGenerator {
     playerActionMaps.put(playerName, actionMap);
   }
 
+  /**
+   * This method should update the player action map with any  Claim City action (if applicable).
+   *
+   * @param unlockedCityCards The list of City cards the player has unlocked.
+   * @param playerName The name of the player (who has unlocked the city/cities).
+   */
   public void updateClaimCityActions(List<CityCard> unlockedCityCards, String playerName) {
     List<ClaimCityAction> claimCityActions = new ArrayList<>();
     for (CityCard unlockedCityCard : unlockedCityCards) {
