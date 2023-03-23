@@ -16,6 +16,12 @@ public class BonusTokenPowerAction extends Action {
   private final Colour colour;
   private final PlayerInGame player;
 
+  /**
+   * Constructor for this power action.
+   *
+   * @param player The player who will be able to take this action.
+   * @param colour The colour of the token the player can take.
+   */
   public BonusTokenPowerAction(PlayerInGame player, Colour colour) {
     super.type = this.getClass().getSimpleName();
     this.player = player;
@@ -32,7 +38,7 @@ public class BonusTokenPowerAction extends Action {
     int oldBankTokenCount = bankTokens.get(colour);
     bankTokens.put(colour, oldBankTokenCount - 1);
     // GO TO NEXT TURN
-    actionListGenerator.getPlayerActionMaps().put(playerInGame.getName(),new HashMap<>());
+    actionListGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
   }
 
   public Colour getColour() {

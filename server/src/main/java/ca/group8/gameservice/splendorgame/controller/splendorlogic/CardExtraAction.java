@@ -10,11 +10,10 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.OrientBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represents an extra DevelopmentCard action.
@@ -45,7 +44,7 @@ public class CardExtraAction extends Action {
                       ActionGenerator actionGenerator, ActionInterpreter actionInterpreter) {
     //based on the cardEffect, execute the associated helper
     if (this.cardEffect == CardEffect.BURN_CARD) {
-      burnActionHelper( playerInGame, actionInterpreter);
+      burnActionHelper(playerInGame, actionInterpreter);
     } else if (this.cardEffect == CardEffect.SATCHEL) {
       satchelActionHelper(playerInGame, actionInterpreter);
     } else if (this.cardEffect == CardEffect.RESERVE_NOBLE) {
@@ -285,7 +284,7 @@ public class CardExtraAction extends Action {
     // continue generate burn action on, not curCard!
     DevelopmentCard newCard = associatedActionInterpreter.getStashedCard();
     if (burnNumber - gemNumber <= 0) {
-      logger.info("Should be no gems left to burn: " +(burnNumber - gemNumber) );
+      logger.info("Should be no gems left to burn: " + (burnNumber - gemNumber));
       //take stashed card and add to player's hand
       newCard = associatedActionInterpreter.getStashedCard();
       curPlayer.getPurchasedHand().addDevelopmentCard(newCard);
@@ -297,7 +296,7 @@ public class CardExtraAction extends Action {
       associatedActionInterpreter.setStashedCard(null);
       actionGenerator.getPlayerActionMaps().put(curPlayer.getName(), new HashMap<>());
     } else {
-      logger.info("Gems still Left to burn: " +(burnNumber - gemNumber) );
+      logger.info("Gems still Left to burn: " + (burnNumber - gemNumber));
       // the curCard in CardExtraAction refer to the card that IS to be burnt
       // not the card that we purchased by burning
       actionGenerator.updateCascadeActions(curPlayer, newCard, CardEffect.BURN_CARD);
