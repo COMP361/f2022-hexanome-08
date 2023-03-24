@@ -9,12 +9,12 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>splendor_model_code</id>-->
-<!--            <url>https://www.cs.mcgill.ca/~rdeng4/</url>-->
-<!--        </repository>-->
-<!--    </repositories>-->
+    <repositories>
+        <repository>
+            <id>splendor_model_code</id>
+            <url>https://www.cs.mcgill.ca/~rdeng4/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
