@@ -45,11 +45,11 @@ public class SaveGamePopUpController implements Initializable {
 
   }
 
-  private EventHandler<ActionEvent> createOnClickSaveButton(Savegame savegame, String accessToken) {
+  private EventHandler<ActionEvent> createOnClickSaveButton(Savegame savegame) {
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
       // first save it, and then delete the current session to LS
-      sender.sendSaveGameRequest(gameId, savegame, accessToken);
+      sender.sendSaveGameRequest(gameId, savegame);
       Button button = (Button) event.getSource();
       Stage curWindow = (Stage) button.getScene().getWindow();
       curWindow.close();
@@ -72,8 +72,7 @@ public class SaveGamePopUpController implements Initializable {
         } else {
           saveButton.setDisable(false);
           Savegame savegame = new Savegame(playerNames, gameName, saveGameId);
-          String accessToken = App.getUser().getAccessToken();
-          saveButton.setOnAction(createOnClickSaveButton(savegame, accessToken));
+          saveButton.setOnAction(createOnClickSaveButton(savegame));
         }
       }
     });

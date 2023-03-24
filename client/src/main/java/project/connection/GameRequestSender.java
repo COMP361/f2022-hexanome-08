@@ -4,6 +4,7 @@ import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import project.App;
 import project.view.lobby.communication.Savegame;
 
 /**
@@ -71,16 +72,17 @@ public class GameRequestSender {
    *
    * @param gameId      gameId
    * @param savegame    savegame
-   * @param accessToken accessToken
    */
-  public void sendSaveGameRequest(long gameId, Savegame savegame, String accessToken) {
+  public void sendSaveGameRequest(long gameId, Savegame savegame) {
     HttpResponse<String> response = null;
     String url = String.format("%s/api/games/%s/savegame", gameUrl + gameServiceName, gameId);
     String body = SplendorDevHelper.getInstance().getGson().toJson(savegame, Savegame.class);
     try {
+      // we can safely trust the username will be
       response = Unirest.put(url)
           .header("Content-Type", "application/json")
-          .queryString("access_token", accessToken)
+          .queryString("player_name", App.getUser().getUsername())
+          .queryString("access_token", App.getUser().getAccessToken())
           .body(body)
           .asString();
     } catch (UnirestException e) {

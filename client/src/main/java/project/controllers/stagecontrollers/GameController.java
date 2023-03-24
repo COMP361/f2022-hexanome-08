@@ -779,10 +779,9 @@ public class GameController implements Initializable {
     // for all mode, these two should be like this
     saveButton.setDisable(true);
     quitButton.setOnAction(createClickOnQuitButtonEvent());
-    // and not in watch mode
-    if (viewerName.equals(curGameInfo.getCreator()) && !inWatchMode) {
-      // if the current user is the creator, activate the save button, otherwise it
-      // greyed out
+    // if not in watch mode, then we re-enable the button
+    // otherwise, player can always save the game if they are in the game
+    if (!inWatchMode) {
       saveButton.setDisable(false);
       saveButton.setOnAction(createClickOnSaveButtonEvent(curGameInfo, gameId));
     }
@@ -822,7 +821,7 @@ public class GameController implements Initializable {
       // from now on, we can safely trust this viewerName as someone in the game
     }
 
-    // only enable the save game button for the creator of the game
+    // enable the save game button for everyone (but the watchers) in the game
     setupSaveGameButton(curGameInfo);
 
     // sort player names based on different client views

@@ -130,20 +130,22 @@ public class SplendorRestController {
       "/splendorcity/api/games/{gameId}/savegame"}, consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> saveGame(@PathVariable long gameId,
                                          @RequestBody Savegame saveGameInfo,
+                                         @RequestParam(value = "player_name") String playerName,
                                          @RequestParam(value = "access_token") String accessToken) {
     try {
       // ModelAccessException can happen if gameId is not found
-      String creatorName = gameManager.getGameById(gameId).getCreator();
+      //String creatorName = gameManager.getGameById(gameId).getCreator();
 
       // check if the request is sent by the creator or not
       // if not, do not allow to save it
-      gameValidator.gameIdPlayerNameValidCheck(accessToken, creatorName, gameId);
+
+      // allow save game for any player in that game, not just creator!
+      gameValidator.gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
+      logger.warn("Got save request successfully from: " +playerName);
 
       // save the game detailed info to our game server as json file
       // and the metadata Savegame to LS
       gameManager.saveGame(saveGameInfo, gameId);
-
-
       // forcing this game to be finished
       GameInfo curGame = gameManager.getGameById(gameId);
       curGame.setFinished();
