@@ -28,6 +28,12 @@
             <version>1.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>eu.kartoffelquadrat</groupId>
+            <artifactId>asyncrestlib</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
         <dependency>
             <groupId>com.mashape.unirest</groupId>
