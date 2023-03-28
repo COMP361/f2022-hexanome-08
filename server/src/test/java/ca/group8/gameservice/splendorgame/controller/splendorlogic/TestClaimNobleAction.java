@@ -70,7 +70,7 @@ public class TestClaimNobleAction {
     claimNobleAction.execute(gameInfo.getTableTop(),playerInGame,actionGenerator,actionInterpreter);
     assertEquals(n1, playerInGame.getPurchasedHand().getNobleCards().get(0));
     // the power is unlocked immediately, thus the points should be updated
-    assertEquals(6, playerInGame.getPrestigePoints());
+    assertEquals(1, playerInGame.getPrestigePoints());
 
     BaseBoard b1 = (BaseBoard) gameInfo.getTableTop().getBoard(Extension.BASE);
     List<NobleCard> nobles = b1.getNobles();
@@ -78,8 +78,8 @@ public class TestClaimNobleAction {
 
     TraderBoard t = (TraderBoard) gameInfo.getTableTop().getBoard(Extension.TRADING_POST);
     Power p = t.getPlayerOnePower(playerInGame.getName(), PowerEffect.FIVE_POINTS);
-    assertTrue(p.isUnlocked());
-    assertEquals(6,playerInGame.getPrestigePoints());
+    assertFalse(p.isUnlocked());
+    assertEquals(1,playerInGame.getPrestigePoints());
   }
 
 }

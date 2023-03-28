@@ -2,6 +2,7 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.LauncherInfo;
 import ca.group8.gameservice.splendorgame.controller.communicationbeans.PlayerInfo;
+import ca.group8.gameservice.splendorgame.controller.communicationbeans.Savegame;
 import java.util.LinkedList;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -93,4 +94,14 @@ public class TestSplendorRestController {
     assertEquals(HttpStatus.OK,response.getStatusCode());
 
   }
+
+  //@Test
+  //public void testSaveGame() {
+  //  Savegame savegame = new Savegame(playerNames, gameServerName, "test 1");
+  //  HttpEntity<Savegame> requestEntity = new HttpEntity<>(savegame, header);
+  //
+  //  ResponseEntity<String> response = restTemplate.exchange(basicUrl+"/savegame",
+  //      HttpMethod.PUT, requestEntity, String.class);
+  //
+  //}
 }

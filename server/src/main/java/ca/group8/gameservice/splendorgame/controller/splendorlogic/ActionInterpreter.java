@@ -275,6 +275,7 @@ public class ActionInterpreter {
       // we announce that the game is over
       if (playerName.equals(lastPlayerName) && !gameInfo.getWinners().isEmpty()) {
         gameInfo.setFinished();
+        decideWinners(gameInfo.getWinners());
       }
 
       // set next turn
@@ -296,8 +297,6 @@ public class ActionInterpreter {
 
   // change the gameInfo winner list to only contain the winner
   private void decideWinners(List<String> winnerNames) {
-
-
     // first need to sort by points, see if there is a tie or not
 
     // descending order, sorted by points
@@ -363,30 +362,17 @@ public class ActionInterpreter {
     }
   }
 
-  public Colour getBurnCardColour() {
-    return burnCardColour;
-  }
-
-  public void setBurnCardColour(Colour burnCardColour) {
-    this.burnCardColour = burnCardColour;
-  }
-
   public DevelopmentCard getStashedCard() {
     assert stashedCard != null;
     return stashedCard;
   }
 
   public void setStashedCard(DevelopmentCard stashedCard) {
-    assert stashedCard != null;
     this.stashedCard = stashedCard;
   }
 
-  public int getFreeCardLevel() {
-    return freeCardLevel;
-  }
-
   public void setFreeCardLevel(int newLevel) {
-    assert newLevel < 3 && newLevel > 0; //Cannot have a free card that is level 3 or above.
+    assert newLevel < 3 && newLevel >= 0; //Cannot have a free card that is level 3 or above.
     freeCardLevel = newLevel;
   }
 
@@ -394,15 +380,11 @@ public class ActionInterpreter {
     return burnCardCount;
   }
 
-  public void addBurnCardCount(int number) {
-    burnCardCount += number;
+  public Colour getBurnCardColour() {
+    return burnCardColour;
   }
 
   public void removeBurnCardCount(int number) {
     burnCardCount -= number;
-  }
-
-  public void setBonusToken(boolean bonusToken) {
-    this.bonusTokenStashed = bonusToken;
   }
 }

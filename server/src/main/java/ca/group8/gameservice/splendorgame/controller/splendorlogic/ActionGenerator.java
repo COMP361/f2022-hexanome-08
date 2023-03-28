@@ -345,8 +345,6 @@ public class ActionGenerator {
             result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
           }
         }
-
-        //result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
       }
     }
 

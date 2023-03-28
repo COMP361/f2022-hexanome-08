@@ -58,16 +58,6 @@ public class ClaimNobleAction extends Action {
     // reset map to next player
     actionGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
 
-    //TraderBoard traderBoard = (TraderBoard) curTableTop.getBoard(Extension.TRADING_POST);
-    //Power power = traderBoard.getPlayerOnePower(playerInGame.getName(), PowerEffect.FIVE_POINTS);
-    //
-    ////if Power was previously locked, but has now been unlocked (validityCheck = true)
-    //if (!power.isUnlocked() && power.validityCheck(playerInGame)) {
-    //  power.unlock(); //set status so power is now unlocked
-    //  playerInGame.changePrestigePoints(5); //add power (5 prestige points) to player
-    //}
-
-
   }
 
   public NobleCard getCurCard() {

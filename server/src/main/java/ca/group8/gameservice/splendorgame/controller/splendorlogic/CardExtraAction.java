@@ -63,20 +63,9 @@ public class CardExtraAction extends Action {
     return position;
   }
 
-  public CardEffect getCardEffect() {
-    return cardEffect;
-  }
-
   public Position getPosition() {
     return position;
   }
-
-  /*
-  //TODO: Ensure this method works once merged with code for CardEffect enum & new DevCard class.
-  public CardEffect getCardEffect() {
-    return curCard.getPurchaseEffect();
-  }
-   */
 
   /**
    * Helper for reserve action.
@@ -87,13 +76,6 @@ public class CardExtraAction extends Action {
   public void reserveNobleActionHelper(TableTop curTableTop,
                                        PlayerInGame curPlayer,
                                        ActionGenerator actionGenerator) {
-
-    //// Make sure curCard is right type
-    //if (!(this.curCard instanceof NobleCard)) {
-    //  //throw new SplendorGameException("Error: Reserve Card is not a NobleCard");
-    //  System.out.println("ReserveNoble: Not a noble");
-    //  return;
-    //}
     NobleCard noble = (NobleCard) this.curCard;
     //remove noble from base board
     ((BaseBoard) curTableTop.getBoard(Extension.BASE)).removeNoble(noble);
@@ -147,21 +129,6 @@ public class CardExtraAction extends Action {
 
     }
 
-
-
-
-    /*
-    //which row and column
-    int index = position.getY();
-    int level = satchel.getLevel();
-
-    //update the board with new card
-    //took it out, done in PurchaseAction
-
-    OrientBoard board = ((OrientBoard) curTableTop.getBoard(Extension.ORIENT));
-    Card replacement = board.popLevelCardFromDeck(level);
-    board.getLevelCardsOnBoard(level)[index] = (DevelopmentCard) replacement;
-     */
   }
 
   /**
@@ -213,45 +180,11 @@ public class CardExtraAction extends Action {
         curPlayer.getPurchasedHand().addDevelopmentCard(freeCard);
         curPlayer.changePrestigePoints(prestigePoints);
       }
-      //TODO: Why do we leave the BURN out in here? -- for julia and young to fix
-      // i have no clue how to do this              ----- by ruoyu ;)
+
       if (currentEffect != CardEffect.BURN_CARD) {
         actionGenerator.updateCascadeActions(curPlayer, freeCard, currentEffect);
       }
 
-
-      //// Case for most orient cards
-      //if (effectNum == 1) {
-      //  OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
-      //  //remove freeCard from Board, replace.
-      //  orientBoard.removeCard(this.position);
-      //  orientBoard.update();
-      //
-      //  if (currentEffect == CardEffect.SATCHEL) {
-      //    // stash the SATCHEL since we this card can not just go to player's purchase
-      //    associatedActionInterpreter.setStashedCard(freeCard);
-      //  } else {
-      //    // otherwise: FREE OR DOUBLE_GOLD OR RESERVE_NOBLE can just go to player's hand
-      //    curPlayer.getPurchasedHand().addDevelopmentCard(freeCard);
-      //    curPlayer.changePrestigePoints(prestigePoints);
-      //  }
-      //  //TODO: Why do we leave the BURN out in here? -- for julia and young to fix
-      //  // i have no clue how to do this              ----- by ruoyu ;)
-      //  if (currentEffect != CardEffect.BURN_CARD) {
-      //    actionGenerator.updateCascadeActions(curPlayer, freeCard, currentEffect);
-      //  }
-      //
-      //  // Special case where an orient card has satchel and free card.
-      //} else if (effectNum == 2) {
-      //  associatedActionInterpreter.setStashedCard(freeCard);
-      //  associatedActionInterpreter.setFreeCardLevel(freeCard.getLevel() - 1);
-      //
-      //  actionGenerator.updateCascadeActions(curPlayer, freeCard, CardEffect.SATCHEL);
-      //
-      //  //Should never reach here.
-      //} else {
-      //  System.out.println("FreeCard: Error, size of CardEffect List is not 0,1,2");
-      //}
     }
   }
 

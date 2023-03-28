@@ -3,17 +3,23 @@ package ca.group8.gameservice.splendorgame.controller.splendorlogic;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
+import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
+import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.CityBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Extension;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
+import ca.group8.gameservice.splendorgame.model.splendormodel.NobleCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerInGame;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Position;
 import ca.group8.gameservice.splendorgame.model.splendormodel.ReservedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TokenHand;
+import ca.group8.gameservice.splendorgame.testutils.CardFactory;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,13 +33,16 @@ import org.junit.jupiter.api.Test;
 public class TestActionInterpreter {
 
   List<String> playerNames = Arrays.asList("julia", "ruoyu");
-  List<Extension> extensions = Arrays.asList(Extension.BASE, Extension.ORIENT);
+  List<Extension> extensions = Arrays.asList(Extension.BASE, Extension.ORIENT, Extension.CITY, Extension.TRADING_POST);
   GameInfo gameInfo = new GameInfo(extensions, playerNames, playerNames.get(0));
   PlayerStates playerStates = new PlayerStates(playerNames);
   ActionInterpreter actionInterpreter = new ActionInterpreter(gameInfo, playerStates);
   ActionGenerator actionGenerator = actionInterpreter.getActionGenerator();
   String curPlayerName = gameInfo.getCurrentPlayer();
   PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
+
+  PlayerInGame lastPlayer = playerStates
+      .getOnePlayerInGame(gameInfo.getPlayerNames().get(playerNames.size()-1));
 
   @Test
   public void testReserveAction_BaseCard() {
@@ -130,11 +139,10 @@ public class TestActionInterpreter {
     TokenHand presetTokenHand = new TokenHand(0);
     allTokens.set(presetTokenHand, presetTokens);
     tokenHand.set(playerInGame, presetTokenHand);
-
     //System.out.println(playerInGame.getTokenHand().getAllTokens());
 
 
-    //actionGenerator.setInitialActions(playerInGame);
+    actionGenerator.setInitialActions(playerInGame, gameInfo.getCurrentPlayer());
     Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(curPlayerName);
     EnumMap<Colour, Integer> tokensTakenFromBank = new EnumMap<>(Colour.class);
     for (String actionId : playerActionMap.keySet()) {
@@ -142,7 +150,7 @@ public class TestActionInterpreter {
       if (curAction instanceof TakeTokenAction) {
         TakeTokenAction takeTokenAction = (TakeTokenAction) curAction;
         tokensTakenFromBank = takeTokenAction.getTokens();
-        //actionInterpreter.interpretAction(actionId, curPlayerName);
+        actionInterpreter.interpretAction(actionId, curPlayerName);
         break;
       }
     }
@@ -151,75 +159,86 @@ public class TestActionInterpreter {
     System.out.println(actionGenerator.getPlayerActionMaps().get(curPlayerName));
     Map<String, Action> returnTokenActionMap =
         actionGenerator.getPlayerActionMaps().get(curPlayerName);
-    for (String actionId : returnTokenActionMap.keySet()) {
-      ReturnTokenAction action = (ReturnTokenAction) returnTokenActionMap.get(actionId);
-      EnumMap<Colour, Integer> returnTokens = action.getTokens();
+    assertEquals(1, returnTokenActionMap.size());
+  }
+
+
+  @Test
+  public void testUnlockNobleAfterTakeToken() {
+
+    for (Colour c : SplendorDevHelper.getInstance().getRawTokenColoursMap().keySet()) {
+      if (!c.equals(Colour.GOLD)) {
+        for (int i = 0; i < 6; i++) {
+          DevelopmentCard card = CardFactory.getInstance().getOneBaseCard(c, 1);
+          playerInGame.getPurchasedHand().addDevelopmentCard(card);
+        }
+      }
+    }
+
+    // remove 2 nobles from the board
+    for (int i = 0; i<2; i++) {
+      BaseBoard baseBoard = (BaseBoard) gameInfo.getTableTop().getBoard(Extension.BASE);
+      NobleCard nobleCard = baseBoard.getNobles().get(i);
+      baseBoard.removeNoble(nobleCard);
+    }
+
+    // should have enough cards to unlock all nobles on board, which are 3
+    actionGenerator.setInitialActions(playerInGame, gameInfo.getCurrentPlayer());
+    Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(curPlayerName);
+    for (String actionId : playerActionMap.keySet()) {
+      Action curAction = playerActionMap.get(actionId);
+      if (curAction instanceof TakeTokenAction) {
+        actionInterpreter.interpretAction(actionId, curPlayerName);
+        break;
+      }
     }
 
   }
 
 
+  @Test
+  public void testWinnerAfterOneAction() {
+    // since we are playing city, winning condition is checked if a player has a city card or not
+    CityBoard cityBoard = (CityBoard) gameInfo.getTableTop().getBoard(Extension.CITY);
+    cityBoard.assignCityCard("julia", CardFactory.getInstance().getOneCityCard(2,15));
+    cityBoard.assignCityCard("ruoyu", CardFactory.getInstance().getOneCityCard(2,16));
 
-  //@BeforeEach
-  //void initialise() throws Exception{
-  //  tokens = new EnumMap<Colour, Integer>(Colour.class);
-  //  playerNames.add("Young");
-  //  playerNames.add("Julia");
-  //  game = new GameInfo(playerNames);
-  //  curPlayer = game.getCurrentPlayer();
-  //  Position position = new Position(2,2);
-  //  card = (DevelopmentCard) game.getTableTop().getBaseBoard().getCard(2,2);
-  //  purchaseAction = new PurchaseAction(position, card, 0);
-  //  reserveAction = new ReserveAction(position, card);
-  //  for(Colour colour:Colour.values()){
-  //    tokens.put(colour, 0);
-  //  }
-  //  tokens.put(Colour.BLUE, 2);
-  //  takeTokenAction = new TakeTokenAction(tokens);
-  //
-  //}
-  //
-  //@Test
-  //void testNextPlayer(){
-  //  PlayerInGame firstPlayer = curPlayer;
-  //  game.setNextPlayer();
-  //  assert(firstPlayer!= game.getCurrentPlayer());
-  //  game.setNextPlayer();
-  //  assert(firstPlayer== game.getCurrentPlayer());
-  //}
-  //
-  //@Test
-  //void testPurchase(){
-  //  interpreter.interpretAction(purchaseAction, game, curPlayer);
-  //  assert(curPlayer.getPurchasedHand().getSize()==1);
-  //  assert(curPlayer.getPurchasedHand().getDevelopmentCards().get(0)==card);
-  //  assert(game.getTableTop().getBaseBoard().getCard(2,2)!=card);
-  //  assert(game.getTableTop().getDecks().get(1).size()==35);
-  //}
-  //
-  //@Test
-  //void testReserve(){
-  //  interpreter.interpretAction(reserveAction, game, curPlayer);
-  //  assert(curPlayer.getReservedHand().getSize()==1);
-  //  assert(curPlayer.getReservedHand().getDevelopmentCards().get(0)==card);
-  //  assert(game.getTableTop().getBaseBoard().getCard(2,2)!=card);
-  //  assert(game.getTableTop().getDecks().get(1).size()==35);
-  //}
-  //
-  //@Test
-  //void testTakeTokens(){
-  //  int initialBlueValue = game.getTableTop().getBank().getAllTokens().get(Colour.BLUE);
-  //
-  //
-  //  interpreter.interpretAction(takeTokenAction, game, curPlayer);
-  //
-  //  for(Colour colour: Colour.values()){
-  //    if(colour == Colour.BLUE){
-  //      assert(curPlayer.getTokenHand().getAllTokens().get(colour)==5);
-  //      assert(initialBlueValue-2==game.getTableTop().getBank().getAllTokens().get(colour));
-  //    }else{
-  //      assert(curPlayer.getTokenHand().getAllTokens().get(colour)==3);
-  //    }
-  //  }
-  //}
+
+
+    // should have enough cards to unlock all nobles on board, which are 3
+
+    List<PlayerInGame> oneRoundOfPlayers = List.of(playerInGame, lastPlayer);
+    for (PlayerInGame player : oneRoundOfPlayers) {
+      actionGenerator.setInitialActions(player, gameInfo.getCurrentPlayer());
+      Map<String, Action> playerActionMap = gameInfo.getPlayerActionMaps().get(player.getName());
+      for (String actionId : playerActionMap.keySet()) {
+        Action curAction = playerActionMap.get(actionId);
+        if (curAction instanceof TakeTokenAction) {
+          actionInterpreter.interpretAction(actionId, player.getName());
+          break;
+        }
+      }
+    }
+  }
+
+
+  @Test
+  public void testSetBurnCardInfo() {
+    EnumMap<Colour, Integer> burnPrice = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+    burnPrice.put(Colour.BLUE, 2);
+    actionInterpreter.setBurnCardInfo(burnPrice);
+    assertEquals(Colour.BLUE, actionInterpreter.getBurnCardColour());
+    assertEquals(2, actionInterpreter.getBurnCardCount());
+    actionInterpreter.removeBurnCardCount(1);
+    assertEquals(1, actionInterpreter.getBurnCardCount());
+  }
+
+  @Test
+  public void testStashedCard() {
+    DevelopmentCard stashedCard = CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 3, List.of(
+        CardEffect.BURN_CARD));
+    actionInterpreter.setStashedCard(stashedCard);
+    assertEquals(stashedCard, actionInterpreter.getStashedCard());
+  }
+
 }

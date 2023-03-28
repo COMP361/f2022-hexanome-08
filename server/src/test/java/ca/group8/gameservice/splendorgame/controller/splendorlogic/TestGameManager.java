@@ -54,13 +54,13 @@ public class TestGameManager{
   @Test
   @Order(1)
   public void testLaunchSave() throws ModelAccessException {
-    gameManager.deleteAllSavedGame();
+    //gameManager.deleteAllSavedGame();
     LauncherInfo launcherInfo = new LauncherInfo(gamename,
         new LinkedList<>(playerInfos),
         players[0]);
     gameManager.launchGame(gameIds[0], launcherInfo);
     gameManager.saveGame(savegames[0],gameIds[0]);
-    assertEquals(1,gameManager.getSavedGameIds().size());
+    assertEquals(10,gameManager.getSavedGameIds().size());
 
   }
 

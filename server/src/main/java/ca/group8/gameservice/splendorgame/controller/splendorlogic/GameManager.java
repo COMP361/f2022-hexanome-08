@@ -45,8 +45,6 @@ public class GameManager {
   private final Map<Long, LauncherInfo> gameLauncherInfos;
   private final LobbyCommunicator lobbyCommunicator;
   private final Logger logger;
-  //private final String saveGameInfoFileName = "saved_games_data.json";
-  //private final String saveGameMetaFileName = "saved_games_meta.json";
   private List<String> savedGameIds = new ArrayList<>();
 
   /**
@@ -138,11 +136,6 @@ public class GameManager {
     return activeGames.get(gameId);
   }
 
-  public PlayerStates getPlayerStatesById(long gameId) {
-    assert activePlayers.containsKey(gameId);
-    return activePlayers.get(gameId);
-  }
-
   public ActionInterpreter getGameActionInterpreter(long gameId) {
     assert gameActionInterpreters.containsKey(gameId);
     return gameActionInterpreters.get(gameId);
@@ -158,10 +151,6 @@ public class GameManager {
    */
   public boolean containsPlayer(long gameId, String playerName) {
     return activePlayers.get(gameId).getPlayersInfo().containsKey(playerName);
-  }
-
-  public Map<Long, PlayerStates> getActivePlayers() {
-    return activePlayers;
   }
 
 
@@ -274,38 +263,6 @@ public class GameManager {
     activePlayers.remove(gameId);
     gameActionInterpreters.remove(gameId);
     gameLauncherInfos.remove(gameId);
-  }
-
-  /**
-   * Helper method to delete all saved game data and metadata in json.
-   * usually not called.
-   */
-  public void deleteAllSavedGame() {
-    List<String> savedGameIds = getSavedGameIds();
-    if (savedGameIds != null && savedGameIds.size() > 0) {
-      Map<String, SavedGameState> dataMap = new HashMap<>();
-      List<Savegame> metaDataList = new ArrayList<>();
-      try {
-        dataMap = readSavedGameDataFromFile();
-        metaDataList = readSavedGameMetaDataFromFile();
-      } catch (IOException e) {
-        logger.error(e.getMessage());
-      }
-      for (String gameId : savedGameIds) {
-        Savegame saveMeta = metaDataList.stream()
-            .filter(g -> g.getSavegameid().equals(gameId))
-            .findFirst()
-            .get();
-        // tell lobby to delete the save game
-        lobbyCommunicator.deleteSaveGame(saveMeta);
-        SavedGameState savedGameState = dataMap.get(gameId);
-        writeSavedGameMetaDataToFile(saveMeta, false);
-        writeSavedGameDataToFile(gameId, savedGameState, false);
-      }
-
-      // remove all game ids from local field
-      this.savedGameIds.clear();
-    }
   }
 
   /**
