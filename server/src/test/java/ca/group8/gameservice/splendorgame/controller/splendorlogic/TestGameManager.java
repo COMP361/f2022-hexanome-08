@@ -16,6 +16,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -43,7 +44,7 @@ public class TestGameManager{
       .mapToObj(i -> new PlayerInfo(players[i], colours[i]))
       .collect(Collectors.toList());
   String gamename = "splendortrade";
-  String[] savegameids = new String[]{"gameId1","gameId2","gameId3"};
+  String[] savegameids = new String[]{"test dummy save game","gameId2","gameId3"};
   Savegame[] savegames = new Savegame[]{
       new Savegame(players,gamename,savegameids[0]),
       new Savegame(players,gamename,savegameids[1]),
@@ -51,17 +52,18 @@ public class TestGameManager{
 
   long[] gameIds = new long[] {5151551235L, 8723123151231L, 1231231512123L};
 
+  // might be empty
+  List<String> prevSavedGameIds = new ArrayList<>(gameManager.getSavedGameIds());
+
   @Test
   @Order(1)
   public void testLaunchSave() throws ModelAccessException {
-    //gameManager.deleteAllSavedGame();
     LauncherInfo launcherInfo = new LauncherInfo(gamename,
         new LinkedList<>(playerInfos),
         players[0]);
     gameManager.launchGame(gameIds[0], launcherInfo);
     gameManager.saveGame(savegames[0],gameIds[0]);
-    assertEquals(10,gameManager.getSavedGameIds().size());
-
+    assertEquals(prevSavedGameIds.size() + 1, gameManager.getSavedGameIds().size());
   }
 
   @Test
@@ -82,36 +84,19 @@ public class TestGameManager{
     assertEquals(new HashSet<>(Arrays.asList(newPlayers)),
         new HashSet<>(gameManager.getGameById(newGameId).getPlayerNames()));
     assertEquals(newPlayers[0], savedGameState.getGameInfo().getCreator());
+    System.out.println(gameManager.getActiveGames().keySet());
+    // delete the games we have registered
+    List<Long> gameIds = new ArrayList<>(gameManager.getActiveGames().keySet());
+    for (Long gameId : gameIds) {
+      gameManager.deleteGame(gameId);
+    }
 
-    //gameManager.deleteAllSavedGame();
-    //// after all saved game being deleted, all saved game ids remain empty
-    //assertEquals(new ArrayList<>(), gameManager.getSavedGameIds());
+    // terminated all launched game in test mode
+    assertTrue(gameManager.getActiveGames().isEmpty());
+
+    gameManager.deleteSaveGame(savegameids[0]);
+    assertEquals(prevSavedGameIds.size(),gameManager.getSavedGameIds().size());
   }
 
-
-  @Test
-  @Order(2)
-  public void testLaunchAndKeepPlaying() throws ModelAccessException {
-    String[] newPlayers = new String[] {"julia", "ruoyu"};
-    List<PlayerInfo> playerInfos = IntStream
-        .range(0, newPlayers.length)
-        .mapToObj(i -> new PlayerInfo(newPlayers[i], colours[i]))
-        .collect(Collectors.toList());
-    LauncherInfo launcherInfo = new LauncherInfo(gamename,
-        new LinkedList<>(playerInfos),
-        players[0]);
-    launcherInfo.setSavegame(savegameids[0]);
-    long newGameId = 12451517195L;
-    SavedGameState savedGameState = gameManager.launchGame(newGameId, launcherInfo);
-    //// there should be two new players whose game was loaded based on one previously saved game
-    //assertEquals(new HashSet<>(Arrays.asList(newPlayers)),
-    //    new HashSet<>(gameManager.getGameById(newGameId).getPlayerNames()));
-
-    // observe the player actions after loading the file
-    GameInfo gameInfo = savedGameState.getGameInfo();
-    PlayerStates playerStates = savedGameState.getPlayerStates();
-    System.out.println();
-
-  }
 
 }

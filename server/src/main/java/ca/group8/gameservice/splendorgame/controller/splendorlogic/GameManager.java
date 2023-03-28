@@ -290,9 +290,25 @@ public class GameManager {
         new SavedGameState(
             gameInfo,
             activePlayers.get(gameId));
-    savedGameIds.add(savegame.getSavegameid());
-    writeSavedGameDataToFile(savegame.getSavegameid(), newSaveGame, true);
-    writeSavedGameMetaDataToFile(savegame, true);
+
+    // only add the saved game and write to file if the game
+    // saved id does not exist before
+    if (!savedGameIds.contains(savegame.getSavegameid())) {
+      savedGameIds.add(savegame.getSavegameid());
+      writeSavedGameDataToFile(savegame.getSavegameid(), newSaveGame, true);
+      writeSavedGameMetaDataToFile(savegame.getSavegameid(), savegame, true);
+    }
+  }
+
+  /**
+   * Given a saved game id (string), go remove it in the files.
+   *
+   * @param saveGameId
+   */
+  public void deleteSaveGame(String saveGameId) {
+    savedGameIds.remove(saveGameId);
+    writeSavedGameDataToFile(saveGameId, null, false);
+    writeSavedGameMetaDataToFile(saveGameId,null, false);
   }
 
 
@@ -322,7 +338,7 @@ public class GameManager {
    * Depending on addToFile being true/false, we decide whether to add/remove the content
    *
    * @param saveGameId     the id of the content
-   * @param savedGameState the content ready to be written
+   * @param savedGameState the content ready to be written, if removing, this is null
    * @param addToFile      the flag indicating delete or not
    */
   private void writeSavedGameDataToFile(String saveGameId,
@@ -386,10 +402,12 @@ public class GameManager {
    * Write to metadata file.
    * Depending on addToFile being true/false, we decide whether to add/remove the content
    *
-   * @param savegame  the content ready to be written
+   * @param saveGameId the string of the saved game id, used for remove purpose.
+   * @param savegame  the content ready to be written (if removing, this is null).
    * @param addToFile the flag indicating delete or not
    */
-  private void writeSavedGameMetaDataToFile(Savegame savegame, boolean addToFile) {
+  private void writeSavedGameMetaDataToFile(String saveGameId, Savegame savegame,
+                                            boolean addToFile) {
     synchronized (saveGameMetaFile) {
       try {
         List<Savegame> allSaveGamesMeta = readSavedGameMetaDataFromFile();
@@ -399,14 +417,13 @@ public class GameManager {
         } else {
           if (addToFile) {
             boolean hasDuplicateId = allSaveGamesMeta.stream()
-                .anyMatch(game -> game.getSavegameid().equals(savegame.getSavegameid()));
+                .anyMatch(game -> game.getSavegameid().equals(saveGameId));
             if (hasDuplicateId) {
               return; // duplicated game id, do not add to json.
             }
             allSaveGamesMeta.add(savegame);
           } else {
-            allSaveGamesMeta.removeIf(
-                game -> game.getSavegameid().equals(savegame.getSavegameid()));
+            allSaveGamesMeta.removeIf(game -> game.getSavegameid().equals(saveGameId));
           }
         }
 
