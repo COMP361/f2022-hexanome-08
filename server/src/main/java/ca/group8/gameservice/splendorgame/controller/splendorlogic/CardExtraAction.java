@@ -145,11 +145,10 @@ public class CardExtraAction extends Action {
 
     DevelopmentCard freeCard = (DevelopmentCard) this.curCard;
     List<CardEffect> cardEffects = freeCard.getPurchaseEffects();
-    int effectNum = cardEffects.size();
     int prestigePoints = freeCard.getPrestigePoints();
 
     //if it is a base card
-    if (effectNum == 0) {
+    if (freeCard.isBaseCard()) {
       BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
       //remove freeCard from Board, replace
       baseBoard.removeCard(this.position);

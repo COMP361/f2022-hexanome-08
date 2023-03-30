@@ -490,12 +490,29 @@ public class ActionGenerator {
       }
 
       DevelopmentCard[] orientCardsToFree = orientBoard.getLevelCardsOnBoard(freeLevel);
+      // check if any card is NOT paired, then satchel card can be taken for free
+      boolean canTakeFreeSatchelCard = false;
+      for (DevelopmentCard card : playerInGame.getPurchasedHand().getDevelopmentCards()) {
+        if (!card.getGemColour().equals(Colour.GOLD)) {
+          if (!card.isPaired()) {
+            canTakeFreeSatchelCard = true;
+            break;
+          }
+        }
+      }
+
       for (int i = 0; i < orientCardsToFree.length; i++) {
         Position position = new Position(freeLevel, i);
         DevelopmentCard curCard = orientCardsToFree[i];
         if (curCard.getPrestigePoints() >= 0) {
           // only create the action if it's not dummy card
-          cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+          //if this is not a satchel card, add extra action
+          //OR if this IS a satchel card, but you're allowed to pick satchel cards, add extra action
+          if (!curCard.getPurchaseEffects().contains(CardEffect.SATCHEL)
+              ||(curCard.getPurchaseEffects().contains(CardEffect.SATCHEL)
+              && canTakeFreeSatchelCard)) {
+            cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
+          }
         }
       }
       Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
