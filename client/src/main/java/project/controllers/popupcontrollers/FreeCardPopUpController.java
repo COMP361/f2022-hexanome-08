@@ -52,8 +52,14 @@ public class FreeCardPopUpController extends ActionSelectionSender implements In
         imageViewInsertIndex = cardPosition.getY();
       } else {
         cardImagePath = App.getOrientCardPath(card.getCardName(), card.getLevel());
-        imageViewInsertIndex = cardPosition.getY() + 4;
+        if (cardsAvailableToFree == 5 && cardPosition.getY() == 1) {
+          imageViewInsertIndex = cardPosition.getY() + 3;
+        } else {
+          imageViewInsertIndex = cardPosition.getY() + 4;
+        }
       }
+
+
       ImageView cardImageView = new ImageView(new Image(cardImagePath));
       cardImageView.setFitHeight(100);
       cardImageView.setFitWidth(80);

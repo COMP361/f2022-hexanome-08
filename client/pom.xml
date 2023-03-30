@@ -52,11 +52,17 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>19</version>
+            <classifier>win</classifier>
+<!--            <classifier>mac-arm64</classifier>-->
+<!--            <classifier>mac-arm64</classifier>-->
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>19</version>
+            <classifier>win</classifier>
+<!--            <classifier>mac-arm64</classifier>-->
+<!--            <classifier>mac-arm64</classifier>-->
         </dependency>
         <dependency>
             <groupId>junit</groupId>

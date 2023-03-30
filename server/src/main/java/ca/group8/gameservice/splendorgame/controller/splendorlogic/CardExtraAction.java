@@ -107,7 +107,16 @@ public class CardExtraAction extends Action {
     //pair the card
     //ownedCard.setIsPaired(true);
     //ownedCard.setPairedCard(satchel);
+
+    Logger logger = LoggerFactory.getLogger(CardExtraAction.class);
+    logger.warn("Pairing state of card of the action (before): " + ownedCard.isPaired());
     ownedCard.pairCard(satchel);
+    logger.warn("Pairing state of card of the action (after): " + ownedCard.isPaired());
+    for (DevelopmentCard card : curPlayer.getPurchasedHand().getDevelopmentCards()) {
+      if (card.equals(ownedCard)) {
+        logger.warn("The card in hand pairing state: " + card.isPaired());
+      }
+    }
 
     //add card to hand, add prestige points
     int prestigeAmount = satchel.getPrestigePoints();
@@ -147,6 +156,10 @@ public class CardExtraAction extends Action {
     List<CardEffect> cardEffects = freeCard.getPurchaseEffects();
     int prestigePoints = freeCard.getPrestigePoints();
 
+    Logger logger = LoggerFactory.getLogger(CardExtraAction.class);
+    logger.warn("Cur card colour: " + freeCard.getGemColour());
+    logger.warn("Cur card is base: " + freeCard.isBaseCard());
+
     //if it is a base card
     if (freeCard.isBaseCard()) {
       BaseBoard baseBoard = (BaseBoard) curTableTop.getBoard(Extension.BASE);
@@ -171,18 +184,27 @@ public class CardExtraAction extends Action {
       orientBoard.removeCard(this.position);
       orientBoard.update();
 
-      if (currentEffect == CardEffect.SATCHEL) {
+      // might contain SATCHEL / FREE / RESERVE_NOBLE
+      if (cardEffects.contains(CardEffect.SATCHEL)) {
         // stash the SATCHEL since we this card can not just go to player's purchase
         associatedActionInterpreter.setStashedCard(freeCard);
       } else {
-        // otherwise: FREE OR DOUBLE_GOLD OR RESERVE_NOBLE can just go to player's hand
+        // otherwise: FREE OR RESERVE_NOBLE can just go to player's hand
         curPlayer.getPurchasedHand().addDevelopmentCard(freeCard);
         curPlayer.changePrestigePoints(prestigePoints);
       }
 
-      if (currentEffect != CardEffect.BURN_CARD) {
+
+      // if the orient has no effects OR double gold, then guarantee clear action map
+      if (cardEffects.isEmpty() || cardEffects.contains(CardEffect.DOUBLE_GOLD)) {
+        associatedActionInterpreter.getActionGenerator()
+            .getPlayerActionMaps().put(curPlayer.getName(), new HashMap<>());
+      } else {
         actionGenerator.updateCascadeActions(curPlayer, freeCard, currentEffect);
       }
+      //always set to 0 because no matter what the cascading action is, it is not a free card.
+      // set free level to 0 to avoid infinite loop
+      associatedActionInterpreter.setFreeCardLevel(0);
 
     }
   }
