@@ -177,8 +177,6 @@ public class CardExtraAction extends Action {
       //if it is an orient card
     } else {
       ActionGenerator actionGenerator = associatedActionInterpreter.getActionGenerator();
-      CardEffect currentEffect = cardEffects.get(0);
-
       OrientBoard orientBoard = (OrientBoard) curTableTop.getBoard(Extension.ORIENT);
       //remove freeCard from Board, replace.
       orientBoard.removeCard(this.position);
@@ -200,6 +198,7 @@ public class CardExtraAction extends Action {
         associatedActionInterpreter.getActionGenerator()
             .getPlayerActionMaps().put(curPlayer.getName(), new HashMap<>());
       } else {
+        CardEffect currentEffect = cardEffects.get(0);
         actionGenerator.updateCascadeActions(curPlayer, freeCard, currentEffect);
       }
       //always set to 0 because no matter what the cascading action is, it is not a free card.

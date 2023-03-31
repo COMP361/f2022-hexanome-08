@@ -39,7 +39,7 @@ public class TestActionGenerator {
 
 
     PlayerInGame playerInGame;
-    List<Extension> extensions = Arrays.asList(Extension.BASE, Extension.ORIENT,Extension.TRADING_POST);
+    List<Extension> extensions = Arrays.asList(Extension.BASE, Extension.ORIENT,Extension.TRADING_POST, Extension.CITY);
     List<String> players = Arrays.asList("Bob", "Tim");
     ActionGenerator actionGenerator;
     Bank bank;
@@ -144,13 +144,9 @@ public class TestActionGenerator {
 
     @Test
     void testUpdateClaimCityActions() {
-        EnumMap<Colour, Integer> price = SplendorDevHelper.getInstance().getRawTokenColoursMap();
-        List<CityCard> cityCards = Arrays.asList(
-            new CityCard(5, price, "c1", 2),
-            new CityCard(5, price, "c2", 2)
-        );
+        List<Integer> cityCardIndices = Arrays.asList(1, 2);
         String name = playerInGame.getName();
-        actionGenerator.updateClaimCityActions(cityCards, playerInGame.getName());
+        actionGenerator.updateClaimCityActions(cityCardIndices, playerInGame.getName());
         assertEquals(2, actionGenerator.getPlayerActionMaps().get(name).size());
 
     }

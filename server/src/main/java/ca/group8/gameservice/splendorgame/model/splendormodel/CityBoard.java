@@ -71,7 +71,7 @@ public class CityBoard extends Board {
   public void assignCityCard(String playerName, CityCard card) {
     playerCities.put(playerName, card);
     for (int i = 0; i < allCityCards.length; i++) {
-      if (allCityCards[i].equals(card)) {
+      if (allCityCards[i] != null && allCityCards[i].equals(card)) {
         allCityCards[i] = null;
       }
     }

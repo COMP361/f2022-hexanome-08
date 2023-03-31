@@ -231,20 +231,23 @@ public class ActionInterpreter {
         if (!unlockedCity) {
           // city winning check, can the player unlock a city or not.
           List<CityCard> unlockedCityCards = new ArrayList<>();
-          for (CityCard cityCard : cityBoard.getAllCityCards()) {
-            // check how many city cards we can unlock
+          List<Integer> unlockedCityCardsIndices = new ArrayList<>();
+          for (int i = 0; i < cityBoard.getAllCityCards().length; i++) {
+            // check how many city cards indices we can unlock
+            CityCard cityCard = cityBoard.getAllCityCards()[i];
             if (cityCard != null && cityCard.canUnlock(playerInGame)) {
-              unlockedCityCards.add(cityCard);
+              unlockedCityCardsIndices.add(i);
             }
           }
 
-          if (unlockedCityCards.size() > 0) {
+          if (unlockedCityCardsIndices.size() > 0) {
             unlockedCity = true;
-            if (unlockedCityCards.size() == 1) {
-              // if unlocked only one, then there is no option to choose
-              cityBoard.assignCityCard(playerName, unlockedCityCards.get(0));
+            if (unlockedCityCardsIndices.size() == 1) {
+              // if unlocked only one, then there is no option to choose (only one index)
+              CityCard unlockedCard = cityBoard.getAllCityCards()[unlockedCityCardsIndices.get(0)];
+              cityBoard.assignCityCard(playerName, unlockedCard);
             } else {
-              actionGenerator.updateClaimCityActions(unlockedCityCards, playerName);
+              actionGenerator.updateClaimCityActions(unlockedCityCardsIndices, playerName);
               // update claim city actions, let player do further move
               return;
             }
@@ -273,11 +276,14 @@ public class ActionInterpreter {
       // after adding the player, we decide should we set the gameInfo state to finished or
       // not only if we are currently at last player && the winner list is not empty
       // we announce that the game is over
+      logger.warn("Game winners: " + gameInfo.getWinners());
+
       if (playerName.equals(lastPlayerName) && !gameInfo.getWinners().isEmpty()) {
         gameInfo.setFinished();
         decideWinners(gameInfo.getWinners());
       }
 
+      logger.warn("Game status: " + gameInfo.isFinished());
       // set next turn
       // the flags to default values
       nobleVisited = false;

@@ -5,6 +5,7 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.Bank;
 import ca.group8.gameservice.splendorgame.model.splendormodel.BaseBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Card;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CardEffect;
+import ca.group8.gameservice.splendorgame.model.splendormodel.CityBoard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.CityCard;
 import ca.group8.gameservice.splendorgame.model.splendormodel.Colour;
 import ca.group8.gameservice.splendorgame.model.splendormodel.DevelopmentCard;
@@ -777,12 +778,15 @@ public class ActionGenerator {
   /**
    * This method should update the player action map with any  Claim City action (if applicable).
    *
-   * @param unlockedCityCards The list of City cards the player has unlocked.
+   * @param unlockedCityCardIndices The list of indices of City cards the player has unlocked.
    * @param playerName The name of the player (who has unlocked the city/cities).
    */
-  public void updateClaimCityActions(List<CityCard> unlockedCityCards, String playerName) {
+  public void updateClaimCityActions(List<Integer> unlockedCityCardIndices, String playerName) {
     List<ClaimCityAction> claimCityActions = new ArrayList<>();
-    for (CityCard unlockedCityCard : unlockedCityCards) {
+    CityBoard cityBoard = (CityBoard) tableTop.getBoard(Extension.CITY);
+    CityCard[] allCityCards = cityBoard.getAllCityCards();
+    for (int i : unlockedCityCardIndices) {
+      CityCard unlockedCityCard = allCityCards[i];
       claimCityActions.add(new ClaimCityAction(unlockedCityCard));
     }
 
