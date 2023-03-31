@@ -47,22 +47,21 @@ configuration a bit.
    `M8-Docker-BGP/f2022-hexanome-08/client/src/main/resources/project/pictures`
 2. Now depending on how you started your server and how exactly you want to play this game, there is some configuration details you need to do. If you want to:
    1. Play with your friends under a same WI-FI:
-      1. Find `M8-Docker-BGP/f2022-hexanome-08/client/src/main/java/App.java`
-      2. At line 38 and 39, you will find the following code:
+      1. Find the json configuration file: `M8-Docker-BGP/f2022-hexanome-08/client/connectionConfig.json`, the default content is:
       ```
-      36: //private static final String mode = "ruoyu_server";
-      37: //private static final String mode = "local_host";
-      38: private static final String mode = "same_wifi";
-      39: private static final String wifiIp = "10.122.104.148";
+      {
+      "defaultUserName": "ruoyu", 
+      "defaultPassword": "abc123_ABC123", 
+      "useDefaultUserInfo": "true",
+      "hostIp": "76.66.139.161",
+      "useLocalHost": "false"
+      }
       ```
-      make sure that you have line 36 and 37 commented out, 38 uncommented and change line 39 to the IP of the machine that runs the 
-      server on. 
-      > For mac user, you can do so by `ipconfig getifaddr en0` in your terminal. For example, you got 10.111.111.111 as your IP, then you will need to replace line 39 to `private static final String wifiIp = "10.111.111.111";` in all the client application
-that you want to run the game on.
+   2. Change the value of `hostIp` to the IP of which your machine that runs the servers.
+      > For mac user, you can do so by `ipconfig getifaddr en0` in your terminal. For example, you got 10.111.111.111 as your IP, then you need to change this configuration file in all the client applications: `"hostIp": "10.111.111.111"`,
    2. Play with your friends under different WI-FI:
-      1. Similarly, you need to comment out line 38 and uncomment line 36.
-      2. [Port-forwarding](https://www.hellotech.com/guide/for/how-to-port-forward#:~:text=To%20forward%20ports%20on%20your%20router%2C%20log%20into%20your%20router,you%20might%20have%20to%20upgrade.) your local host so that you can play the game with your friends under different WI-FI.
-      3. Say the IP you got after port-forwarding is: `http://33.23.123.456/`, then you replace line 39 by: `private static final String wifiIp = "33.23.123.456";`
+      1. [Port-forwarding](https://www.hellotech.com/guide/for/how-to-port-forward#:~:text=To%20forward%20ports%20on%20your%20router%2C%20log%20into%20your%20router,you%20might%20have%20to%20upgrade.) your local host so that you can play the game with your friends under different WI-FI.
+      2. Say the IP you got after port-forwarding is: `http://33.23.123.456/`, then similarly, you will need to replace `hostIp` to `"33.23.123.456"`, which is your own server IP after port-forwarding.
 3. Now you have configured the client IP correctly, we are just one command line away from playing! Now type: `cd M8-Docker-BGP/f2022-hexanome-08/client` 
 4. Lastly, type: `mvn clean javafx:run`, and you should be able to see the game running!
 
@@ -74,11 +73,10 @@ You could've skipped all the steps mentioned above if you just want to play some
 3. Then, type: `mvn clean javafx:run` to start the game!
 
 
-### Log-in Account Management
-One last step before playing, is to create your account to access the lobby.
-You can log in with a default admin username: `ruoyu` and password: `abc123_ABC123`. Later, you can use this account to add more accounts for your friends or create your own account.
-
-
+### Lastly, Log-in Account Management
+As you have noticed, we have provided you a default admin account to start the game with. For the very first time that you log in, you can use this account to add more accounts as you go.
+Afterwards, you can change `"defaultUserName"` and `"defaultPassword"` to your own account information. The flag value: `"useDefaultUserInfo": "true"` enables that your password and username
+being pre-filled for you (save some time) when you log in. If you do not like this feature, then you can simply change it to "false": `"useDefaultUserInfo": "false"`
 
 
 **_Congrats! You have finished all the steps you needed to play the game (a bit long, I admit). Now it's time to gather some friends around, and start playing!_**
