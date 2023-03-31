@@ -96,21 +96,21 @@ public class GameController implements Initializable {
   private List<String> sortedPlayerNames = new ArrayList<>();
   private Thread playerInfoThread;
   private Thread mainGameUpdateThread;
-  
+
   private String viewerName = null;
-  
+
   private boolean inWatchMode = false;
 
   /**
    * GameController for the main page.
    *
-   * @param gameId     gameId
+   * @param gameId gameId
    */
   public GameController(long gameId, String viewerName) {
     this.gameId = gameId;
     // set up for indicating this is a watch game or not
     if (viewerName != null) {
-      this.viewerName = viewerName; 
+      this.viewerName = viewerName;
     } else {
       inWatchMode = true;
     }
@@ -145,8 +145,8 @@ public class GameController implements Initializable {
 
       App.loadPopUpWithController("my_reserved_cards.fxml",
           new ReservedHandController(reservedHand, playerActions, gameId),
-              config.getLargePopUpWidth(),
-              config.getLargePopUpHeight());
+          config.getLargePopUpWidth(),
+          config.getLargePopUpHeight());
 
     };
   }
@@ -176,8 +176,8 @@ public class GameController implements Initializable {
 
       App.loadPopUpWithController("my_development_cards.fxml",
           new PurchaseHandController(gameId, purchasedHand, playerActions),
-              config.getLargePopUpWidth(),
-              config.getLargePopUpHeight());
+          config.getLargePopUpWidth(),
+          config.getLargePopUpHeight());
 
     };
   }
@@ -247,8 +247,9 @@ public class GameController implements Initializable {
                 gameRequestSender.sendGetAllPlayerInfoRequest(gameId, hashedResponse);
             responseCode = longPullResponse.getStatus();
             if (Thread.currentThread().isInterrupted()) {
-              throw new InterruptedException("PlayerInfo Thread: " + Thread.currentThread().getName() +
-                  " terminated");
+              throw new InterruptedException(
+                  "PlayerInfo Thread: " + Thread.currentThread().getName() +
+                      " terminated");
             }
           }
 
@@ -392,8 +393,8 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("noble_action_pop_up.fxml",
               new ActOnNoblePopUpController(gameId, playerActionMap, false),
-                  config.getSmallPopUpWidth(),
-                  config.getSmallPopUpHeight());
+              config.getSmallPopUpWidth(),
+              config.getSmallPopUpHeight());
         });
       });
 
@@ -401,8 +402,8 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("noble_action_pop_up.fxml",
             new ActOnNoblePopUpController(gameId, playerActionMap, false),
-                config.getSmallPopUpWidth(),
-                config.getSmallPopUpHeight());
+            config.getSmallPopUpWidth(),
+            config.getSmallPopUpHeight());
       });
 
     }
@@ -429,8 +430,8 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("my_development_cards.fxml",
               new PurchaseHandController(gameId, purchasedHand, playerActionMap),
-                  config.getLargePopUpWidth(),
-                  config.getLargePopUpHeight());
+              config.getLargePopUpWidth(),
+              config.getLargePopUpHeight());
         });
       });
 
@@ -438,11 +439,12 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("my_development_cards.fxml",
             new PurchaseHandController(gameId, purchasedHand, playerActionMap),
-                config.getLargePopUpWidth(),
-                config.getLargePopUpHeight());
+            config.getLargePopUpWidth(),
+            config.getLargePopUpHeight());
       });
     }
   }
+
   //TODO: take out prints
   private void showBurnCardPopUp(GameInfo curGameInfo) {
     GameBoardLayoutConfig config = App.getGuiLayouts();
@@ -458,8 +460,8 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("free_card_pop_up.fxml",
               new BurnCardController(gameId, playerActionMap),
-                  config.getLargePopUpWidth(),
-                  config.getLargePopUpHeight());
+              config.getLargePopUpWidth(),
+              config.getLargePopUpHeight());
         });
       });
 
@@ -468,12 +470,11 @@ public class GameController implements Initializable {
 
         App.loadPopUpWithController("free_card_pop_up.fxml",
             new BurnCardController(gameId, playerActionMap),
-                config.getLargePopUpWidth(),
-                config.getLargePopUpHeight());
+            config.getLargePopUpWidth(),
+            config.getLargePopUpHeight());
       });
     }
   }
-
 
 
   private void showFreeCardPopUp(GameInfo curGameInfo) {
@@ -491,7 +492,7 @@ public class GameController implements Initializable {
           App.loadPopUpWithController("free_card_pop_up.fxml",
               new FreeCardPopUpController(gameId, playerActionMap),
               config.getSelectFreeCardWidth(),
-                  config.getSelectFreeCardHeight());
+              config.getSelectFreeCardHeight());
         });
       });
 
@@ -499,8 +500,8 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("free_card_pop_up.fxml",
             new FreeCardPopUpController(gameId, playerActionMap),
-                config.getSelectFreeCardWidth(),
-                config.getSelectFreeCardHeight());
+            config.getSelectFreeCardWidth(),
+            config.getSelectFreeCardHeight());
       });
     }
   }
@@ -520,18 +521,18 @@ public class GameController implements Initializable {
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
           App.loadPopUpWithController("noble_action_pop_up.fxml",
-             new ActOnNoblePopUpController(gameId, playerActionMap,true),
-                  config.getSmallPopUpWidth(),
-                  config.getSmallPopUpHeight());
+              new ActOnNoblePopUpController(gameId, playerActionMap, true),
+              config.getSmallPopUpWidth(),
+              config.getSmallPopUpHeight());
         });
       });
 
       // also, show a popup immediately
       Platform.runLater(() -> {
         App.loadPopUpWithController("noble_action_pop_up.fxml",
-            new ActOnNoblePopUpController(gameId, playerActionMap,true),
-                config.getSmallPopUpWidth(),
-                config.getSmallPopUpHeight());
+            new ActOnNoblePopUpController(gameId, playerActionMap, true),
+            config.getSmallPopUpWidth(),
+            config.getSmallPopUpHeight());
       });
     }
   }
@@ -698,8 +699,9 @@ public class GameController implements Initializable {
             longPullResponse = gameRequestSender.sendGetGameInfoRequest(gameId, hashedResponse);
             responseCode = longPullResponse.getStatus();
             if (Thread.currentThread().isInterrupted()) {
-              throw new InterruptedException("GameInfo Thread: " + Thread.currentThread().getName() +
-                  " terminated");
+              throw new InterruptedException(
+                  "GameInfo Thread: " + Thread.currentThread().getName() +
+                      " terminated");
             }
           }
           if (responseCode == 200) {
@@ -760,8 +762,8 @@ public class GameController implements Initializable {
     return event -> {
       App.loadPopUpWithController("save_game.fxml",
           new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
-              config.getSmallPopUpWidth(),
-              config.getSmallPopUpHeight());
+          config.getSmallPopUpWidth(),
+          config.getSmallPopUpHeight());
     };
   }
 

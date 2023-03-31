@@ -25,6 +25,7 @@ public class BurnCardController extends ActionSelectionSender implements Initial
   private HBox freeCardsHbox;
   @FXML
   private Text title;
+
   public BurnCardController(long gameId, Map<String, Action> playerActionMap) {
     super(gameId);
     this.playerActionMap = playerActionMap;
@@ -41,7 +42,7 @@ public class BurnCardController extends ActionSelectionSender implements Initial
       Action action = playerActionMap.get(actionId);
       CardExtraAction cardExtraAction = (CardExtraAction) action;
       DevelopmentCard card = (DevelopmentCard) cardExtraAction.getCurCard();
-      System.out.println("Need to burn colour: " +card.getGemColour());
+      System.out.println("Need to burn colour: " + card.getGemColour());
       String cardImagePath;
       int imageViewInsertIndex;
       if (card.isBaseCard()) {

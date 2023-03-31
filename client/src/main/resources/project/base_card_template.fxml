@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0"
-         prefWidth="460.0" spacing="5.0" type="HBox" xmlns="http://javafx.com/javafx/19"
-         xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.App">
+<fx:root xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+         prefHeight="150.0" prefWidth="460.0" spacing="5.0" type="HBox"
+         xmlns="http://javafx.com/javafx/19" fx:controller="project.App">
     <children>
         <Group>
             <children>

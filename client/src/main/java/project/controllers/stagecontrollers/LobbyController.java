@@ -130,7 +130,8 @@ public class LobbyController extends AbstractLobbyController {
             for (long sessionId : sessionMap.keySet()) {
               Session curSession = sessionMap.get(sessionId);
               // create the new GUI
-              SessionGui curSessionGui = new SessionGui(curSession, sessionId, App.getUser(), Thread.currentThread());
+              SessionGui curSessionGui =
+                  new SessionGui(curSession, sessionId, App.getUser(), Thread.currentThread());
               // set up the session gui
               curSessionGui.setup();
               SessionGuiManager.getInstance().addSessionGui(curSessionGui);

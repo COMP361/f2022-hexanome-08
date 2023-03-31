@@ -4,14 +4,15 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
-<Pane fx:id="purchaseContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<Pane xmlns:fx="http://javafx.com/fxml/1" fx:id="purchaseContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="180.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/19">
     <children>
-        <Text layoutX="60.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose one noble to reserve" textAlignment="CENTER" wrappingWidth="241.015625">
+        <Text layoutX="60.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose one noble to reserve"
+              textAlignment="CENTER" wrappingWidth="241.015625">
             <font>
-                <Font name="System Bold" size="19.0" />
+                <Font name="System Bold" size="19.0"/>
             </font>
         </Text>
-      <HBox fx:id="noblesToReserveHbox" layoutX="21.0" layoutY="53.0" prefHeight="100.0" prefWidth="324.0" />
+        <HBox fx:id="noblesToReserveHbox" layoutX="21.0" layoutY="53.0" prefHeight="100.0" prefWidth="324.0"/>
     </children>
 </Pane>

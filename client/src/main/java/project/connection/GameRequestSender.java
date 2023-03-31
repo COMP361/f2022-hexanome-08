@@ -70,11 +70,11 @@ public class GameRequestSender {
   /**
    * Send a save game request to our game service backend.
    *
-   * @param gameId      gameId
-   * @param savegame    savegame
+   * @param gameId   gameId
+   * @param savegame savegame
    * @throws UnirestException when the game id is duplicated saved in game server side.
    */
-  public void sendSaveGameRequest(long gameId, Savegame savegame) throws UnirestException{
+  public void sendSaveGameRequest(long gameId, Savegame savegame) throws UnirestException {
     String url = String.format("%s/api/games/%s/savegame", gameUrl + gameServiceName, gameId);
     String body = SplendorDevHelper.getInstance().getGson().toJson(savegame, Savegame.class);
     // we can safely trust the username will be

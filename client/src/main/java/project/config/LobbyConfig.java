@@ -1,2 +1,4 @@
-package project.config;public class LobbyConfig {
+package project.config;
+
+public class LobbyConfig {
 }

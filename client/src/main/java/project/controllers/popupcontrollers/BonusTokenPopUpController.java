@@ -14,9 +14,9 @@ import project.App;
 
 public class BonusTokenPopUpController extends ActionSelectionSender implements Initializable {
 
+  private final Map<String, Action> playerActionMap;
   @FXML
   private HBox availableTokensHbox;
-  private final Map<String, Action> playerActionMap;
 
 
   public BonusTokenPopUpController(long gameId, Map<String, Action> playerActionMap) {

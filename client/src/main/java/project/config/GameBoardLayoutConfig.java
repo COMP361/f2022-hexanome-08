@@ -90,9 +90,13 @@ public class GameBoardLayoutConfig {
     this.nobleLayoutY = nobleLayoutY;
   }
 
-  public double getNobleSpace() {return nobleSpace;}
+  public double getNobleSpace() {
+    return nobleSpace;
+  }
 
-  public void setNobleSpace(double nobleSpace) {this.nobleSpace = nobleSpace;}
+  public void setNobleSpace(double nobleSpace) {
+    this.nobleSpace = nobleSpace;
+  }
 
   public double getTokenBankLayoutX() {
     return tokenBankLayoutX;
@@ -221,17 +225,30 @@ public class GameBoardLayoutConfig {
   public void setPacBoardLayoutY(double powerAndCityBoardLayoutY) {
     this.pacBoardLayoutY = powerAndCityBoardLayoutY;
   }
-  public void setCityWidth(double cityWidth) {this.cityWidth = cityWidth;}
 
-  public void setCityHeight(double cityHeight) {this.cityHeight = cityHeight;}
+  public double getCityWidth() {
+    return cityWidth;
+  }
 
-  public void setCitySpace(double citySpace) {this.citySpace = citySpace;}
+  public void setCityWidth(double cityWidth) {
+    this.cityWidth = cityWidth;
+  }
 
-  public double getCityWidth() {return cityWidth;}
+  public double getCityHeight() {
+    return cityHeight;
+  }
 
-  public double getCityHeight() {return cityHeight;}
+  public void setCityHeight(double cityHeight) {
+    this.cityHeight = cityHeight;
+  }
 
-  public double getCitySpace() {return citySpace;}
+  public double getCitySpace() {
+    return citySpace;
+  }
+
+  public void setCitySpace(double citySpace) {
+    this.citySpace = citySpace;
+  }
 
   public double getNobleWidth() {
     return nobleWidth;
@@ -376,6 +393,7 @@ public class GameBoardLayoutConfig {
   public void setCardActionHeight(double cardActionHeight) {
     this.cardActionHeight = cardActionHeight;
   }
+
   public double getSmallPopUpWidth() {
     return smallPopUpWidth;
   }
@@ -399,6 +417,7 @@ public class GameBoardLayoutConfig {
   public void setExitGameHeight(double exitGameHeight) {
     this.exitGameHeight = exitGameHeight;
   }
+
   public double getLargePopUpWidth() {
     return largePopUpWidth;
   }

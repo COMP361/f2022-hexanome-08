@@ -24,8 +24,8 @@ public class DeckActionController implements Initializable {
   /**
    * DeckActionController.
    *
-   * @param gameId         gameId
-   * @param actionId       actionId
+   * @param gameId   gameId
+   * @param actionId actionId
    */
   public DeckActionController(long gameId, String actionId) {
     this.gameId = gameId;
@@ -46,7 +46,7 @@ public class DeckActionController implements Initializable {
   }
 
   @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {;
+  public void initialize(URL url, ResourceBundle resourceBundle) {
     reserveButton.setOnAction(createOnClickReserveHandler());
   }
 }

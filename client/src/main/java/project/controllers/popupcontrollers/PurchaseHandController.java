@@ -59,8 +59,8 @@ public class PurchaseHandController implements Initializable {
   /**
    * PurchaseHandController.
    *
-   * @param purchasedHand  purchasedHand
-   * @param playerActions  playerActions
+   * @param purchasedHand purchasedHand
+   * @param playerActions playerActions
    */
   public PurchaseHandController(long gameId, PurchasedHand purchasedHand,
                                 Map<String, Action> playerActions) {

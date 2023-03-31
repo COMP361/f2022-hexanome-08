@@ -5,15 +5,17 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
-<Pane fx:id="purchaseContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="173.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<Pane xmlns:fx="http://javafx.com/fxml/1" fx:id="purchaseContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="173.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/19">
     <children>
-        <Text layoutX="46.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GAME OVER!!!!" textAlignment="CENTER" wrappingWidth="268.015625">
+        <Text layoutX="46.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GAME OVER!!!!"
+              textAlignment="CENTER" wrappingWidth="268.015625">
             <font>
-                <Font name="System Bold" size="38.0" />
+                <Font name="System Bold" size="38.0"/>
             </font>
         </Text>
-      <Button fx:id="byeButton" layoutX="133.0" layoutY="127.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" text="Bye~" />
-      <Label fx:id="winnersLabel" layoutX="57.0" layoutY="80.0" prefHeight="34.0" prefWidth="247.0" />
+        <Button fx:id="byeButton" layoutX="133.0" layoutY="127.0" mnemonicParsing="false" prefHeight="26.0"
+                prefWidth="94.0" text="Bye~"/>
+        <Label fx:id="winnersLabel" layoutX="57.0" layoutY="80.0" prefHeight="34.0" prefWidth="247.0"/>
     </children>
 </Pane>

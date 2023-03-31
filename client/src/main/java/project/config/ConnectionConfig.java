@@ -1,16 +1,16 @@
 package project.config;
 
 public class ConnectionConfig {
-  private String defaultUserName;
-  private String defaultPassword;
-  private boolean useDefaultUserInfo;
-  private String hostIp;
-  private boolean useLocalHost;
+  private final String defaultUserName;
+  private final String defaultPassword;
+  private final boolean useDefaultUserInfo;
+  private final String hostIp;
+  private final boolean useLocalHost;
 
 
-
-  public ConnectionConfig(String defaultUserName, String defaultPassword, boolean useDefaultUserInfo,
-                     String hostIp, boolean useLocalHost) {
+  public ConnectionConfig(String defaultUserName, String defaultPassword,
+                          boolean useDefaultUserInfo,
+                          String hostIp, boolean useLocalHost) {
     this.defaultUserName = defaultUserName;
     this.defaultPassword = defaultPassword;
     this.useDefaultUserInfo = useDefaultUserInfo;

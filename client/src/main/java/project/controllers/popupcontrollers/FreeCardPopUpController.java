@@ -24,6 +24,7 @@ public class FreeCardPopUpController extends ActionSelectionSender implements In
   private HBox freeCardsHbox;
   @FXML
   private Text title;
+
   public FreeCardPopUpController(long gameId, Map<String, Action> playerActionMap) {
     super(gameId);
     this.playerActionMap = playerActionMap;

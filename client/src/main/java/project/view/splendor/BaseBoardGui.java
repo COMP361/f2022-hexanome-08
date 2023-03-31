@@ -49,7 +49,8 @@ public class BaseBoardGui implements BoardGui {
   public BaseBoardGui(AnchorPane playerBoardAnchorPane, long gameId) {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     this.gameId = gameId;
-    nobleBoardGui = new NobleBoardGui(config.getNobleWidth(), config.getNobleHeight(), config.getNobleSpace());
+    nobleBoardGui =
+        new NobleBoardGui(config.getNobleWidth(), config.getNobleHeight(), config.getNobleSpace());
     tokenBankGui = new TokenBankGui(gameId);
     this.playerBoardAnchorPane = playerBoardAnchorPane;
     this.baseCardBoard = new VBox();

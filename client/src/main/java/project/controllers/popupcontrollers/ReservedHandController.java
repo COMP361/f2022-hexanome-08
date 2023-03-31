@@ -40,10 +40,11 @@ public class ReservedHandController implements Initializable {
   /**
    * Controller for the ReservedHand.
    *
-   * @param reservedHand   reservedHand
-   * @param playerActions  playerActions
+   * @param reservedHand  reservedHand
+   * @param playerActions playerActions
    */
-  public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions, long gameId) {
+  public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions,
+                                long gameId) {
     Map<String, Action> purchaseActions = playerActions.entrySet()
         .stream().filter(e -> e.getValue() instanceof PurchaseAction)
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

@@ -99,7 +99,7 @@ public class LogInController implements Initializable {
   }
 
   private Thread createRefreshTokenThread() {
-    return new Thread(()-> {
+    return new Thread(() -> {
       System.out.println(Thread.currentThread().getName() + ", the refresh token thread starts!");
       System.out.println("Refreshing for " + App.getUser().getUsername());
       while (!Thread.currentThread().isInterrupted()) {
@@ -115,7 +115,6 @@ public class LogInController implements Initializable {
       }
     });
   }
-
 
 
   @Override

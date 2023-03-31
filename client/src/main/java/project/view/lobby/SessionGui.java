@@ -23,9 +23,8 @@ public class SessionGui extends HBox {
 
   private final Long curSessionId;
   private final User curUser;
-  private Session curSession;
-
   private final Thread lobbyUpdateThread;
+  private Session curSession;
 
 
   // TODO: Needs to add a field -> String saveGameId, constructed in constructor

@@ -14,9 +14,9 @@ import project.App;
 
 public class ClaimCityPopUpController extends ActionSelectionSender implements Initializable {
 
+  private final Map<String, Action> playerActionMap;
   @FXML
   private VBox unlockedCityCardsVbox;
-  private final Map<String, Action> playerActionMap;
 
   public ClaimCityPopUpController(long gameId, Map<String, Action> playerActionMap) {
     super(gameId);

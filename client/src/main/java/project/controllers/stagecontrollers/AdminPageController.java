@@ -103,27 +103,27 @@ public class AdminPageController extends AbstractLobbyController {
           (int) (prefColour.getBlue() * 255),
           (int) (prefColour.getOpacity() * 255));
       Role role = Role.valueOf("ROLE_" + rolesChoiceBox.getValue().toUpperCase(Locale.ROOT));
-      Player new_player = new Player(username, colorString, password,role);
+      Player new_player = new Player(username, colorString, password, role);
       //passing in name of player who we are adding
 
       try {
         App.getLobbyServiceRequestSender().putOneNewPlayer(App.getUser().getAccessToken()
-            ,username,new_player);
+            , username, new_player);
         //refresh the page
         App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
         title = "Add New Player Confirmation";
         msg = "Player was added to the Lobby Service database!";
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(msg, title),
-                config.getSmallPopUpWidth(),
-                config.getSmallPopUpHeight());
+            config.getSmallPopUpWidth(),
+            config.getSmallPopUpHeight());
       } catch (UnirestException e) {
         title = "Add New Player Error";
         msg = "Player could not be added to the Lobby Service database";
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(msg, title),
-                config.getSmallPopUpWidth(),
-                config.getSmallPopUpHeight());
+            config.getSmallPopUpWidth(),
+            config.getSmallPopUpHeight());
 
       }
     });

@@ -74,7 +74,7 @@ public class PlayerLobbyGuiController implements Initializable {
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(error, errorTitle),
             config.getSmallPopUpWidth(),
-                config.getSmallPopUpHeight());
+            config.getSmallPopUpHeight());
       }
     });
 
@@ -100,8 +100,8 @@ public class PlayerLobbyGuiController implements Initializable {
 
       App.loadPopUpWithController("lobby_warn.fxml",
           new LobbyWarnPopUpController(msg, title),
-              config.getSmallPopUpWidth(),
-              config.getSmallPopUpHeight());
+          config.getSmallPopUpWidth(),
+          config.getSmallPopUpHeight());
       passwordField.clear();
     });
 
@@ -123,10 +123,9 @@ public class PlayerLobbyGuiController implements Initializable {
 
       App.loadPopUpWithController("lobby_warn.fxml",
           new LobbyWarnPopUpController(msg, title),
-              config.getSmallPopUpWidth(),
-              config.getSmallPopUpHeight());
+          config.getSmallPopUpWidth(),
+          config.getSmallPopUpHeight());
     });
-
 
 
   }

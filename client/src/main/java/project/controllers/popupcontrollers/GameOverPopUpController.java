@@ -59,6 +59,7 @@ public class GameOverPopUpController implements Initializable {
       window.close();
     };
   }
+
   // indicate whether to have the close button in the pop up or not
   public boolean isOptionToCancel() {
     return optionToCancel;
