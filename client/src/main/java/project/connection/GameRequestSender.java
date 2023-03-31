@@ -72,23 +72,22 @@ public class GameRequestSender {
    *
    * @param gameId      gameId
    * @param savegame    savegame
+   * @throws UnirestException when the game id is duplicated saved in game server side.
    */
-  public void sendSaveGameRequest(long gameId, Savegame savegame) {
-    HttpResponse<String> response = null;
+  public void sendSaveGameRequest(long gameId, Savegame savegame) throws UnirestException{
     String url = String.format("%s/api/games/%s/savegame", gameUrl + gameServiceName, gameId);
     String body = SplendorDevHelper.getInstance().getGson().toJson(savegame, Savegame.class);
-    try {
-      // we can safely trust the username will be
-      response = Unirest.put(url)
-          .header("Content-Type", "application/json")
-          .queryString("player_name", App.getUser().getUsername())
-          .queryString("access_token", App.getUser().getAccessToken())
-          .body(body)
-          .asString();
-    } catch (UnirestException e) {
-      e.printStackTrace();
-      System.out.println("Failed to save this game: " + gameId);
+    // we can safely trust the username will be
+    HttpResponse<String> response = Unirest.put(url)
+        .header("Content-Type", "application/json")
+        .queryString("player_name", App.getUser().getUsername())
+        .queryString("access_token", App.getUser().getAccessToken())
+        .body(body)
+        .asString();
+    if (response.getStatus() != 200) {
+      throw new UnirestException("Duplicate Save Game Id! Re-enter another one!");
     }
+
   }
 
   /**

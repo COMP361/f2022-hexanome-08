@@ -1,6 +1,7 @@
 package project.controllers.popupcontrollers;
 
 import ca.mcgill.comp361.splendormodel.model.GameInfo;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -9,8 +10,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.swing.event.ChangeListener;
 import project.App;
 import project.connection.GameRequestSender;
 import project.view.lobby.communication.Savegame;
@@ -27,6 +30,9 @@ public class SaveGamePopUpController implements Initializable {
   private TextField saveGameIdTextField;
   @FXML
   private Button saveButton;
+
+  @FXML
+  private Label errorMsgLabel;
 
   /**
    * Controller ofr save game pop up.
@@ -49,10 +55,15 @@ public class SaveGamePopUpController implements Initializable {
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
       // first save it, and then delete the current session to LS
-      sender.sendSaveGameRequest(gameId, savegame);
-      Button button = (Button) event.getSource();
-      Stage curWindow = (Stage) button.getScene().getWindow();
-      curWindow.close();
+      try {
+        sender.sendSaveGameRequest(gameId, savegame);
+        Button button = (Button) event.getSource();
+        Stage curWindow = (Stage) button.getScene().getWindow();
+        curWindow.close();
+      } catch (UnirestException e) {
+        errorMsgLabel.setText(e.getMessage());
+        saveGameIdTextField.clear();
+      }
     };
   }
 
@@ -60,22 +71,17 @@ public class SaveGamePopUpController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     List<String> playerNamesList = gameInfo.getPlayerNames();
-    String[] playerNames = playerNamesList.toArray(new String[playerNamesList.size()]);
+    String[] playerNames = playerNamesList.toArray(new String[0]);
     String gameName = App.getGameRequestSender().getGameServiceName();
-    //cancelButton.setOnAction(createOnClickCancelButton());
-    Thread saveGameFiledThread = new Thread(() -> {
-      while (true) {
-        // keep looping until user input something
-        String saveGameId = saveGameIdTextField.getText();
-        if (saveGameId == null || saveGameId.equals("")) {
-          saveButton.setDisable(true);
-        } else {
-          saveButton.setDisable(false);
-          Savegame savegame = new Savegame(playerNames, gameName, saveGameId);
-          saveButton.setOnAction(createOnClickSaveButton(savegame));
-        }
+    saveButton.setDisable(true);
+    saveGameIdTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.trim().isEmpty()) {
+        saveButton.setDisable(true);
+      } else {
+        saveButton.setDisable(false);
+        Savegame savegame = new Savegame(playerNames, gameName, newValue);
+        saveButton.setOnAction(createOnClickSaveButton(savegame));
       }
     });
-    saveGameFiledThread.start();
   }
 }
