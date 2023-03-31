@@ -3,15 +3,12 @@ package project;
 import ca.mcgill.comp361.splendormodel.model.CityCard;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import com.google.gson.Gson;
-import com.google.gson.stream.JsonReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,6 +18,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.commons.io.FileUtils;
+import project.config.ConnectionConfig;
+import project.config.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
 import project.controllers.popupcontrollers.GameOverPopUpController;
@@ -32,12 +31,6 @@ import project.view.lobby.communication.User;
  * Splendor Game App.
  */
 public class App extends Application {
-
-  //private static final String mode = "ruoyu_server";
-  private static final String mode = "local_host";
-  //private static final String mode = "same_wifi";
-  //private static final String wifiIp = "10.122.104.148";
-  private static final String wifiIp = "76.66.139.161";
   private static final Colour[] allColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
   };
@@ -51,6 +44,8 @@ public class App extends Application {
   private static Stage primaryStage;
   private static User user;
   private static GameBoardLayoutConfig guiLayouts;
+
+  private static ConnectionConfig connectionConfig;
 
   public static void main(String[] args) {
     launch();
@@ -67,10 +62,15 @@ public class App extends Application {
     System.setProperty("com.apple.macos.useScreenMenuBar", "true");
     primaryStage = stage;
     File gameConfigFile = new File("appConfig.json");
+    File connectConfigFile = new File("connectionConfig.json");
+
 
     try {
       String gameConfigString = FileUtils.readFileToString(gameConfigFile, StandardCharsets.UTF_8);
+      String connectConfigJson
+          = FileUtils.readFileToString(connectConfigFile, StandardCharsets.UTF_8);
       guiLayouts = new Gson().fromJson(gameConfigString, GameBoardLayoutConfig.class);
+      connectionConfig = new Gson().fromJson(connectConfigJson, ConnectionConfig.class);
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
@@ -89,43 +89,16 @@ public class App extends Application {
     primaryStage.show();
   }
 
-  private static String getWifiIp() throws IOException {
-    // Run "ipconfig getifaddr en0" command on a Mac system
-    ProcessBuilder pb = new ProcessBuilder("ipconfig", "getifaddr", "en0");
-    Process process = pb.start();
-
-    // Read the output of the command and store it as a string
-    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-    StringBuilder output = new StringBuilder();
-    String line;
-    while ((line = reader.readLine()) != null) {
-      output.append(line);
-    }
-    return output.toString();
-  }
-
   /**
    * get the lobby request sender.
    *
    * @return lobby request sender.
    */
   public static LobbyRequestSender getLobbyServiceRequestSender() {
-    try {
-      if (lobbyRequestSender == null) {
-        String lobbyUrl;
-        if (mode.equals("ruoyu_server") || mode.equals("same_wifi")) {
-          lobbyUrl = String.format("http://%s:4242", wifiIp);
-        } else if (mode.equals("local_host")) {
-          lobbyUrl = "http://127.0.0.1:4242";
-        } else {
-          throw new IOException("Unknown mode!");
-        }
-        lobbyRequestSender = new LobbyRequestSender(lobbyUrl);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
+    if (lobbyRequestSender == null)  {
+      String lobbyUrl = String.format("http://%s:4242", connectionConfig.getHostIp());
+      lobbyRequestSender = new LobbyRequestSender(lobbyUrl);
     }
-
     return lobbyRequestSender;
 
   }
@@ -136,22 +109,11 @@ public class App extends Application {
    * @return game request sender.
    */
   public static GameRequestSender getGameRequestSender() {
-    try {
-      if (gameRequestSender == null) {
-        String gameUrl;
-        if (mode.equals("ruoyu_server") || mode.equals("same_wifi")) {
-          gameUrl = String.format("http://%s:4246/", wifiIp);
-        } else if (mode.equals("local_host")) {
-          gameUrl = "http://127.0.0.1:4246/";
-        } else {
-          throw new IOException("Unknown mode!");
-        }
-        gameRequestSender = new GameRequestSender(gameUrl, "");
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
+    if (gameRequestSender == null) {
+      String gameUrl = String.format("http://%s:4246/", connectionConfig.getHostIp());
+      gameRequestSender = new GameRequestSender(gameUrl, "");
+    }
     return gameRequestSender;
   }
 
@@ -241,13 +203,18 @@ public class App extends Application {
     return user;
   }
 
-  public static void setUser(User puser) {
-    user = puser;
+  public static void setUser(User newUser) {
+    user = newUser;
   }
 
   public static GameBoardLayoutConfig getGuiLayouts() {
     return guiLayouts;
   }
+
+  public static ConnectionConfig getConnectionConfig() {
+    return connectionConfig;
+  }
+
 
   public static String getNoblePath(String cardName) {
     return String.format("project/pictures/noble/%s.png", cardName);

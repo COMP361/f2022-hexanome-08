@@ -1,4 +1,4 @@
-package project;
+package project.config;
 
 /**
  * A configuration class that stores the layout and size information needed to set up the game app.

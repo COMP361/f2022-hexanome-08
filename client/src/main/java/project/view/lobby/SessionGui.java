@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import project.App;
-import project.GameBoardLayoutConfig;
 import project.connection.LobbyRequestSender;
 import project.controllers.stagecontrollers.GameController;
 import project.view.lobby.communication.Session;

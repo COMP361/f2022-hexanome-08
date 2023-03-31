@@ -9,9 +9,8 @@ import java.util.Map;
 import javafx.application.Platform;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import project.App;
-import project.GameBoardLayoutConfig;
+import project.config.GameBoardLayoutConfig;
 
 /**
  * it displays the city board GUI.

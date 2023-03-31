@@ -1,6 +1,5 @@
 package project.controllers.stagecontrollers;
 
-import ca.mcgill.comp361.splendormodel.model.Colour;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import project.App;
-import project.GameBoardLayoutConfig;
+import project.config.GameBoardLayoutConfig;
 import project.connection.LobbyRequestSender;
 import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.view.lobby.PlayerLobbyGui;

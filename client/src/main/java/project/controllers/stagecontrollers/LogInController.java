@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.json.JSONObject;
 import project.App;
+import project.config.ConnectionConfig;
 import project.connection.LobbyRequestSender;
 import project.view.lobby.communication.User;
 
@@ -92,14 +93,11 @@ public class LogInController implements Initializable {
 
   // Mainly for debug usage
   private void setDefaultLogInInfo() {
-    //String name = "ruoyuplayer";
-    String name = "ruoyu";
-    String password = "abc123_ABC123";
-
-    //String name = "splendorbase";
-    //String password = "laaPhie*aiN0";
-    userName.setText(name);
-    userPassword.setText(password);
+    ConnectionConfig config = App.getConnectionConfig();
+    if (config.isUseDefaultUserInfo()) {
+      userName.setText(config.getDefaultUserName());
+      userPassword.setText(config.getDefaultPassword());
+    }
   }
 
   private Thread createRefreshTokenThread() {
@@ -130,11 +128,6 @@ public class LogInController implements Initializable {
     quitButton.setOnAction(event -> {
       // before quiting, also terminate the refresh token thread
       Platform.runLater(Platform::exit);
-      //Map<Thread, StackTraceElement[]> allThreads = Thread.getAllStackTraces();
-      //System.out.println("Number of running threads: " + allThreads.size());
-      //for (Thread thread : allThreads.keySet()) {
-      //  System.out.println("Thread name: " + thread.getName() + ", Thread ID: " + thread.getId());
-      //}
     });
   }
 }
