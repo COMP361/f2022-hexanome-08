@@ -146,19 +146,19 @@ public class SplendorRestController {
       // save the game detailed info to our game server as json file
       // and the metadata Savegame to LS
       gameManager.saveGame(saveGameInfo, gameId);
-      // forcing this game to be finished
-      GameInfo curGame = gameManager.getGameById(gameId);
-      curGame.setFinished();
-      // immediately tell the client, game is over
-      gameInfoBroadcastContentManager.get(gameId).touch();
-      // remove anything related to this game from game manager
-      // implicitly tell LS to delete this session
-      gameManager.deleteGame(gameId);
-
-      // remove the broadcast content manager which controls the
-      // long polling updates after letting clients know the game is finished
-      gameInfoBroadcastContentManager.remove(gameId);
-      allPlayerInfoBroadcastContentManager.remove(gameId);
+      //// forcing this game to be finished
+      //GameInfo curGame = gameManager.getGameById(gameId);
+      //curGame.setFinished();
+      //// immediately tell the client, game is over
+      //gameInfoBroadcastContentManager.get(gameId).touch();
+      //// remove anything related to this game from game manager
+      //// implicitly tell LS to delete this session
+      //gameManager.deleteGame(gameId);
+      //
+      //// remove the broadcast content manager which controls the
+      //// long polling updates after letting clients know the game is finished
+      //gameInfoBroadcastContentManager.remove(gameId);
+      //allPlayerInfoBroadcastContentManager.remove(gameId);
       return ResponseEntity.status(HttpStatus.OK).body("");
     } catch (ModelAccessException e) {
       logger.warn(e.getMessage());
