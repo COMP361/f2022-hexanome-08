@@ -141,7 +141,7 @@ public class SplendorRestController {
 
       // allow save game for any player in that game, not just creator!
       gameValidator.gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
-      logger.warn("Got save request successfully from: " +playerName);
+      logger.warn("Got save request successfully from: " + playerName);
 
       // save the game detailed info to our game server as json file
       // and the metadata Savegame to LS, might throw model access exception

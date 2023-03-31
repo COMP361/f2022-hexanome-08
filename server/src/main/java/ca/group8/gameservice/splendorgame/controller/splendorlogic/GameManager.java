@@ -294,22 +294,22 @@ public class GameManager {
     // saved id does not exist before
     if (!savedGameIds.contains(savegame.getSavegameid())) {
       savedGameIds.add(savegame.getSavegameid());
-      writeSavedGameDataToFile(savegame.getSavegameid(), newSaveGame, true);
-      writeSavedGameMetaDataToFile(savegame.getSavegameid(), savegame, true);
+      writeSavedGameDataToFile(savegame.getSavegameid(), newSaveGame);
+      writeSavedGameMetaDataToFile(savegame.getSavegameid(), savegame);
     } else {
       throw new ModelAccessException("Duplicate save game id!");
     }
   }
 
   /**
-   * Given a saved game id (string), go remove it in the files.
+   * Given a saved game id (string), remove it in the json files for meta and data.
    *
-   * @param saveGameId
+   * @param saveGameId the game id that we are removing
    */
   public void deleteSaveGame(String saveGameId) {
     savedGameIds.remove(saveGameId);
-    writeSavedGameDataToFile(saveGameId, null, false);
-    writeSavedGameMetaDataToFile(saveGameId,null, false);
+    writeSavedGameDataToFile(saveGameId, null);
+    writeSavedGameMetaDataToFile(saveGameId, null);
   }
 
 
@@ -340,24 +340,24 @@ public class GameManager {
    *
    * @param saveGameId     the id of the content
    * @param savedGameState the content ready to be written, if removing, this is null
-   * @param addToFile      the flag indicating delete or not
    */
-  private void writeSavedGameDataToFile(String saveGameId,
-                                        SavedGameState savedGameState, boolean addToFile) {
+  private void writeSavedGameDataToFile(String saveGameId, SavedGameState savedGameState) {
     synchronized (saveGameInfoFile) {
       try {
         Map<String, SavedGameState> allSaveGames = readSavedGameDataFromFile();
-        if (allSaveGames == null || (allSaveGames.isEmpty() && addToFile)) {
+        if (allSaveGames == null || (allSaveGames.isEmpty() && savedGameState != null)) {
           // in case the file is empty, just add the data
           allSaveGames = new HashMap<>();
           allSaveGames.put(saveGameId, savedGameState);
-        } else { // if the file is not empty, check if we have duplicate id when putting
-          if (addToFile) {
-            if (allSaveGames.containsKey(saveGameId)) {
-              return; // duplicate id, do not write anything
+        } else {
+          // if the file is not empty, check if we have duplicate id when putting
+          if (savedGameState != null) {
+            if (!allSaveGames.containsKey(saveGameId)) {
+              // only put the game if it does not exist before
+              allSaveGames.put(saveGameId, savedGameState);
             }
-            allSaveGames.put(saveGameId, savedGameState);
           } else {
+            // otherwise, remove from file
             allSaveGames.remove(saveGameId);
           }
         }
@@ -405,25 +405,25 @@ public class GameManager {
    *
    * @param saveGameId the string of the saved game id, used for remove purpose.
    * @param savegame  the content ready to be written (if removing, this is null).
-   * @param addToFile the flag indicating delete or not
    */
-  private void writeSavedGameMetaDataToFile(String saveGameId, Savegame savegame,
-                                            boolean addToFile) {
+  private void writeSavedGameMetaDataToFile(String saveGameId, Savegame savegame) {
     synchronized (saveGameMetaFile) {
       try {
         List<Savegame> allSaveGamesMeta = readSavedGameMetaDataFromFile();
-        if (allSaveGamesMeta == null || (allSaveGamesMeta.isEmpty() && addToFile)) {
+        if (allSaveGamesMeta == null || (allSaveGamesMeta.isEmpty() && savegame != null)) {
           allSaveGamesMeta = new ArrayList<>();
           allSaveGamesMeta.add(savegame);
         } else {
-          if (addToFile) {
+          // trying to save a savegame meta data
+          if (savegame != null) {
             boolean hasDuplicateId = allSaveGamesMeta.stream()
                 .anyMatch(game -> game.getSavegameid().equals(saveGameId));
-            if (hasDuplicateId) {
-              return; // duplicated game id, do not add to json.
+            if (!hasDuplicateId) {
+              // only add if there is no duplicate id
+              allSaveGamesMeta.add(savegame);
             }
-            allSaveGamesMeta.add(savegame);
           } else {
+            // save game is null, thus we are removing
             allSaveGamesMeta.removeIf(game -> game.getSavegameid().equals(saveGameId));
           }
         }

@@ -512,9 +512,9 @@ public class ActionGenerator {
           // only create the action if it's not dummy card
           //if this is not a satchel card, add extra action
           //OR if this IS a satchel card, but you're allowed to pick satchel cards, add extra action
-          if (!curCard.getPurchaseEffects().contains(CardEffect.SATCHEL)
-              ||(curCard.getPurchaseEffects().contains(CardEffect.SATCHEL)
-              && canTakeFreeSatchelCard)) {
+          List<CardEffect> purchaseEffects = curCard.getPurchaseEffects();
+          if (!purchaseEffects.contains(CardEffect.SATCHEL)
+              || (purchaseEffects.contains(CardEffect.SATCHEL) && canTakeFreeSatchelCard)) {
             logger.warn("Is satchel: " + curCard.getPurchaseEffects().contains(CardEffect.SATCHEL));
             logger.warn("Has card to pair: " + canTakeFreeSatchelCard);
             cascadeActions.add(new CardExtraAction(curCard, cardEffect, position));
