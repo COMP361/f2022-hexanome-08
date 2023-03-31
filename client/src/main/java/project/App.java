@@ -33,10 +33,11 @@ import project.view.lobby.communication.User;
  */
 public class App extends Application {
 
-  //private static final String mode = "ruoyu_server";
+  private static final String mode = "ruoyu_server";
   //private static final String mode = "local_host";
-  private static final String mode = "same_wifi";
-  private static final String wifiIp = "10.122.104.148";
+  //private static final String mode = "same_wifi";
+  //private static final String wifiIp = "10.122.104.148";
+  private static final String wifiIp = "76.66.139.161";
   private static final Colour[] allColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN, Colour.GOLD
   };
@@ -112,13 +113,10 @@ public class App extends Application {
     try {
       if (lobbyRequestSender == null) {
         String lobbyUrl;
-        if (mode.equals("ruoyu_server")) {
-          lobbyUrl = "http://76.66.139.161:4242";
+        if (mode.equals("ruoyu_server") || mode.equals("same_wifi")) {
+          lobbyUrl = String.format("http://%s:4242", wifiIp);
         } else if (mode.equals("local_host")) {
           lobbyUrl = "http://127.0.0.1:4242";
-        } else if (mode.equals("same_wifi")) {
-          //lobbyUrl = "http://10.122.126.253:4242";
-          lobbyUrl = String.format("http://%s:4242", wifiIp);
         } else {
           throw new IOException("Unknown mode!");
         }
@@ -141,13 +139,10 @@ public class App extends Application {
     try {
       if (gameRequestSender == null) {
         String gameUrl;
-        if (mode.equals("ruoyu_server")) {
-          gameUrl = "http://76.66.139.161:4246/";
+        if (mode.equals("ruoyu_server") || mode.equals("same_wifi")) {
+          gameUrl = String.format("http://%s:4246/", wifiIp);
         } else if (mode.equals("local_host")) {
           gameUrl = "http://127.0.0.1:4246/";
-        } else if (mode.equals("same_wifi")) {
-          //gameUrl = String.format("http://10.122.126.253:4246/", wifiIp);
-          gameUrl = String.format("http://%s:4246/", wifiIp);
         } else {
           throw new IOException("Unknown mode!");
         }
