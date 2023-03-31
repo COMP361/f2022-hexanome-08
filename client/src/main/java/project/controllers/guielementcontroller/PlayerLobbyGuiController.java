@@ -11,7 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.paint.Color;
 import project.App;
-import project.GameBoardLayoutConfig;
+import project.config.GameBoardLayoutConfig;
 import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.controllers.stagecontrollers.AdminPageController;
 import project.view.lobby.communication.Player;
