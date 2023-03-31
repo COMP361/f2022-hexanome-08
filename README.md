@@ -1,6 +1,91 @@
 # COMP 361 Project
 
-## Ruoyu's README is great
+## What is this project?
+As a group of 7 people, we developed an online version of _Splendor_, a famous broad game. The backend server was implemented using Spring Boot framework, 
+and we used JavaFX as our frontend framework. 
+The game is deployed on a [lobby service](https://github.com/m5c/LobbyService), developed by the course instructor: [Maximilian Schiedermeier](https://github.com/m5c).
+
+## How to run everything by yourself (server and client)
+### Prerequisite
+1. Make sure you have [maven](https://maven.apache.org/download.cgi) installed on your machine. It is required to run
+the client.
+2. Download and install [docker desktop](https://www.docker.com/) so that you can run the server and database in some isolated containers.
+3. Due to copy right issue, we can not upload the game assets of the original game in this repository, thus you must download it
+from [here](https://drive.google.com/drive/folders/1_qFamQnAU4fEEZqE0P-e6zrqeNkG2nRD). Download the folder `pictures` and
+store it somewhere on your machine. We will put it in the right place afterwards.
+
+### Server
+Let's start with the setting up the servers and database using `docker`:
+
+#### docker compose up
+Follow the steps by typing the command into your `terminal` (`cmd` if you are using windows)
+1. git clone this [repository](https://github.com/RuoyuDeng/M8-Docker-BGP.git) by typing: `git clone https://github.com/RuoyuDeng/M8-Docker-BGP.git`
+2. Then you cd into the directory: `cd M8-Docker-BGP`
+3. Run the update submodules script
+   1. For mac/linux, type: `./updatesubmodules.sh`
+   2. For windows, you can first open the folder in explorer, and then right-click on the file `updatesubmodules.ps1`,
+   in the prompt, click `run with powershell`.
+4. After that, type: `docker compose up`
+   > make sure you have docker desktop up and running before typing this
+5. Wait for around 2-3 minutes (max), then you should have the `Lobby Server` and `Game Server` both running on your machine.
+#### Alternative Approach after docker compose up (for developer)
+After you have build the `docker images`, you can choose to run the `database` inside the container and the `Lobby Service` and `Game Server`
+outside of the container. This approach is usually taken when you feel like customizing and modifying the game server or lobby server by yourself frequently 
+during game play (not recommended for gamers).
+1. Make sure you have the container `BGP-Database` created from previous `docker compose up` running. You can do so through the dashboard of the docker desktop application. 
+2. `cd M8-Docker-BGP/LobbyService`, and then type: `mvn clean spring-boot:run`
+3. Go back to the root folder: `M8-Docker-BGP`, then type: `cd f2022-hexanome-08/server`. Start the server by typing: `mvn clean spring-boot:run`
+4. Despite several more steps, you have achieved the same goal as above approach.
+
+Now, you should have the backend servers ready, let's see how to run the client.
+### Client
+We have not yet configured a way to package our frontend code to a `jar` file so that
+it can be played cross-platform by simply double-clicking on one file. So the only way to
+run the client (frontend) is use mvn: `mvn clean javafx:run`. Note that according to how the server is deployed, you might need to change the client
+configuration a bit.
+1. Remember the `pictures` folder that you downloaded as part of the prerequisite? Now let's put it in the right place, which is under:
+   `M8-Docker-BGP/f2022-hexanome-08/client/src/main/resources/project/pictures`
+2. Now depending on how you started your server and how exactly you want to play this game, there is some configuration details you need to do. If you want to:
+   1. Play with your friends under a same WI-FI:
+      1. Find `M8-Docker-BGP/f2022-hexanome-08/client/src/main/java/App.java`
+      2. At line 38 and 39, you will find the following code:
+      ```
+      36: //private static final String mode = "ruoyu_server";
+      37: //private static final String mode = "local_host";
+      38: private static final String mode = "same_wifi";
+      39: private static final String wifiIp = "10.122.104.148";
+      ```
+      make sure that you have line 36 and 37 commented out, 38 uncommented and change line 39 to the IP of the machine that runs the 
+      server on. 
+      > For mac user, you can do so by `ipconfig getifaddr en0` in your terminal. For example, you got 10.111.111.111 as your IP, then you will need to replace line 39 to `private static final String wifiIp = "10.111.111.111";` in all the client application
+that you want to run the game on.
+   2. Play with your friends under different WI-FI:
+      1. Similarly, you need to comment out line 38 and uncomment line 36.
+      2. [Port-forwarding](https://www.hellotech.com/guide/for/how-to-port-forward#:~:text=To%20forward%20ports%20on%20your%20router%2C%20log%20into%20your%20router,you%20might%20have%20to%20upgrade.) your local host so that you can play the game with your friends under different WI-FI.
+      3. Say the IP you got after port-forwarding is: `http://33.23.123.456/`, then you replace line 39 by: `private static final String wifiIp = "33.23.123.456";`
+3. Now you have configured the client IP correctly, we are just one command line away from playing! Now type: `cd M8-Docker-BGP/f2022-hexanome-08/client` 
+4. Lastly, type: `mvn clean javafx:run`, and you should be able to see the game running!
+
+### I just want to play the game (client)
+You could've skipped all the steps mentioned above if you just want to play some game ASAP. Follow the steps below:
+1. Remember the `pictures` folder that you downloaded as part of the prerequisite? Now let's put it in the right place, which is under:
+`M8-Docker-BGP/f2022-hexanome-08/client/src/main/resources/project/pictures`
+2. Open your terminal or cmd, type: `cd M8-Docker-BGP/f2022-hexanome-08/client`
+3. Then, type: `mvn clean javafx:run` to start the game!
+
+
+### Log-in Account Management
+One last step before playing, is to create your account to access the lobby.
+You can log in with a default admin username: `ruoyu` and password: `abc123_ABC123`. Later, you can use this account to add more accounts for your friends or create your own account.
+
+
+
+
+**_Congrats! You have finished all the steps you needed to play the game (a bit long, I admit). Now it's time to gather some friends around, and start playing!_**
+
+---
+> Develop & Learning Logs
+## Course Notes
 
 ### M7 prep
 #### Backend
@@ -79,7 +164,7 @@ mvn archetype:generate \
         -Djavafx-version=18.0.1
 ```
 
-2. use `mvn clean javafx:run` to complie and run the code
+2. use `mvn clean javafx:run` to compile and run the code
 
 #### Download The Pictures
 Since we are not allowed to push the picture files into our repo, we have to download them somewhere locally.
@@ -91,65 +176,66 @@ Since we are not allowed to push the picture files into our repo, we have to dow
 1. use `mvn clean package` to generate the java docs. (you can access the `html file` under `docs/project/`)
 
 
-
 > Note: we can savely delete module-info.java if we are not developing a modular program.
 
 
-## The Rules
+## Course repo edit restrictions
 
- * Feel free to edit/replace this file.
- * Do not delete or rename the [reports](reports), [client](client), [server](server) or [docs](docs) directories.  
-See [Static Content](#static-content)
- * Don't clutter your repo, update your [```.gitignore```](.gitignore) file, depending on your client language / technology.
-    * Don't commit binaries. (Images, jar files, class files, etc...)
-    * Don't commit buffer files. (Vim buffer files, IDE meta files etc...)
- * Place your documentation in [```docs```](docs) on [master](branch).
- * Commit frequently, commit fine grained.
- * Use branches
- * **Don't push on master!**
-    * Create a new branch for your feature.
-    * Work until stable / tested.
-    * Merge / rebase your temporary branch back to master.
-    * Delete your temporary branch.
+* Feel free to edit/replace this file.
+* Do not delete or rename the [reports](reports), [client](client), [server](server) or [docs](docs) directories.  
+  See [Static Content](#static-content)
+* Don't clutter your repo, update your [```.gitignore```](.gitignore) file, depending on your client language / technology.
+   * Don't commit binaries. (Images, jar files, class files, etc...)
+   * Don't commit buffer files. (Vim buffer files, IDE meta files etc...)
+* Place your documentation in [```docs```](docs) on [master](branch).
+* Commit frequently, commit fine grained.
+* Use branches
+* **Don't push on master!**
+   * Create a new branch for your feature.
+   * Work until stable / tested.
+   * Merge / rebase your temporary branch back to master.
+   * Delete your temporary branch.
 
 ## Static content
 
- * [```.gitignore```](.gitignore): Preliminary git exclusion instructions. Visit [Toptal's generator](https://www.toptal.com/developers/gitignore) to update.
- * [```reports```](reports): Base directory for automatic report collection. Your weekly reports go here. Must be uploaded every monday noon **to master** and follow correct date string ```YYYY-MM-DD.md```. Use [template](reports/YYYY-MM-DD.md) for your own reports. Do not resubmit same report / copy paste.
- * [```docs```](docs): source directory for your [enabled GitHub Pages](https://comp361.github.io/f2022-hexanome-00/). (Update number in link). Configure IDE to generate API docs into this directory or build your own webpage (optional).
- *  [```client```](client): Place your client sources into this directory. Do not use a separate repository for your work.
- * [```server```](server): Place your Spring Boot Game Server sources in this directory. Do not use a separate repository for your work.
+* [```.gitignore```](.gitignore): Preliminary git exclusion instructions. Visit [Toptal's generator](https://www.toptal.com/developers/gitignore) to update.
+* [```reports```](reports): Base directory for automatic report collection. Your weekly reports go here. Must be uploaded every monday noon **to master** and follow correct date string ```YYYY-MM-DD.md```. Use [template](reports/YYYY-MM-DD.md) for your own reports. Do not resubmit same report / copy paste.
+* [```docs```](docs): source directory for your [enabled GitHub Pages](https://comp361.github.io/f2022-hexanome-00/). (Update number in link). Configure IDE to generate API docs into this directory or build your own webpage (optional).
+*  [```client```](client): Place your client sources into this directory. Do not use a separate repository for your work.
+* [```server```](server): Place your Spring Boot Game Server sources in this directory. Do not use a separate repository for your work.
 
 ## Useful Links
 
 ### Code Style and Tools
 
- * [Chrome MarkDown Plugin](https://chrome.google.com/webstore/detail/markdown-viewer/ckkdlimhmcjmikdlpkmbgfkaikojcbjk?hl=en).
-    * Don't forget to enable ```file://``` in ```advanced settings```.
- * [IntelliJ Checkstyle Plugin](https://plugins.jetbrains.com/plugin/1065-checkstyle-idea).
-    * Don't forget to enable [Google's Checkstyle Configuration](https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml).
- * [Git CheatSheet](git-cheatsheet.md).
- * [Advanced Rest Client (Rest Call Code Generator)](https://docs.advancedrestclient.com/installation).
+* [Chrome MarkDown Plugin](https://chrome.google.com/webstore/detail/markdown-viewer/ckkdlimhmcjmikdlpkmbgfkaikojcbjk?hl=en).
+   * Don't forget to enable ```file://``` in ```advanced settings```.
+* [IntelliJ Checkstyle Plugin](https://plugins.jetbrains.com/plugin/1065-checkstyle-idea).
+   * Don't forget to enable [Google's Checkstyle Configuration](https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml).
+* [Git CheatSheet](git-cheatsheet.md).
+* [Advanced Rest Client (Rest Call Code Generator)](https://docs.advancedrestclient.com/installation).
 
 ### Requirements
 
- * [Lobby Service](https://github.com/kartoffelquadrat/LobbyService)
-    * [Install Guide](https://github.com/kartoffelquadrat/LobbyService/blob/master/markdown/build-deploy.md)  
-Recommended: Startup in ```dev``` profile (default).
-    * [API Doc and ARC Configurations](https://github.com/kartoffelquadrat/LobbyService/blob/master/markdown/api.md)
-    * [Game Developer Instructions](https://github.com/kartoffelquadrat/LobbyService/blob/master/markdown/game-dev.md)
- * [BGP sample deployment configuration](https://github.com/kartoffelquadrat/BoardGamePlatform) (This one is meant for testing / understanding the interaction between LS, UI and sample game)  
-Board Game Platform (BGP) = Lobby Service + Lobby Service Web UI + Sample Game, all as docker containers.
-    * Sample [Lobby Service Web UI](https://github.com/kartoffelquadrat/LobbyServiceWebInterface)
-    * Sample Lobby Service compatible [Game (Tic Tac Toe, backend + frontend)](https://github.com/kartoffelquadrat/BgpXox)
+* [Lobby Service](https://github.com/kartoffelquadrat/LobbyService)
+   * [Install Guide](https://github.com/kartoffelquadrat/LobbyService/blob/master/markdown/build-deploy.md)  
+     Recommended: Startup in ```dev``` profile (default).
+   * [API Doc and ARC Configurations](https://github.com/kartoffelquadrat/LobbyService/blob/master/markdown/api.md)
+   * [Game Developer Instructions](https://github.com/kartoffelquadrat/LobbyService/blob/master/markdown/game-dev.md)
+* [BGP sample deployment configuration](https://github.com/kartoffelquadrat/BoardGamePlatform) (This one is meant for testing / understanding the interaction between LS, UI and sample game)  
+  Board Game Platform (BGP) = Lobby Service + Lobby Service Web UI + Sample Game, all as docker containers.
+   * Sample [Lobby Service Web UI](https://github.com/kartoffelquadrat/LobbyServiceWebInterface)
+   * Sample Lobby Service compatible [Game (Tic Tac Toe, backend + frontend)](https://github.com/kartoffelquadrat/BgpXox)
 
- > Be careful not to confuse *Lobby Service* and *Board Game Platform*.
+> Be careful not to confuse *Lobby Service* and *Board Game Platform*.
+
 
 ## Authors
 
 Fill e.g. names + link to github profiles in list below.
 
- * ~~Maximilian Schiedermeier - [https://github.com/kartoffelquadrat]~~
- * ...
+ * Maximilian Schiedermeier - [https://github.com/m5c]
+ * [Ruoyu Deng](https://github.com/RuoyuDeng)
+ * ....
 
 
