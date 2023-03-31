@@ -275,7 +275,7 @@ public class GameManager {
    * @param savegame a class that stores metadata to save a game
    * @param gameId   the game id used to retrieve info needed to store the game
    */
-  public void saveGame(Savegame savegame, long gameId) {
+  public void saveGame(Savegame savegame, long gameId) throws ModelAccessException {
 
     // TODO: 1. send a request to LS to save the Savegame
     try {
@@ -297,6 +297,8 @@ public class GameManager {
       savedGameIds.add(savegame.getSavegameid());
       writeSavedGameDataToFile(savegame.getSavegameid(), newSaveGame, true);
       writeSavedGameMetaDataToFile(savegame.getSavegameid(), savegame, true);
+    } else {
+      throw new ModelAccessException("Duplicate save game id!");
     }
   }
 

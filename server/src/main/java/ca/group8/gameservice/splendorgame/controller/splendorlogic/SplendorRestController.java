@@ -144,7 +144,8 @@ public class SplendorRestController {
       logger.warn("Got save request successfully from: " +playerName);
 
       // save the game detailed info to our game server as json file
-      // and the metadata Savegame to LS
+      // and the metadata Savegame to LS, might throw model access exception
+      // if duplicate game is saved
       gameManager.saveGame(saveGameInfo, gameId);
       //// forcing this game to be finished
       //GameInfo curGame = gameManager.getGameById(gameId);
