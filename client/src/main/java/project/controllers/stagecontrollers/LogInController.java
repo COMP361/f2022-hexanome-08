@@ -1,7 +1,6 @@
 package project.controllers.stagecontrollers;
 
 import java.net.URL;
-import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -12,7 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.json.JSONObject;
 import project.App;
 import project.config.ConnectionConfig;

@@ -3,7 +3,6 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import io.github.isharipov.gson.adapters.JsonSubtype;
 import io.github.isharipov.gson.adapters.JsonType;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.util.ResourceUtils;
 
 /**
  * The super abstract class that defines the behavior of all extension boards.

@@ -1,6 +1,5 @@
 package ca.group8.gameservice.splendorgame.controller.communicationbeans;
 
-import ca.group8.gameservice.splendorgame.controller.splendorlogic.ActionInterpreter;
 import ca.group8.gameservice.splendorgame.model.splendormodel.GameInfo;
 import ca.group8.gameservice.splendorgame.model.splendormodel.PlayerStates;
 import java.util.List;

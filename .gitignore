@@ -4,6 +4,8 @@
 ### Java ###
 # .mvn and .idea in subdirectories
 client/.idea
+server/docs/
+client/docs/
 server/.idea
 client/target/
 server/target/

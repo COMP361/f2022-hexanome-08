@@ -1,6 +1,5 @@
 package project.controllers.popupcontrollers;
 
-import ca.mcgill.comp361.splendormodel.model.GameInfo;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;

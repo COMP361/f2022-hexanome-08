@@ -13,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javax.swing.event.ChangeListener;
 import project.App;
 import project.connection.GameRequestSender;
 import project.view.lobby.communication.Savegame;

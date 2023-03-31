@@ -3,7 +3,6 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
 import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

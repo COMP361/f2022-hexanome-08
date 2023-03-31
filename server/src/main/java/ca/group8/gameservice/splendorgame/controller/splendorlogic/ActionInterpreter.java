@@ -18,7 +18,6 @@ import ca.group8.gameservice.splendorgame.model.splendormodel.PurchasedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.ReservedHand;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TableTop;
 import ca.group8.gameservice.splendorgame.model.splendormodel.TraderBoard;
-import eu.kartoffelquadrat.asyncrestlib.BroadcastContentManager;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;

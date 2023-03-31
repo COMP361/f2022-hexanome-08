@@ -7,17 +7,13 @@ import ca.mcgill.comp361.splendormodel.model.Position;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import project.App;
-import project.connection.GameRequestSender;
 
 /**
  * Control free card pop up.

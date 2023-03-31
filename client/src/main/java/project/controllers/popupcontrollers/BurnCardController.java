@@ -3,11 +3,9 @@ package project.controllers.popupcontrollers;
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.CardExtraAction;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
-import ca.mcgill.comp361.splendormodel.model.Position;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;

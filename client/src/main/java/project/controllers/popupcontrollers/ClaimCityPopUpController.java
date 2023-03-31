@@ -1,7 +1,6 @@
 package project.controllers.popupcontrollers;
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
-import ca.mcgill.comp361.splendormodel.actions.BonusTokenPowerAction;
 import ca.mcgill.comp361.splendormodel.actions.ClaimCityAction;
 import java.net.URL;
 import java.util.Map;
