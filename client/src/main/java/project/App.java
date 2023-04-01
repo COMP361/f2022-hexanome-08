@@ -16,6 +16,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import project.config.ConnectionConfig;
 import project.config.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
@@ -46,6 +48,10 @@ public class App extends Application {
   private static ConnectionConfig connectionConfig;
 
   public static void main(String[] args) {
+    // mute annoying logging msgs to console
+    ch.qos.logback.classic.Logger rootLogger =
+        (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+    rootLogger.setLevel(ch.qos.logback.classic.Level.INFO);
     launch();
   }
 
