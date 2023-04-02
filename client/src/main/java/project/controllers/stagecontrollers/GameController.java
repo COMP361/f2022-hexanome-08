@@ -205,20 +205,19 @@ public class GameController implements Initializable {
     EnumMap<Colour, Integer> newTokenInHand = curPlayerInGame.getTokenHand().getAllTokens();
     // this gems contain gold colour orient card count!!!!
     EnumMap<Colour, Integer> gemsInHand = curPlayerInGame.getTotalGems();
+    // get number of reserved cards
+    int numOfReservedCards = curPlayerInGame.getReservedHand().getDevelopmentCards().size();
+    int numOfReservedNobles = curPlayerInGame.getReservedHand().getNobleCards().size();
     // Get the player gui
     PlayerInfoGui playerInfoGui = nameToPlayerInfoGuiMap.get(playerName);
     // updating the GUI based on the new info from server
     Platform.runLater(() -> {
       // update the public-player associated area
-      // TODO: Add updating number of noble reserved and number of dev cards reserved
       playerInfoGui.setNewPrestigePoints(newPoints);
       playerInfoGui.setNewTokenInHand(newTokenInHand);
-      //System.out.println("Someone made a move:");
-      //System.out.println(playerName + " has tokens in hand: " + newTokenInHand);
-      //System.out.println(playerName + " has gems in hand: " + gemsInHand);
-      //System.out.println("Update finish");
-      //System.out.println();
       playerInfoGui.setGemsInHand(gemsInHand);
+      playerInfoGui.setReservedCardCount(numOfReservedCards);
+      playerInfoGui.setReservedNobleCount(numOfReservedNobles);
     });
   }
 

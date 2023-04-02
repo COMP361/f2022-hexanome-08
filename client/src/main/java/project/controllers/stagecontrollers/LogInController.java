@@ -124,7 +124,7 @@ public class LogInController implements Initializable {
     // guarantee to execute the termination of program in javafx thread
     quitButton.setOnAction(event -> {
       // before quiting, also terminate the refresh token thread
-      Platform.runLater(Platform::exit);
+      Platform.exit();
     });
   }
 }

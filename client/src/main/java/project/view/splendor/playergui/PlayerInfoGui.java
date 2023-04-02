@@ -81,6 +81,14 @@ public class PlayerInfoGui {
     playerImageGui.setHighlightRectangle(highlightChoice);
   }
 
+  public void setReservedNobleCount(int reservedNobleCount) {
+    playerImageGui.setReservedNobleCountText(reservedNobleCount);
+  }
+
+  public void setReservedCardCount(int reservedCardCount) {
+    playerImageGui.setReservedCardsCountText(reservedCardCount);
+  }
+
   public void setup(double layoutX, double layoutY) {
     // set the layout of the GUI
     container.setLayoutX(layoutX);
