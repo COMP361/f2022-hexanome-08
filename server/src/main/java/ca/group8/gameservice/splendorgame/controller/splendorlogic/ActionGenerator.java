@@ -58,6 +58,8 @@ public class ActionGenerator {
   private final Map<String, Map<String, Action>> playerActionMaps;
   private final TableTop tableTop;
 
+  private Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
+
   public ActionGenerator(Map<String, Map<String, Action>> playerActionMaps, TableTop tableTop) {
     this.playerActionMaps = playerActionMaps;
     this.tableTop = tableTop;
@@ -104,11 +106,53 @@ public class ActionGenerator {
     return result;
   }
 
-  // Translate all dev cards on base/orient board to purchase actions (including the cards
-  // reserved in hand)
-  private List<Action> cardsToPurchaseAction(BaseBoard baseBoard,
-                                             OrientBoard orientBoard,
-                                             PlayerInGame curPlayerInfo) {
+
+  private PurchaseAction regularCardToPurchaseAction(DevelopmentCard card, Position cardPosition,
+                                                     EnumMap<Colour, Integer> totalGems,
+                                                     EnumMap<Colour, Integer> totalTokens,
+                                                     int goldTokenNeeded) {
+    EnumMap<Colour, Integer> tokensPaid = new EnumMap<>(card.getPrice());
+    int goldCardsNeeded = 0;
+    for (Colour c : totalGems.keySet()) {
+      if (c != Colour.GOLD) {
+        //calculate price after discount
+        int priceAfterDiscount = tokensPaid.get(c) - totalGems.get(c);
+        //if price is negative, meaning you have more gems than required,
+        //just set tokens paid to 0.
+        if (priceAfterDiscount <= 0) {
+          tokensPaid.put(c, 0);
+        } else if (priceAfterDiscount > totalTokens.get(c)) {
+          tokensPaid.put(c, totalTokens.get(c));
+        } else {
+          tokensPaid.put(c, priceAfterDiscount);
+        }
+      }
+    }
+
+    if (goldTokenNeeded > 0) {
+      int goldTokensInHand = totalTokens.get(Colour.GOLD);
+      if (goldTokensInHand >= goldTokenNeeded) {
+        tokensPaid.put(Colour.GOLD, goldTokenNeeded);
+      } else {
+        // calculate the number of gold card first
+        goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
+        int goldTokensToPay = goldTokenNeeded - 2 * goldCardsNeeded;
+        tokensPaid.put(Colour.GOLD, goldTokensToPay);
+      }
+    } else {
+      tokensPaid.put(Colour.GOLD, 0);
+    }
+    return new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid);
+  }
+
+
+
+
+
+  private List<Action> listOfDevCardsToPurchaseAction(DevelopmentCard[] cards, int level,
+                                                      PlayerInGame curPlayerInfo) {
+
+    // gather necessary player information we need before generating actions
     boolean hasDoubleGoldPower = false;
     String playerName = curPlayerInfo.getName();
     if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
@@ -119,239 +163,94 @@ public class ActionGenerator {
 
     EnumMap<Colour, Integer> totalGems = curPlayerInfo.getTotalGems(); // discount (dev cards)
     EnumMap<Colour, Integer> totalTokens = curPlayerInfo.getTokenHand().getAllTokens(); // tokens
-
-    // now when we decide whether a card is affordable or not, we need to consider the effect of
-    // the double gold power is on
-    List<Action> result = new ArrayList<>();
-    int goldTokenNeeded;
     int goldCardInHand = (int) curPlayerInfo.getPurchasedHand().getDevelopmentCards()
         .stream().filter(c -> c.getGemColour() == Colour.GOLD).count();
+
+    List<Action> result = new ArrayList<>();
+    for (int cardIndex = 0; cardIndex < cards.length; cardIndex++) {
+      Position cardPosition = new Position(level, cardIndex);
+      DevelopmentCard card = cards[cardIndex];
+      int goldTokenNeeded;
+
+      // if orient card is a burn card
+      if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
+        for (Colour color : card.getPrice().keySet()) {
+          if (card.getPrice().get(color) == 2 && curPlayerInfo.getTotalGems().get(color) >= 2) {
+            result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
+          }
+        }
+      } else if (card.getPurchaseEffects().contains(CardEffect.SATCHEL)) {
+        // if orient card contains satchel effect
+        PurchasedHand purchasedHand = curPlayerInfo.getPurchasedHand();
+        List<DevelopmentCard> cardsInHand = purchasedHand.getDevelopmentCards();
+        boolean hasCardToPair = false;
+        for (DevelopmentCard developmentCard : cardsInHand) {
+          // if a card is not gold, not paired, has gem num at least 1, means we can pair something
+          // so that the satchel we are about to buy is allowed to be bought
+          if (!developmentCard.getGemColour().equals(Colour.GOLD)
+              && developmentCard.getGemNumber() >= 1 && !developmentCard.isPaired()) {
+            hasCardToPair = true;
+            break;
+          }
+        }
+        if (hasCardToPair) {
+          // this card can be bought (can be paired)
+          EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
+          goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
+          result.add(regularCardToPurchaseAction(card,
+              cardPosition,
+              totalGems,
+              totalTokens,
+              goldTokenNeeded));
+        }
+      } else {
+        // for all other orient/base cards with no special buying conditions
+        EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
+        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
+        if (goldTokenNeeded >= 0) {
+          // this card can be bought
+          result.add(regularCardToPurchaseAction(card,
+              cardPosition,
+              totalGems,
+              totalTokens,
+              goldTokenNeeded));
+        }
+      }
+    }
+    return result;
+  }
+
+
+  // Translate all dev cards on base/orient board to purchase actions (including the cards
+  // reserved in hand)
+  private List<Action> cardsToPurchaseAction(BaseBoard baseBoard,
+                                             OrientBoard orientBoard,
+                                             PlayerInGame curPlayerInfo) {
+
+    List<Action> result = new ArrayList<>();
+    // translating from board cards to actions
     for (int level = 1; level <= 3; level++) {
       DevelopmentCard[] baseLevelCards = baseBoard.getLevelCardsOnBoard(level);
       DevelopmentCard[] orientLevelCards = orientBoard.getLevelCardsOnBoard(level);
 
+      // translate a list of base card to actions
       for (int cardIndex = 0; cardIndex < baseLevelCards.length; cardIndex++) {
-        int goldCardsNeeded = 0;
-        final Position cardPosition = new Position(level, cardIndex);
-        DevelopmentCard card = baseLevelCards[cardIndex];
-        EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
-        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
-        if (goldTokenNeeded == -1) {
-          continue; // this card can not be bought
-        }
-        // always generate reserve actions for base cards for index 0,1,2,3
-        EnumMap<Colour, Integer> tokensPaid = new EnumMap<>(card.getPrice());
-        for (Colour c : totalGems.keySet()) {
-          if (c.equals(Colour.GOLD)) {
-            continue;
-          }
-          //calculate price after discount
-          int priceAfterDiscount = tokensPaid.get(c) - totalGems.get(c);
-          //if price is negative, meaning you have more gems than required,
-          //just set tokens paid to 0.
-          if (priceAfterDiscount <= 0) {
-            tokensPaid.put(c, 0);
-          } else if (priceAfterDiscount > totalTokens.get(c)) {
-            tokensPaid.put(c, totalTokens.get(c));
-          } else {
-            tokensPaid.put(c, priceAfterDiscount);
-          }
-        }
-
-        if (goldTokenNeeded > 0) {
-          int goldTokensInHand = totalTokens.get(Colour.GOLD);
-          if (goldTokensInHand >= goldTokenNeeded) {
-            tokensPaid.put(Colour.GOLD, goldTokenNeeded);
-          } else {
-            // calculate the number of gold card first
-            goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
-            int goldTokensToPay = goldTokenNeeded - 2 * goldCardsNeeded;
-            tokensPaid.put(Colour.GOLD, goldTokensToPay);
-          }
-        } else {
-          tokensPaid.put(Colour.GOLD, 0);
-        }
-        result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
+          result.addAll(listOfDevCardsToPurchaseAction(baseLevelCards, level, curPlayerInfo));
       }
-
+      // translate a list of orient card to actions
       for (int cardIndex = 0; cardIndex < orientLevelCards.length; cardIndex++) {
-        // if index = 0 or 1, generate reserve action for orient cards
-        int goldCardsNeeded = 0;
-        final Position cardPosition = new Position(level, cardIndex);
-        DevelopmentCard card = orientLevelCards[cardIndex];
-
-        //if orient card is a burn card
-        if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
-          Colour cardsColour = null;
-          for (Colour color : card.getPrice().keySet()) {
-            if (card.getPrice().get(color) == 2) {
-              cardsColour = color;
-              if (curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
-                result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
-              }
-              break;
-            }
-          }
-          continue;
-        }
-        EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
-        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
-        if (goldTokenNeeded == -1) {
-          continue; // this card can not be bought
-        }
-        // always generate reserve actions for base cards for index 0,1,2,3
-        //EnumMap<Colour, Integer> tokensPaid = card.getPrice();
-        EnumMap<Colour, Integer> tokensPaid = new EnumMap<>(card.getPrice());
-
-
-        // calculating the regular colour (RED,BLUE.... EXCLUDING GOLD) gem discount
-        // and modify the tokens that we actually need to pay before taking account
-        // of any gold token
-        for (Colour c : totalGems.keySet()) {
-          if (c.equals(Colour.GOLD)) {
-            continue;
-          }
-          //calculate price after discount
-          int priceAfterDiscount = tokensPaid.get(c) - totalGems.get(c);
-          //if price is negative, meaning you have more gems than required,
-          // just set tokens paid to 0.
-          if (priceAfterDiscount <= 0) {
-            tokensPaid.put(c, 0);
-          } else if (priceAfterDiscount > totalTokens.get(c)) {
-            tokensPaid.put(c, totalTokens.get(c));
-          } else {
-            tokensPaid.put(c, priceAfterDiscount);
-          }
-        }
-
-        //TODO: gold token needed can contain gold tokens (actual token)
-        // or gold gem (from double_gold) even we say it's "gold gem",
-        // but we treat it as gold token needed in here!
-        if (goldTokenNeeded > 0) {
-          int goldTokensInHand = totalTokens.get(Colour.GOLD);
-          if (goldTokensInHand >= goldTokenNeeded) {
-            tokensPaid.put(Colour.GOLD, goldTokenNeeded);
-          } else {
-            // calculate the number of gold card first
-            goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
-            int goldTokensToPay = goldTokenNeeded - 2 * goldCardsNeeded;
-            tokensPaid.put(Colour.GOLD, goldTokensToPay);
-          }
-        } else {
-          tokensPaid.put(Colour.GOLD, 0);
-        }
-        PurchasedHand purchasedHand = curPlayerInfo.getPurchasedHand();
-        List<DevelopmentCard> cardsInHand = purchasedHand.getDevelopmentCards();
-        boolean hasSatchel = card.getPurchaseEffects().contains(CardEffect.SATCHEL);
-        boolean hasCardToPair = false;
-        for (DevelopmentCard developmentCard : cardsInHand) {
-          // if a card is not gold, not paired, has gem num at least 1, means we can pair something
-          // so that the satchel we are about to buy is allowed to be bought
-          if (!developmentCard.getGemColour().equals(Colour.GOLD)
-              && developmentCard.getGemNumber() >= 1 && !developmentCard.isPaired()) {
-            hasCardToPair = true;
-            break;
-          }
-        }
-
-        //no gold cards ever required for burn, therefore always set to 0
-        //set card price to its original price (no discounts on burn cards)
-        if (!hasSatchel) {
-          result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
-        } else {
-          if (hasCardToPair) {
-            result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
-          }
-        }
-
+        result.addAll(listOfDevCardsToPurchaseAction(orientLevelCards, level, curPlayerInfo));
       }
+
     }
 
     //get list of cards in player's reserve card hand
-    DevelopmentCard[] reservedCards = curPlayerInfo.getReservedHand().getDevelopmentCards()
-        .toArray(DevelopmentCard[]::new);
-    if (reservedCards.length > 0) { //only iterate
-      for (int cardIndex = 0; cardIndex < reservedCards.length; cardIndex++) {
-        int goldCardsNeeded = 0;
-        //x coordinate = 0, means this is a card in the reserve hand!
-        final Position cardPosition = new Position(0, cardIndex);
-        DevelopmentCard card = reservedCards[cardIndex];
-
-        //if is burn card
-        if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
-          Colour cardsColour = null;
-          for (Colour color : card.getPrice().keySet()) {
-            if (card.getPrice().get(color) == 2) {
-              cardsColour = color;
-              if (curPlayerInfo.getTotalGems().get(cardsColour) >= 2) {
-                result.add(new PurchaseAction(cardPosition, card, 0, card.getPrice()));
-              }
-              break;
-            }
-          }
-          continue;
-        }
-        EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
-        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
-        if (goldTokenNeeded == -1) {
-          continue; // this card can not be bought
-        }
-        // always generate reserve actions for base cards for index 0,1,2,3
-        //EnumMap<Colour, Integer> tokensPaid = card.getPrice();
-        EnumMap<Colour, Integer> tokensPaid = new EnumMap<>(card.getPrice());
-        for (Colour c : totalGems.keySet()) {
-          if (c.equals(Colour.GOLD)) {
-            continue;
-          }
-          //calculate price after discount
-          int priceAfterDiscount = tokensPaid.get(c) - totalGems.get(c);
-          //if price is negative, meaning you have more gems than required,
-          // just set tokens paid to 0.
-          if (priceAfterDiscount <= 0) {
-            tokensPaid.put(c, 0);
-          } else if (priceAfterDiscount > totalTokens.get(c)) {
-            tokensPaid.put(c, totalTokens.get(c));
-          } else {
-            tokensPaid.put(c, priceAfterDiscount);
-          }
-        }
-
-        if (goldTokenNeeded > 0) {
-          int goldTokensInHand = totalTokens.get(Colour.GOLD);
-          if (goldTokensInHand >= goldTokenNeeded) {
-            tokensPaid.put(Colour.GOLD, goldTokenNeeded);
-          } else {
-            // calculate the number of gold card first
-            goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
-            int goldTokensToPay = goldTokenNeeded - 2 * goldCardsNeeded;
-            tokensPaid.put(Colour.GOLD, goldTokensToPay);
-          }
-        } else {
-          tokensPaid.put(Colour.GOLD, 0);
-        }
-
-        PurchasedHand purchasedHand = curPlayerInfo.getPurchasedHand();
-        List<DevelopmentCard> cardsInHand = purchasedHand.getDevelopmentCards();
-        boolean hasSatchel = card.getPurchaseEffects().contains(CardEffect.SATCHEL);
-        boolean hasCardToPair = false;
-        for (DevelopmentCard developmentCard : cardsInHand) {
-          // if a card is not gold, not paired, has gem num at least 1, means we can pair something
-          // so that the satchel we are about to buy is allowed to be bought
-          if (!developmentCard.getGemColour().equals(Colour.GOLD)
-              && developmentCard.getGemNumber() >= 1 && !developmentCard.isPaired()) {
-            hasCardToPair = true;
-            break;
-          }
-        }
-
-        if (!hasSatchel) {
-          result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
-        } else {
-          if (hasCardToPair) {
-            result.add(new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid));
-          }
-        }
-      }
+    DevelopmentCard[] reservedCards = curPlayerInfo
+        .getReservedHand().getDevelopmentCards().toArray(DevelopmentCard[]::new);
+    // if there are any reserved cards, then we need to translate them to actions
+    if (reservedCards.length > 0) {
+      // for reserved cards, level = 0, as indication of reserved hand
+      result.addAll(listOfDevCardsToPurchaseAction(reservedCards, 0, curPlayerInfo));
     }
 
     return result;
