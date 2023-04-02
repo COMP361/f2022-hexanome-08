@@ -7,15 +7,15 @@
 <?import javafx.scene.text.Text?>
 
 <fx:root type="Group" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-    <Rectangle fx:id="highlightRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="125.0" stroke="BLACK" strokeType="INSIDE" width="125.0" />
-    <ImageView fx:id="playerImageView" fitHeight="110.0" fitWidth="110.0" layoutX="8.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />
-    <Circle fill="#acdef4" layoutX="108.0" layoutY="17.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
-    <Text layoutX="106.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
-    <Circle fill="#e3f2ac" layoutX="109.0" layoutY="51.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
-    <Text layoutX="108.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
-    <Text fx:id="maxPointsText" layoutX="109.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="15" />
-    <Text fx:id="currentPointsText" layoutX="96.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-    <Text fx:id="reservedCardsCountText" layoutX="113.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-    <Text fx:id="reservedNobleCountText" layoutX="98.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
-    <ImageView fx:id="armImageView" fitHeight="56.0" fitWidth="42.0" layoutX="8.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true" />
+    <Rectangle fx:id="highlightRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="100.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
+    <ImageView fx:id="playerImageView" fitHeight="83.0" fitWidth="83.0" layoutX="8.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />
+    <Circle fill="#acdef4" layoutX="78.0" layoutY="17.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+    <Text layoutX="76.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
+    <Circle fill="#e3f2ac" layoutX="78.0" layoutY="51.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+    <Text layoutX="76.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
+    <Text fx:id="maxPointsText" layoutX="79.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="15" />
+    <Text fx:id="currentPointsText" layoutX="66.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+    <Text fx:id="reservedCardsCountText" layoutX="80.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+    <Text fx:id="reservedNobleCountText" layoutX="66.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+    <ImageView fx:id="armImageView" fitHeight="56.0" fitWidth="42.0" layoutX="8.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
 </fx:root>
