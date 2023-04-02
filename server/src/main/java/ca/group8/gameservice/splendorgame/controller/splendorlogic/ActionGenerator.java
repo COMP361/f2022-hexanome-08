@@ -109,8 +109,6 @@ public class ActionGenerator {
   private List<Action> cardsToPurchaseAction(BaseBoard baseBoard,
                                              OrientBoard orientBoard,
                                              PlayerInGame curPlayerInfo) {
-
-    EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
     boolean hasDoubleGoldPower = false;
     String playerName = curPlayerInfo.getName();
     if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
@@ -136,6 +134,7 @@ public class ActionGenerator {
         int goldCardsNeeded = 0;
         final Position cardPosition = new Position(level, cardIndex);
         DevelopmentCard card = baseLevelCards[cardIndex];
+        EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
@@ -195,7 +194,7 @@ public class ActionGenerator {
           }
           continue;
         }
-
+        EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
@@ -233,8 +232,10 @@ public class ActionGenerator {
           if (goldTokensInHand >= goldTokenNeeded) {
             tokensPaid.put(Colour.GOLD, goldTokenNeeded);
           } else {
-            tokensPaid.put(Colour.GOLD, goldTokensInHand);
+            // calculate the number of gold card first
             goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
+            int goldTokensToPay = goldTokenNeeded - 2 * goldCardsNeeded;
+            tokensPaid.put(Colour.GOLD, goldTokensToPay);
           }
         } else {
           tokensPaid.put(Colour.GOLD, 0);
@@ -290,7 +291,7 @@ public class ActionGenerator {
           }
           continue;
         }
-
+        EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
         goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
@@ -320,8 +321,10 @@ public class ActionGenerator {
           if (goldTokensInHand >= goldTokenNeeded) {
             tokensPaid.put(Colour.GOLD, goldTokenNeeded);
           } else {
-            tokensPaid.put(Colour.GOLD, goldTokensInHand);
+            // calculate the number of gold card first
             goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
+            int goldTokensToPay = goldTokenNeeded - 2 * goldCardsNeeded;
+            tokensPaid.put(Colour.GOLD, goldTokensToPay);
           }
         } else {
           tokensPaid.put(Colour.GOLD, 0);
