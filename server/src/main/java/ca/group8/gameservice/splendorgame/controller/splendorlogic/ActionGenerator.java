@@ -110,7 +110,7 @@ public class ActionGenerator {
                                              OrientBoard orientBoard,
                                              PlayerInGame curPlayerInfo) {
 
-    EnumMap<Colour, Integer> wealth = curPlayerInfo.getWealth();
+    EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
     boolean hasDoubleGoldPower = false;
     String playerName = curPlayerInfo.getName();
     if (tableTop.getGameBoards().containsKey(Extension.TRADING_POST)) {
