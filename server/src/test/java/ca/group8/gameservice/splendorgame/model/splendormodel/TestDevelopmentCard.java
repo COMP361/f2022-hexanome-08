@@ -129,7 +129,7 @@ public class TestDevelopmentCard {
         DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
             1, Colour.BLUE, 1, new ArrayList<>());
 
-        assertEquals(1, baseCard.canBeBought(true, playerWealth));
+        assertEquals(1, baseCard.canBeBought(true, playerWealth, 0));
     }
 
 
@@ -155,7 +155,57 @@ public class TestDevelopmentCard {
         DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
             1, Colour.BLUE, 1, new ArrayList<>());
 
-        assertEquals(2, baseCard.canBeBought(false, playerWealth));
+        assertEquals(2, baseCard.canBeBought(false, playerWealth, 0));
+    }
+
+    @Test
+    void testCanBeBought_True3() {
+        EnumMap<Colour, Integer> price = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 4);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+        }};
+
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 3);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+            put(Colour.GOLD, 0);
+        }};
+
+        DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
+            1, Colour.BLUE, 1, new ArrayList<>());
+
+        assertEquals(2, baseCard.canBeBought(true, playerWealth, 1));
+    }
+
+    @Test
+    void testCanBeBought_True4() {
+        EnumMap<Colour, Integer> price = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 4);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 1);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+        }};
+
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<Colour,Integer>(Colour.class){{
+            put(Colour.BLUE, 3);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+            put(Colour.GOLD, 0);
+        }};
+
+        DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
+            1, Colour.BLUE, 1, new ArrayList<>());
+
+        assertEquals(2, baseCard.canBeBought(true, playerWealth, 1));
     }
 
     @Test
@@ -180,7 +230,7 @@ public class TestDevelopmentCard {
         DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
             1, Colour.BLUE, 1, new ArrayList<>());
 
-        assertEquals(-1, baseCard.canBeBought(true, playerWealth));
+        assertEquals(-1, baseCard.canBeBought(true, playerWealth, 0));
     }
 
     @Test
@@ -205,11 +255,9 @@ public class TestDevelopmentCard {
         DevelopmentCard baseCard = new DevelopmentCard(3, price, "c1",
             1, Colour.BLUE, 1, new ArrayList<>());
 
-        assertEquals(-1, baseCard.canBeBought(true, playerWealth));
+        assertEquals(-1, baseCard.canBeBought(true, playerWealth, 0));
     }
 
-    @Test
-    void test() {
-        System.out.println(Math.round((double) 3/2));
-    }
+
+
 }

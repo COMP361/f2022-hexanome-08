@@ -131,29 +131,21 @@ public class DevelopmentCard extends Card {
    * @param wealth wealth
    * @return -1 if can not afford, 0 or >0 as a number of gold token needed
    */
-  public int canBeBought(boolean hasDoubleGoldPower, EnumMap<Colour, Integer> wealth) {
+  public int canBeBought(boolean hasDoubleGoldPower,
+                         EnumMap<Colour, Integer> wealth,
+                         int goldCardCount) {
+    EnumMap<Colour, Integer> wealthWithoutGoldCard = new EnumMap<>(wealth);
     EnumMap<Colour, Integer> cardPrice = super.getPrice();
+    // leave only gold token count in wealth
+    int goldTokensInHand = wealthWithoutGoldCard.get(Colour.GOLD);
+    int goldTokensFromCard = 2 * goldCardCount;
+    wealthWithoutGoldCard.put(Colour.GOLD, wealth.get(Colour.GOLD) - goldTokensFromCard);
+    Map<Colour, Integer> diffPrice = new EnumMap<>(cardPrice);
+    int goldTokenNeededToPay = 0;
 
-    // such Colour -> Integer map only contain the difference between regular token
-    // colours, not the gold colour
-    // diffPrices -> {BLUE:0, RED:-1, ..} is the result of wealth - price, we do not
-    // consider gold in here
-    Map<Colour, Integer> diffPrice = wealth.keySet().stream()
-        .filter(colour -> !colour.equals(Colour.GOLD) && !colour.equals(Colour.ORIENT))
-        .collect(Collectors.toMap(
-            key -> key,
-            key -> wealth.get(key) - cardPrice.get(key)
-        ));
-
-
-    int goldTokenCount = wealth.get(Colour.GOLD);
-    boolean hasGoldToken = goldTokenCount > 0;
-    int goldTokenNeeded = 0;
-    // do something to diff price map in here
-    if (hasGoldToken) {
-      // only consider count the gold token differently if the player has the power and one has
-      // some gold tokens, otherwise there is no point considering it
-      int[] goldTokenArr = new int[goldTokenCount];
+    // prioritizing card to use
+    if (goldCardCount > 0) {
+      int[] goldTokenArr = new int[goldTokensFromCard];
       if (hasDoubleGoldPower) {
         // this len = goldTokenCount array [2,2,2,2..] is used to consider the double gold
         // whenever in the diff price map we need a gold token to make up the price diff,
@@ -162,34 +154,98 @@ public class DevelopmentCard extends Card {
       } else {
         Arrays.fill(goldTokenArr, 1);
       }
-      // either we have a
       int i = 0;
-      while (i < goldTokenArr.length && diffPrice.values().stream().anyMatch(v -> v < 0)) {
+      int goldCardLeft = goldCardCount;
+      while (goldCardLeft > 0) {
         for (Colour colour : diffPrice.keySet()) {
-          if (diffPrice.get(colour) < 0) {
-            int curLeftOver = diffPrice.get(colour);
-            diffPrice.put(colour, curLeftOver + goldTokenArr[i]);
-            // increment the gold token amt needed, move to next gold token spot
-            goldTokenArr[i] = 0;
-            i += 1;
-            goldTokenNeeded += 1;
-            if (i == goldTokenArr.length) {
-              break;
+          // excluding gold token in here since we only consider gold token card
+          if (colour != Colour.GOLD) {
+            int leftOver = wealthWithoutGoldCard.get(colour) - diffPrice.get(colour);
+            if (leftOver < 0) {
+              leftOver += goldTokenArr[i];
+              diffPrice.put(colour, leftOver);
+              i += 1;
+              // after adding the value from gold arr, if we are at even index of gold arr
+              // and there are no
+              if (diffPrice.values().stream().noneMatch(v -> v < 0) && i % 2 == 1) {
+                goldCardLeft -= 1;
+                // make sure we used every token in the card, and update diffPrice
+                leftOver += goldTokenArr[i];
+                diffPrice.put(colour, leftOver);
+                goldTokenNeededToPay += 2;
+              }
             }
+          }
+        }
+      }
 
+
+      // after this computation, it is possible that we still need the help
+      // from gold tokens (still have some negative number), then we need to
+      // consider the
+      if (diffPrice.values().stream().anyMatch(v -> v < 0)) {
+        if (goldTokensInHand > 0) {
+          goldTokenNeededToPay += computeGoldTokensNeeded(
+              goldTokensInHand,
+              hasDoubleGoldPower,
+              diffPrice);
+        }
+      }
+
+    } else {
+      // we do not have any gold card, then do a regular check with gold tokens in hand
+      diffPrice = wealthWithoutGoldCard.keySet().stream()
+          .filter(colour -> !colour.equals(Colour.GOLD) && !colour.equals(Colour.ORIENT))
+          .collect(Collectors.toMap(
+              key -> key,
+              key -> wealthWithoutGoldCard.get(key) - cardPrice.get(key)
+          ));
+      if (goldTokensInHand > 0) {
+        goldTokenNeededToPay += computeGoldTokensNeeded(
+            goldTokensInHand,
+            hasDoubleGoldPower,
+            diffPrice);
+      }
+    }
+
+    // after all the computation we can do to the price diff map, we can check if we have
+    // a non-negative diffPrice map. If anything is still negative, we can not buy this card
+    // then the player can afford this without using any gold token
+    if (diffPrice.values().stream().anyMatch(v -> v < 0)) {
+      return -1;
+    } else {
+      return goldTokenNeededToPay;
+    }
+  }
+
+  private int computeGoldTokensNeeded(int goldTokensInHand,
+                                                boolean hasDoubleGoldPower,
+                                                Map<Colour, Integer> diffPrice) {
+    // compute the price considering gold tokens
+    int goldTokenNeededToPay = 0;
+    int[] goldTokenArr = new int[goldTokensInHand];
+    if (hasDoubleGoldPower) {
+      Arrays.fill(goldTokenArr, 2);
+    } else {
+      Arrays.fill(goldTokenArr, 1);
+    }
+    int i = 0;
+    while (i < goldTokenArr.length && diffPrice.values().stream().anyMatch(v -> v < 0)) {
+      for (Colour colour : diffPrice.keySet()) {
+        if (diffPrice.get(colour) < 0) {
+          int curLeftOver = diffPrice.get(colour);
+          diffPrice.put(colour, curLeftOver + goldTokenArr[i]);
+          // increment the gold token amt needed, move to next gold token spot
+          goldTokenArr[i] = 0;
+          i += 1;
+          goldTokenNeededToPay += 1;
+          if (i == goldTokenArr.length) {
+            break;
           }
         }
       }
     }
-
-    // has no gold token, return the result regularly. if the diff map stays all non-negative,
-    // then the player can afford this without using any gold token
-    if (diffPrice.values().stream().allMatch(count -> count >= 0)) {
-      return goldTokenNeeded;
-    } else {
-      // otherwise, no gold token and can not afford, return -1
-      return -1;
-    }
+    return goldTokenNeededToPay;
   }
 
 

@@ -126,6 +126,8 @@ public class ActionGenerator {
     // the double gold power is on
     List<Action> result = new ArrayList<>();
     int goldTokenNeeded;
+    int goldCardInHand = (int) curPlayerInfo.getPurchasedHand().getDevelopmentCards()
+        .stream().filter(c -> c.getGemColour() == Colour.GOLD).count();
     for (int level = 1; level <= 3; level++) {
       DevelopmentCard[] baseLevelCards = baseBoard.getLevelCardsOnBoard(level);
       DevelopmentCard[] orientLevelCards = orientBoard.getLevelCardsOnBoard(level);
@@ -134,7 +136,7 @@ public class ActionGenerator {
         int goldCardsNeeded = 0;
         final Position cardPosition = new Position(level, cardIndex);
         DevelopmentCard card = baseLevelCards[cardIndex];
-        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
+        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
         }
@@ -162,8 +164,10 @@ public class ActionGenerator {
           if (goldTokensInHand >= goldTokenNeeded) {
             tokensPaid.put(Colour.GOLD, goldTokenNeeded);
           } else {
-            tokensPaid.put(Colour.GOLD, goldTokensInHand);
+            // calculate the number of gold card first
             goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
+            int goldTokensToPay = goldTokenNeeded - 2 * goldCardsNeeded;
+            tokensPaid.put(Colour.GOLD, goldTokensToPay);
           }
         } else {
           tokensPaid.put(Colour.GOLD, 0);
@@ -192,7 +196,7 @@ public class ActionGenerator {
           continue;
         }
 
-        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
+        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
         }
@@ -287,7 +291,7 @@ public class ActionGenerator {
           continue;
         }
 
-        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth);
+        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
         if (goldTokenNeeded == -1) {
           continue; // this card can not be bought
         }
