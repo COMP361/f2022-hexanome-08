@@ -48,18 +48,15 @@ import project.controllers.popupcontrollers.GameOverPopUpController;
 import project.controllers.popupcontrollers.PurchaseHandController;
 import project.controllers.popupcontrollers.ReservedHandController;
 import project.controllers.popupcontrollers.SaveGamePopUpController;
-import project.view.splendor.BaseBoardGui;
-import project.view.splendor.BaseCardLevelGui;
-import project.view.splendor.BoardGui;
-import project.view.splendor.CityBoardGui;
-import project.view.splendor.HorizontalPlayerInfoGui;
-import project.view.splendor.NobleBoardGui;
-import project.view.splendor.OrientBoardGui;
-import project.view.splendor.PlayerInfoGui;
-import project.view.splendor.PlayerPosition;
-import project.view.splendor.TokenBankGui;
-import project.view.splendor.TraderBoardGui;
-import project.view.splendor.VerticalPlayerInfoGui;
+import project.view.splendor.boardgui.BaseBoardGui;
+import project.view.splendor.boardgui.BoardGui;
+import project.view.splendor.boardgui.CityBoardGui;
+import project.view.splendor.boardgui.NobleBoardGui;
+import project.view.splendor.boardgui.OrientBoardGui;
+import project.view.splendor.boardgui.TokenBankGui;
+import project.view.splendor.boardgui.TraderBoardGui;
+import project.view.splendor.playergui.PlayerInfoGui;
+import project.view.splendor.playergui.PlayerPosition;
 
 /**
  * Game controller for game GUI.
@@ -67,7 +64,6 @@ import project.view.splendor.VerticalPlayerInfoGui;
 public class GameController implements Initializable {
 
   private final long gameId;
-  private final Map<Integer, BaseCardLevelGui> baseCardGuiMap = new HashMap<>();
   private final Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap = new HashMap<>();
   private final Map<String, Integer> nameToArmCodeMap = new HashMap<>();
   private final Map<Extension, BoardGui> extensionBoardGuiMap = new HashMap<>();
@@ -188,13 +184,7 @@ public class GameController implements Initializable {
       for (PlayerInfoGui playerInfoGui : nameToPlayerInfoGuiMap.values()) {
         Platform.runLater(() -> {
           ObservableList<Node> mainBoardChildren = playerBoardAnchorPane.getChildren();
-          if (playerInfoGui instanceof VerticalPlayerInfoGui) {
-            mainBoardChildren.remove((VerticalPlayerInfoGui) playerInfoGui);
-          }
-          if (playerInfoGui instanceof HorizontalPlayerInfoGui) {
-            mainBoardChildren.remove((HorizontalPlayerInfoGui) playerInfoGui);
-          }
-
+          mainBoardChildren.remove(playerInfoGui.getContainer());
         });
       }
       // clean the map
@@ -223,11 +213,11 @@ public class GameController implements Initializable {
       // TODO: Add updating number of noble reserved and number of dev cards reserved
       playerInfoGui.setNewPrestigePoints(newPoints);
       playerInfoGui.setNewTokenInHand(newTokenInHand);
-      System.out.println("Someone made a move:");
-      System.out.println(playerName + " has tokens in hand: " + newTokenInHand);
-      System.out.println(playerName + " has gems in hand: " + gemsInHand);
-      System.out.println("Update finish");
-      System.out.println();
+      //System.out.println("Someone made a move:");
+      //System.out.println(playerName + " has tokens in hand: " + newTokenInHand);
+      //System.out.println(playerName + " has gems in hand: " + gemsInHand);
+      //System.out.println("Update finish");
+      //System.out.println();
       playerInfoGui.setGemsInHand(gemsInHand);
     });
   }
@@ -265,7 +255,7 @@ public class GameController implements Initializable {
             clearAllPlayerInfoGui();
 
             // set up GUI
-            setupAllPlayerInfoGui(0);
+            setupAllPlayerInfoGui();
 
             // update information on the GUI
             for (PlayerInGame playerInfo : playerStates.getPlayersInfo().values()) {
@@ -286,95 +276,62 @@ public class GameController implements Initializable {
 
 
   // For setup initial playerInfoGuis to display for the first time
-  private void setupAllPlayerInfoGui(int initTokenAmount) {
-    GameBoardLayoutConfig config = App.getGuiLayouts();
-    int playerCount = sortedPlayerNames.size();
+  private void setupAllPlayerInfoGui() {
     PlayerPosition[] playerPositions = PlayerPosition.values();
     // iterate through the players we have (sorted, add their GUI accordingly)
-    for (int i = 0; i < playerCount; i++) {
-      PlayerPosition position = playerPositions[i];
-      // horizontal player GUI setup
-      if (position.equals(PlayerPosition.BOTTOM) || position.equals(PlayerPosition.TOP)) {
-        // decide player names based on player position (sorted above)
-        String playerName;
-        if (position.equals(PlayerPosition.BOTTOM)) {
-          playerName = viewerName;
-          if (!inWatchMode) {
-            // allow user to click on my cards/reserved cards
-            // if not in watch mode
-            myCardButton.setOnAction(createOpenMyPurchaseCardClick());
-            myReservedCardsButton.setOnAction(createOpenMyReserveCardClick());
-          }
-        } else {
-          playerName = sortedPlayerNames.get(2);
+    for (int positionIndex = 0; positionIndex < sortedPlayerNames.size(); positionIndex++) {
+      PlayerPosition position = playerPositions[positionIndex];
+      String playerName;
+      if (position == PlayerPosition.BOTTOM) {
+        playerName = viewerName;
+        if (!inWatchMode) {
+          // allow user to click on my cards/reserved cards
+          // if not in watch mode
+          myCardButton.setOnAction(createOpenMyPurchaseCardClick());
+          myReservedCardsButton.setOnAction(createOpenMyReserveCardClick());
         }
-
-        int armCode;
-        if (nameToArmCodeMap.isEmpty()) {
-          armCode = -1;
-        } else {
-          armCode = nameToArmCodeMap.get(playerName);
-        }
-        // initialize with diff arm code depends on existence of trader extension
-        HorizontalPlayerInfoGui horizontalPlayerInfoGui = new HorizontalPlayerInfoGui(
-            position,
-            playerName,
-            initTokenAmount,
-            armCode);
-        // set up GUI layout X and Y
-        if (position.equals(PlayerPosition.BOTTOM)) {
-          horizontalPlayerInfoGui.setup(config.getBtmPlayerLayoutX(), config.getBtmPlayerLayoutY());
-        } else {
-          horizontalPlayerInfoGui.setup(config.getTopPlayerLayoutX(), config.getTopPlayerLayoutY());
-        }
-        // add to map, so it's easier to get them afterwards
-        nameToPlayerInfoGuiMap.put(playerName, horizontalPlayerInfoGui);
+      } else {
+        playerName = sortedPlayerNames.get(positionIndex);
       }
-
-      // identical logic with horizontal players GUI
-      if (position.equals(PlayerPosition.LEFT) || position.equals(PlayerPosition.RIGHT)) {
-        String playerName;
-        if (position.equals(PlayerPosition.LEFT)) {
-          playerName = sortedPlayerNames.get(1);
-        } else {
-          playerName = sortedPlayerNames.get(3);
-        }
-
-        int armCode;
-        if (nameToArmCodeMap.isEmpty()) {
-          armCode = -1;
-        } else {
-          armCode = nameToArmCodeMap.get(playerName);
-        }
-        VerticalPlayerInfoGui verticalPlayerInfoGui = new VerticalPlayerInfoGui(
-            position,
-            playerName,
-            initTokenAmount,
-            armCode);
-        if (position.equals(PlayerPosition.LEFT)) {
-          verticalPlayerInfoGui.setup(
-              config.getLeftPlayerLayoutX(),
-              config.getLeftPlayerLayoutY()
-          );
-        } else {
-          verticalPlayerInfoGui.setup(
-              config.getRightPlayerLayoutX(),
-              config.getRightPlayerLayoutY()
-          );
-        }
-        nameToPlayerInfoGuiMap.put(playerName, verticalPlayerInfoGui);
+      int armCode;
+      if (nameToArmCodeMap.isEmpty()) {
+        armCode = -1;
+      } else {
+        armCode = nameToArmCodeMap.get(playerName);
       }
+      PlayerInfoGui playerInfoGui = new PlayerInfoGui(position, playerName, armCode);
+      // set up based on position
+      switch (position) {
+        case BOTTOM:
+          playerInfoGui.setup(
+              App.getGuiLayouts().getBtmPlayerLayoutX(),
+              App.getGuiLayouts().getBtmPlayerLayoutY());
+          break;
+
+        case TOP:
+          playerInfoGui.setup(
+              App.getGuiLayouts().getTopPlayerLayoutX(),
+              App.getGuiLayouts().getTopPlayerLayoutY());
+          break;
+        case LEFT:
+          playerInfoGui.setup(
+              App.getGuiLayouts().getLeftPlayerLayoutX(),
+              App.getGuiLayouts().getLeftPlayerLayoutY());
+          break;
+        case RIGHT:
+          playerInfoGui.setup(
+              App.getGuiLayouts().getRightPlayerLayoutX(),
+              App.getGuiLayouts().getRightPlayerLayoutY());
+          break;
+
+        default:break;
+      }
+      nameToPlayerInfoGuiMap.put(playerName, playerInfoGui);
     }
-
     // now the gui is set, postpone displaying to main thread
     Platform.runLater(() -> {
       for (PlayerInfoGui playerInfoGui : nameToPlayerInfoGuiMap.values()) {
-        if (playerInfoGui instanceof VerticalPlayerInfoGui) {
-          playerBoardAnchorPane.getChildren().add((VerticalPlayerInfoGui) playerInfoGui);
-        }
-        if (playerInfoGui instanceof HorizontalPlayerInfoGui) {
-          playerBoardAnchorPane.getChildren().add((HorizontalPlayerInfoGui) playerInfoGui);
-        }
+        playerBoardAnchorPane.getChildren().add(playerInfoGui.getContainer());
       }
     });
   }
@@ -397,15 +354,6 @@ public class GameController implements Initializable {
               config.getSmallPopUpHeight());
         });
       });
-
-      // also, show a popup immediately
-      Platform.runLater(() -> {
-        App.loadPopUpWithController("noble_action_pop_up.fxml",
-            new ActOnNoblePopUpController(gameId, playerActionMap, false),
-            config.getSmallPopUpWidth(),
-            config.getSmallPopUpHeight());
-      });
-
     }
   }
 

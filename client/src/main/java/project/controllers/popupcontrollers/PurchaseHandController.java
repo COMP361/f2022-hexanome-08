@@ -31,7 +31,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import project.App;
 import project.connection.GameRequestSender;
-import project.view.splendor.ActionIdPair;
+import project.view.splendor.boardgui.ActionIdPair;
 
 /**
  * Purchase controller class, controls the visual updates happening in purchase hand.

@@ -1,4 +1,4 @@
-package project.view.splendor;
+package project.view.splendor.boardgui;
 
 import ca.mcgill.comp361.splendormodel.model.Position;
 import java.util.List;

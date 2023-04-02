@@ -1,4 +1,4 @@
-package project.view.splendor;
+package project.view.splendor.playergui;
 
 /**
  * TODO.

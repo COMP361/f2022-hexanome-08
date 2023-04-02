@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.EnumMap;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -37,6 +38,16 @@ public class App extends Application {
   private static final Colour[] baseColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
   };
+
+  private static final EnumMap<Colour, String> colourStringMap = new EnumMap<>(Colour.class) {{
+      put(Colour.RED, "#ed3737");
+      put(Colour.BLUE, "DODGERBLUE");
+      put(Colour.GREEN, "#30ff1f");
+      put(Colour.GOLD, "#faff1f");
+      put(Colour.BLACK, "#000000d5");
+      put(Colour.WHITE, "WHITE");
+  }};
+
   private static final String defaultImageUrl =
       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg";
   private static GameRequestSender gameRequestSender = null;
@@ -144,7 +155,7 @@ public class App extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    primaryStage.setFullScreen(true);
+    //primaryStage.setFullScreen(true);
   }
 
   /**
@@ -217,6 +228,10 @@ public class App extends Application {
       playerImage = new Image(defaultImageUrl);
     }
     return playerImage;
+  }
+
+  public static EnumMap<Colour, String> getColourStringMap() {
+    return new EnumMap<>(colourStringMap);
   }
 
   /**

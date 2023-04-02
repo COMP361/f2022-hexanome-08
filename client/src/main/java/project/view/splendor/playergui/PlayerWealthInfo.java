@@ -1,4 +1,4 @@
-package project.view.splendor;
+package project.view.splendor.playergui;
 
 /**
  * Represents the different types of player wealth info that are displayed.

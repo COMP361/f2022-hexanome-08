@@ -11,7 +11,7 @@
 //import java.util.Map;
 //import java.util.concurrent.locks.ReentrantLock;
 //import org.junit.Test;
-//import project.view.splendor.PlayerPosition;
+//import project.view.splendor.playergui.PlayerPosition;
 //
 //public class TestBoardGui {
 //
