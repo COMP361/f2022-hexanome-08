@@ -142,7 +142,7 @@ public class DevelopmentCard extends Card {
     EnumMap<Colour, Integer> cardPrice = SplendorDevHelper.getInstance().getRawTokenColoursMap();
     cardPrice.remove(Colour.GOLD);
     for (Colour colour : cardPrice.keySet()) {
-      int cardPriceVal = cardPrice.get(colour);
+      int cardPriceVal = super.getPrice().get(colour);
       int gemCount = allGems.get(colour);
       int priceAfterDiscount = cardPriceVal - gemCount;
       if (priceAfterDiscount <= 0) {
@@ -186,7 +186,7 @@ public class DevelopmentCard extends Card {
           int newValue = diffPrice.get(colour) + goldTokenArr[i];
           i += 1;
           int oldValue = tokensToPay.get(colour);
-          tokensToPay.put(colour,  oldValue - goldTokenArr[i]);
+          tokensToPay.put(colour,  oldValue - goldTokenArr[i-1]);
           diffPrice.put(colour, newValue);
         }
       }

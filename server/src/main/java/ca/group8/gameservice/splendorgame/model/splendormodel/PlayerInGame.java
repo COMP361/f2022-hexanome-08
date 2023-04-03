@@ -110,7 +110,14 @@ public class PlayerInGame {
         if (!colour.equals(Colour.ORIENT)) {
           Logger logger  = LoggerFactory.getLogger(PlayerInGame.class);
           int oldValue = totalGems.get(colour);
-          totalGems.put(colour, oldValue + card.getGemNumber());
+          int count;
+          if (colour == Colour.GOLD) {
+            count = card.getGemNumber() / 2;
+          } else {
+            count = card.getGemNumber();
+          }
+
+          totalGems.put(colour, oldValue + count);
           //logger.warn("Player name:" + name);
           //logger.warn("Colour " + colour);
           //logger.warn("TotalGems: " + totalGems);
