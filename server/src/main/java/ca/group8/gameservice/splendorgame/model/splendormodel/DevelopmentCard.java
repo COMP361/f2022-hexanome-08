@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represents the SuperClass of all Development Cards.
@@ -134,6 +136,8 @@ public class DevelopmentCard extends Card {
   public int canBeBought(boolean hasDoubleGoldPower,
                          EnumMap<Colour, Integer> wealth,
                          int goldCardCount) {
+    Logger logger = LoggerFactory.getLogger(DevelopmentCard.class);
+
     EnumMap<Colour, Integer> wealthWithoutGoldCard = new EnumMap<>(wealth);
     EnumMap<Colour, Integer> cardPrice = super.getPrice();
     // leave only gold token count in wealth
@@ -144,6 +148,9 @@ public class DevelopmentCard extends Card {
     int goldTokenNeededToPay = 0;
 
     // prioritizing card to use
+    logger.warn("Gold card in hand: " + goldCardCount);
+    logger.warn("Actual wealth: " + wealth);
+    logger.warn("Excluded gold card tokens: " + wealthWithoutGoldCard);
     if (goldCardCount > 0) {
       int[] goldTokenArr = new int[goldTokensFromCard];
       if (hasDoubleGoldPower) {
@@ -155,8 +162,12 @@ public class DevelopmentCard extends Card {
         Arrays.fill(goldTokenArr, 1);
       }
       int i = 0;
+
       int goldCardLeft = goldCardCount;
       while (goldCardLeft > 0) {
+        logger.warn("i index is: " + i);
+        logger.warn("gold token arr: " + Arrays.toString(goldTokenArr));
+        logger.warn("gold card left: " + goldCardLeft);
         for (Colour colour : diffPrice.keySet()) {
           // excluding gold token in here since we only consider gold token card
           if (colour != Colour.GOLD) {

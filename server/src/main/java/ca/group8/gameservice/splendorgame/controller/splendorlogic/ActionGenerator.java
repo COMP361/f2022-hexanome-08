@@ -149,7 +149,7 @@ public class ActionGenerator {
 
 
 
-  private List<Action> listOfDevCardsToPurchaseAction(DevelopmentCard[] cards, int level,
+  public List<Action> listOfDevCardsToPurchaseAction(DevelopmentCard[] cards, int level,
                                                       PlayerInGame curPlayerInfo) {
 
     // gather necessary player information we need before generating actions
@@ -161,8 +161,8 @@ public class ActionGenerator {
           .getPlayerOnePower(playerName, PowerEffect.DOUBLE_GOLD).isUnlocked();
     }
 
-    EnumMap<Colour, Integer> totalGems = curPlayerInfo.getTotalGems(); // discount (dev cards)
-    EnumMap<Colour, Integer> totalTokens = curPlayerInfo.getTokenHand().getAllTokens(); // tokens
+    EnumMap<Colour, Integer> totalGems = new EnumMap<>(curPlayerInfo.getTotalGems()); // discount (dev cards)
+    EnumMap<Colour, Integer> totalTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens()); // tokens)
     int goldCardInHand = (int) curPlayerInfo.getPurchasedHand().getDevelopmentCards()
         .stream().filter(c -> c.getGemColour() == Colour.GOLD).count();
 

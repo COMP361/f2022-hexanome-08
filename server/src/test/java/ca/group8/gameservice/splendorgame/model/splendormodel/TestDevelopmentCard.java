@@ -1,6 +1,7 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
 import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
+import ca.group8.gameservice.splendorgame.testutils.CardFactory;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -257,7 +258,5 @@ public class TestDevelopmentCard {
 
         assertEquals(-1, baseCard.canBeBought(true, playerWealth, 0));
     }
-
-
 
 }

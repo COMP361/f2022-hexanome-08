@@ -40,7 +40,7 @@ public class TestActionGenerator {
 
     PlayerInGame playerInGame;
     List<Extension> extensions = Arrays.asList(Extension.BASE, Extension.ORIENT,Extension.TRADING_POST, Extension.CITY);
-    List<String> players = Arrays.asList("Bob", "Tim");
+    List<String> players = Arrays.asList("ruoyu", "Tim");
     ActionGenerator actionGenerator;
     Bank bank;
 
@@ -326,5 +326,33 @@ public class TestActionGenerator {
         }
     }
 
+    @Test
+    void testNewCanBeBought() {
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
+            put(Colour.BLUE, 0);
+            put(Colour.RED, 2);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+            put(Colour.GOLD, 1);
+        }};
+
+        PlayerInGame playerInGame = new PlayerInGame("ruoyu");
+        playerInGame.getTokenHand().addToken(playerWealth);
+        EnumMap<Colour, Integer> price1 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+        EnumMap<Colour, Integer> price2 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+        price1.put(Colour.RED, 3);
+        price2.put(Colour.BLUE, 3);
+        DevelopmentCard[] orientCardsToBuy = new DevelopmentCard[] {
+            CardFactory.getInstance().getOneOrientCard(Colour.RED, 1,List.of(CardEffect.DOUBLE_GOLD), price1),
+            CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 1,List.of(CardEffect.DOUBLE_GOLD), price2)
+        };
+
+        System.out.println(orientCardsToBuy[0].getPrice());
+        System.out.println(orientCardsToBuy[1].getPrice());
+
+        List<Action> actions = actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame);
+        System.out.println(actions);
+    }
 
 }
