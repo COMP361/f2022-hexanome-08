@@ -728,6 +728,71 @@ public class TestActionGenerator {
         System.out.println("Num of Gold Token Card needed: " + purchaseAction.getGoldCardsRequired());
     }
 
+    @Test
+    void testNewCanBeBought_WithGoldCard_PowerOn() {
+        // give tokens
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
+            put(Colour.BLUE, 1);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 1);
+            put(Colour.WHITE, 0);
+            put(Colour.GOLD, 1);
+        }};
+        PlayerInGame playerInGame = new PlayerInGame("ruoyu");
+        playerInGame.getTokenHand().addToken(playerWealth);
+
+
+        // activate power
+        TableTop tableTop = actionGenerator.getTableTop();
+        TraderBoard traderBoard = (TraderBoard)tableTop.getBoard(Extension.TRADING_POST);
+        Power power = traderBoard.getPlayerOnePower("ruoyu", PowerEffect.DOUBLE_GOLD);
+        //power.unlock();
+
+
+
+        // assign cards to hand
+        DevelopmentCard[] cardsInHand = new DevelopmentCard[] {
+            CardFactory.getInstance().getOneBaseCard(Colour.RED, 1),
+            CardFactory.getInstance().getOneBaseCard(Colour.RED, 1),
+            CardFactory.getInstance().getOneBaseCard(Colour.RED, 1),
+
+            CardFactory.getInstance().getOneBaseCard(Colour.BLACK, 1),
+
+            CardFactory.getInstance().getOneBaseCard(Colour.BLUE, 1),
+            CardFactory.getInstance().getOneBaseCard(Colour.BLUE, 1),
+            CardFactory.getInstance().getOneBaseCard(Colour.BLUE, 1),
+
+            CardFactory.getInstance().getOneBaseCard(Colour.GREEN, 1),
+
+            CardFactory.getInstance().getOneOrientCard(Colour.GOLD, 1, List.of(CardEffect.DOUBLE_GOLD))
+
+        };
+
+        for (DevelopmentCard card : cardsInHand) {
+            playerInGame.getPurchasedHand().addDevelopmentCard(card);
+        }
+
+
+        System.out.println("Player wealth: " + playerInGame.getWealth());
+        System.out.println("Player tokens: " + playerInGame.getTokenHand().getAllTokens());
+        System.out.println("Player gems: " + playerInGame.getTotalGems());
+
+        BaseBoard baseBoard = (BaseBoard) tableTop.getBoard(Extension.BASE);
+        for (int level = 1; level <= 3; level++) {
+            DevelopmentCard[] cardsPerLevel = baseBoard.getLevelCardsOnBoard(level);
+            for (DevelopmentCard card : cardsPerLevel) {
+                System.out.printf("Look at card '%s' price: %s\n", card.getCardName(), card.getPrice());
+            }
+
+            List<Action> actions = actionGenerator.listOfDevCardsToPurchaseAction(cardsPerLevel, level, playerInGame);
+            for (Action action : actions) {
+                PurchaseAction purchaseAction = (PurchaseAction) action;
+                System.out.println("Tokens needed to be paid: " + purchaseAction.getTokensToBePaid());
+                System.out.println("Num of Gold Token Card needed: " + purchaseAction.getGoldCardsRequired());
+            }
+        }
+    }
 
 
 }
