@@ -180,19 +180,19 @@ public class DevelopmentCard extends Card {
       if (colour != Colour.GOLD) {
         while (diffPrice.get(colour) < 0 && i < goldTokenArr.length) {
           int newValue = diffPrice.get(colour) + goldTokenArr[i];
+          diffPrice.put(colour, newValue);
           i += 1;
           int oldValue = tokensToPay.get(colour);
-          tokensToPay.put(colour,  oldValue - goldTokenArr[i-1]);
-          if(tokensToPay.get(colour) < 0 ){
+          tokensToPay.put(colour, oldValue - goldTokenArr[i - 1]);
+          if (tokensToPay.get(colour) < 0) {
             tokensToPay.put(colour, 0);
           }
-          diffPrice.put(colour, newValue);
         }
       }
     }
 
     boolean allMatch = diffPrice.values().stream().allMatch(v -> v >= 0);
-    if (!allMatch){
+    if (!allMatch) {
       return null;
     }
 
@@ -201,19 +201,19 @@ public class DevelopmentCard extends Card {
     int goldCardUsed = 0;
     int goldTokenUsed = 0;
 
-    while (goldValueNeeded > 0 && (goldTokenCount>0 || goldCardCount>0)) {
-      if (goldCardCount > 0 && goldValueNeeded >= 2){
+    while (goldValueNeeded > 0 && (goldTokenCount > 0 || goldCardCount > 0)) {
+      if (goldCardCount > 0 && goldValueNeeded >= 2) {
         goldValueNeeded -= 2;
-        goldCardCount --;
-        goldCardUsed ++;
-      } else if (goldTokenCount>0) {
+        goldCardCount--;
+        goldCardUsed++;
+      } else if (goldTokenCount > 0) {
         goldTokenCount--;
         goldValueNeeded--;
-        goldTokenUsed ++;
+        goldTokenUsed++;
       } else {
         goldValueNeeded -= 2;
         goldCardCount--;
-        goldCardUsed ++;
+        goldCardUsed++;
       }
     }
 
@@ -226,7 +226,7 @@ public class DevelopmentCard extends Card {
         int oldTokensToPay = tokensToPay.get(colour);
         if (oldTokensToPay > 0) {
           tokensToPay.put(colour, oldTokensToPay - newIndex);
-          if(tokensToPay.get(colour) < 0){
+          if (tokensToPay.get(colour) < 0) {
             tokensToPay.put(colour, 0);
           }
           break;
@@ -235,8 +235,8 @@ public class DevelopmentCard extends Card {
     }
 
     //now just assign  gold tokens and card used and return
-    tokensToPay.put(Colour.GOLD , goldTokenUsed);
-    tokensToPay.put(Colour.ORIENT , goldCardUsed);
+    tokensToPay.put(Colour.GOLD, goldTokenUsed);
+    tokensToPay.put(Colour.ORIENT, goldCardUsed);
     return tokensToPay;
 
   }
@@ -254,11 +254,11 @@ public class DevelopmentCard extends Card {
     DevelopmentCard other = (DevelopmentCard) obj;
 
     return super.equals(other)
-            && this.level == other.level
-            && this.gemNumber == other.gemNumber
-            && this.isPaired == other.isPaired
-            && this.gemColour.equals(other.gemColour)
-            && this.purchaseEffects.equals(other.purchaseEffects);
+        && this.level == other.level
+        && this.gemNumber == other.gemNumber
+        && this.isPaired == other.isPaired
+        && this.gemColour.equals(other.gemColour)
+        && this.purchaseEffects.equals(other.purchaseEffects);
   }
 
   @Override
