@@ -39,6 +39,10 @@ public class CardFactory {
     if (effects.contains(CardEffect.BURN_CARD)) {
       // always purchase by burning 2 blue gems
       price.put(Colour.BLUE, 2);
+    } else if (effects.contains(CardEffect.DOUBLE_GOLD)) {
+      return new DevelopmentCard(5,
+          price, "c1", level, Colour.GOLD, 2,
+          effects);
     } else {
       for (Colour c : price.keySet()) {
         if (!c.equals(Colour.GOLD)) {

@@ -40,7 +40,7 @@ public class TestActionGenerator {
 
     PlayerInGame playerInGame;
     List<Extension> extensions = Arrays.asList(Extension.BASE, Extension.ORIENT,Extension.TRADING_POST, Extension.CITY);
-    List<String> players = Arrays.asList("ruoyu", "Tim");
+    List<String> players = Arrays.asList("ruoyu", "Bob");
     ActionGenerator actionGenerator;
     Bank bank;
 
@@ -48,8 +48,8 @@ public class TestActionGenerator {
     void setUp() {
         bank = new Bank(2);
         Map<String, Map<String, Action>> actionMap = new HashMap<>();
+        actionMap.put("ruoyu", new HashMap<>());
         actionMap.put("Bob", new HashMap<>());
-        actionMap.put("Tim", new HashMap<>());
         actionGenerator = new ActionGenerator(actionMap, new TableTop(players, extensions));
         playerInGame = new PlayerInGame("Bob");
     }
@@ -325,6 +325,29 @@ public class TestActionGenerator {
             assertTrue(action instanceof TakeTokenAction);
         }
     }
+    @Test
+    void testNewCanBeBought_NoGoldInvolved() {
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
+            put(Colour.BLUE, 0);
+            put(Colour.RED, 3);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+            put(Colour.GOLD, 0);
+        }};
+
+        PlayerInGame playerInGame = new PlayerInGame("ruoyu");
+        playerInGame.getTokenHand().addToken(playerWealth);
+        EnumMap<Colour, Integer> price1 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+        price1.put(Colour.RED, 3);
+        DevelopmentCard[] orientCardsToBuy = new DevelopmentCard[] {
+            CardFactory.getInstance().getOneOrientCard(Colour.RED, 1,List.of(CardEffect.DOUBLE_GOLD), price1)
+        };
+        assertEquals(1, actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame).size());
+    }
+
+
+
 
     @Test
     void testNewCanBeBought_NoGoldCard() {
@@ -347,14 +370,39 @@ public class TestActionGenerator {
             CardFactory.getInstance().getOneOrientCard(Colour.RED, 1,List.of(CardEffect.DOUBLE_GOLD), price1),
             CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 1,List.of(CardEffect.DOUBLE_GOLD), price2)
         };
-        assertEquals(1, actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame));
+        assertEquals(1, actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame).size());
     }
 
     @Test
-    void testNewCanBeBought_HasGoldCard() {
+    void testNewCanBeBought_HasGoldCard1_False() {
+
+        PlayerInGame playerInGame = new PlayerInGame("ruoyu");
+        EnumMap<Colour, Integer> price3 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+
+        price3.put(Colour.BLUE, 1);
+        price3.put(Colour.WHITE, 3);
+        price3.put(Colour.BLACK, 1);
+        DevelopmentCard[] orientCardsToBuy = new DevelopmentCard[] {
+            CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 1,List.of(CardEffect.DOUBLE_GOLD), price3)
+        };
+
+        playerInGame.getPurchasedHand().addDevelopmentCard(
+            CardFactory.getInstance().getOneOrientCard(Colour.GOLD, 1, List.of(CardEffect.DOUBLE_GOLD)));
+
+        System.out.println(playerInGame.getWealth());
+        List<Action> actions = actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame);
+        assertTrue(actions.isEmpty());
+        //PurchaseAction purchaseAction = (PurchaseAction) actions.get(0);
+        //System.out.println("Tokens needed to be paid: " + purchaseAction.getTokensToBePaid());
+        //System.out.println("Num of Gold Token Card needed: " + purchaseAction.getGoldCardsRequired());
+    }
+
+
+    @Test
+    void testNewCanBeBought_HasGoldCard2() {
         EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
-            put(Colour.BLUE, 0);
-            put(Colour.RED, 2);
+            put(Colour.BLUE, 3);
+            put(Colour.RED, 0);
             put(Colour.BLACK, 0);
             put(Colour.GREEN, 0);
             put(Colour.WHITE, 0);
@@ -363,22 +411,174 @@ public class TestActionGenerator {
 
         PlayerInGame playerInGame = new PlayerInGame("ruoyu");
         playerInGame.getTokenHand().addToken(playerWealth);
-        EnumMap<Colour, Integer> price1 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
-        EnumMap<Colour, Integer> price2 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
-        price1.put(Colour.RED, 3);
-        price2.put(Colour.BLUE, 3);
+        EnumMap<Colour, Integer> price3 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+        price3.put(Colour.BLUE, 4);
+
         DevelopmentCard[] orientCardsToBuy = new DevelopmentCard[] {
-            CardFactory.getInstance().getOneOrientCard(Colour.RED, 1,List.of(CardEffect.DOUBLE_GOLD), price1),
-            CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 1,List.of(CardEffect.DOUBLE_GOLD), price2)
+            CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 1,List.of(CardEffect.DOUBLE_GOLD), price3)
         };
 
         playerInGame.getPurchasedHand().addDevelopmentCard(
-            CardFactory.getInstance().getOneOrientCard(Colour.RED, 1,List.of(CardEffect.DOUBLE_GOLD)));
+            CardFactory.getInstance().getOneOrientCard(Colour.GOLD, 1, List.of(CardEffect.DOUBLE_GOLD)));
 
+        System.out.println(playerInGame.getWealth());
 
-
-
-        actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame);
+        List<Action> actions = actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame);
+        PurchaseAction purchaseAction = (PurchaseAction) actions.get(0);
+        System.out.println("Tokens needed to be paid: " + purchaseAction.getTokensToBePaid());
+        System.out.println("Num of Gold Token Card needed: " + purchaseAction.getGoldCardsRequired());
     }
+
+    @Test
+    void testNewCanBeBought_HasGoldCard3() {
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
+            put(Colour.BLUE, 3);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 1);
+            put(Colour.GOLD, 0);
+        }};
+
+        PlayerInGame playerInGame = new PlayerInGame("ruoyu");
+        playerInGame.getTokenHand().addToken(playerWealth);
+
+        EnumMap<Colour, Integer> price3 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+        price3.put(Colour.BLUE, 4);
+        price3.put(Colour.WHITE, 2);
+
+        DevelopmentCard[] orientCardsToBuy = new DevelopmentCard[] {
+            CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 1,List.of(CardEffect.DOUBLE_GOLD), price3)
+        };
+
+        playerInGame.getPurchasedHand().addDevelopmentCard(
+            CardFactory.getInstance().getOneOrientCard(Colour.GOLD, 1, List.of(CardEffect.DOUBLE_GOLD)));
+
+        System.out.println("Player wealth: " + playerInGame.getWealth());
+
+        List<Action> actions = actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame);
+        PurchaseAction purchaseAction = (PurchaseAction) actions.get(0);
+        System.out.println("Tokens needed to be paid: " + purchaseAction.getTokensToBePaid());
+        System.out.println("Num of Gold Token Card needed: " + purchaseAction.getGoldCardsRequired());
+
+    }
+
+    @Test
+    void testNewCanBeBought_HasGoldCard4() {
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
+            put(Colour.BLUE, 2);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 2);
+            put(Colour.GOLD, 0);
+        }};
+
+        PlayerInGame playerInGame = new PlayerInGame("ruoyu");
+        playerInGame.getTokenHand().addToken(playerWealth);
+
+        EnumMap<Colour, Integer> price3 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+        price3.put(Colour.BLUE, 4);
+        price3.put(Colour.WHITE, 2);
+
+        DevelopmentCard[] orientCardsToBuy = new DevelopmentCard[] {
+            CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 1,List.of(CardEffect.DOUBLE_GOLD), price3)
+        };
+
+        playerInGame.getPurchasedHand().addDevelopmentCard(
+            CardFactory.getInstance().getOneOrientCard(Colour.GOLD, 1, List.of(CardEffect.DOUBLE_GOLD)));
+
+        System.out.println("Player wealth: " + playerInGame.getWealth());
+        System.out.println("Player gold card: " + playerInGame
+            .getPurchasedHand()
+            .getDevelopmentCards()
+            .stream().filter(c -> c.getGemColour() == Colour.GOLD).count());
+
+        List<Action> actions = actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame);
+        PurchaseAction purchaseAction = (PurchaseAction) actions.get(0);
+        System.out.println("Tokens needed to be paid: " + purchaseAction.getTokensToBePaid());
+        System.out.println("Num of Gold Token Card needed: " + purchaseAction.getGoldCardsRequired());
+
+    }
+
+
+    @Test
+    void testNewCanBeBought_HasGoldCard_PowerOn_True() {
+        TableTop tableTop = actionGenerator.getTableTop();
+        TraderBoard traderBoard = (TraderBoard)tableTop.getBoard(Extension.TRADING_POST);
+        Power power = traderBoard.getPlayerOnePower("ruoyu", PowerEffect.DOUBLE_GOLD);
+        power.unlock();
+
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
+            put(Colour.BLUE, 2);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 2);
+            put(Colour.GOLD, 0);
+        }};
+
+        PlayerInGame playerInGame = new PlayerInGame("ruoyu");
+        playerInGame.getTokenHand().addToken(playerWealth);
+
+        EnumMap<Colour, Integer> price3 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+        price3.put(Colour.BLUE, 4);
+        price3.put(Colour.WHITE, 4);
+
+        DevelopmentCard[] orientCardsToBuy = new DevelopmentCard[] {
+            CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 1,List.of(CardEffect.DOUBLE_GOLD), price3)
+        };
+
+        playerInGame.getPurchasedHand().addDevelopmentCard(
+            CardFactory.getInstance().getOneOrientCard(Colour.GOLD, 1, List.of(CardEffect.DOUBLE_GOLD)));
+
+        System.out.println("Player wealth: " + playerInGame.getWealth());
+
+        List<Action> actions = actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame);
+        PurchaseAction purchaseAction = (PurchaseAction) actions.get(0);
+        System.out.println("Tokens needed to be paid: " + purchaseAction.getTokensToBePaid());
+        System.out.println("Num of Gold Token Card needed: " + purchaseAction.getGoldCardsRequired());
+    }
+
+    @Test
+    void testNewCanBeBought_HasGoldCard_PowerOn_False() {
+        //TableTop tableTop = actionGenerator.getTableTop();
+        //TraderBoard traderBoard = (TraderBoard)tableTop.getBoard(Extension.TRADING_POST);
+        //Power power = traderBoard.getPlayerOnePower("ruoyu", PowerEffect.DOUBLE_GOLD);
+        //power.unlock();
+
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
+            put(Colour.BLUE, 2);
+            put(Colour.RED, 0);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 2);
+            put(Colour.GOLD, 0);
+        }};
+
+        PlayerInGame playerInGame = new PlayerInGame("ruoyu");
+        playerInGame.getTokenHand().addToken(playerWealth);
+
+        EnumMap<Colour, Integer> price3 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+        price3.put(Colour.BLUE, 4);
+        price3.put(Colour.WHITE, 4);
+
+        DevelopmentCard[] orientCardsToBuy = new DevelopmentCard[] {
+            CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 1,List.of(CardEffect.DOUBLE_GOLD), price3)
+        };
+
+        playerInGame.getPurchasedHand().addDevelopmentCard(
+            CardFactory.getInstance().getOneOrientCard(Colour.GOLD, 1, List.of(CardEffect.DOUBLE_GOLD)));
+
+        System.out.println("Player wealth: " + playerInGame.getWealth());
+
+        List<Action> actions = actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame);
+        System.out.println(actions.size());
+        //PurchaseAction purchaseAction = (PurchaseAction) actions.get(0);
+        //System.out.println("Tokens needed to be paid: " + purchaseAction.getTokensToBePaid());
+        //System.out.println("Num of Gold Token Card needed: " + purchaseAction.getGoldCardsRequired());
+    }
+
+
 
 }

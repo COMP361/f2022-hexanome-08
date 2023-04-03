@@ -108,39 +108,21 @@ public class ActionGenerator {
 
 
   private PurchaseAction regularCardToPurchaseAction(DevelopmentCard card, Position cardPosition,
-                                                     EnumMap<Colour, Integer> totalGems,
                                                      EnumMap<Colour, Integer> totalTokens,
-                                                     int goldTokenNeeded) {
-    EnumMap<Colour, Integer> tokensPaid = new EnumMap<>(card.getPrice());
+                                                     EnumMap<Colour, Integer> tokensPaid) {
+    int goldTokenNeeded = tokensPaid.get(Colour.GOLD);
     int goldCardsNeeded = 0;
-    for (Colour c : totalGems.keySet()) {
-      if (c != Colour.GOLD) {
-        //calculate price after discount
-        int priceAfterDiscount = tokensPaid.get(c) - totalGems.get(c);
-        //if price is negative, meaning you have more gems than required,
-        //just set tokens paid to 0.
-        if (priceAfterDiscount <= 0) {
-          tokensPaid.put(c, 0);
-        } else if (priceAfterDiscount > totalTokens.get(c)) {
-          tokensPaid.put(c, totalTokens.get(c));
-        } else {
-          tokensPaid.put(c, priceAfterDiscount);
-        }
-      }
-    }
-
     if (goldTokenNeeded > 0) {
       int goldTokensInHand = totalTokens.get(Colour.GOLD);
       if (goldTokensInHand >= goldTokenNeeded) {
+        // if we have more gold tokens in hand than needed, then we pay needed amount
         tokensPaid.put(Colour.GOLD, goldTokenNeeded);
       } else {
-        // calculate the number of gold card first
+        // if we do not have enough gold tokens, then the rest must be from gold cards
         goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
         int goldTokensToPay = goldTokenNeeded - 2 * goldCardsNeeded;
         tokensPaid.put(Colour.GOLD, goldTokensToPay);
       }
-    } else {
-      tokensPaid.put(Colour.GOLD, 0);
     }
     return new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid);
   }
@@ -161,16 +143,11 @@ public class ActionGenerator {
           .getPlayerOnePower(playerName, PowerEffect.DOUBLE_GOLD).isUnlocked();
     }
 
-    EnumMap<Colour, Integer> totalGems = new EnumMap<>(curPlayerInfo.getTotalGems()); // discount (dev cards)
-    EnumMap<Colour, Integer> totalTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens()); // tokens)
-    int goldCardInHand = (int) curPlayerInfo.getPurchasedHand().getDevelopmentCards()
-        .stream().filter(c -> c.getGemColour() == Colour.GOLD).count();
 
     List<Action> result = new ArrayList<>();
     for (int cardIndex = 0; cardIndex < cards.length; cardIndex++) {
       Position cardPosition = new Position(level, cardIndex);
       DevelopmentCard card = cards[cardIndex];
-      int goldTokenNeeded;
 
       // if orient card is a burn card
       if (card.getPurchaseEffects().contains(CardEffect.BURN_CARD)) {
@@ -195,25 +172,22 @@ public class ActionGenerator {
         }
         if (hasCardToPair) {
           // this card can be bought (can be paired)
-          EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
-          goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
-          result.add(regularCardToPurchaseAction(card,
-              cardPosition,
-              totalGems,
-              totalTokens,
-              goldTokenNeeded));
+          EnumMap<Colour, Integer> tokensPaid =
+              card.canBeBought(hasDoubleGoldPower, curPlayerInfo);
+          // if there is no negative number to pay, then this is a valid price to pay
+          if (tokensPaid.values().stream().noneMatch(v -> v < 0)) {
+            EnumMap<Colour, Integer> allTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
+            result.add(regularCardToPurchaseAction(card, cardPosition, allTokens, tokensPaid));
+          }
         }
       } else {
         // for all other orient/base cards with no special buying conditions
-        EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
-        goldTokenNeeded = card.canBeBought(hasDoubleGoldPower, wealth, goldCardInHand);
-        if (goldTokenNeeded >= 0) {
-          // this card can be bought
-          result.add(regularCardToPurchaseAction(card,
-              cardPosition,
-              totalGems,
-              totalTokens,
-              goldTokenNeeded));
+        EnumMap<Colour, Integer> tokensPaid =
+            card.canBeBought(hasDoubleGoldPower, curPlayerInfo);
+        // if there is no negative number to pay, then this is a valid price to pay
+        if (tokensPaid.values().stream().noneMatch(v -> v < 0)) {
+          EnumMap<Colour, Integer> allTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
+          result.add(regularCardToPurchaseAction(card, cardPosition, allTokens, tokensPaid));
         }
       }
     }
@@ -234,13 +208,9 @@ public class ActionGenerator {
       DevelopmentCard[] orientLevelCards = orientBoard.getLevelCardsOnBoard(level);
 
       // translate a list of base card to actions
-      for (int cardIndex = 0; cardIndex < baseLevelCards.length; cardIndex++) {
-          result.addAll(listOfDevCardsToPurchaseAction(baseLevelCards, level, curPlayerInfo));
-      }
+      result.addAll(listOfDevCardsToPurchaseAction(baseLevelCards, level, curPlayerInfo));
       // translate a list of orient card to actions
-      for (int cardIndex = 0; cardIndex < orientLevelCards.length; cardIndex++) {
-        result.addAll(listOfDevCardsToPurchaseAction(orientLevelCards, level, curPlayerInfo));
-      }
+      result.addAll(listOfDevCardsToPurchaseAction(orientLevelCards, level, curPlayerInfo));
 
     }
 

@@ -25,6 +25,7 @@ public class PurchaseAction extends Action {
 
   private final EnumMap<Colour, Integer> tokensToBePaid;
   private final DevelopmentCard curCard;
+
   private final int goldCardsRequired;
   private final Position cardPosition;
 
@@ -197,5 +198,9 @@ public class PurchaseAction extends Action {
 
   public DevelopmentCard getCurCard() {
     return curCard;
+  }
+
+  public int getGoldCardsRequired() {
+    return goldCardsRequired;
   }
 }

@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -130,22 +131,26 @@ public class DevelopmentCard extends Card {
    * canBeBought.
    *
    * @param hasDoubleGoldPower hasDoubleGoldPower
-   * @param wealth wealth
-   * @return -1 if can not afford, 0 or >0 as a number of gold token needed
    */
-  public int canBeBought(boolean hasDoubleGoldPower,
-                         EnumMap<Colour, Integer> wealth,
-                         int goldCardCount) {
-    Logger logger = LoggerFactory.getLogger(DevelopmentCard.class);
-    logger.warn("Currently checking card price: " + super.getPrice());
+  public EnumMap<Colour, Integer> canBeBought(boolean hasDoubleGoldPower,
+                                              PlayerInGame curPlayerInfo) {
 
-    EnumMap<Colour, Integer> wealthWithoutGoldCard = new EnumMap<>(wealth);
+    Logger logger = LoggerFactory.getLogger(DevelopmentCard.class);
+    EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
+    EnumMap<Colour, Integer> wealthWithoutGoldCard = new EnumMap<>(curPlayerInfo.getWealth());
+    // discount (dev cards)
+    EnumMap<Colour, Integer> allGems = new EnumMap<>(curPlayerInfo.getTotalGems());
+    // (tokens)
+    EnumMap<Colour, Integer> allTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
+    int goldCardCount = (int) curPlayerInfo.getPurchasedHand().getDevelopmentCards()
+        .stream().filter(c -> c.getGemColour() == Colour.GOLD).count();
+
     EnumMap<Colour, Integer> cardPrice = super.getPrice();
     // leave only gold token count in wealth
-    int goldTokensInHand = wealthWithoutGoldCard.get(Colour.GOLD);
     int goldTokensFromCard = 2 * goldCardCount;
     wealthWithoutGoldCard.put(Colour.GOLD, wealth.get(Colour.GOLD) - goldTokensFromCard);
-    Map<Colour, Integer> diffPrice = new EnumMap<>(cardPrice);
+    int goldTokensInHand = wealthWithoutGoldCard.get(Colour.GOLD);
+    Map<Colour, Integer> diffPrice;
     int goldTokenNeededToPay = 0;
 
     // prioritizing card to use
@@ -160,28 +165,41 @@ public class DevelopmentCard extends Card {
         Arrays.fill(goldTokenArr, 1);
       }
       int i = 0;
+      diffPrice = wealthWithoutGoldCard.keySet().stream()
+          .filter(colour -> !colour.equals(Colour.GOLD) && !colour.equals(Colour.ORIENT))
+          .collect(Collectors.toMap(
+              key -> key,
+              key -> wealthWithoutGoldCard.get(key) - cardPrice.get(key)
+          ));
+
 
       int goldCardLeft = goldCardCount;
       while (goldCardLeft > 0) {
         for (Colour colour : diffPrice.keySet()) {
           // excluding gold token in here since we only consider gold token card
           if (colour != Colour.GOLD) {
-            int leftOver = wealthWithoutGoldCard.get(colour) - diffPrice.get(colour);
-            if (leftOver < 0) {
-              leftOver += goldTokenArr[i];
-              diffPrice.put(colour, leftOver);
+            while (diffPrice.get(colour) < 0) {
+              if (i >= goldTokenArr.length) {
+                break;
+              }
+              int newValue = diffPrice.get(colour) + goldTokenArr[i];
               i += 1;
-              // after adding the value from gold arr, if we are at even index of gold arr
-              // and there are no
-              if (diffPrice.values().stream().noneMatch(v -> v < 0) && i % 2 == 1) {
+              diffPrice.put(colour, newValue);
+              if (newValue == 0 && i % 2 == 1) {
+                // when the current colour reaches 0
+                if (diffPrice.values().stream().noneMatch(v -> v < 0)) {
+                  newValue = diffPrice.get(colour) + goldTokenArr[i];
+                  i += 1;
+                }
+                diffPrice.put(colour, newValue);
                 goldCardLeft -= 1;
-                // make sure we used every token in the card, and update diffPrice
-                leftOver += goldTokenArr[i];
-                diffPrice.put(colour, leftOver);
                 goldTokenNeededToPay += 2;
               }
             }
           }
+        }
+        if (i >= goldTokenArr.length) {
+          break;
         }
       }
 
@@ -214,14 +232,25 @@ public class DevelopmentCard extends Card {
       }
     }
 
-    // after all the computation we can do to the price diff map, we can check if we have
-    // a non-negative diffPrice map. If anything is still negative, we can not buy this card
-    // then the player can afford this without using any gold token
-    if (diffPrice.values().stream().anyMatch(v -> v < 0)) {
-      return -1;
-    } else {
-      return goldTokenNeededToPay;
+    EnumMap<Colour, Integer> finalResult = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+
+    // store gold tokens needed in here
+    finalResult.put(Colour.GOLD, goldTokenNeededToPay);
+    for (Colour colour : allTokens.keySet()) {
+      if (colour != Colour.GOLD) {
+        int tokensOfColourHas = allTokens.get(colour);
+        int gemsOfColourHas = allGems.get(colour);
+        int tokensOfColourLeft = diffPrice.get(colour);
+        if (tokensOfColourLeft < 0) {
+         finalResult.put(colour, tokensOfColourLeft);
+        } else {
+          finalResult.put(colour, tokensOfColourHas + gemsOfColourHas - tokensOfColourLeft);
+        }
+      }
     }
+
+    return finalResult;
+
   }
 
   private int computeGoldTokensNeeded(int goldTokensInHand,
