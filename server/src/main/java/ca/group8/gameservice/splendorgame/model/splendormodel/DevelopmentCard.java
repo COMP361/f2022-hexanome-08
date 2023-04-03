@@ -187,6 +187,9 @@ public class DevelopmentCard extends Card {
           i += 1;
           int oldValue = tokensToPay.get(colour);
           tokensToPay.put(colour,  oldValue - goldTokenArr[i-1]);
+          if(tokensToPay.get(colour) < 0 ){
+            tokensToPay.put(colour, 0);
+          }
           diffPrice.put(colour, newValue);
         }
       }
@@ -227,6 +230,10 @@ public class DevelopmentCard extends Card {
         int oldTokensToPay = tokensToPay.get(colour);
         if (oldTokensToPay > 0) {
           tokensToPay.put(colour, oldTokensToPay - newIndex);
+          if(tokensToPay.get(colour) < 0){
+            tokensToPay.put(colour, 0);
+          }
+          break;
         }
       }
     }
