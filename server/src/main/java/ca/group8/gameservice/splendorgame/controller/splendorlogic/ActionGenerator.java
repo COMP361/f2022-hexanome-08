@@ -168,18 +168,16 @@ public class ActionGenerator {
         if (hasCardToPair) {
           EnumMap<Colour, Integer> tokensPaid =
               card.canBeBought(hasDoubleGoldPower, curPlayerInfo);
-          if (tokensPaid == null){
-            continue;
+          if (tokensPaid != null){
+            result.add(regularCardToPurchaseAction(card, cardPosition, tokensPaid));
           }
-          result.add(regularCardToPurchaseAction(card, cardPosition, tokensPaid));
         }
       } else { // for all other orient/base cards with no special buying conditions
         EnumMap<Colour, Integer> tokensPaid =
             card.canBeBought(hasDoubleGoldPower, curPlayerInfo);
-        if (tokensPaid == null){
-          continue;
+        if (tokensPaid != null){
+          result.add(regularCardToPurchaseAction(card, cardPosition, tokensPaid));
         }
-        result.add(regularCardToPurchaseAction(card, cardPosition, tokensPaid));
       }
     }
     return result;
