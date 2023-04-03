@@ -327,7 +327,7 @@ public class TestActionGenerator {
     }
 
     @Test
-    void testNewCanBeBought() {
+    void testNewCanBeBought_NoGoldCard() {
         EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
             put(Colour.BLUE, 0);
             put(Colour.RED, 2);
@@ -347,12 +347,38 @@ public class TestActionGenerator {
             CardFactory.getInstance().getOneOrientCard(Colour.RED, 1,List.of(CardEffect.DOUBLE_GOLD), price1),
             CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 1,List.of(CardEffect.DOUBLE_GOLD), price2)
         };
+        assertEquals(1, actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame));
+    }
 
-        System.out.println(orientCardsToBuy[0].getPrice());
-        System.out.println(orientCardsToBuy[1].getPrice());
+    @Test
+    void testNewCanBeBought_HasGoldCard() {
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
+            put(Colour.BLUE, 0);
+            put(Colour.RED, 2);
+            put(Colour.BLACK, 0);
+            put(Colour.GREEN, 0);
+            put(Colour.WHITE, 0);
+            put(Colour.GOLD, 0);
+        }};
 
-        List<Action> actions = actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame);
-        System.out.println(actions);
+        PlayerInGame playerInGame = new PlayerInGame("ruoyu");
+        playerInGame.getTokenHand().addToken(playerWealth);
+        EnumMap<Colour, Integer> price1 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+        EnumMap<Colour, Integer> price2 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+        price1.put(Colour.RED, 3);
+        price2.put(Colour.BLUE, 3);
+        DevelopmentCard[] orientCardsToBuy = new DevelopmentCard[] {
+            CardFactory.getInstance().getOneOrientCard(Colour.RED, 1,List.of(CardEffect.DOUBLE_GOLD), price1),
+            CardFactory.getInstance().getOneOrientCard(Colour.BLUE, 1,List.of(CardEffect.DOUBLE_GOLD), price2)
+        };
+
+        playerInGame.getPurchasedHand().addDevelopmentCard(
+            CardFactory.getInstance().getOneOrientCard(Colour.RED, 1,List.of(CardEffect.DOUBLE_GOLD)));
+
+
+
+
+        actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame);
     }
 
 }

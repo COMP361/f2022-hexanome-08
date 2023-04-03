@@ -137,6 +137,7 @@ public class DevelopmentCard extends Card {
                          EnumMap<Colour, Integer> wealth,
                          int goldCardCount) {
     Logger logger = LoggerFactory.getLogger(DevelopmentCard.class);
+    logger.warn("Currently checking card price: " + super.getPrice());
 
     EnumMap<Colour, Integer> wealthWithoutGoldCard = new EnumMap<>(wealth);
     EnumMap<Colour, Integer> cardPrice = super.getPrice();
@@ -148,9 +149,6 @@ public class DevelopmentCard extends Card {
     int goldTokenNeededToPay = 0;
 
     // prioritizing card to use
-    logger.warn("Gold card in hand: " + goldCardCount);
-    logger.warn("Actual wealth: " + wealth);
-    logger.warn("Excluded gold card tokens: " + wealthWithoutGoldCard);
     if (goldCardCount > 0) {
       int[] goldTokenArr = new int[goldTokensFromCard];
       if (hasDoubleGoldPower) {
@@ -165,9 +163,6 @@ public class DevelopmentCard extends Card {
 
       int goldCardLeft = goldCardCount;
       while (goldCardLeft > 0) {
-        logger.warn("i index is: " + i);
-        logger.warn("gold token arr: " + Arrays.toString(goldTokenArr));
-        logger.warn("gold card left: " + goldCardLeft);
         for (Colour colour : diffPrice.keySet()) {
           // excluding gold token in here since we only consider gold token card
           if (colour != Colour.GOLD) {
