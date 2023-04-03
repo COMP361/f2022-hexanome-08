@@ -34,6 +34,13 @@ public class CardFactory {
         new ArrayList<>());
   }
 
+  public DevelopmentCard getOneBaseCard(Colour colour, int level, EnumMap<Colour, Integer> price) {
+
+    return new DevelopmentCard(5,
+        price, "c1", level, colour, 1,
+        new ArrayList<>());
+  }
+
   public DevelopmentCard getOneOrientCard(Colour colour, int level, List<CardEffect> effects) {
     EnumMap<Colour, Integer> price = SplendorDevHelper.getInstance().getRawTokenColoursMap();
     if (effects.contains(CardEffect.BURN_CARD)) {

@@ -326,7 +326,7 @@ public class TestActionGenerator {
         }
     }
     @Test
-    void testNewCanBeBought_NoGoldInvolved() {
+    void testNewCanBeBought_NoGoldInvolved1() {
         EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
             put(Colour.BLUE, 0);
             put(Colour.RED, 3);
@@ -345,6 +345,38 @@ public class TestActionGenerator {
         };
         assertEquals(1, actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame).size());
     }
+
+    @Test
+    void testNewCanBeBought_NoGoldInvolved2() {
+        EnumMap<Colour, Integer> playerWealth = new EnumMap<>(Colour.class){{
+            put(Colour.BLUE, 1);
+            put(Colour.RED, 1);
+            put(Colour.BLACK, 2);
+            put(Colour.GREEN, 1);
+            put(Colour.WHITE, 0);
+            put(Colour.GOLD, 0);
+        }};
+
+        PlayerInGame playerInGame = new PlayerInGame("ruoyu");
+        playerInGame.getTokenHand().addToken(playerWealth);
+        EnumMap<Colour, Integer> price1 = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+        price1.put(Colour.RED, 1);
+        price1.put(Colour.WHITE, 1);
+        price1.put(Colour.BLUE, 1);
+        price1.put(Colour.BLACK, 2);
+        playerInGame.getPurchasedHand().addDevelopmentCard(CardFactory.getInstance().getOneBaseCard(Colour.WHITE, 1, price1));
+
+        DevelopmentCard[] cardsToBuy = new DevelopmentCard[] {
+            CardFactory.getInstance().getOneBaseCard(Colour.WHITE, 1, price1)
+        };
+
+        System.out.println(playerInGame.getWealth());
+        System.out.println("Tokens in hand: " + playerInGame.getTokenHand().getAllTokens());
+        System.out.println("Gems in hand: " + playerInGame.getTotalGems());
+        PurchaseAction action = (PurchaseAction) actionGenerator.listOfDevCardsToPurchaseAction(cardsToBuy, 1, playerInGame).get(0);
+        System.out.println("Tokens to be paid: " + action.getTokensToBePaid());
+    }
+
 
 
 

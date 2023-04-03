@@ -244,7 +244,13 @@ public class DevelopmentCard extends Card {
         if (tokensOfColourLeft < 0) {
          finalResult.put(colour, tokensOfColourLeft);
         } else {
-          finalResult.put(colour, tokensOfColourHas + gemsOfColourHas - tokensOfColourLeft);
+          if (gemsOfColourHas - cardPrice.get(colour) >= 0) {
+            // if we have enough gem, player does not need to pay anything for this colour
+            finalResult.put(colour, 0);
+          } else {
+            // otherwise, some tokens need to be considered
+            finalResult.put(colour, tokensOfColourHas + gemsOfColourHas - tokensOfColourLeft);
+          }
         }
       }
     }
