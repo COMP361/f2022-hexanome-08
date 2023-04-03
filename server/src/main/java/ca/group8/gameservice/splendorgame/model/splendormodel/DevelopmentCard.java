@@ -249,7 +249,14 @@ public class DevelopmentCard extends Card {
             finalResult.put(colour, 0);
           } else {
             // otherwise, some tokens need to be considered
-            finalResult.put(colour, tokensOfColourHas + gemsOfColourHas - tokensOfColourLeft);
+            if (tokensOfColourLeft == 0) {
+              // we have just the right amount to pay off, thus all tokens will be used
+              finalResult.put(colour, tokensOfColourHas);
+            } else {
+              // tokensOfColourLeft > 0, which means that we have some tokens left
+              finalResult.put(colour, tokensOfColourHas - tokensOfColourLeft);
+            }
+
           }
         }
       }
