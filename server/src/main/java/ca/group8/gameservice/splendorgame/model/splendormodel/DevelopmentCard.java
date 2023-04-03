@@ -192,13 +192,18 @@ public class DevelopmentCard extends Card {
       }
     }
 
+    boolean allMatch = diffPrice.values().stream().allMatch(v -> v >= 0);
+    if (allMatch == false){
+      return null;
+    }
+
     //now i is the number of gold tokens use, need to find the best configuration
     int goldValueNeeded = i;
     int goldCardUsed = 0;
     int goldTokenUsed = 0;
 
     while (goldValueNeeded > 0 && (goldTokenCount>0 || goldCardCount>0)) {
-      if (goldCardCount > 0 && goldValueNeeded > 2){
+      if (goldCardCount > 0 && goldValueNeeded >= 2){
         goldValueNeeded -= 2;
         goldCardCount --;
         goldCardUsed ++;
@@ -214,9 +219,7 @@ public class DevelopmentCard extends Card {
     }
 
     //if gold token used is still >0 card cannot be bought
-    if (goldValueNeeded>0){
-      return null;
-    }
+
     //if its less than zero than we have a spare gold token from gold card to assign
     if (goldValueNeeded < 0) {
       int newIndex = goldTokenArr[0];

@@ -488,8 +488,6 @@ public class TestActionGenerator {
         System.out.println("Gems: " + playerInGame.getTotalGems());
         System.out.println("Tokens: " + playerInGame.getTokenHand().getAllTokens());
         List<Action> actions = actionGenerator.listOfDevCardsToPurchaseAction(orientCardsToBuy, 1, playerInGame);
-        PurchaseAction purchaseAction = (PurchaseAction) actions.get(0);
-        System.out.println("Paying: " + purchaseAction.getTokensToBePaid());
         assertTrue(actions.isEmpty());
         //PurchaseAction purchaseAction = (PurchaseAction) actions.get(0);
         //System.out.println("Tokens needed to be paid: " + purchaseAction.getTokensToBePaid());
