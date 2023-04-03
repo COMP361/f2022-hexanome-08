@@ -186,7 +186,7 @@ public class DevelopmentCard extends Card {
           int newValue = diffPrice.get(colour) + goldTokenArr[i];
           i += 1;
           int oldValue = tokensToPay.get(colour);
-          tokensToPay.put(colour,  oldValue - 1);
+          tokensToPay.put(colour,  oldValue - goldTokenArr[i]);
           diffPrice.put(colour, newValue);
         }
       }
@@ -217,189 +217,200 @@ public class DevelopmentCard extends Card {
     if (goldValueNeeded>0){
       return null;
     }
-    //if its greater than zero than we have a spare gold token from gold card to assign
-
+    //if its less than zero than we have a spare gold token from gold card to assign
+    if (goldValueNeeded < 0) {
+      int newIndex = goldTokenArr[0];
+      for (Colour colour : tokensToPay.keySet()) {
+        int oldTokensToPay = tokensToPay.get(colour);
+        if (oldTokensToPay > 0) {
+          tokensToPay.put(colour, oldTokensToPay - newIndex);
+        }
+      }
+    }
 
     //now just assign  gold tokens and card used and return
+    tokensToPay.put(Colour.GOLD , goldTokenUsed);
+    tokensToPay.put(Colour.ORIENT , goldCardUsed);
+    return tokensToPay;
 
 
 
 
 
     ///endddd
-
-    if (goldTokenArr.length - i > 0) {
-      int newIndex = goldTokenArr.length - i;
-      for (Colour colour : tokensToPay.keySet()) {
-        int oldTokensToPay = tokensToPay.get(colour);
-        if (oldTokensToPay > 0) {
-          //tokensToPay.put(colour, oldTokensToPay - );
-
-        }
-      }
-    }
-
-
-    if (diffPrice.values().stream().anyMatch(v -> v < 0)) {
-      int goldTokensInHand = allTokens.get(Colour.GOLD);
-      if (goldTokensInHand > 0) {
-        goldTokenNeededToPay += computeGoldTokensNeeded(
-            goldTokensInHand,
-            hasDoubleGoldPower,
-            diffPrice);
-      }
-    }
-
-
-
-    //////// end of julias implementation
-
-
-    // prioritizing using gold card to pay off the difference
-    if (goldCardCount > 0) {
-      int[] goldTokenArr = new int[goldTokensFromCard];
-      if (hasDoubleGoldPower) {
-        // this len = goldTokenCount array [2,2,2,2..] is used to consider the double gold
-        // whenever in the diff price map we need a gold token to make up the price diff,
-        // we take an entry out of the array, make it to zero and add it to the diff price map
-        Arrays.fill(goldTokenArr, 2);
-      } else {
-        Arrays.fill(goldTokenArr, 1);
-      }
-      int i = 0;
-      for (Colour colour : diffPrice.keySet()) {
-        // excluding gold token in here since we only consider gold token card
-        if (colour != Colour.GOLD) {
-          while (diffPrice.get(colour) < 0 && i < goldTokenArr.length) {
-            int newValue = diffPrice.get(colour) + goldTokenArr[i];
-            i += 1;
-            int oldValue = tokensToPay.get(colour);
-            tokensToPay.put(colour,  oldValue - 1);
-            diffPrice.put(colour, newValue);
-          }
-        }
-      }
-
-      if (goldTokenArr.length - i > 0) {
-        int newIndex = goldTokenArr.length - i;
-        for (Colour colour : tokensToPay.keySet()) {
-          int oldTokensToPay = tokensToPay.get(colour);
-          if (oldTokensToPay > 0) {
-            //tokensToPay.put(colour, oldTokensToPay - );
-
-          }
-        }
-      }
-
-      //while (goldCardLeft > 0) {
-      //  for (Colour colour : diffPrice.keySet()) {
-      //    // excluding gold token in here since we only consider gold token card
-      //    if (colour != Colour.GOLD) {
-      //      while (diffPrice.get(colour) < 0) {
-      //        int newValue = diffPrice.get(colour) + goldTokenArr[i];
-      //        i += 1;
-      //        int oldValue = tokensToPay.get(colour);
-      //        tokensToPay.put(colour,  oldValue - 1);
-      //        if (i >= goldTokenArr.length) {
-      //          break;
-      //        }
-      //        diffPrice.put(colour, newValue);
-      //
-      //        // given i is a legal index value
-      //        // if i is odd -> we just used the first token of the card
-      //        //    -> it is possible to keep using another token of this colour if all other price
-      //        //      are non-negative
-      //        //
-      //        // if i is even -> we just used the second (last) token of the card
-      //        if (i % 2 == 1) {
-      //          if (diffPrice.values().stream().allMatch(v -> v >= 0)) {
-      //            continue;
-      //          }
-      //
-      //        }
-      //
-      //        //if (newValue == 0) {
-      //        //  // the new value becomes 0, it is only necessary to add more
-      //        //  // if we just used the first gold token of the card -> means this
-      //        //  // current i-value should be odd
-      //        //  // besides that, we must have all other values of diffPrice being non-negative
-      //        //  // otherwise we do not have the money to save for this particular colour
-      //        //  if (i % 2 == 1 && diffPrice.values().stream().noneMatch(v -> v < 0)) {
-      //        //    newValue = diffPrice.get(colour) + goldTokenArr[i];
-      //        //    i += 1;
-      //        //  }
-      //        //  // if any of the two condition failed above, we shall not consider saving
-      //        //  // token for this colour
-      //        //  diffPrice.put(colour, newValue);
-      //        //  goldCardLeft -= 1;
-      //        //  goldTokenNeededToPay += 2;
-      //        //}
-      //      }
-      //    }
-      //  }
-      //  if (i >= goldTokenArr.length) {
-      //    break;
-      //  }
-      //}
-
-
-      // after this computation, it is possible that we still need the help
-      // from gold tokens (still have some negative number), then we need to
-      // consider the
-      if (diffPrice.values().stream().anyMatch(v -> v < 0)) {
-        int goldTokensInHand = allTokens.get(Colour.GOLD);
-        if (goldTokensInHand > 0) {
-          goldTokenNeededToPay += computeGoldTokensNeeded(
-              goldTokensInHand,
-              hasDoubleGoldPower,
-              diffPrice);
-        }
-      }
-
-    } else {
-      // we do not have any gold card, then do a regular check with gold tokens in hand
-      int goldTokensInHand = allTokens.get(Colour.GOLD);
-      if (goldTokensInHand > 0) {
-        goldTokenNeededToPay += computeGoldTokensNeeded(
-            goldTokensInHand,
-            hasDoubleGoldPower,
-            diffPrice);
-      }
-    }
-
-    EnumMap<Colour, Integer> finalResult = SplendorDevHelper.getInstance().getRawTokenColoursMap();
-
-    // store gold tokens needed in here
-    allTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
-    allGems = new EnumMap<>(curPlayerInfo.getTotalGems());
-    finalResult.put(Colour.GOLD, goldTokenNeededToPay);
-    for (Colour colour : allTokens.keySet()) {
-      if (colour != Colour.GOLD) {
-        int tokensOfColourHas = allTokens.get(colour);
-        int gemsOfColourHas = allGems.get(colour);
-        int tokensOfColourLeft = diffPrice.get(colour);
-        if (tokensOfColourLeft < 0) {
-          finalResult.put(colour, tokensOfColourLeft);
-        } else {
-          if (gemsOfColourHas - cardPrice.get(colour) >= 0) {
-            // if we have enough gem, player does not need to pay anything for this colour
-            finalResult.put(colour, 0);
-          } else {
-            // otherwise, some tokens need to be considered
-            if (tokensOfColourLeft == 0) {
-              // we have just the right amount to pay off, thus all tokens will be used
-              finalResult.put(colour, tokensOfColourHas);
-            } else {
-              // tokensOfColourLeft > 0, which means that we have some tokens left
-              finalResult.put(colour, tokensOfColourHas - tokensOfColourLeft);
-            }
-
-          }
-        }
-      }
-    }
-
-    return finalResult;
+//
+//    if (goldTokenArr.length - i > 0) {
+//      int newIndex = goldTokenArr.length - i;
+//      for (Colour colour : tokensToPay.keySet()) {
+//        int oldTokensToPay = tokensToPay.get(colour);
+//        if (oldTokensToPay > 0) {
+//          //tokensToPay.put(colour, oldTokensToPay - );
+//
+//        }
+//      }
+//    }
+//
+//
+//    if (diffPrice.values().stream().anyMatch(v -> v < 0)) {
+//      int goldTokensInHand = allTokens.get(Colour.GOLD);
+//      if (goldTokensInHand > 0) {
+//        goldTokenNeededToPay += computeGoldTokensNeeded(
+//            goldTokensInHand,
+//            hasDoubleGoldPower,
+//            diffPrice);
+//      }
+//    }
+//
+//
+//
+//    //////// end of julias implementation
+//
+//
+//    // prioritizing using gold card to pay off the difference
+//    if (goldCardCount > 0) {
+//      int[] goldTokenArr = new int[goldTokensFromCard];
+//      if (hasDoubleGoldPower) {
+//        // this len = goldTokenCount array [2,2,2,2..] is used to consider the double gold
+//        // whenever in the diff price map we need a gold token to make up the price diff,
+//        // we take an entry out of the array, make it to zero and add it to the diff price map
+//        Arrays.fill(goldTokenArr, 2);
+//      } else {
+//        Arrays.fill(goldTokenArr, 1);
+//      }
+//      int i = 0;
+//      for (Colour colour : diffPrice.keySet()) {
+//        // excluding gold token in here since we only consider gold token card
+//        if (colour != Colour.GOLD) {
+//          while (diffPrice.get(colour) < 0 && i < goldTokenArr.length) {
+//            int newValue = diffPrice.get(colour) + goldTokenArr[i];
+//            i += 1;
+//            int oldValue = tokensToPay.get(colour);
+//            tokensToPay.put(colour,  oldValue - 1);
+//            diffPrice.put(colour, newValue);
+//          }
+//        }
+//      }
+//
+//      if (goldTokenArr.length - i > 0) {
+//        int newIndex = goldTokenArr.length - i;
+//        for (Colour colour : tokensToPay.keySet()) {
+//          int oldTokensToPay = tokensToPay.get(colour);
+//          if (oldTokensToPay > 0) {
+//            //tokensToPay.put(colour, oldTokensToPay - );
+//
+//          }
+//        }
+//      }
+//
+//      //while (goldCardLeft > 0) {
+//      //  for (Colour colour : diffPrice.keySet()) {
+//      //    // excluding gold token in here since we only consider gold token card
+//      //    if (colour != Colour.GOLD) {
+//      //      while (diffPrice.get(colour) < 0) {
+//      //        int newValue = diffPrice.get(colour) + goldTokenArr[i];
+//      //        i += 1;
+//      //        int oldValue = tokensToPay.get(colour);
+//      //        tokensToPay.put(colour,  oldValue - 1);
+//      //        if (i >= goldTokenArr.length) {
+//      //          break;
+//      //        }
+//      //        diffPrice.put(colour, newValue);
+//      //
+//      //        // given i is a legal index value
+//      //        // if i is odd -> we just used the first token of the card
+//      //        //    -> it is possible to keep using another token of this colour if all other price
+//      //        //      are non-negative
+//      //        //
+//      //        // if i is even -> we just used the second (last) token of the card
+//      //        if (i % 2 == 1) {
+//      //          if (diffPrice.values().stream().allMatch(v -> v >= 0)) {
+//      //            continue;
+//      //          }
+//      //
+//      //        }
+//      //
+//      //        //if (newValue == 0) {
+//      //        //  // the new value becomes 0, it is only necessary to add more
+//      //        //  // if we just used the first gold token of the card -> means this
+//      //        //  // current i-value should be odd
+//      //        //  // besides that, we must have all other values of diffPrice being non-negative
+//      //        //  // otherwise we do not have the money to save for this particular colour
+//      //        //  if (i % 2 == 1 && diffPrice.values().stream().noneMatch(v -> v < 0)) {
+//      //        //    newValue = diffPrice.get(colour) + goldTokenArr[i];
+//      //        //    i += 1;
+//      //        //  }
+//      //        //  // if any of the two condition failed above, we shall not consider saving
+//      //        //  // token for this colour
+//      //        //  diffPrice.put(colour, newValue);
+//      //        //  goldCardLeft -= 1;
+//      //        //  goldTokenNeededToPay += 2;
+//      //        //}
+//      //      }
+//      //    }
+//      //  }
+//      //  if (i >= goldTokenArr.length) {
+//      //    break;
+//      //  }
+//      //}
+//
+//
+//      // after this computation, it is possible that we still need the help
+//      // from gold tokens (still have some negative number), then we need to
+//      // consider the
+//      if (diffPrice.values().stream().anyMatch(v -> v < 0)) {
+//        int goldTokensInHand = allTokens.get(Colour.GOLD);
+//        if (goldTokensInHand > 0) {
+//          goldTokenNeededToPay += computeGoldTokensNeeded(
+//              goldTokensInHand,
+//              hasDoubleGoldPower,
+//              diffPrice);
+//        }
+//      }
+//
+//    } else {
+//      // we do not have any gold card, then do a regular check with gold tokens in hand
+//      int goldTokensInHand = allTokens.get(Colour.GOLD);
+//      if (goldTokensInHand > 0) {
+//        goldTokenNeededToPay += computeGoldTokensNeeded(
+//            goldTokensInHand,
+//            hasDoubleGoldPower,
+//            diffPrice);
+//      }
+//    }
+//
+//    EnumMap<Colour, Integer> finalResult = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+//
+//    // store gold tokens needed in here
+//    allTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
+//    allGems = new EnumMap<>(curPlayerInfo.getTotalGems());
+//    finalResult.put(Colour.GOLD, goldTokenNeededToPay);
+//    for (Colour colour : allTokens.keySet()) {
+//      if (colour != Colour.GOLD) {
+//        int tokensOfColourHas = allTokens.get(colour);
+//        int gemsOfColourHas = allGems.get(colour);
+//        int tokensOfColourLeft = diffPrice.get(colour);
+//        if (tokensOfColourLeft < 0) {
+//          finalResult.put(colour, tokensOfColourLeft);
+//        } else {
+//          if (gemsOfColourHas - cardPrice.get(colour) >= 0) {
+//            // if we have enough gem, player does not need to pay anything for this colour
+//            finalResult.put(colour, 0);
+//          } else {
+//            // otherwise, some tokens need to be considered
+//            if (tokensOfColourLeft == 0) {
+//              // we have just the right amount to pay off, thus all tokens will be used
+//              finalResult.put(colour, tokensOfColourHas);
+//            } else {
+//              // tokensOfColourLeft > 0, which means that we have some tokens left
+//              finalResult.put(colour, tokensOfColourHas - tokensOfColourLeft);
+//            }
+//
+//          }
+//        }
+//      }
+//    }
+//
+//    return finalResult;
 
   }
 

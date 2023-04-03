@@ -108,22 +108,11 @@ public class ActionGenerator {
 
 
   private PurchaseAction regularCardToPurchaseAction(DevelopmentCard card, Position cardPosition,
-                                                     EnumMap<Colour, Integer> totalTokens,
                                                      EnumMap<Colour, Integer> tokensPaid) {
-    int goldTokenNeeded = tokensPaid.get(Colour.GOLD);
-    int goldCardsNeeded = 0;
-    if (goldTokenNeeded > 0) {
-      int goldTokensInHand = totalTokens.get(Colour.GOLD);
-      if (goldTokensInHand >= goldTokenNeeded) {
-        // if we have more gold tokens in hand than needed, then we pay needed amount
-        tokensPaid.put(Colour.GOLD, goldTokenNeeded);
-      } else {
-        // if we do not have enough gold tokens, then the rest must be from gold cards
-        goldCardsNeeded = (int) Math.round((double) (goldTokenNeeded - goldTokensInHand) / 2);
-        int goldTokensToPay = goldTokenNeeded - 2 * goldCardsNeeded;
-        tokensPaid.put(Colour.GOLD, goldTokensToPay);
-      }
-    }
+
+    int goldCardsNeeded = tokensPaid.get(Colour.ORIENT);
+    tokensPaid.remove(Colour.ORIENT);
+
     return new PurchaseAction(cardPosition, card, goldCardsNeeded, tokensPaid);
   }
 
@@ -179,23 +168,18 @@ public class ActionGenerator {
         if (hasCardToPair) {
           EnumMap<Colour, Integer> tokensPaid =
               card.canBeBought(hasDoubleGoldPower, curPlayerInfo);
-
-          if (tokensPaid.values().stream().noneMatch(v -> v < 0)) {
-            // if there is no negative number to pay, then this is a valid price to pay
-            EnumMap<Colour, Integer> allTokens =
-                new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
-            result.add(regularCardToPurchaseAction(card, cardPosition, allTokens, tokensPaid));
+          if (tokensPaid == null){
+            continue;
           }
+          result.add(regularCardToPurchaseAction(card, cardPosition, tokensPaid));
         }
       } else { // for all other orient/base cards with no special buying conditions
         EnumMap<Colour, Integer> tokensPaid =
             card.canBeBought(hasDoubleGoldPower, curPlayerInfo);
-        // if there is no negative number to pay, then this is a valid price to pay
-        if (tokensPaid.values().stream().noneMatch(v -> v < 0)) {
-          EnumMap<Colour, Integer> allTokens =
-              new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
-          result.add(regularCardToPurchaseAction(card, cardPosition, allTokens, tokensPaid));
+        if (tokensPaid == null){
+          continue;
         }
+        result.add(regularCardToPurchaseAction(card, cardPosition, tokensPaid));
       }
     }
     return result;
