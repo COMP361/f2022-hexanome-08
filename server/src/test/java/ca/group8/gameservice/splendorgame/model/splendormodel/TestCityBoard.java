@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,18 +45,13 @@ public class TestCityBoard {
     assertEquals(cardToAssign, cityBoard.getPlayerCities().get("Bob"));
   }
 
-  //@Test
-  //void testAssignCityCard_Failure() {
-  //  CityCard cardToAssign = testCityCards[1];
-  //  cityBoard.assignCityCard("RandomGuy", cardToAssign);
-  //  // The city card should stay on board
-  //  assertEquals(cardToAssign, cityBoard.getAllCityCards()[1]);
-  //  // all players have no card assigned to them
-  //  Map<String, CityCard> playerCities = cityBoard.getPlayerCities();
-  //  assertTrue(playerCities.keySet()
-  //      .stream()
-  //      .allMatch(name -> playerCities.get(name) == null));
-  //}
+  @Test
+  void testRenamePlayers() {
+    List<String> newPlayerNames = new ArrayList<>(Arrays.asList("ruoyu", "julia"));
+    cityBoard.renamePlayers(newPlayerNames);
+    assertEquals(new HashSet<>(newPlayerNames), cityBoard.getPlayerCities().keySet());
+
+  }
 
 
 }
