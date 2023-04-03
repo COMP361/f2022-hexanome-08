@@ -4,10 +4,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import project.App;
 
 public class PlayerImageGuiController implements Initializable {
@@ -32,6 +35,9 @@ public class PlayerImageGuiController implements Initializable {
 
   @FXML
   private ImageView playerImageView;
+
+  @FXML
+  private Circle reservedInfoCircle;
 
   private final String playerName;
 
@@ -64,5 +70,18 @@ public class PlayerImageGuiController implements Initializable {
       armImageView.setImage(new Image(App.getArmPath(armCode)));
     }
     playerImageView.setImage(App.getPlayerImage(playerName));
+
+    Tooltip tooltip = new Tooltip(
+        "The number on the left is the number of reserved nobles\n" +
+            "The number on the right is the number of reserved cards");
+    tooltip.setShowDelay(Duration.millis(20));
+    tooltip.setStyle("-fx-font-size: 15px;");
+    reservedInfoCircle.setOnMouseEntered(e-> {
+      Tooltip.install(reservedInfoCircle, tooltip);
+    });
+
+    reservedInfoCircle.setOnMouseExited(e-> {
+      Tooltip.uninstall(reservedInfoCircle, tooltip);
+    });
   }
 }

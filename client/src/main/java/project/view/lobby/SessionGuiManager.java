@@ -72,9 +72,17 @@ public class SessionGuiManager extends VBox {
     // now put every session gui together
     containsUserSessionList.addAll(otherUserSessionList);
     for (SessionGui sessionGui : containsUserSessionList) {
-      if (sessionGui.getCurSession().isLaunched()) {
-        sessionGui.setStyle("-fx-border-width:8; -fx-border-color:green");
+      List<String> playerNames = sessionGui.getCurSession().getPlayers();
+      String curUserName = sessionGui.getCurUser().getUsername();
+
+      if (playerNames.contains(curUserName)) {
+        if (sessionGui.getCurSession().isLaunched()) {
+          sessionGui.setStyle("-fx-border-width:6; -fx-border-color:#41de00");
+        } else {
+          sessionGui.setStyle("-fx-border-width:6; -fx-border-color:#ffb366");
+        }
       }
+
       Platform.runLater(() -> {
         sessionsVbox.getChildren().add(sessionGui);
       });

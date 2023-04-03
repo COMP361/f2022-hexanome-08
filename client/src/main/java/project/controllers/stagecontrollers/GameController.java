@@ -469,7 +469,7 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("noble_action_pop_up.fxml",
               new ActOnNoblePopUpController(gameId, playerActionMap, true),
-              config.getSmallPopUpWidth(),
+              config.getSmallPopUpWidth() / 3 * 5,
               config.getSmallPopUpHeight());
         });
       });
@@ -478,7 +478,7 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("noble_action_pop_up.fxml",
             new ActOnNoblePopUpController(gameId, playerActionMap, true),
-            config.getSmallPopUpWidth(),
+            config.getSmallPopUpWidth() / 3 * 5,
             config.getSmallPopUpHeight());
       });
     }

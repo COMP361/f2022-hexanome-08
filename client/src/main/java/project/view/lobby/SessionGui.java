@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import project.App;
 import project.connection.LobbyRequestSender;
+import project.controllers.guielementcontroller.SessionGuiController;
 import project.controllers.stagecontrollers.GameController;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
@@ -46,6 +47,7 @@ public class SessionGui extends HBox {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass()
         .getResource("/project/session_gui.fxml"));
     fxmlLoader.setRoot(this);
+    fxmlLoader.setController(new SessionGuiController(curSession));
     try {
       fxmlLoader.load();
     } catch (IOException e) {
@@ -55,25 +57,8 @@ public class SessionGui extends HBox {
 
   public void setup() {
     setSessionButtons();
-    setSessionInfoText();
-  }
 
-  private String formatSessionInfo(Session session) {
-    List<String> curPlayers = session.getPlayers();
-    String curPlayerStr = curPlayers.toString();
-    String creatorName = session.getCreator();
-    int curPlayersCount = curPlayers.size();
-    int maxPlayerCount = session.getGameParameters().getMaxSessionPlayers();
-    String displayGameName = session.getGameParameters().getDisplayName();
-    return String.format(
-        "%s, [%d/%d] players %s: \n",
-        displayGameName,
-        curPlayersCount,
-        maxPlayerCount,
-        curPlayerStr)
-        + String.format("creator: %s", creatorName);
   }
-
   public Session getCurSession() {
     return curSession;
   }
@@ -90,14 +75,6 @@ public class SessionGui extends HBox {
     return curUser;
   }
 
-  /**
-   * Sets the text information for the current session.
-   */
-  public void setSessionInfoText() {
-    String sessionInfo = formatSessionInfo(curSession);
-    Label sessionInfoLabel = (Label) this.getChildren().get(0);
-    sessionInfoLabel.setText(sessionInfo);
-  }
 
   private EventHandler<ActionEvent> createWatchGameHandler() {
     return event -> {
@@ -234,60 +211,4 @@ public class SessionGui extends HBox {
       }
     }
   }
-
-  /**
-   * To updateSessionGui.
-   */
-  public void updateSessionGui() {
-    // if user is in this game, then we only need to delete the Leave button to Play
-    // if user is NOT in this game, change the Join button to Watch
-    // either way, we are just removing one button and create a new one
-    String curUserName = curUser.getUsername();
-    List<String> curPlayers = curSession.getPlayers();
-    VBox buttonsVbox = (VBox) this.getChildren().get(2);
-    Button topButton = (Button) buttonsVbox.getChildren().get(0);
-    Button btmButton = (Button) buttonsVbox.getChildren().get(1);
-    topButton.setVisible(false);
-    btmButton.setVisible(false);
-
-    if (curSession.isLaunched()) {
-      topButton.setVisible(true);
-      if (curPlayers.contains(curUserName)) {
-        // Play button case
-        topButton.setText("Play");
-        topButton.setOnAction(createPlayGameHandler());
-      } else {
-        // Watch button case
-        topButton.setText("Watch");
-        topButton.setOnAction(createWatchGameHandler());
-      }
-    } else {
-      String sessionCreator = curSession.getCreator();
-      if (curUserName.equals(sessionCreator)) {
-        topButton.setVisible(true);
-        btmButton.setVisible(true);
-        topButton.setText("Delete");
-        btmButton.setText("Launch");
-        topButton.setOnAction(createDeleteSessionHandler());
-        btmButton.setOnAction(createLaunchSessionHandler());
-
-        int curPlayersCount = curPlayers.size();
-        int minPlayersCount = curSession.getGameParameters().getMinSessionPlayers();
-
-        // delete and launch (clickable or not depends on curPlayer < minPlayer or not)
-        btmButton.setDisable(curPlayersCount < minPlayersCount);
-      } else {
-        topButton.setVisible(true);
-        topButton.setOnAction(createJoinLeaveSessionHandler());
-        if (curPlayers.contains(curUserName)) {
-          // leave button case
-          topButton.setText("Leave");
-        } else {
-          // join button case
-          topButton.setText("Join");
-        }
-      }
-    }
-  }
-
 }
