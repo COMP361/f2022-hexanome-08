@@ -138,10 +138,6 @@ public class DevelopmentCard extends Card {
     Logger logger = LoggerFactory.getLogger(DevelopmentCard.class);
     EnumMap<Colour, Integer> wealth = new EnumMap<>(curPlayerInfo.getWealth());
     EnumMap<Colour, Integer> wealthWithoutGoldCard = new EnumMap<>(curPlayerInfo.getWealth());
-    // discount (dev cards)
-    EnumMap<Colour, Integer> allGems = new EnumMap<>(curPlayerInfo.getTotalGems());
-    // (tokens)
-    EnumMap<Colour, Integer> allTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
     int goldCardCount = (int) curPlayerInfo.getPurchasedHand().getDevelopmentCards()
         .stream().filter(c -> c.getGemColour() == Colour.GOLD).count();
 
@@ -235,6 +231,8 @@ public class DevelopmentCard extends Card {
     EnumMap<Colour, Integer> finalResult = SplendorDevHelper.getInstance().getRawTokenColoursMap();
 
     // store gold tokens needed in here
+    EnumMap<Colour, Integer> allTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
+    EnumMap<Colour, Integer> allGems = new EnumMap<>(curPlayerInfo.getTotalGems());
     finalResult.put(Colour.GOLD, goldTokenNeededToPay);
     for (Colour colour : allTokens.keySet()) {
       if (colour != Colour.GOLD) {
@@ -242,7 +240,7 @@ public class DevelopmentCard extends Card {
         int gemsOfColourHas = allGems.get(colour);
         int tokensOfColourLeft = diffPrice.get(colour);
         if (tokensOfColourLeft < 0) {
-         finalResult.put(colour, tokensOfColourLeft);
+          finalResult.put(colour, tokensOfColourLeft);
         } else {
           if (gemsOfColourHas - cardPrice.get(colour) >= 0) {
             // if we have enough gem, player does not need to pay anything for this colour

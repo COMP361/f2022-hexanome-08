@@ -128,9 +128,14 @@ public class ActionGenerator {
   }
 
 
-
-
-
+  /**
+   * Translate a list of development cards to purchase actions.
+   *
+   * @param cards cards to be translated
+   * @param level level of the cards, 0 if it's reserved hand
+   * @param curPlayerInfo player info
+   * @return list of purchase actions generated
+   */
   public List<Action> listOfDevCardsToPurchaseAction(DevelopmentCard[] cards, int level,
                                                       PlayerInGame curPlayerInfo) {
 
@@ -170,23 +175,25 @@ public class ActionGenerator {
             break;
           }
         }
+        // this card can be bought (can be paired)
         if (hasCardToPair) {
-          // this card can be bought (can be paired)
           EnumMap<Colour, Integer> tokensPaid =
               card.canBeBought(hasDoubleGoldPower, curPlayerInfo);
-          // if there is no negative number to pay, then this is a valid price to pay
+
           if (tokensPaid.values().stream().noneMatch(v -> v < 0)) {
-            EnumMap<Colour, Integer> allTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
+            // if there is no negative number to pay, then this is a valid price to pay
+            EnumMap<Colour, Integer> allTokens =
+                new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
             result.add(regularCardToPurchaseAction(card, cardPosition, allTokens, tokensPaid));
           }
         }
-      } else {
-        // for all other orient/base cards with no special buying conditions
+      } else { // for all other orient/base cards with no special buying conditions
         EnumMap<Colour, Integer> tokensPaid =
             card.canBeBought(hasDoubleGoldPower, curPlayerInfo);
         // if there is no negative number to pay, then this is a valid price to pay
         if (tokensPaid.values().stream().noneMatch(v -> v < 0)) {
-          EnumMap<Colour, Integer> allTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
+          EnumMap<Colour, Integer> allTokens =
+              new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
           result.add(regularCardToPurchaseAction(card, cardPosition, allTokens, tokensPaid));
         }
       }
