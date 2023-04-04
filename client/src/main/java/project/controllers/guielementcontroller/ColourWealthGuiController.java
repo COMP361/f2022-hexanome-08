@@ -46,13 +46,15 @@ public class ColourWealthGuiController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     String colourString = App.getColourStringMap().get(colour);
-    String tipInfo =
-        "Number on left is the number of cards of this corresponding colour in hand\n" +
-            "Number on right is the number of tokens of this corresponding colour in hand";
+    String tipInfo;
     if (colour == Colour.GOLD) {
-      tipInfo += "\nNote that gold card can not be paired!";
+      tipInfo = "Number on left is the number of orient double gold token cards in hand\n" +
+          "Number on right is the number of tokens of this corresponding colour in hand";
+    } else {
+      tipInfo = "Number on left is the number of cards of this corresponding colour in hand\n" +
+          "Number on right is the number of tokens of this corresponding colour in hand";
     }
-    App.bindToolTip(tipInfo,15,backgroundRectangle, 20);
+    App.bindToolTip(tipInfo,15, backgroundRectangle, 20);
     backgroundRectangle.setFill(Color.web(colourString));
     if (colour == Colour.BLACK) {
       gemCountText.setFill(Color.WHITE);

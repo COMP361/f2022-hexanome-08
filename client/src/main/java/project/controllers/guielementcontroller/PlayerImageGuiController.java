@@ -47,6 +47,8 @@ public class PlayerImageGuiController implements Initializable {
   @FXML
   private Circle reservedInfoCircle;
 
+  @FXML
+  private Circle pointsCircle;
   private final String playerName;
 
   private final int armCode;
@@ -85,6 +87,10 @@ public class PlayerImageGuiController implements Initializable {
     String tipInfo = "The number on the left is the number of reserved nobles\n" +
         "The number on the right is the number of reserved cards";
     App.bindToolTip(tipInfo, 15, reservedInfoCircle, 20);
+
+    String pointsInfo = "Player's prestige points out of 15";
+    App.bindToolTip(pointsInfo, 15, pointsCircle, 20);
+
     String playerImageViewTip = "Click on to see the player's purchased hand!";
     // only bind the tooltip except the current user's image view
     if (!App.getUser().getUsername().equals(playerName)) {

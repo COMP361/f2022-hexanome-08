@@ -46,7 +46,7 @@ public class SessionGuiController implements Initializable {
     String creatorInfo = String.format("creator: %s", session.getCreator());
     creatorNameLabel.setText(creatorInfo);
 
-    String playerInfos = String.format("players: [%s/%s-%s]\n%s",
+    String playerInfos = String.format("players [%s/%s-%s]: %s",
         session.getPlayers().size(),
         session.getGameParameters().getMinSessionPlayers(),
         session.getGameParameters().getMaxSessionPlayers(),
@@ -54,9 +54,7 @@ public class SessionGuiController implements Initializable {
     playerInfosLabel.setText(playerInfos);
 
     if (!session.getSavegameid().isEmpty()) {
-      saveGameIdLabel.setText("saved game id");
-      String saveGameInfo = session.getSavegameid();
-      App.bindToolTip(saveGameInfo, 15, saveGameIdLabel, 20);
+      saveGameIdLabel.setText("saved game id: " + session.getSavegameid());
     }
   }
 }

@@ -10,31 +10,31 @@
 
 <fx:root alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="140.0" prefWidth="840.0" style="-fx-border-width: 6; -fx-border-color: lightblue;" type="HBox" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-      <AnchorPane prefHeight="128.0" prefWidth="294.0">
+      <AnchorPane prefHeight="128.0" prefWidth="700.0">
          <children>
-            <Label fx:id="gameNameLabel" layoutX="8.0" prefHeight="41.0" prefWidth="244.0" textFill="#00aeff">
+            <Label fx:id="gameNameLabel" layoutX="8.0" prefHeight="41.0" prefWidth="329.0" text="Game Display" textFill="#00aeff">
                <font>
                   <Font name="MesloLGS NF Bold Italic" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="creatorNameLabel" layoutX="8.0" layoutY="32.0" prefHeight="26.0" prefWidth="250.0" textFill="#75c8fa">
+            <Label fx:id="creatorNameLabel" layoutX="8.0" layoutY="40.0" prefHeight="26.0" prefWidth="558.0" text="creator: 123" textFill="#75c8fa">
                <font>
-                  <Font name="MesloLGS NF Bold Italic" size="12.0" />
+                  <Font name="MesloLGS NF Bold Italic" size="14.0" />
                </font>
             </Label>
-            <Label fx:id="playerInfosLabel" layoutX="8.0" layoutY="58.0" prefHeight="41.0" prefWidth="250.0" textFill="#75c8fa">
+            <Label fx:id="playerInfosLabel" layoutX="8.0" layoutY="60.0" prefHeight="41.0" prefWidth="586.0" text="players: []" textFill="#75c8fa">
                <font>
-                  <Font name="MesloLGS NF Bold Italic" size="12.0" />
+                  <Font name="MesloLGS NF Bold Italic" size="16.0" />
                </font>
             </Label>
-            <Label fx:id="saveGameIdLabel" layoutX="8.0" layoutY="101.0" prefHeight="26.0" prefWidth="118.0" textFill="#00a1ff">
+            <Label fx:id="saveGameIdLabel" layoutX="8.0" layoutY="100.0" prefHeight="26.0" prefWidth="513.0" text="save game id:" textFill="#00a1ff">
                <font>
-                  <Font name="MesloLGS NF Bold Italic" size="12.0" />
+                  <Font name="MesloLGS NF Bold Italic" size="14.0" />
                </font>
             </Label>
          </children>
       </AnchorPane>
-        <Region prefHeight="140.0" prefWidth="450.0" />
+        <Region prefHeight="128.0" prefWidth="178.0" />
         <VBox fx:id="buttonsVbox" prefHeight="140.0" prefWidth="175.0" spacing="10.0">
             <children>
                 <Button fx:id="topButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="177.0" text="Button" visible="false" />
