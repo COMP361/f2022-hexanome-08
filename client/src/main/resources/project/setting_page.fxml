@@ -63,7 +63,7 @@
                 <Font size="54.0" />
             </font>
         </Label>
-        <VBox layoutX="19.0" layoutY="17.0" prefHeight="200.0" prefWidth="100.0" style="-fx-border-width: 5; -fx-border-color: blue;">
+        <VBox fx:id="playerVisualInfoVbox" layoutX="19.0" layoutY="17.0" prefHeight="200.0" prefWidth="100.0" style="-fx-border-width: 5; -fx-border-color: blue;">
             <children>
                 <ImageView fx:id="userImageView" fitHeight="229.0" fitWidth="273.0" pickOnBounds="true" preserveRatio="true" />
                 <Label fx:id="userNameLabel" prefHeight="19.0" prefWidth="274.0" textFill="#0026ff">

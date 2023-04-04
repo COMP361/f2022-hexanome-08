@@ -35,6 +35,7 @@ import project.controllers.popupcontrollers.GameOverPopUpController;
 import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.controllers.stagecontrollers.AdminPageController;
 import project.controllers.stagecontrollers.LogInController;
+import project.controllers.stagecontrollers.SettingPageController;
 import project.view.lobby.communication.Player;
 import project.view.lobby.communication.User;
 
@@ -279,11 +280,14 @@ public class App extends Application {
 
 
   public static void bindColourUpdateAction(Player player, ColorPicker colorPicker,
-                                            Button colorUpdateButton, GameBoardLayoutConfig config) {
+                                            boolean refreshSettingPage, Button colorUpdateButton,
+                                            GameBoardLayoutConfig config) {
     Color color = Color.web(player.getPreferredColour());
     colorPicker.setValue(color);
     colorUpdateButton.setOnAction(event -> {
       // Convert the color to a 16-byte encoded string
+      String msg;
+      String title;
       String colorString = colorToColourString(colorPicker.getValue());
       try {
         App.getLobbyServiceRequestSender().updateOnePlayerColour(
@@ -291,16 +295,25 @@ public class App extends Application {
             App.getUser().getUsername(),
             colorString
         );
+        // depending on the flag, decide which page are we on to refresh
+        if (refreshSettingPage) {
+          App.loadNewSceneToPrimaryStage("setting_page.fxml", new SettingPageController());
+        } else {
+          App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
+        }
+        title = "Colour Update Confirmation";
+        msg = "Updated correctly!";
       } catch (UnirestException e) {
         // somehow failed to update the colour
         e.printStackTrace();
-        String errorTitle = "Colour Selection Error";
-        String error = "Could not update user's new colour choice!\nPlease try again";
-        App.loadPopUpWithController("lobby_warn.fxml",
-            new LobbyWarnPopUpController(error, errorTitle),
-            config.getSmallPopUpWidth(),
-            config.getSmallPopUpHeight());
+        title = "Colour Selection Error";
+        msg = "Could not update user's new colour choice!\nPlease try again";
       }
+
+      App.loadPopUpWithController("lobby_warn.fxml",
+          new LobbyWarnPopUpController(msg, title),
+          config.getSmallPopUpWidth(),
+          config.getSmallPopUpHeight());
     });
   }
 
@@ -340,8 +353,7 @@ public class App extends Application {
       String title;
       try {
         App.getLobbyServiceRequestSender()
-            .deleteOnePlayer(App.getUser().getAccessToken(),
-                player.getName());
+            .deleteOnePlayer(App.getUser().getAccessToken(), player.getName());
         // if we should go back to log in page (deleted at setting page)
         // then load the start page, otherwise refresh the admin zon
         if (backToLogInPage) {

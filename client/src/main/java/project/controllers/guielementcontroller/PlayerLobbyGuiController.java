@@ -54,7 +54,7 @@ public class PlayerLobbyGuiController implements Initializable {
     textInfoLabel.setText(labelContent);
 
     // set up the colour part and update button part
-    App.bindColourUpdateAction(player, colorPicker, colorUpdateButton, config);
+    App.bindColourUpdateAction(player, colorPicker, false, colorUpdateButton, config);
 
     // bind the actions to password update
     App.bindPasswordUpdateAction(player, passwordField, passwordUpdateButton, config);

@@ -65,7 +65,7 @@ public class SettingPageController extends AbstractLobbyController {
         App.getUser().getUsername());
 
     // set up the colour part and update button part
-    App.bindColourUpdateAction(player, colorPicker, colorUpdateButton, config);
+    App.bindColourUpdateAction(player, colorPicker, true, colorUpdateButton, config);
 
     // bind the actions to password update
     App.bindPasswordUpdateAction(player, passwordField, passwordUpdateButton, config);
