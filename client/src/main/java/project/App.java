@@ -167,7 +167,7 @@ public class App extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    //primaryStage.setFullScreen(true);
+    primaryStage.setFullScreen(true);
   }
 
   /**
