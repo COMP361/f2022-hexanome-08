@@ -110,7 +110,7 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
     Group levelCard = (Group) this.getChildren().get(2);
     Rectangle rectangle = (Rectangle) levelCard.getChildren().get(0);
     int newRemainingCards = deck.size();
-    rectangle.setFill(Color.RED);
+    rectangle.setFill(Color.web("DE010E"));
     Text deck = (Text) levelCard.getChildren().get(1);
     Text levelOfCard = (Text) levelCard.getChildren().get(2);
     deck.setText("10");
