@@ -6,7 +6,7 @@ and we used JavaFX as our frontend framework.
 The game is deployed on a [lobby service](https://github.com/m5c/LobbyService), developed by the course instructor: [Maximilian Schiedermeier](https://github.com/m5c).
 
 ## How to run everything by yourself (server and client)
-### Prerequisite
+### Prerequisites
 1. Make sure you have [maven](https://maven.apache.org/download.cgi) installed on your machine. It is required to run
 the client.
 2. Download and install [docker desktop](https://www.docker.com/) so that you can run the server and database in some isolated containers.
