@@ -67,5 +67,16 @@ public class SettingPageController extends AbstractLobbyController {
     // bind the actions to delete user (flag indicating staying at admin page)
     App.bindDeleteUserAction(player, deletePlayerButton, true, config);
 
+    String warn = "THE DELETION CAN NOT BE REVERSED!!!";
+    App.bindToolTip(warn, 15, deletePlayerButton, 20);
+
+    //deletePlayerButton.setDisable(true);
+    //if (!App.getUser().getAuthority().equals("ROLE_ADMIN")) {
+    //  deletePlayerButton.setDisable(false);
+    //  App.bindDeleteUserAction(player, deletePlayerButton, true, config);
+    //
+    //  String warn = "THE DELETION CAN NOT BE REVERSED!!!";
+    //  App.bindToolTip(warn, 15, deletePlayerButton, 20);
+    //}
   }
 }

@@ -33,6 +33,10 @@ public class RegisteredGameGuiController implements Initializable {
     displayNameLabel.setText("Display Name: " + gameParameters.getDisplayName());
     LobbyRequestSender sender = App.getLobbyServiceRequestSender();
     GameBoardLayoutConfig config = App.getGuiLayouts();
+
+    String warn = "THE UN-REGISTRATION CAN NOT BE REVERSED!!!";
+    App.bindToolTip(warn, 15, unregisterButton, 20);
+
     unregisterButton.setOnAction(event -> {
       String msg;
       String title;

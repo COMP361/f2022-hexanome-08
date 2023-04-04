@@ -58,5 +58,8 @@ public class PlayerLobbyGuiController implements Initializable {
 
     // bind the actions to delete user (flag indicating staying at admin page)
     App.bindDeleteUserAction(player, deletePlayerButton, false, config);
+
+    String warn = "THE DELETION CAN NOT BE REVERSED!!!";
+    App.bindToolTip(warn, 15, deletePlayerButton, 20);
   }
 }
