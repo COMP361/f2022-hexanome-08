@@ -53,11 +53,11 @@ public class App extends Application {
 
   private static final EnumMap<Colour, String> colourStringMap = new EnumMap<>(Colour.class) {
     {
-      put(Colour.RED, "#ed3737");
-      put(Colour.BLUE, "DODGERBLUE");
-      put(Colour.GREEN, "#30ff1f");
+      put(Colour.RED, "#EE3A44");
+      put(Colour.BLUE, "#1398FE");
+      put(Colour.GREEN, "#00D074");
       put(Colour.GOLD, "#faff1f");
-      put(Colour.BLACK, "#000000d5");
+      put(Colour.BLACK, "#3C3D3C");
       put(Colour.WHITE, "WHITE");
     }
   };

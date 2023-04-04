@@ -128,19 +128,19 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     Text deck = (Text) levelCard.getChildren().get(1);
     Text levelOfCard = (Text) levelCard.getChildren().get(2);
     if (level == 3) {
-      rectangle.setFill(Color.DODGERBLUE);
+      rectangle.setFill(Color.web("#0581E0"));
       deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(". . .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));
     } else if (level == 2) {
-      rectangle.setFill(Color.YELLOW);
+      rectangle.setFill(Color.web("#FFB629"));
       deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(" . .");
       levelOfCard.setFont(Font.font("System", FontPosture.REGULAR, 18));
     } else if (level == 1) {
-      rectangle.setFill(Paint.valueOf("#30ff1f"));
+      rectangle.setFill(Paint.valueOf("#00B464"));
       deck.setText(newRemainingCards + "");
       deck.setFont(Font.font("System", FontPosture.REGULAR, 16));
       levelOfCard.setText(" .");
