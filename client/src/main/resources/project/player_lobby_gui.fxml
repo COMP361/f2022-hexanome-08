@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<fx:root xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+<fx:root xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+         minHeight="-Infinity"
          minWidth="-Infinity" prefHeight="140.0" prefWidth="840.0" style="-fx-border-width: 5; -fx-border-color: blue;"
          type="HBox" xmlns="http://javafx.com/javafx/19">
     <children>

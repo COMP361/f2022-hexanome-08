@@ -15,16 +15,13 @@ import project.controllers.stagecontrollers.AdminPageController;
 import project.view.lobby.communication.GameParameters;
 
 public class RegisteredGameGuiController implements Initializable {
+  private final GameParameters gameParameters;
   @FXML
   private Button unregisterButton;
-
   @FXML
   private Label serviceNameLabel;
-
   @FXML
   private Label displayNameLabel;
-
-  private final GameParameters gameParameters;
 
   public RegisteredGameGuiController(GameParameters gameParameters) {
     this.gameParameters = gameParameters;

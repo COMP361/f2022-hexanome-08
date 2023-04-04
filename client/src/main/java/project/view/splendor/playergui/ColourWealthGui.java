@@ -4,8 +4,6 @@ import ca.mcgill.comp361.splendormodel.model.Colour;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
-import javafx.scene.control.Tooltip;
-import javafx.util.Duration;
 import project.controllers.guielementcontroller.ColourWealthGuiController;
 
 public class ColourWealthGui extends Group {

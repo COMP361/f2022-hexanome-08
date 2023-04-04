@@ -66,7 +66,7 @@ public class PurchaseHandController implements Initializable {
   /**
    * PurchaseHandController.
    *
-   * @param playerInGame playerInGame
+   * @param playerInGame  playerInGame
    * @param playerActions playerActions
    */
   public PurchaseHandController(long gameId, PlayerInGame playerInGame,

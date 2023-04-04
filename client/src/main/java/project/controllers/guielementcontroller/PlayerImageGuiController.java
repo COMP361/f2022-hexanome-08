@@ -2,7 +2,6 @@ package project.controllers.guielementcontroller;
 
 import ca.mcgill.comp361.splendormodel.model.PlayerInGame;
 import ca.mcgill.comp361.splendormodel.model.PlayerStates;
-import ca.mcgill.comp361.splendormodel.model.PurchasedHand;
 import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import com.mashape.unirest.http.HttpResponse;
 import java.net.URL;
@@ -10,50 +9,38 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import project.App;
 import project.connection.GameRequestSender;
 import project.controllers.popupcontrollers.PurchaseHandController;
 
 public class PlayerImageGuiController implements Initializable {
 
+  private final String playerName;
+  private final int armCode;
+  private final long gameId;
   @FXML
   private Text maxPointsText;
-
   @FXML
   private Text currentPointsText;
-
   @FXML
   private Text reservedNobleCountText;
-
   @FXML
   private Text reservedCardsCountText;
-
   @FXML
   private Rectangle highlightRectangle;
-
   @FXML
   private ImageView armImageView;
-
   @FXML
   private ImageView playerImageView;
-
   @FXML
   private Circle reservedInfoCircle;
-
   @FXML
   private Circle pointsCircle;
-  private final String playerName;
-
-  private final int armCode;
-
-  private final long gameId;
 
   public PlayerImageGuiController(long gameId, String playerName, int armCode) {
     this.gameId = gameId;
@@ -84,8 +71,8 @@ public class PlayerImageGuiController implements Initializable {
     }
     playerImageView.setImage(App.getPlayerImage(playerName));
 
-    String tipInfo = "The number on the left is the number of reserved nobles\n" +
-        "The number on the right is the number of reserved cards";
+    String tipInfo = "The number on the left is the number of reserved nobles\n"
+        + "The number on the right is the number of reserved cards";
     App.bindToolTip(tipInfo, 15, reservedInfoCircle, 20);
 
     String pointsInfo = "Player's prestige points out of 15";

@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import project.App;
@@ -59,6 +58,7 @@ public class SessionGui extends HBox {
     setSessionButtons();
 
   }
+
   public Session getCurSession() {
     return curSession;
   }

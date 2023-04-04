@@ -16,15 +16,14 @@ import project.view.lobby.communication.Player;
 public class PlayerLobbyGuiController implements Initializable {
 
   private final Player player;
+  private final GameBoardLayoutConfig config = App.getGuiLayouts();
   @FXML
   private Label textInfoLabel;
-
   // the FXML fields shared with Setting Page Controller
   @FXML
   private PasswordField passwordField;
   @FXML
   private Button passwordUpdateButton;
-
   @FXML
   private ColorPicker colorPicker;
   @FXML
@@ -32,17 +31,15 @@ public class PlayerLobbyGuiController implements Initializable {
   @FXML
   private Button deletePlayerButton;
 
-  private final GameBoardLayoutConfig config = App.getGuiLayouts();
+  public PlayerLobbyGuiController(Player player) {
+    this.player = player;
+  }
 
   public String getColourStringFromColourPicker() {
     // Get the selected color from the ColorPicker
     Color chosenColor = colorPicker.getValue();
     // Convert the color to a 16-byte encoded string
     return App.colorToColourString(chosenColor);
-  }
-
-  public PlayerLobbyGuiController(Player player) {
-    this.player = player;
   }
 
   @Override

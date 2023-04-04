@@ -12,7 +12,6 @@ import ca.mcgill.comp361.splendormodel.model.Extension;
 import ca.mcgill.comp361.splendormodel.model.GameInfo;
 import ca.mcgill.comp361.splendormodel.model.PlayerInGame;
 import ca.mcgill.comp361.splendormodel.model.PlayerStates;
-import ca.mcgill.comp361.splendormodel.model.PurchasedHand;
 import ca.mcgill.comp361.splendormodel.model.ReservedHand;
 import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
 import ca.mcgill.comp361.splendormodel.model.TableTop;
@@ -235,8 +234,8 @@ public class GameController implements Initializable {
             responseCode = longPullResponse.getStatus();
             if (Thread.currentThread().isInterrupted()) {
               throw new InterruptedException(
-                  "PlayerInfo Thread: " + Thread.currentThread().getName() +
-                      " terminated");
+                  "PlayerInfo Thread: " + Thread.currentThread().getName()
+                      + " terminated");
             }
           }
 
@@ -321,7 +320,8 @@ public class GameController implements Initializable {
               App.getGuiLayouts().getRightPlayerLayoutY());
           break;
 
-        default:break;
+        default:
+          break;
       }
       nameToPlayerInfoGuiMap.put(playerName, playerInfoGui);
     }
@@ -643,8 +643,8 @@ public class GameController implements Initializable {
             responseCode = longPullResponse.getStatus();
             if (Thread.currentThread().isInterrupted()) {
               throw new InterruptedException(
-                  "GameInfo Thread: " + Thread.currentThread().getName() +
-                      " terminated");
+                  "GameInfo Thread: " + Thread.currentThread().getName()
+                      + " terminated");
             }
           }
           if (responseCode == 200) {
@@ -671,22 +671,22 @@ public class GameController implements Initializable {
               resetPendingActionButton(curGameInfo);
 
               // TODO: <<<<< START OF OPTIONAL SECTION >>>>>>>>>
-              // TODO: <<<<< This section contains the method that contains optional pop ups>>>>>>>>>
-              // TODO: <<<<< conditions are check internally in method for readability      >>>>>>>>>
+              // TODO: <<<<< This section contains the method that contains optional pop ups>>>>>>>
+              // TODO: <<<<< conditions are check internally in method for readability      >>>>>>>
 
-              // optionally, show the claim noble pop up, condition is checked inside method
+              // optionally, show the claim noble pop up, condition is checked inside
               showClaimNoblePopUp(curGameInfo);
-              // optionally, show the pairing card pop up, condition is checked inside method
+              // optionally, show the pairing card pop up, condition is checked inside
               showPairingCardPopUp(curGameInfo);
-              // optionally, show the taking a free card pop up, condition is checked inside method
+              // optionally, show the taking a free card pop up, condition is checked inside
               showFreeCardPopUp(curGameInfo);
-              // optionally, show the taking a free card pop up, condition is checked inside method
+              // optionally, show the taking a free card pop up, condition is checked inside
               showBurnCardPopUp(curGameInfo);
-              // optionally, show the taking a reserve noble pop up, condition is checked inside method
+              // optionally, show the taking a reserve noble pop up, condition is checked inside
               showReserveNoblePopUp(curGameInfo);
-              // optionally, show the take a token for free pop up, condition is checked inside method
+              // optionally, show the take a token for free pop up, condition is checked inside
               showBonusTokenPopUp(curGameInfo);
-              // optionally, show the claiming a city pop up, condition is checked inside method
+              // optionally, show the claiming a city pop up, condition is checked inside
               showClaimCityPopUp(curGameInfo);
               // TODO: <<<<< END OF OPTIONAL SECTION >>>>>>>>>
             }

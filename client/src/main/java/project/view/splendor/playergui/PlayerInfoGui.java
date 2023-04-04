@@ -27,8 +27,8 @@ public class PlayerInfoGui {
   /**
    * Construct new visual display of player.
    *
-   * @param playerPosition  the position the player will be on the client's display.
-   * @param playerName      represents the player's name as a String.
+   * @param playerPosition the position the player will be on the client's display.
+   * @param playerName     represents the player's name as a String.
    */
   public PlayerInfoGui(long gameId, PlayerPosition playerPosition, String playerName, int armCode) {
     this.gameId = gameId;

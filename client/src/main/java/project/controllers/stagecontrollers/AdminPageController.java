@@ -70,6 +70,8 @@ public class AdminPageController extends AbstractLobbyController {
   @FXML
   private Button addUserButton;
 
+  private final GameBoardLayoutConfig config = App.getGuiLayouts();
+
 
   private void pageSpecificActionBind() {
     settingButton.setOnAction(event -> {
@@ -106,7 +108,6 @@ public class AdminPageController extends AbstractLobbyController {
   }
 
   private void setUpCreateUser() {
-    GameBoardLayoutConfig config = App.getGuiLayouts();
     //add choices for rolesChoiceBox (player, service, admin)
     rolesChoiceBox.getItems().add("Player");
     rolesChoiceBox.getItems().add("Admin");
@@ -128,12 +129,12 @@ public class AdminPageController extends AbstractLobbyController {
           (int) (prefColour.getOpacity() * 255));
 
       Role role = Role.valueOf("ROLE_" + rolesChoiceBox.getValue().toUpperCase(Locale.ROOT));
-      Player new_player = new Player(username, colorString, password, role);
+      Player newPlayer = new Player(username, colorString, password, role);
       //passing in name of player who we are adding
 
       try {
-        App.getLobbyServiceRequestSender().putOneNewPlayer(App.getUser().getAccessToken()
-            , username, new_player);
+        App.getLobbyServiceRequestSender().putOneNewPlayer(App.getUser().getAccessToken(),
+            username, newPlayer);
         //refresh the page
         App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
         title = "Add New Player Confirmation";
@@ -152,7 +153,6 @@ public class AdminPageController extends AbstractLobbyController {
       }
     });
   }
-
 
 
   @Override

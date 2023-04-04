@@ -51,14 +51,16 @@ public class App extends Application {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
   };
 
-  private static final EnumMap<Colour, String> colourStringMap = new EnumMap<>(Colour.class) {{
+  private static final EnumMap<Colour, String> colourStringMap = new EnumMap<>(Colour.class) {
+    {
       put(Colour.RED, "#ed3737");
       put(Colour.BLUE, "DODGERBLUE");
       put(Colour.GREEN, "#30ff1f");
       put(Colour.GOLD, "#faff1f");
       put(Colour.BLACK, "#000000d5");
       put(Colour.WHITE, "WHITE");
-  }};
+    }
+  };
 
   private static final String defaultImageUrl =
       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg";
@@ -249,10 +251,10 @@ public class App extends Application {
   /**
    * Bind a tooltip to display (on-hover text hint) to any javafx node.
    *
-   * @param toolTipContent content of the on-hover text
+   * @param toolTipContent         content of the on-hover text
    * @param toolTipContentFontSize font size of the content
-   * @param toolTipBindingElement the javafx node that you want to bind this tooltip to
-   * @param displayDelayMillis display delay (how long you need to wait before seeing the text)
+   * @param toolTipBindingElement  the javafx node that you want to bind this tooltip to
+   * @param displayDelayMillis     display delay (how long you need to wait before seeing the text)
    */
   public static void bindToolTip(String toolTipContent, int toolTipContentFontSize,
                                  Node toolTipBindingElement, double displayDelayMillis) {
@@ -276,7 +278,6 @@ public class App extends Application {
         (int) (chosenColor.getBlue() * 255),
         (int) (chosenColor.getOpacity() * 255));
   }
-
 
 
   public static void bindColourUpdateAction(Player player, ColorPicker colorPicker,

@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<Pane xmlns:fx="http://javafx.com/fxml/1" fx:id="resCardPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+<Pane xmlns:fx="http://javafx.com/fxml/1" fx:id="resCardPane" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity"
       minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19">
     <children>
         <Label layoutX="383.0" layoutY="29.0" prefHeight="25.0" prefWidth="135.0" text="My Reserved Cards">

@@ -61,8 +61,8 @@ public class LobbyController extends AbstractLobbyController {
       if (displayGameName == null) {
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(
-                "Please choose a option of game first!" +
-                    "\nIf there is no game, ask the admin in person\nto create one!",
+                "Please choose a option of game first!"
+                    + "\nIf there is no game, ask the admin in person\nto create one!",
                 "NO GAME CHOSEN"),
             360,
             170);
@@ -112,8 +112,8 @@ public class LobbyController extends AbstractLobbyController {
             responseCode = longPullResponse.getStatus();
             // before continuing to next iteration or exit the loop, if interrupted, finish
             if (Thread.currentThread().isInterrupted()) {
-              throw new InterruptedException("Lobby Thread: " + Thread.currentThread().getName() +
-                  " terminated");
+              throw new InterruptedException("Lobby Thread: " + Thread.currentThread().getName()
+                  + " terminated");
             }
           }
 

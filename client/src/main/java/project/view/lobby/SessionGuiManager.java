@@ -14,9 +14,8 @@ import project.App;
 public class SessionGuiManager extends VBox {
 
   private static final Map<Long, SessionGui> sessionIdGuiMap = new HashMap<>();
-  private static SessionGuiManager sessionsVbox = null;
-
   private static final List<SessionGui> sessionGuiList = new ArrayList<>();
+  private static SessionGuiManager sessionsVbox = null;
 
 
   private SessionGuiManager() {

@@ -1,38 +1,32 @@
 package project.controllers.stagecontrollers;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.PasswordField;
-import javafx.scene.paint.Color;
 import project.App;
 import project.config.GameBoardLayoutConfig;
-import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.view.lobby.communication.Player;
 
 public class SettingPageController extends AbstractLobbyController {
+  private final GameBoardLayoutConfig config = App.getGuiLayouts();
   @FXML
   private Button adminZoneButton;
-
   @FXML
   private Button lobbyPageButton;
-
   // the FXML fields shared with Player Lobby Gui Controller
   @FXML
   private PasswordField passwordField;
   @FXML
   private Button passwordUpdateButton;
-
   @FXML
   private ColorPicker colorPicker;
   @FXML
   private Button colorUpdateButton;
   @FXML
   private Button deletePlayerButton;
-  private final GameBoardLayoutConfig config = App.getGuiLayouts();
 
   private void pageSpecificActionBind() {
     adminZoneButton.setVisible(false);

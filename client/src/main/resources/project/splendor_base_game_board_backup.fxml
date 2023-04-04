@@ -6,7 +6,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="playerBoardAnchorPane" maxHeight="900.0" maxWidth="1600.0" prefHeight="900.0"
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="playerBoardAnchorPane" maxHeight="900.0" maxWidth="1600.0"
+            prefHeight="900.0"
             prefWidth="1600.0" style="-fx-background-color: #ffebcd;"
             xmlns="http://javafx.com/javafx/19">
     <children>
