@@ -415,6 +415,24 @@ public class LobbyRequestSender {
         .header("Content-Type", "application/json")
         .body(requestBody)
         .asString();
+    if (response.getStatus() != 200) {
+      throw new UnirestException("Failed to update player's preferred colour!");
+    }
+  }
+
+  /*
+  /api/gameservices/{gameservice}: DELETE
+  Sending delete request to LS to force unregister a game
+   */
+  public void unregisterOneGameService(String accessToken, String gameServerName)
+      throws UnirestException {
+    String url = String.format("%s/api/gameservices/%s", lobbyUrl, gameServerName);
+    HttpResponse<String> response = Unirest.delete(url)
+        .queryString("access_token", accessToken)
+        .asString();
+    if (response.getStatus() != 200) {
+      throw new UnirestException("Failed to force unregister a game!");
+    }
   }
 
 }

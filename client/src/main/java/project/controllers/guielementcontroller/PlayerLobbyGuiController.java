@@ -36,6 +36,16 @@ public class PlayerLobbyGuiController implements Initializable {
     this.player = player;
   }
 
+  public String getColourStringFromColourPicker() {
+    // Get the selected color from the ColorPicker
+    Color chosenColor = colorPicker.getValue();
+    // Convert the color to a 16-byte encoded string
+    return String.format("%02X%02X%02X%02X",
+        (int) (chosenColor.getRed() * 255),
+        (int) (chosenColor.getGreen() * 255),
+        (int) (chosenColor.getBlue() * 255),
+        (int) (chosenColor.getOpacity() * 255));
+  }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -46,20 +56,11 @@ public class PlayerLobbyGuiController implements Initializable {
     String labelContent = String.format("User name: %s \nUser role: %s\n", name, role);
     textInfoLabel.setText(labelContent);
 
-
     // set up the colour part and update button part
     Color color = Color.web(player.getPreferredColour());
     colorPicker.setValue(color);
     colorUpdateButton.setOnAction(event -> {
-      // Get the selected color from the ColorPicker
-      Color chosenColor = colorPicker.getValue();
-
-      // Convert the color to a 16-byte encoded string
-      String colorString = String.format("%02X%02X%02X%02X",
-          (int) (chosenColor.getRed() * 255),
-          (int) (chosenColor.getGreen() * 255),
-          (int) (chosenColor.getBlue() * 255),
-          (int) (chosenColor.getOpacity() * 255));
+      String colorString = getColourStringFromColourPicker();
       try {
         App.getLobbyServiceRequestSender().updateOnePlayerColour(
             App.getUser().getAccessToken(),
@@ -68,7 +69,6 @@ public class PlayerLobbyGuiController implements Initializable {
         );
       } catch (UnirestException e) {
         // somehow failed to update the colour
-        e.printStackTrace();
         String errorTitle = "Colour Selection Error";
         String error = "Could not update user's new colour choice!\nPlease try again";
         App.loadPopUpWithController("lobby_warn.fxml",

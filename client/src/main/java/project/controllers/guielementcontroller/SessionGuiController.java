@@ -46,8 +46,9 @@ public class SessionGuiController implements Initializable {
     String creatorInfo = String.format("creator: %s", session.getCreator());
     creatorNameLabel.setText(creatorInfo);
 
-    String playerInfos = String.format("players: [%s/%s]\n%s",
+    String playerInfos = String.format("players: [%s/%s-%s]\n%s",
         session.getPlayers().size(),
+        session.getGameParameters().getMinSessionPlayers(),
         session.getGameParameters().getMaxSessionPlayers(),
         session.getPlayers());
     playerInfosLabel.setText(playerInfos);

@@ -12,65 +12,61 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="900.0" maxWidth="1600.0" prefHeight="900.0"
-            prefWidth="1600.0" xmlns="http://javafx.com/javafx/19">
+
+<AnchorPane maxHeight="900.0" maxWidth="1600.0" prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <HBox alignment="BOTTOM_CENTER" prefHeight="125.0"/>
+        <HBox alignment="BOTTOM_CENTER" prefHeight="125.0" />
         <HBox alignment="CENTER_RIGHT" layoutX="940.0" layoutY="107.0" prefHeight="39.0">
             <children>
                 <HBox alignment="TOP_RIGHT" prefHeight="119.0" prefWidth="338.0">
                     <children>
                         <VBox prefHeight="119.0" prefWidth="100.0">
                             <children>
-                                <Button fx:id="lobbyPageButton" mnemonicParsing="false" text="Lobby Page"/>
+                                <Button fx:id="lobbyPageButton" mnemonicParsing="false" text="Lobby Page" />
                             </children>
                         </VBox>
                         <VBox prefHeight="119.0" prefWidth="99.0">
                             <children>
-                                <Button fx:id="settingButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="78.0"
-                                        text="Setting"/>
+                                <Button fx:id="settingButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="78.0" text="Setting" />
                             </children>
                         </VBox>
                         <VBox prefHeight="119.0" prefWidth="114.0">
                             <children>
-                                <Button fx:id="logOutButton" mnemonicParsing="false" text="Log out"/>
+                                <Button fx:id="logOutButton" mnemonicParsing="false" text="Log out" />
                             </children>
                         </VBox>
                     </children>
                 </HBox>
             </children>
         </HBox>
-        <ScrollPane fx:id="allPlayersScrollPane" layoutX="364.0" layoutY="340.0" maxWidth="-Infinity"
-                    minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="860.0" vbarPolicy="ALWAYS">
+        <ScrollPane fx:id="allPlayersScrollPane" layoutX="364.0" layoutY="340.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="322.0" prefWidth="860.0" vbarPolicy="ALWAYS">
             <content>
-                <VBox fx:id="allPlayersVbox" prefHeight="420.0" prefWidth="855.0"/>
+                <VBox fx:id="allPlayersVbox" prefHeight="325.0" prefWidth="843.0" />
             </content>
         </ScrollPane>
-        <HBox fx:id="createGame" alignment="CENTER"/>
-        <Label layoutX="745.0" layoutY="296.0" prefHeight="35.0" prefWidth="110.0" text="All Users">
+        <HBox fx:id="createGame" alignment="CENTER" />
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="739.0" layoutY="296.0" prefHeight="35.0" prefWidth="110.0" text="All Users">
             <font>
-                <Font name="Axiforma-Regular" size="24.0"/>
+                <Font name="Axiforma-Regular" size="24.0" />
             </font>
         </Label>
-        <HBox fx:id="gameOptions" alignment="CENTER" layoutX="370.0" layoutY="146.0" spacing="10.0"/>
+        <HBox fx:id="gameOptions" alignment="CENTER" layoutX="370.0" layoutY="146.0" spacing="10.0" />
         <Label layoutX="377.0" layoutY="105.0" prefHeight="35.0">
             <font>
-                <Font name="Axiforma-Regular" size="24.0"/>
+                <Font name="Axiforma-Regular" size="24.0" />
             </font>
         </Label>
         <Label layoutX="646.0" layoutY="-3.0" prefHeight="109.0" prefWidth="295.0" text="Admin Page">
             <font>
-                <Font size="54.0"/>
+                <Font size="54.0" />
             </font>
         </Label>
-        <VBox layoutX="7.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0"
-              style="-fx-border-width: 5; -fx-border-color: blue;">
+        <VBox layoutX="7.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" style="-fx-border-width: 5; -fx-border-color: blue;">
             <children>
-                <ImageView fx:id="userImageView" fitHeight="229.0" fitWidth="273.0" pickOnBounds="true"
-                           preserveRatio="true"/>
+                <ImageView fx:id="userImageView" fitHeight="229.0" fitWidth="273.0" pickOnBounds="true" preserveRatio="true" />
                 <Label fx:id="userNameLabel" prefHeight="19.0" prefWidth="274.0" textFill="#0026ff">
                     <font>
-                        <Font name="System Bold" size="15.0"/>
+                        <Font name="System Bold" size="15.0" />
                     </font>
                 </Label>
             </children>
@@ -79,39 +75,45 @@
             <children>
                 <VBox prefHeight="62.0" prefWidth="118.0">
                     <children>
-                        <TextField fx:id="userName" prefHeight="26.0" prefWidth="179.0" promptText="User Name "/>
-                        <Label prefHeight="36.0" prefWidth="119.0" text="Only latin alphabet &#10;characters."
-                               textFill="#a19d9d"/>
+                        <TextField fx:id="userName" prefHeight="26.0" prefWidth="179.0" promptText="User Name " />
+                        <Label prefHeight="36.0" prefWidth="119.0" text="Only latin alphabet &#10;characters." textFill="#a19d9d" />
                     </children>
                 </VBox>
                 <VBox prefHeight="62.0" prefWidth="214.0">
                     <children>
-                        <PasswordField fx:id="userPassword" promptText="Password"/>
-                        <Label prefHeight="36.0" prefWidth="215.0"
-                               text="8-32 characters long, at least &#10;one upper, lower, digit, special char."
-                               textFill="#a19d9d"/>
+                        <PasswordField fx:id="userPassword" promptText="Password" />
+                        <Label prefHeight="36.0" prefWidth="215.0" text="8-32 characters long, at least &#10;one upper, lower, digit, special char." textFill="#a19d9d" />
                     </children>
                 </VBox>
                 <VBox prefHeight="62.0" prefWidth="149.0">
                     <children>
-                        <ChoiceBox fx:id="rolesChoiceBox" prefWidth="150.0"/>
-                        <Label prefHeight="36.0" prefWidth="215.0"
-                               text="Service accounts can not &#10;be used for playing." textFill="#a19d9d"/>
+                        <ChoiceBox fx:id="rolesChoiceBox" prefWidth="150.0" />
+                        <Label prefHeight="36.0" prefWidth="215.0" text="Service accounts can not &#10;be used for playing." textFill="#a19d9d" />
                     </children>
                 </VBox>
                 <VBox prefHeight="62.0" prefWidth="145.0">
                     <children>
-                        <ColorPicker fx:id="newUserColourPicker"/>
-                        <Label prefHeight="36.0" prefWidth="215.0" text="Preferred in-game colour." textFill="#a19d9d"/>
+                        <ColorPicker fx:id="newUserColourPicker" />
+                        <Label prefHeight="36.0" prefWidth="215.0" text="Preferred in-game colour." textFill="#a19d9d" />
                     </children>
                 </VBox>
-                <Button fx:id="addUserButton" mnemonicParsing="false" text="Add User"/>
+                <Button fx:id="addUserButton" mnemonicParsing="false" text="Add User" />
             </children>
         </HBox>
         <Label layoutX="716.0" layoutY="199.0" prefHeight="35.0" prefWidth="168.0" text="Add New User">
             <font>
-                <Font name="Axiforma-Regular" size="24.0"/>
+                <Font name="Axiforma-Regular" size="24.0" />
             </font>
         </Label>
+      <ScrollPane fx:id="allRegisteredGameScrollPane" layoutX="364.0" layoutY="753.0" prefHeight="140.0" prefWidth="860.0">
+         <content>
+            <VBox fx:id="allRegisteredGameVbox" prefHeight="108.0" prefWidth="843.0" />
+         </content>
+      </ScrollPane>
+      <Label alignment="CENTER" layoutX="647.0" layoutY="691.0" prefHeight="35.0" prefWidth="295.0" text="Registered Game Services">
+         <font>
+            <Font name="Axiforma-Regular" size="24.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>
