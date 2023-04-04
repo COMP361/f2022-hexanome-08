@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.Group?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<Pane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-      minWidth="-Infinity"
-      prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19">
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <HBox fx:id="cardStackHbox" layoutX="10.0" layoutY="80.0" prefHeight="359.0" prefWidth="670.0">
             <children>
-                <Group/>
-                <Group fx:id="redCards"/>
-                <Group fx:id="redCards1"/>
-                <Group fx:id="redCards2"/>
-                <Group fx:id="redCards3"/>
-                <VBox fx:id="goldTokenCardsVbox" prefHeight="355.0" prefWidth="100.0"/>
+                <Group />
+                <Group fx:id="redCards" />
+                <Group fx:id="redCards1" />
+                <Group fx:id="redCards2" />
+                <Group fx:id="redCards3" />
+                <VBox fx:id="goldTokenCardsVbox" prefHeight="355.0" prefWidth="100.0" />
             </children>
         </HBox>
-        <Label fx:id="ownershipLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="273.0" layoutY="23.0"
-               prefHeight="25.0" prefWidth="355.0" text="My Development Cards and Nobles">
+        <Label fx:id="ownershipLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="196.0" layoutY="20.0" prefHeight="32.0" prefWidth="508.0" text="My Development Cards and Nobles">
             <font>
-                <Font size="16.0"/>
+                <Font name="Arial Black" size="22.0" />
             </font>
         </Label>
-        <VBox fx:id="noblesUnLocked" layoutX="780.0" layoutY="80.0" prefHeight="359.0" prefWidth="100.0"/>
+        <VBox fx:id="noblesUnLocked" layoutX="780.0" layoutY="80.0" prefHeight="359.0" prefWidth="100.0" />
     </children>
 </Pane>
