@@ -389,7 +389,6 @@ public class GameController implements Initializable {
     }
   }
 
-  //TODO: take out prints
   private void showBurnCardPopUp(GameInfo curGameInfo) {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     // generate special pop up for pairing card
@@ -657,6 +656,14 @@ public class GameController implements Initializable {
             GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
             // if the game is over, load the game over pop up page
             showFinishGamePopUp(curGameInfo);
+
+            //ALWAYS, highlight the correct player gui based on the new game info
+            // busy waiting, for the map to be set
+            while (nameToPlayerInfoGuiMap.size() < curGameInfo.getPlayerNames().size()) {
+              Thread.sleep(50);
+            }
+            highlightPlayerInfoGui(curGameInfo);
+
             // these additional things can only happen if not in watch mode
             if (!inWatchMode) {
               // internally, check if the player has empty action map, if so
@@ -686,9 +693,6 @@ public class GameController implements Initializable {
 
             // ALWAYS, reset all game boards gui based on the new game info
             resetAllGameBoards(curGameInfo);
-            //ALWAYS, highlight the correct player gui based on the new game info
-            highlightPlayerInfoGui(curGameInfo);
-
           }
         } catch (InterruptedException e) {
           System.out.println(Thread.currentThread().getName() + " is dead!");
@@ -775,7 +779,6 @@ public class GameController implements Initializable {
 
     // sort player names based on different client views
     sortAllPlayerNames(curGameInfo);
-
     // if we are playing the Trading Extension, initialize the map of player name
     // to their arm code index
     List<Extension> extensionsPlaying = curGameInfo.getExtensions();

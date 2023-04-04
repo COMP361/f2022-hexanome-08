@@ -55,6 +55,8 @@ public class SessionGuiController implements Initializable {
 
     if (!session.getSavegameid().isEmpty()) {
       saveGameIdLabel.setText("saved game id: " + session.getSavegameid());
+    } else {
+      saveGameIdLabel.setText("");
     }
   }
 }
