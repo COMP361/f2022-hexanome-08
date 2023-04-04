@@ -9,84 +9,76 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="900.0" maxWidth="1600.0" prefHeight="900.0"
-            prefWidth="1600.0" xmlns="http://javafx.com/javafx/19">
+
+<AnchorPane maxHeight="900.0" maxWidth="1600.0" prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <HBox layoutX="459.0" layoutY="643.0" prefHeight="26.0" prefWidth="258.0"/>
+        <HBox layoutX="459.0" layoutY="643.0" prefHeight="26.0" prefWidth="258.0" />
 
         <HBox layoutX="669.0" layoutY="316.0" prefHeight="89.0" prefWidth="283.0">
             <children>
                 <VBox prefHeight="62.0" prefWidth="214.0">
                     <children>
-                        <PasswordField fx:id="userPassword" prefHeight="26.0" prefWidth="245.0" promptText="Password"/>
-                        <Label prefHeight="36.0" prefWidth="215.0"
-                               text="8-32 characters long, at least &#10;one upper, lower, digit, special char."
-                               textFill="#a19d9d"/>
+                        <PasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="245.0" promptText="Password" />
+                        <Label prefHeight="36.0" prefWidth="215.0" text="8-32 characters long, at least &#10;one upper, lower, digit, special char." textFill="#a19d9d" />
                     </children>
                 </VBox>
-                <Button fx:id="passwordUpdateButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0"
-                        text="Update"/>
+                <Button fx:id="passwordUpdateButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" text="Update" />
             </children>
         </HBox>
 
-        <Button fx:id="deletePlayerButton" layoutX="885.0" layoutY="581.0" mnemonicParsing="false" prefHeight="26.0"
-                prefWidth="65.0" text="Delete"/>
-        <HBox alignment="BOTTOM_CENTER" prefHeight="125.0"/>
+        <Button fx:id="deletePlayerButton" layoutX="885.0" layoutY="581.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="65.0" text="Delete" />
+        <HBox alignment="BOTTOM_CENTER" prefHeight="125.0" />
         <HBox alignment="CENTER_RIGHT" layoutX="940.0" layoutY="107.0" prefHeight="39.0">
             <children>
                 <HBox alignment="TOP_RIGHT" prefHeight="119.0" prefWidth="338.0">
                     <children>
                         <VBox prefHeight="119.0" prefWidth="100.0">
                             <children>
-                                <Button fx:id="adminZoneButton" mnemonicParsing="false" text="Admin Zone"/>
+                                <Button fx:id="adminZoneButton" mnemonicParsing="false" text="Admin Zone" />
                             </children>
                         </VBox>
                         <VBox prefHeight="119.0" prefWidth="99.0">
                             <children>
-                                <Button fx:id="lobbyPageButton" mnemonicParsing="false" prefHeight="26.0"
-                                        prefWidth="88.0" text="Lobby Page"/>
+                                <Button fx:id="lobbyPageButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="88.0" text="Lobby Page" />
                             </children>
                         </VBox>
                         <VBox prefHeight="119.0" prefWidth="114.0">
                             <children>
-                                <Button fx:id="logOutButton" mnemonicParsing="false" text="Log out"/>
+                                <Button fx:id="logOutButton" mnemonicParsing="false" text="Log out" />
                             </children>
                         </VBox>
                     </children>
                 </HBox>
             </children>
         </HBox>
-        <HBox fx:id="createGame" alignment="CENTER"/>
-        <HBox fx:id="gameOptions" alignment="CENTER" layoutX="370.0" layoutY="146.0" spacing="10.0"/>
+        <HBox fx:id="createGame" alignment="CENTER" />
+        <HBox fx:id="gameOptions" alignment="CENTER" layoutX="370.0" layoutY="146.0" spacing="10.0" />
         <Label layoutX="377.0" layoutY="105.0" prefHeight="35.0">
             <font>
-                <Font name="Axiforma-Regular" size="24.0"/>
+                <Font name="Axiforma-Regular" size="24.0" />
             </font>
         </Label>
         <Label layoutX="646.0" layoutY="-3.0" prefHeight="109.0" prefWidth="295.0" text="Settings">
             <font>
-                <Font size="54.0"/>
+                <Font size="54.0" />
             </font>
         </Label>
-        <VBox layoutX="19.0" layoutY="17.0" prefHeight="200.0" prefWidth="100.0"
-              style="-fx-border-width: 5; -fx-border-color: blue;">
+        <VBox fx:id="playerVisualInfoVbox" layoutX="19.0" layoutY="17.0" prefHeight="200.0" prefWidth="100.0" style="-fx-border-width: 5; -fx-border-color: blue;">
             <children>
-                <ImageView fx:id="userImageView" fitHeight="229.0" fitWidth="273.0" pickOnBounds="true"
-                           preserveRatio="true"/>
+                <ImageView fx:id="userImageView" fitHeight="229.0" fitWidth="273.0" pickOnBounds="true" preserveRatio="true" />
                 <Label fx:id="userNameLabel" prefHeight="19.0" prefWidth="274.0" textFill="#0026ff">
                     <font>
-                        <Font name="System Bold" size="15.0"/>
+                        <Font name="System Bold" size="15.0" />
                     </font>
                 </Label>
             </children>
         </VBox>
         <Label layoutX="716.0" layoutY="199.0" prefHeight="35.0" prefWidth="190.0" text="Account Settings">
             <font>
-                <Font name="Axiforma-Regular" size="24.0"/>
+                <Font name="Axiforma-Regular" size="24.0" />
             </font>
         </Label>
-        <ColorPicker fx:id="colorPicker" layoutX="746.0" layoutY="450.0"/>
-        <Button fx:id="colorUpdateButton" layoutX="873.0" layoutY="450.0" mnemonicParsing="false" prefHeight="26.0"
-                prefWidth="88.0" text="Update"/>
+        <ColorPicker fx:id="colorPicker" layoutX="746.0" layoutY="450.0" />
+        <Button fx:id="colorUpdateButton" layoutX="873.0" layoutY="450.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="88.0" text="Update" />
     </children>
 </AnchorPane>

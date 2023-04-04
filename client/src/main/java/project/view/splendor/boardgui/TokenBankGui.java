@@ -1,4 +1,4 @@
-package project.view.splendor;
+package project.view.splendor.boardgui;
 
 import ca.mcgill.comp361.splendormodel.actions.ReturnTokenAction;
 import ca.mcgill.comp361.splendormodel.actions.TakeTokenAction;

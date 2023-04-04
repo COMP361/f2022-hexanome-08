@@ -21,12 +21,24 @@ import project.config.GameBoardLayoutConfig;
 import project.connection.LobbyRequestSender;
 import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.view.lobby.PlayerLobbyGui;
+import project.view.lobby.RegisteredGameGui;
+import project.view.lobby.communication.GameParameters;
 import project.view.lobby.communication.Player;
 import project.view.lobby.communication.Role;
 
 public class AdminPageController extends AbstractLobbyController {
 
   private List<Player> allRegisteredPlayers = new ArrayList<>();
+
+  private List<GameParameters> allRegisteredGameServices = new ArrayList<>();
+
+  // registered game service part
+  @FXML
+  private ScrollPane allRegisteredGameScrollPane;
+
+  @FXML
+  private VBox allRegisteredGameVbox;
+
 
   // app user related fields
   @FXML
@@ -69,26 +81,38 @@ public class AdminPageController extends AbstractLobbyController {
     });
   }
 
-  @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    GameBoardLayoutConfig config = App.getGuiLayouts();
-    super.initialize(url, resourceBundle);
-    // for admin page, bind action to setting and lobby button
-    pageSpecificActionBind();
-
+  private void setUpInitialUsers() {
     LobbyRequestSender sender = App.getLobbyServiceRequestSender();
     // set up the user gui in the scroll pane region
     String adminToken = App.getUser().getAccessToken();
     allRegisteredPlayers = Arrays.asList(sender.getPlayers(adminToken));
     for (Player player : allRegisteredPlayers) {
-      allPlayersVbox.getChildren().add(new PlayerLobbyGui(player));
+      PlayerLobbyGui playerLobbyGui = new PlayerLobbyGui(player);
+      playerLobbyGui.setBorderColour();
+      allPlayersVbox.getChildren().add(playerLobbyGui);
     }
     allPlayersScrollPane.setContent(allPlayersVbox);
+  }
 
+  private void setUpInitialRegisteredGames() {
+    LobbyRequestSender sender = App.getLobbyServiceRequestSender();
+    allRegisteredGameServices.addAll(sender.sendAllGamesRequest());
+    if (!allRegisteredGameServices.isEmpty()) {
+      for (GameParameters gameParameters : allRegisteredGameServices) {
+        allRegisteredGameVbox.getChildren().add(new RegisteredGameGui(gameParameters));
+      }
+      allRegisteredGameScrollPane.setContent(allRegisteredGameVbox);
+    }
+  }
+
+  private void setUpCreateUser() {
+    GameBoardLayoutConfig config = App.getGuiLayouts();
     //add choices for rolesChoiceBox (player, service, admin)
     rolesChoiceBox.getItems().add("Player");
     rolesChoiceBox.getItems().add("Admin");
     rolesChoiceBox.getItems().add("Service");
+    // by default, creating players
+    rolesChoiceBox.setValue("Player");
 
     addUserButton.setOnAction(event -> {
       String msg;
@@ -102,6 +126,7 @@ public class AdminPageController extends AbstractLobbyController {
           (int) (prefColour.getGreen() * 255),
           (int) (prefColour.getBlue() * 255),
           (int) (prefColour.getOpacity() * 255));
+
       Role role = Role.valueOf("ROLE_" + rolesChoiceBox.getValue().toUpperCase(Locale.ROOT));
       Player new_player = new Player(username, colorString, password, role);
       //passing in name of player who we are adding
@@ -124,13 +149,26 @@ public class AdminPageController extends AbstractLobbyController {
             new LobbyWarnPopUpController(msg, title),
             config.getSmallPopUpWidth(),
             config.getSmallPopUpHeight());
-
       }
     });
+  }
 
 
-    // TODO: Finish other features on admin zone
 
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    super.initialize(url, resourceBundle);
+    // for admin page, bind action to setting and lobby button
+    pageSpecificActionBind();
+
+    // all users
+    setUpInitialUsers();
+
+    // set up the services part that can be forced unregistered
+    setUpInitialRegisteredGames();
+
+    // set up logic for creating one user
+    setUpCreateUser();
 
   }
 }

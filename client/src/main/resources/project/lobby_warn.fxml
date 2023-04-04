@@ -3,15 +3,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<Pane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="180.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/19">
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Label fx:id="errorMessageTitle" layoutX="31.0" layoutY="14.0" prefHeight="30.0" prefWidth="299.0">
             <font>
-                <Font name="System Bold" size="16.0"/>
+                <Font name="System Bold" size="16.0" />
             </font>
         </Label>
-        <Label fx:id="errorMessageLabel" alignment="TOP_LEFT" layoutX="31.0" layoutY="58.0" prefHeight="92.0"
-               prefWidth="299.0"/>
+        <Label fx:id="errorMessageLabel" alignment="TOP_LEFT" layoutX="25.0" layoutY="59.0" prefHeight="92.0" prefWidth="310.0" />
     </children>
 </Pane>

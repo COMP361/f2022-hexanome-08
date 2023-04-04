@@ -3,18 +3,27 @@ package project;
 import ca.mcgill.comp361.splendormodel.model.CityCard;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import com.google.gson.Gson;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.EnumMap;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +32,11 @@ import project.config.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
 import project.controllers.popupcontrollers.GameOverPopUpController;
+import project.controllers.popupcontrollers.LobbyWarnPopUpController;
+import project.controllers.stagecontrollers.AdminPageController;
 import project.controllers.stagecontrollers.LogInController;
+import project.controllers.stagecontrollers.SettingPageController;
+import project.view.lobby.communication.Player;
 import project.view.lobby.communication.User;
 
 
@@ -37,6 +50,16 @@ public class App extends Application {
   private static final Colour[] baseColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
   };
+
+  private static final EnumMap<Colour, String> colourStringMap = new EnumMap<>(Colour.class) {{
+      put(Colour.RED, "#ed3737");
+      put(Colour.BLUE, "DODGERBLUE");
+      put(Colour.GREEN, "#30ff1f");
+      put(Colour.GOLD, "#faff1f");
+      put(Colour.BLACK, "#000000d5");
+      put(Colour.WHITE, "WHITE");
+  }};
+
   private static final String defaultImageUrl =
       "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg";
   private static GameRequestSender gameRequestSender = null;
@@ -217,6 +240,145 @@ public class App extends Application {
       playerImage = new Image(defaultImageUrl);
     }
     return playerImage;
+  }
+
+  public static EnumMap<Colour, String> getColourStringMap() {
+    return new EnumMap<>(colourStringMap);
+  }
+
+  /**
+   * Bind a tooltip to display (on-hover text hint) to any javafx node.
+   *
+   * @param toolTipContent content of the on-hover text
+   * @param toolTipContentFontSize font size of the content
+   * @param toolTipBindingElement the javafx node that you want to bind this tooltip to
+   * @param displayDelayMillis display delay (how long you need to wait before seeing the text)
+   */
+  public static void bindToolTip(String toolTipContent, int toolTipContentFontSize,
+                                 Node toolTipBindingElement, double displayDelayMillis) {
+    Tooltip tooltip = new Tooltip(toolTipContent);
+    tooltip.setShowDelay(Duration.millis(displayDelayMillis));
+    tooltip.setStyle(String.format("-fx-font-size: %spx;", toolTipContentFontSize));
+    toolTipBindingElement.setOnMouseEntered(e -> {
+      Tooltip.install(toolTipBindingElement, tooltip);
+    });
+
+    toolTipBindingElement.setOnMouseExited(e -> {
+      Tooltip.uninstall(toolTipBindingElement, tooltip);
+    });
+  }
+
+  public static String colorToColourString(Color chosenColor) {
+    // Convert the color to a 16-byte encoded string
+    return String.format("%02X%02X%02X%02X",
+        (int) (chosenColor.getRed() * 255),
+        (int) (chosenColor.getGreen() * 255),
+        (int) (chosenColor.getBlue() * 255),
+        (int) (chosenColor.getOpacity() * 255));
+  }
+
+
+
+  public static void bindColourUpdateAction(Player player, ColorPicker colorPicker,
+                                            boolean refreshSettingPage, Button colorUpdateButton,
+                                            GameBoardLayoutConfig config) {
+    Color color = Color.web(player.getPreferredColour());
+    colorPicker.setValue(color);
+    colorUpdateButton.setOnAction(event -> {
+      // Convert the color to a 16-byte encoded string
+      String msg;
+      String title;
+      String colorString = colorToColourString(colorPicker.getValue());
+      try {
+        App.getLobbyServiceRequestSender().updateOnePlayerColour(
+            App.getUser().getAccessToken(),
+            App.getUser().getUsername(),
+            colorString
+        );
+        // depending on the flag, decide which page are we on to refresh
+        if (refreshSettingPage) {
+          App.loadNewSceneToPrimaryStage("setting_page.fxml", new SettingPageController());
+        } else {
+          App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
+        }
+        title = "Colour Update Confirmation";
+        msg = "Updated correctly!";
+      } catch (UnirestException e) {
+        // somehow failed to update the colour
+        e.printStackTrace();
+        title = "Colour Selection Error";
+        msg = "Could not update user's new colour choice!\nPlease try again";
+      }
+
+      App.loadPopUpWithController("lobby_warn.fxml",
+          new LobbyWarnPopUpController(msg, title),
+          config.getSmallPopUpWidth(),
+          config.getSmallPopUpHeight());
+    });
+  }
+
+  public static void bindPasswordUpdateAction(Player player, PasswordField passwordField,
+                                              Button passwordUpdateButton,
+                                              GameBoardLayoutConfig config) {
+    passwordUpdateButton.setOnAction(event -> {
+      String msg;
+      String title;
+      try {
+        App.getLobbyServiceRequestSender()
+            .updateOnePlayerPassword(
+                App.getUser().getAccessToken(),
+                player.getName(),
+                player.getPassword(),
+                passwordField.getText());
+        title = "Password Update Confirmation";
+        msg = "Updated correctly!";
+
+      } catch (UnirestException e) {
+        title = "Password Update Error";
+        msg = "Wrong password format.";
+      }
+
+      App.loadPopUpWithController("lobby_warn.fxml",
+          new LobbyWarnPopUpController(msg, title),
+          config.getSmallPopUpWidth(),
+          config.getSmallPopUpHeight());
+      passwordField.clear();
+    });
+  }
+
+  public static void bindDeleteUserAction(Player player, Button deletePlayerButton,
+                                          boolean backToLogInPage, GameBoardLayoutConfig config) {
+    deletePlayerButton.setOnAction(event -> {
+      String msg;
+      String title;
+      try {
+        App.getLobbyServiceRequestSender()
+            .deleteOnePlayer(App.getUser().getAccessToken(), player.getName());
+        // if we should go back to log in page (deleted at setting page)
+        // then load the start page, otherwise refresh the admin zon
+        if (backToLogInPage) {
+          // Reset the App user to null
+          App.setUser(null);
+          // jump back to start page
+          App.loadNewSceneToPrimaryStage("start_page.fxml", new LogInController());
+        } else {
+          App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
+        }
+
+        title = "Delete Player Confirmation";
+        msg = "Deleted correctly!";
+
+      } catch (UnirestException e) {
+        title = "Delete Player Error";
+        msg = "Player was unable to be deleted.";
+      }
+
+      App.loadPopUpWithController("lobby_warn.fxml",
+          new LobbyWarnPopUpController(msg, title),
+          config.getSmallPopUpWidth(),
+          config.getSmallPopUpHeight());
+    });
+
   }
 
   /**

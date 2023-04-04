@@ -7,11 +7,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import project.App;
+import project.view.lobby.communication.Player;
 
 public class AbstractLobbyController implements Initializable {
   @FXML
   protected ImageView userImageView;
+
+  @FXML
+  protected VBox playerVisualInfoVbox;
 
   @FXML
   protected Label userNameLabel;
@@ -40,6 +46,13 @@ public class AbstractLobbyController implements Initializable {
     // regular display set up for all users (admin or player)
     userImageView.setImage(App.getPlayerImage(App.getUser().getUsername()));
     userNameLabel.setText("Current user: " + App.getUser().getUsername());
+
+    Player player = App.getLobbyServiceRequestSender().getOnePlayer(
+        App.getUser().getAccessToken(),
+        App.getUser().getUsername());
+    String playerPreferColor = player.getPreferredColour();
+    System.out.println(playerPreferColor);
+    playerVisualInfoVbox.setStyle("-fx-border-width:5; -fx-border-color:#" + playerPreferColor);
 
     logOutButton.setOnAction(event -> {
       // before leaving the lobby page, make sure to stop the update thread

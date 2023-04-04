@@ -13,7 +13,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import project.App;
 import project.connection.GameRequestSender;
-import project.view.splendor.ActionIdPair;
+import project.view.splendor.boardgui.ActionIdPair;
 
 /**
  * Card action controller class.

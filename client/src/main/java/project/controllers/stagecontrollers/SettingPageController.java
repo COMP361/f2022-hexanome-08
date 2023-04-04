@@ -9,32 +9,30 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.paint.Color;
 import project.App;
+import project.config.GameBoardLayoutConfig;
 import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.view.lobby.communication.Player;
 
 public class SettingPageController extends AbstractLobbyController {
-
-  @FXML
-  private PasswordField userPassword;
-
-  @FXML
-  private Button passwordUpdateButton;
-
-  @FXML
-  private ColorPicker colorPicker;
-
-  @FXML
-  private Button colorUpdateButton;
-
-  @FXML
-  private Button deletePlayerButton;
-
   @FXML
   private Button adminZoneButton;
 
   @FXML
   private Button lobbyPageButton;
 
+  // the FXML fields shared with Player Lobby Gui Controller
+  @FXML
+  private PasswordField passwordField;
+  @FXML
+  private Button passwordUpdateButton;
+
+  @FXML
+  private ColorPicker colorPicker;
+  @FXML
+  private Button colorUpdateButton;
+  @FXML
+  private Button deletePlayerButton;
+  private final GameBoardLayoutConfig config = App.getGuiLayouts();
 
   private void pageSpecificActionBind() {
     adminZoneButton.setVisible(false);
@@ -61,88 +59,19 @@ public class SettingPageController extends AbstractLobbyController {
     // for admin page, bind action to admin and lobby button (admin potentially greyed out)
     pageSpecificActionBind();
 
+    // set up the colour part and update button part
+    Player player = App.getLobbyServiceRequestSender().getOnePlayer(
+        App.getUser().getAccessToken(),
+        App.getUser().getUsername());
 
     // set up the colour part and update button part
-    Player player = App.getLobbyServiceRequestSender()
-        .getOnePlayer(App.getUser().getAccessToken(), App.getUser().getUsername().toLowerCase());
+    App.bindColourUpdateAction(player, colorPicker, true, colorUpdateButton, config);
 
-    Color color = Color.web(player.getPreferredColour());
-    colorPicker.setValue(color);
-    colorUpdateButton.setOnAction(event -> {
-      // Get the selected color from the ColorPicker
-      Color chosenColor = colorPicker.getValue();
+    // bind the actions to password update
+    App.bindPasswordUpdateAction(player, passwordField, passwordUpdateButton, config);
 
-      // Convert the color to a 16-byte encoded string
-      String colorString = String.format("%02X%02X%02X%02X",
-          (int) (chosenColor.getRed() * 255),
-          (int) (chosenColor.getGreen() * 255),
-          (int) (chosenColor.getBlue() * 255),
-          (int) (chosenColor.getOpacity() * 255));
-      try {
-        App.getLobbyServiceRequestSender().updateOnePlayerColour(
-            App.getUser().getAccessToken(),
-            App.getUser().getUsername(),
-            colorString
-        );
-      } catch (UnirestException e) {
-        // somehow failed to update the colour
-        e.printStackTrace();
-        String errorTitle = "Colour Selection Error";
-        String error = "Could not update user's new colour choice!\nPlease try again";
-        App.loadPopUpWithController("lobby_warn.fxml",
-            new LobbyWarnPopUpController(error, errorTitle),
-            360,
-            170);
-      }
-    });
+    // bind the actions to delete user (flag indicating staying at admin page)
+    App.bindDeleteUserAction(player, deletePlayerButton, true, config);
 
-    deletePlayerButton.setOnAction(event -> {
-      String msg;
-      String title;
-      try {
-        App.getLobbyServiceRequestSender()
-            .deleteOnePlayer(App.getUser().getAccessToken(),
-                player.getName());
-        //refresh the page to reflect that player has been deleted
-        App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
-        title = "Delete Player Confirmation";
-        msg = "Deleted correctly!";
-      } catch (UnirestException e) {
-        title = "Delete Player Error";
-        msg = "Player was unable to be deleted.";
-      }
-
-      App.loadPopUpWithController("lobby_warn.fxml",
-          new LobbyWarnPopUpController(msg, title),
-          360,
-          170);
-    });
-
-    passwordUpdateButton.setOnAction(event -> {
-      String msg;
-      String title;
-      try {
-        App.getLobbyServiceRequestSender()
-            .updateOnePlayerPassword(
-                App.getUser().getAccessToken(),
-                player.getName(),
-                player.getPassword(),
-                userPassword.getText());
-        title = "Password Update Confirmation";
-        msg = "Updated correctly!";
-
-      } catch (UnirestException e) {
-        title = "Password Update Error";
-        msg = "Wrong password format.";
-      }
-
-      App.loadPopUpWithController("lobby_warn.fxml",
-          new LobbyWarnPopUpController(msg, title),
-          360,
-          170);
-      userPassword.clear();
-    });
-
-    // TODO: Finish the other update action binding (can copy paste from PlayerLobbyGui controller)
   }
 }

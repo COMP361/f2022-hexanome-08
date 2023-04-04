@@ -1,5 +1,6 @@
 package ca.group8.gameservice.splendorgame.model.splendormodel;
 
+import ca.group8.gameservice.splendorgame.controller.SplendorDevHelper;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -7,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represents the SuperClass of all Development Cards.
@@ -128,70 +131,115 @@ public class DevelopmentCard extends Card {
    * canBeBought.
    *
    * @param hasDoubleGoldPower hasDoubleGoldPower
-   * @param wealth wealth
-   * @return -1 if can not afford, 0 or >0 as a number of gold token needed
    */
-  public int canBeBought(boolean hasDoubleGoldPower, EnumMap<Colour, Integer> wealth) {
-    EnumMap<Colour, Integer> cardPrice = super.getPrice();
+  public EnumMap<Colour, Integer> canBeBought(boolean hasDoubleGoldPower,
+                                              PlayerInGame curPlayerInfo) {
 
-    // such Colour -> Integer map only contain the difference between regular token
-    // colours, not the gold colour
-    // diffPrices -> {BLUE:0, RED:-1, ..} is the result of wealth - price, we do not
-    // consider gold in here
-    Map<Colour, Integer> diffPrice = wealth.keySet().stream()
-        .filter(colour -> !colour.equals(Colour.GOLD) && !colour.equals(Colour.ORIENT))
+    Logger logger = LoggerFactory.getLogger(DevelopmentCard.class);
+
+    // constructing a new card price that considered gem discount already
+    EnumMap<Colour, Integer> allGems = new EnumMap<>(curPlayerInfo.getTotalGems());
+    EnumMap<Colour, Integer> cardPrice = SplendorDevHelper.getInstance().getRawTokenColoursMap();
+    cardPrice.remove(Colour.GOLD);
+    for (Colour colour : cardPrice.keySet()) {
+      int cardPriceVal = super.getPrice().get(colour);
+      int gemCount = allGems.get(colour);
+      int priceAfterDiscount = cardPriceVal - gemCount;
+      cardPrice.put(colour, Math.max(priceAfterDiscount, 0));
+    }
+
+    // diff price containing the tokens (only tokens) we need to pay off
+    // for this particular player
+    EnumMap<Colour, Integer> allTokens = new EnumMap<>(curPlayerInfo.getTokenHand().getAllTokens());
+    Map<Colour, Integer> diffPrice = cardPrice.keySet().stream()
+        .filter(colour -> colour != Colour.GOLD && colour != Colour.ORIENT)
         .collect(Collectors.toMap(
             key -> key,
-            key -> wealth.get(key) - cardPrice.get(key)
+            key -> allTokens.get(key) - cardPrice.get(key)
         ));
+    int goldCardCount = (int) curPlayerInfo.getPurchasedHand().getDevelopmentCards()
+        .stream().filter(c -> c.getGemColour() == Colour.GOLD).count();
+    int goldTokenCount = allTokens.get(Colour.GOLD);
+    //int goldTokenNeededToPay = 0;
+    int goldTokensFromCard = 2 * goldCardCount;
+    int totalGoldCount = goldTokensFromCard + goldTokenCount;
+    EnumMap<Colour, Integer> tokensToPay = new EnumMap<>(cardPrice);
 
-
-    int goldTokenCount = wealth.get(Colour.GOLD);
-    boolean hasGoldToken = goldTokenCount > 0;
-    int goldTokenNeeded = 0;
-    // do something to diff price map in here
-    if (hasGoldToken) {
-      // only consider count the gold token differently if the player has the power and one has
-      // some gold tokens, otherwise there is no point considering it
-      int[] goldTokenArr = new int[goldTokenCount];
-      if (hasDoubleGoldPower) {
-        // this len = goldTokenCount array [2,2,2,2..] is used to consider the double gold
-        // whenever in the diff price map we need a gold token to make up the price diff,
-        // we take an entry out of the array, make it to zero and add it to the diff price map
-        Arrays.fill(goldTokenArr, 2);
-      } else {
-        Arrays.fill(goldTokenArr, 1);
-      }
-      // either we have a
-      int i = 0;
-      while (i < goldTokenArr.length && diffPrice.values().stream().anyMatch(v -> v < 0)) {
-        for (Colour colour : diffPrice.keySet()) {
-          if (diffPrice.get(colour) < 0) {
-            int curLeftOver = diffPrice.get(colour);
-            diffPrice.put(colour, curLeftOver + goldTokenArr[i]);
-            // increment the gold token amt needed, move to next gold token spot
-            goldTokenArr[i] = 0;
-            i += 1;
-            goldTokenNeeded += 1;
-            if (i == goldTokenArr.length) {
-              break;
-            }
-
+    int[] goldTokenArr = new int[totalGoldCount];
+    if (hasDoubleGoldPower) {
+      // this len = goldTokenCount array [2,2,2,2..] is used to consider the double gold
+      // whenever in the diff price map we need a gold token to make up the price diff,
+      // we take an entry out of the array, make it to zero and add it to the diff price map
+      Arrays.fill(goldTokenArr, 2);
+    } else {
+      Arrays.fill(goldTokenArr, 1);
+    }
+    int i = 0;
+    for (Colour colour : diffPrice.keySet()) {
+      // excluding gold token in here since we only consider gold token card
+      if (colour != Colour.GOLD) {
+        while (diffPrice.get(colour) < 0 && i < goldTokenArr.length) {
+          int newValue = diffPrice.get(colour) + goldTokenArr[i];
+          diffPrice.put(colour, newValue);
+          i += 1;
+          int oldValue = tokensToPay.get(colour);
+          tokensToPay.put(colour, oldValue - goldTokenArr[i - 1]);
+          if (tokensToPay.get(colour) < 0) {
+            tokensToPay.put(colour, 0);
           }
         }
       }
     }
 
-    // has no gold token, return the result regularly. if the diff map stays all non-negative,
-    // then the player can afford this without using any gold token
-    if (diffPrice.values().stream().allMatch(count -> count >= 0)) {
-      return goldTokenNeeded;
-    } else {
-      // otherwise, no gold token and can not afford, return -1
-      return -1;
+    boolean allMatch = diffPrice.values().stream().allMatch(v -> v >= 0);
+    if (!allMatch) {
+      return null;
     }
-  }
 
+    //now i is the number of gold tokens use, need to find the best configuration
+    int goldValueNeeded = i;
+    int goldCardUsed = 0;
+    int goldTokenUsed = 0;
+
+    while (goldValueNeeded > 0 && (goldTokenCount > 0 || goldCardCount > 0)) {
+      if (goldCardCount > 0 && goldValueNeeded >= 2) {
+        goldValueNeeded -= 2;
+        goldCardCount--;
+        goldCardUsed++;
+      } else if (goldTokenCount > 0) {
+        goldTokenCount--;
+        goldValueNeeded--;
+        goldTokenUsed++;
+      } else {
+        goldValueNeeded -= 2;
+        goldCardCount--;
+        goldCardUsed++;
+      }
+    }
+
+    //if gold token used is still >0 card cannot be bought
+
+    //if its less than zero than we have a spare gold token from gold card to assign
+    if (goldValueNeeded < 0) {
+      int newIndex = goldTokenArr[0];
+      for (Colour colour : tokensToPay.keySet()) {
+        int oldTokensToPay = tokensToPay.get(colour);
+        if (oldTokensToPay > 0) {
+          tokensToPay.put(colour, oldTokensToPay - newIndex);
+          if (tokensToPay.get(colour) < 0) {
+            tokensToPay.put(colour, 0);
+          }
+          break;
+        }
+      }
+    }
+
+    //now just assign  gold tokens and card used and return
+    tokensToPay.put(Colour.GOLD, goldTokenUsed);
+    tokensToPay.put(Colour.ORIENT, goldCardUsed);
+    return tokensToPay;
+
+  }
 
   @Override
   public boolean equals(Object obj) {
@@ -206,11 +254,11 @@ public class DevelopmentCard extends Card {
     DevelopmentCard other = (DevelopmentCard) obj;
 
     return super.equals(other)
-            && this.level == other.level
-            && this.gemNumber == other.gemNumber
-            && this.isPaired == other.isPaired
-            && this.gemColour.equals(other.gemColour)
-            && this.purchaseEffects.equals(other.purchaseEffects);
+        && this.level == other.level
+        && this.gemNumber == other.gemNumber
+        && this.isPaired == other.isPaired
+        && this.gemColour.equals(other.gemColour)
+        && this.purchaseEffects.equals(other.purchaseEffects);
   }
 
   @Override

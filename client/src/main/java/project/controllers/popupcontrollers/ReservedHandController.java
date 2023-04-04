@@ -22,7 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import project.App;
-import project.view.splendor.ActionIdPair;
+import project.view.splendor.boardgui.ActionIdPair;
 
 /**
  * Reserve hand controller class.

@@ -1,4 +1,4 @@
-package project.view.splendor;
+package project.view.splendor.boardgui;
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.PurchaseAction;

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+<fx:root type="Group" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+    <Rectangle fx:id="highlightRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="100.0" stroke="BLACK" strokeType="INSIDE" width="100.0" />
+    <ImageView fx:id="playerImageView" fitHeight="83.0" fitWidth="83.0" layoutX="8.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />
+    <Circle fx:id="pointsCircle" fill="#acdef4" layoutX="82.0" layoutY="18.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
+    <Text layoutX="81.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
+    <Circle fx:id="reservedInfoCircle" fill="#e3f2ac" layoutX="82.0" layoutY="51.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" />
+    <Text layoutX="81.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="|" />
+    <Text fx:id="maxPointsText" layoutX="84.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="15" />
+    <Text fx:id="currentPointsText" layoutX="67.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+    <Text fx:id="reservedCardsCountText" layoutX="85.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+    <Text fx:id="reservedNobleCountText" layoutX="71.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" />
+    <ImageView fx:id="armImageView" fitHeight="35.0" fitWidth="35.0" layoutX="8.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" />
+</fx:root>
