@@ -52,18 +52,7 @@ public class ColourWealthGuiController implements Initializable {
     if (colour == Colour.GOLD) {
       tipInfo += "\nNote that gold card can not be paired!";
     }
-    Tooltip tooltip = new Tooltip(tipInfo);
-    tooltip.setShowDelay(Duration.millis(20));
-    tooltip.setStyle("-fx-font-size: 20px;");
-
-    backgroundRectangle.setOnMouseEntered(e-> {
-      Tooltip.install(backgroundRectangle,tooltip);
-    });
-
-    backgroundRectangle.setOnMouseExited(e-> {
-      Tooltip.uninstall(backgroundRectangle,tooltip);
-    });
-
+    App.bindToolTip(tipInfo,15,backgroundRectangle, 20);
     backgroundRectangle.setFill(Color.web(colourString));
     if (colour == Colour.BLACK) {
       gemCountText.setFill(Color.WHITE);

@@ -7,10 +7,11 @@ import ca.mcgill.comp361.splendormodel.model.CardEffect;
 import ca.mcgill.comp361.splendormodel.model.Colour;
 import ca.mcgill.comp361.splendormodel.model.DevelopmentCard;
 import ca.mcgill.comp361.splendormodel.model.NobleCard;
+import ca.mcgill.comp361.splendormodel.model.PlayerInGame;
 import ca.mcgill.comp361.splendormodel.model.Position;
-import ca.mcgill.comp361.splendormodel.model.PurchasedHand;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -44,6 +46,8 @@ public class PurchaseHandController implements Initializable {
   private final List<NobleCard> nobleCards;
   private final Map<String, Action> playerActions;
   private final long gameId;
+
+  private final PlayerInGame playerInGame;
   @FXML
   // each index represent the group of displaying all cards of one colour
   // there are 6 colours to display (hold the Groups)
@@ -56,20 +60,24 @@ public class PurchaseHandController implements Initializable {
   // hold List<NobleCard>
   private VBox noblesUnLocked;
 
+  @FXML
+  private Label ownershipLabel;
+
   /**
    * PurchaseHandController.
    *
-   * @param purchasedHand purchasedHand
+   * @param playerInGame playerInGame
    * @param playerActions playerActions
    */
-  public PurchaseHandController(long gameId, PurchasedHand purchasedHand,
+  public PurchaseHandController(long gameId, PlayerInGame playerInGame,
                                 Map<String, Action> playerActions) {
     // organize all dev cards (including gold colour ones) into colour map
     this.gameId = gameId;
-    List<DevelopmentCard> allCardsInHand = purchasedHand.getDevelopmentCards();
+    this.playerInGame = playerInGame;
+    List<DevelopmentCard> allCardsInHand = playerInGame.getPurchasedHand().getDevelopmentCards();
     this.colourCardsMap = reorganizeCardsInHand(allCardsInHand);
     this.colourGroupMap = new HashMap<>();
-    this.nobleCards = purchasedHand.getNobleCards();
+    this.nobleCards = playerInGame.getPurchasedHand().getNobleCards();
     this.playerActions = playerActions;
   }
 
@@ -124,8 +132,10 @@ public class PurchaseHandController implements Initializable {
       ImageView imgV = new ImageView(img);
       imgV.setFitWidth(100);
       imgV.setFitHeight(150);
-      satchelMark.setWidth(20);
+      satchelMark.setWidth(15);
       satchelMark.setHeight(150);
+      String hintOnMark = "This card is paired! No reverse!";
+      App.bindToolTip(hintOnMark, 15, satchelMark, 20);
 
       // if we have some pair actions, assign them
       if (!positionSatchelActionMap.isEmpty()) {
@@ -152,8 +162,8 @@ public class PurchaseHandController implements Initializable {
 
     int i = 0;
     for (Node n : groupOfOneColour.getChildren()) {
-      n.setLayoutX(i * 10);
-      n.setLayoutY(i * 20);
+      n.setLayoutX(i * 15);
+      n.setLayoutY(i * 25);
       i += 1;
     }
   }
@@ -222,10 +232,13 @@ public class PurchaseHandController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    //Map<String, Action> satchelActions = playerActions.entrySet()
-    //    .stream().filter(e -> e.getValue() instanceof CardExtraAction &&
-    //        ((CardExtraAction) e).getCardEffect().equals(CardEffect.SATCHEL))
-    //    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    if (App.getUser().getUsername().equals(playerInGame.getName())) {
+      ownershipLabel.setText("My Development Cards and Nobles");
+    } else {
+      String title = String.format("%s's Development Cards and Nobles", playerInGame.getName());
+      ownershipLabel.setText(title);
+    }
+
     Map<String, Action> satchelActions = new HashMap<>();
     for (String actionId : playerActions.keySet()) {
       Action action = playerActions.get(actionId);
@@ -262,16 +275,10 @@ public class PurchaseHandController implements Initializable {
     for (Colour c : colourGroupMap.keySet()) {
       if (colourCardsMap.containsKey(c)) {
         List<DevelopmentCard> cardsOfOneColour = colourCardsMap.get(c);
-        ////TODO: assign actions to image views with playerActions, depending on what kind of
-        //// actions (only CardExtraAction of Satchel can happen in this purchase hand,
-        //// only for normal
-        //// cards with RED, WHITE, BLUE, GREEN, BLACK colours)
-        //// Bind actions to image view during generateCardSatchelPair(...) method
-        //for (DevelopmentCard card : cardsOfOneColour) {
-        //  System.out.println(card.getCardName());
-        //}
-
-        List<HBox> allPairs = generateCardSatchelPair(cardsOfOneColour, positionSatchelActionMap);
+        List<DevelopmentCard> sortedCards = cardsOfOneColour.stream()
+            .sorted(Comparator.comparingInt(DevelopmentCard::getPrestigePoints))
+            .collect(Collectors.toList());
+        List<HBox> allPairs = generateCardSatchelPair(sortedCards, positionSatchelActionMap);
         addCardSatchelPairToColourGroup(allPairs, colourGroupMap.get(c));
       }
     }

@@ -10,12 +10,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.EnumMap;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -232,6 +235,28 @@ public class App extends Application {
 
   public static EnumMap<Colour, String> getColourStringMap() {
     return new EnumMap<>(colourStringMap);
+  }
+
+  /**
+   * Bind a tooltip to display (on-hover text hint) to any javafx node.
+   *
+   * @param toolTipContent content of the on-hover text
+   * @param toolTipContentFontSize font size of the content
+   * @param toolTipBindingElement the javafx node that you want to bind this tooltip to
+   * @param displayDelayMillis display delay (how long you need to wait before seeing the text)
+   */
+  public static void bindToolTip(String toolTipContent, int toolTipContentFontSize,
+                                 Node toolTipBindingElement, double displayDelayMillis) {
+    Tooltip tooltip = new Tooltip(toolTipContent);
+    tooltip.setShowDelay(Duration.millis(displayDelayMillis));
+    tooltip.setStyle(String.format("-fx-font-size: %spx;", toolTipContentFontSize));
+    toolTipBindingElement.setOnMouseEntered(e -> {
+      Tooltip.install(toolTipBindingElement, tooltip);
+    });
+
+    toolTipBindingElement.setOnMouseExited(e -> {
+      Tooltip.uninstall(toolTipBindingElement, tooltip);
+    });
   }
 
   /**

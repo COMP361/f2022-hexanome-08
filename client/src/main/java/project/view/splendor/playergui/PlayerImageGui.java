@@ -12,11 +12,11 @@ public class PlayerImageGui extends Group {
   private final PlayerImageGuiController controller;
 
 
-  public PlayerImageGui(String playerName, int armCode) {
+  public PlayerImageGui(long gameId, String playerName, int armCode) {
     FXMLLoader fxmlLoader =
         new FXMLLoader(getClass().getResource("/project/player_image.fxml"));
     fxmlLoader.setRoot(this);
-    controller = new PlayerImageGuiController(playerName, armCode);
+    controller = new PlayerImageGuiController(gameId, playerName, armCode);
     fxmlLoader.setController(controller);
     try {
       fxmlLoader.load();

@@ -164,17 +164,15 @@ public class GameController implements Initializable {
       PlayerStates playerStates = gsonParser.fromJson(playerStatsJson, PlayerStates.class);
       // every time button click, we have up-to-date information
       PlayerInGame playerInGame = playerStates.getOnePlayerInGame(curPlayerName);
-      PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
       String gameInfoJson = sender.sendGetGameInfoRequest(gameId, "").getBody();
       GameInfo gameInfo = gsonParser.fromJson(gameInfoJson, GameInfo.class);
       String playerName = viewerName;
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
       App.loadPopUpWithController("my_development_cards.fxml",
-          new PurchaseHandController(gameId, purchasedHand, playerActions),
+          new PurchaseHandController(gameId, playerInGame, playerActions),
           config.getLargePopUpWidth(),
           config.getLargePopUpHeight());
-
     };
   }
 
@@ -298,7 +296,7 @@ public class GameController implements Initializable {
       } else {
         armCode = nameToArmCodeMap.get(playerName);
       }
-      PlayerInfoGui playerInfoGui = new PlayerInfoGui(position, playerName, armCode);
+      PlayerInfoGui playerInfoGui = new PlayerInfoGui(gameId, position, playerName, armCode);
       // set up based on position
       switch (position) {
         case BOTTOM:
@@ -370,13 +368,12 @@ public class GameController implements Initializable {
       PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
           .fromJson(playerStatesJson, PlayerStates.class);
       PlayerInGame playerInGame = playerStates.getOnePlayerInGame(viewerName);
-      PurchasedHand purchasedHand = playerInGame.getPurchasedHand();
       // also assign the pending action button some functionality
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
           App.loadPopUpWithController("my_development_cards.fxml",
-              new PurchaseHandController(gameId, purchasedHand, playerActionMap),
+              new PurchaseHandController(gameId, playerInGame, playerActionMap),
               config.getLargePopUpWidth(),
               config.getLargePopUpHeight());
         });
@@ -385,7 +382,7 @@ public class GameController implements Initializable {
       // do a pop up right now
       Platform.runLater(() -> {
         App.loadPopUpWithController("my_development_cards.fxml",
-            new PurchaseHandController(gameId, purchasedHand, playerActionMap),
+            new PurchaseHandController(gameId, playerInGame, playerActionMap),
             config.getLargePopUpWidth(),
             config.getLargePopUpHeight());
       });

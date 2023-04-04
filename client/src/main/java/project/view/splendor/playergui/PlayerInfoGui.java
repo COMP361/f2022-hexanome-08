@@ -22,17 +22,20 @@ public class PlayerInfoGui {
 
   private final PlayerImageGui playerImageGui;
 
+  private final long gameId;
+
   /**
    * Construct new visual display of player.
    *
    * @param playerPosition  the position the player will be on the client's display.
    * @param playerName      represents the player's name as a String.
    */
-  public PlayerInfoGui(PlayerPosition playerPosition, String playerName, int armCode) {
+  public PlayerInfoGui(long gameId, PlayerPosition playerPosition, String playerName, int armCode) {
+    this.gameId = gameId;
     this.playerPosition = playerPosition;
     this.playerName = playerName;
     this.armCode = armCode;
-    this.playerImageGui = new PlayerImageGui(playerName, armCode);
+    this.playerImageGui = new PlayerImageGui(gameId, playerName, armCode);
     if (playerPosition == PlayerPosition.LEFT || playerPosition == PlayerPosition.RIGHT) {
       container = new VBox();
     } else {

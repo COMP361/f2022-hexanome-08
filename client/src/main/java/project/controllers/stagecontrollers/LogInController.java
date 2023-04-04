@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import org.json.JSONObject;
 import project.App;
 import project.config.ConnectionConfig;
@@ -41,52 +42,49 @@ public class LogInController implements Initializable {
    * The logic of handling log in. The methods check if the user has input both username and user
    * password or not
    */
-
-  private EventHandler<ActionEvent> createOnLogInClick() {
-    return actionEvent -> {
-      // extract fields from the object, in case of failing to extract "access_token",
-      // update the error message
-      boolean serviceLogIn = false;
-      try {
-        String userNameStr = userName.getText();
-        String userPasswordStr = userPassword.getText();
-        // retrieve the parsed JSONObject from the response
-        LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
-        JSONObject logInResponseJson = lobbyRequestSender
-            .sendLogInRequest(userNameStr, userPasswordStr);
-        // set up the permanent refresh_token for user
-        String accessToken = logInResponseJson.getString("access_token");
-        String refreshToken = logInResponseJson.getString("refresh_token");
-        String authority = lobbyRequestSender.sendAuthorityRequest(accessToken);
-        User curUser = new User(userNameStr, accessToken, refreshToken, authority);
-        // bind the user to the scope of App running lifecycle
-        App.setUser(curUser);
-        if (authority.equals("ROLE_SERVICE")) {
-          serviceLogIn = true;
-          throw new RuntimeException("");
-        }
-
-        // at the same time, spawn a thread that keeps refreshing this player's access token
-        Thread refreshTokenThread = createRefreshTokenThread();
-        refreshTokenThread.setDaemon(true);
-        refreshTokenThread.start();
-        LobbyController lobbyController = new LobbyController();
-        lobbyController.initializeRefreshTokenThread(refreshTokenThread);
-        // display the lobby page, the role of the user will be used inside to
-        // decide whether to display admin zone button or not
-        App.loadNewSceneToPrimaryStage("lobby_page.fxml", lobbyController);
-
-      } catch (Exception e) {
-        if (!serviceLogIn) {
-          logInPageErrorMessage.setText("Please enter both valid username and password");
-        } else {
-          logInPageErrorMessage.setText("Service Role can not log in LS! Try again");
-        }
-
-        userName.setText("");
-        userPassword.setText("");
+  private void doLogIn() {
+    // extract fields from the object, in case of failing to extract "access_token",
+    // update the error message
+    boolean serviceLogIn = false;
+    try {
+      String userNameStr = userName.getText();
+      String userPasswordStr = userPassword.getText();
+      // retrieve the parsed JSONObject from the response
+      LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();
+      JSONObject logInResponseJson = lobbyRequestSender
+          .sendLogInRequest(userNameStr, userPasswordStr);
+      // set up the permanent refresh_token for user
+      String accessToken = logInResponseJson.getString("access_token");
+      String refreshToken = logInResponseJson.getString("refresh_token");
+      String authority = lobbyRequestSender.sendAuthorityRequest(accessToken);
+      User curUser = new User(userNameStr, accessToken, refreshToken, authority);
+      // bind the user to the scope of App running lifecycle
+      App.setUser(curUser);
+      if (authority.equals("ROLE_SERVICE")) {
+        serviceLogIn = true;
+        throw new RuntimeException("");
       }
-    };
+
+      // at the same time, spawn a thread that keeps refreshing this player's access token
+      Thread refreshTokenThread = createRefreshTokenThread();
+      refreshTokenThread.setDaemon(true);
+      refreshTokenThread.start();
+      LobbyController lobbyController = new LobbyController();
+      lobbyController.initializeRefreshTokenThread(refreshTokenThread);
+      // display the lobby page, the role of the user will be used inside to
+      // decide whether to display admin zone button or not
+      App.loadNewSceneToPrimaryStage("lobby_page.fxml", lobbyController);
+
+    } catch (Exception e) {
+      if (!serviceLogIn) {
+        logInPageErrorMessage.setText("Please enter both valid username and password");
+      } else {
+        logInPageErrorMessage.setText("Service Role can not log in LS! Try again");
+      }
+
+      userName.setText("");
+      userPassword.setText("");
+    }
   }
 
   // Mainly for debug usage
@@ -120,7 +118,11 @@ public class LogInController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     setDefaultLogInInfo();
-    logInButton.setOnAction(createOnLogInClick());
+    // enable log-in by pressing ENTER
+    logInButton.setDefaultButton(true);
+    logInButton.setOnAction(event -> {
+      doLogIn();
+    });
     // guarantee to execute the termination of program in javafx thread
     quitButton.setOnAction(event -> {
       // before quiting, also terminate the refresh token thread

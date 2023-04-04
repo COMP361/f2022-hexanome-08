@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.util.Duration;
+import project.App;
 import project.view.lobby.communication.Session;
 
 public class SessionGuiController implements Initializable {
@@ -50,14 +51,11 @@ public class SessionGuiController implements Initializable {
         session.getGameParameters().getMaxSessionPlayers(),
         session.getPlayers());
     playerInfosLabel.setText(playerInfos);
-    saveGameIdLabel.setText("saved game id");
 
     if (!session.getSavegameid().isEmpty()) {
-      Tooltip tooltip = new Tooltip(session.getSavegameid());
-      tooltip.setStyle("-fx-font-size: 15px;");
-      tooltip.setShowDelay(Duration.millis(20));
-      saveGameIdLabel.setTooltip(tooltip);
+      saveGameIdLabel.setText("saved game id");
+      String saveGameInfo = session.getSavegameid();
+      App.bindToolTip(saveGameInfo, 15, saveGameIdLabel, 20);
     }
-
   }
 }

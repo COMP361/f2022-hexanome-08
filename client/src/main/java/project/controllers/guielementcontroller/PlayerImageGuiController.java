@@ -1,6 +1,12 @@
 package project.controllers.guielementcontroller;
 
+import ca.mcgill.comp361.splendormodel.model.PlayerInGame;
+import ca.mcgill.comp361.splendormodel.model.PlayerStates;
+import ca.mcgill.comp361.splendormodel.model.PurchasedHand;
+import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
+import com.mashape.unirest.http.HttpResponse;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,6 +18,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import project.App;
+import project.connection.GameRequestSender;
+import project.controllers.popupcontrollers.PurchaseHandController;
 
 public class PlayerImageGuiController implements Initializable {
 
@@ -43,7 +51,10 @@ public class PlayerImageGuiController implements Initializable {
 
   private final int armCode;
 
-  public PlayerImageGuiController(String playerName, int armCode) {
+  private final long gameId;
+
+  public PlayerImageGuiController(long gameId, String playerName, int armCode) {
+    this.gameId = gameId;
     this.playerName = playerName;
     this.armCode = armCode;
   }
@@ -71,17 +82,25 @@ public class PlayerImageGuiController implements Initializable {
     }
     playerImageView.setImage(App.getPlayerImage(playerName));
 
-    Tooltip tooltip = new Tooltip(
-        "The number on the left is the number of reserved nobles\n" +
-            "The number on the right is the number of reserved cards");
-    tooltip.setShowDelay(Duration.millis(20));
-    tooltip.setStyle("-fx-font-size: 15px;");
-    reservedInfoCircle.setOnMouseEntered(e-> {
-      Tooltip.install(reservedInfoCircle, tooltip);
-    });
+    String tipInfo = "The number on the left is the number of reserved nobles\n" +
+        "The number on the right is the number of reserved cards";
+    App.bindToolTip(tipInfo, 15, reservedInfoCircle, 20);
+    String playerImageViewTip = "Click on to see the player's purchased hand!";
+    // only bind the tooltip except the current user's image view
+    if (!App.getUser().getUsername().equals(playerName)) {
+      App.bindToolTip(playerImageViewTip, 15, playerImageView, 20);
+      playerImageView.setOnMouseClicked(e -> {
+        GameRequestSender sender = App.getGameRequestSender();
+        HttpResponse<String> response = sender.sendGetAllPlayerInfoRequest(gameId, "");
+        PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
+            .fromJson(response.getBody(), PlayerStates.class);
+        PlayerInGame playerInGame = playerStates.getOnePlayerInGame(playerName);
+        App.loadPopUpWithController("my_development_cards.fxml",
+            new PurchaseHandController(gameId, playerInGame, new HashMap<>()),
+            App.getGuiLayouts().getLargePopUpWidth(),
+            App.getGuiLayouts().getLargePopUpHeight());
+      });
+    }
 
-    reservedInfoCircle.setOnMouseExited(e-> {
-      Tooltip.uninstall(reservedInfoCircle, tooltip);
-    });
   }
 }
