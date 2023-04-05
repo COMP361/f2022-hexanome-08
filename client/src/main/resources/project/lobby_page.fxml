@@ -38,7 +38,7 @@
         </HBox>
         <ScrollPane fx:id="allSessionScrollPane" layoutX="360.0" layoutY="264.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="425.0" prefWidth="860.0" vbarPolicy="ALWAYS">
             <content>
-                <VBox fx:id="sessionVbox" prefHeight="420.0" prefWidth="855.0" />
+                <VBox fx:id="sessionVbox" prefHeight="175.0" prefWidth="842.0" />
             </content>
         </ScrollPane>
         <HBox fx:id="createGame" alignment="CENTER" />

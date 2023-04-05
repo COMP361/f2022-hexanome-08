@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.PasswordField;
+import javafx.scene.paint.Color;
 import project.App;
 import project.config.GameBoardLayoutConfig;
 import project.view.lobby.communication.Player;
@@ -38,6 +39,8 @@ public class SettingPageController extends AbstractLobbyController {
     // only set up for admin role
     if (role.equals("ROLE_ADMIN")) {
       adminZoneButton.setVisible(true);
+      adminZoneButton.setStyle("-fx-background-color: #e50916");
+      adminZoneButton.setTextFill(Color.WHITE);
       adminZoneButton.setOnAction(event -> {
         App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
       });

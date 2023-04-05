@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.paint.Color;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.connection.LobbyRequestSender;
@@ -205,6 +206,8 @@ public class LobbyController extends AbstractLobbyController {
     // only set up for admin role
     if (role.equals("ROLE_ADMIN")) {
       adminZoneButton.setVisible(true);
+      adminZoneButton.setStyle("-fx-background-color: #e50916");
+      adminZoneButton.setTextFill(Color.WHITE);
       adminZoneButton.setOnAction(event -> {
         // before leaving the lobby page, make sure to stop the update thread
         sessionUpdateThread.interrupt();
