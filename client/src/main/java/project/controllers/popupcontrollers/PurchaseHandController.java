@@ -242,8 +242,8 @@ public class PurchaseHandController implements Initializable {
       ownershipLabel.setText(title);
     }
 
-    cardCountLabel.setText(cardCountLabel.getText() + " " +
-        playerInGame.getPurchasedHand().getDevelopmentCards().size());
+    cardCountLabel.setText(cardCountLabel.getText() + " "
+        + playerInGame.getPurchasedHand().getDevelopmentCards().size());
 
     Map<String, Action> satchelActions = new HashMap<>();
     for (String actionId : playerActions.keySet()) {
