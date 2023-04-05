@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
@@ -44,6 +45,9 @@ public class PlayerImageGuiController implements Initializable {
   private Circle reservedInfoCircle;
   @FXML
   private Circle pointsCircle;
+
+  @FXML
+  private Label playerNameLabel;
 
   /**
    * PlayerImageGuiController.
@@ -81,6 +85,7 @@ public class PlayerImageGuiController implements Initializable {
     }
     playerImageView.setImage(App.getPlayerImage(playerName));
 
+    playerNameLabel.setText(playerName);
     String tipInfo = "The number on the left is the number of reserved nobles\n"
         + "The number on the right is the number of reserved cards";
     App.bindToolTip(tipInfo, 15, reservedInfoCircle, 20);

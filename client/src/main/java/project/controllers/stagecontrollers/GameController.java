@@ -32,8 +32,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.config.GameBoardLayoutConfig;
@@ -83,6 +85,10 @@ public class GameController implements Initializable {
   private Button myReservedCardsButton;
   @FXML
   private Button quitButton;
+
+  @FXML
+  private Label currentPlayerLabel;
+
   private List<String> sortedPlayerNames = new ArrayList<>();
   private Thread playerInfoThread;
   private Thread mainGameUpdateThread;
@@ -652,12 +658,16 @@ public class GameController implements Initializable {
             String responseInJsonString = longPullResponse.getBody();
             Gson gsonParser = SplendorDevHelper.getInstance().getGson();
             GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
+            Platform.runLater(() -> {
+              currentPlayerLabel.setText("Current Player:\n" + curGameInfo.getCurrentPlayer());
+            });
+
             // first thing of the turn, close all popups
             Platform.runLater(App::closeAllPopUps);
 
             // if the game is over, load the game over pop up page
             showFinishGamePopUp(curGameInfo);
-            highlightPlayerInfoGui(curGameInfo);
+            //highlightPlayerInfoGui(curGameInfo);
 
             // these additional things can only happen if not in watch mode
             if (!inWatchMode) {
@@ -761,6 +771,8 @@ public class GameController implements Initializable {
         gameRequestSender.sendGetGameInfoRequest(gameId, "");
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
+    currentPlayerLabel.setText("Current Player:\n" + curGameInfo.getCurrentPlayer());
+
     // information about viewer's perspective
     if (viewerName == null) {
       viewerName = curGameInfo.getFirstPlayerName();
