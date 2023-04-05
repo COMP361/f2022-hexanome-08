@@ -81,10 +81,10 @@ public class GameOverPopUpController implements Initializable {
           e.printStackTrace();
           throw new RuntimeException("could not quit the game!");
         }
+      } else {
+        // otherwise, this is a game over popup, no request sent
+
       }
-      // otherwise, this is a game over popup, no request sent
-
-
       // typical closing pop up logic
       Button button = (Button) event.getSource();
       Stage window = (Stage) button.getScene().getWindow();
@@ -100,8 +100,12 @@ public class GameOverPopUpController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     byeButton.setOnAction(clickOnQuitGameButton(mainGameUpdateThread, playerInfoThread));
-    if (!winnerNames.isEmpty() && !optionToCancel) {
-      winnersLabel.setText("Winners: " + winnerNames);
+    if (!optionToCancel) {
+      if (!winnerNames.isEmpty()) {
+        winnersLabel.setText("Winners: " + winnerNames);
+      } else {
+        winnersLabel.setText("No Winner Yet, Game Finish!");
+      }
     }
   }
 
