@@ -122,6 +122,9 @@ public class PurchaseHandController implements Initializable {
       // Colour will be assigned differently if the card is linked
       if (card.isPaired()) {
         satchelMark.setFill(Color.BLUE);
+        // tooltip only if the card is paired
+        String hintOnMark = "This card is paired! No reverse!";
+        App.bindToolTip(hintOnMark, 15, satchelMark, 20);
       } else {
         satchelMark.setFill(Color.WHITESMOKE);
       }
@@ -137,8 +140,6 @@ public class PurchaseHandController implements Initializable {
       imgV.setFitHeight(150);
       satchelMark.setWidth(15);
       satchelMark.setHeight(150);
-      String hintOnMark = "This card is paired! No reverse!";
-      App.bindToolTip(hintOnMark, 15, satchelMark, 20);
 
       // if we have some pair actions, assign them
       if (!positionSatchelActionMap.isEmpty()) {
