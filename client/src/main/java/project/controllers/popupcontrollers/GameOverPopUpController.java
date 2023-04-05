@@ -81,10 +81,9 @@ public class GameOverPopUpController implements Initializable {
           e.printStackTrace();
           throw new RuntimeException("could not quit the game!");
         }
-      } else {
-        // otherwise, this is a game over popup, no request sent
-
       }
+      // otherwise, this is a game over popup, no request sent
+
       // typical closing pop up logic
       Button button = (Button) event.getSource();
       Stage window = (Stage) button.getScene().getWindow();
