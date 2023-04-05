@@ -64,8 +64,6 @@ public class App extends Application {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
   };
 
-  public static CountDownLatch popupCloseLatch = new CountDownLatch(1);
-
   private static final EnumMap<Colour, String> colourStringMap = new EnumMap<>(Colour.class) {
     {
       put(Colour.RED, "#EE3A44");

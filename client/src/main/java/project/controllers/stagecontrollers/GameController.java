@@ -342,9 +342,16 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("noble_action_pop_up.fxml",
               new ActOnNoblePopUpController(gameId, playerActionMap, false),
-              config.getSmallPopUpWidth(),
+              config.getSmallPopUpWidth() / 3 * 5,
               config.getSmallPopUpHeight());
         });
+      });
+
+      Platform.runLater(() -> {
+        App.loadPopUpWithController("noble_action_pop_up.fxml",
+            new ActOnNoblePopUpController(gameId, playerActionMap, false),
+            config.getSmallPopUpWidth() / 3 * 5,
+            config.getSmallPopUpHeight());
       });
     }
   }
@@ -646,17 +653,7 @@ public class GameController implements Initializable {
             Gson gsonParser = SplendorDevHelper.getInstance().getGson();
             GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
             // first thing of the turn, close all popups
-            Platform.runLater(() -> {
-              App.closeAllPopUps();
-              App.popupCloseLatch.countDown();
-            });
-
-
-            try {
-              App.popupCloseLatch.await();
-            } catch (InterruptedException e) {
-              e.printStackTrace();
-            }
+            Platform.runLater(App::closeAllPopUps);
 
             // if the game is over, load the game over pop up page
             showFinishGamePopUp(curGameInfo);
