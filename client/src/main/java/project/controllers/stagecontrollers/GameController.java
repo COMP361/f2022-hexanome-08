@@ -667,6 +667,10 @@ public class GameController implements Initializable {
 
             // if the game is over, load the game over pop up page
             showFinishGamePopUp(curGameInfo);
+
+            //ALWAYS, highlight the correct player gui based on the new game info
+            // busy waiting, for the map to be set
+            highlightPlayerInfoGui(curGameInfo);
             //highlightPlayerInfoGui(curGameInfo);
 
             // these additional things can only happen if not in watch mode
