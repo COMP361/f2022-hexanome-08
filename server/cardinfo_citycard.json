@@ -166,5 +166,17 @@
             "WHITE":2
         },
         "anyColourCount":0
+    },
+    {
+        "cardName":"city8_1",
+        "prestigePoints":14,
+        "price":{
+            "BLUE":3,
+            "BLACK":0,
+            "RED":3,
+            "GREEN":0,
+            "WHITE":0
+        },
+        "anyColourCount":0
     }
 ]
