@@ -33,8 +33,8 @@ public class CityBoard extends Board {
     HashSet<Integer> prefixSet = new HashSet<>();
     // add 3 unique random prefix number in here
     while (prefixSet.size() < 3) {
-      // randomly got one number from 1 -> 7
-      prefixSet.add(new Random().nextInt(7) + 1);
+      // randomly got one number from 1 -> 8
+      prefixSet.add(new Random().nextInt(8) + 1);
     }
     List<Integer> uniquePrefixes = new ArrayList<>(prefixSet);
 
