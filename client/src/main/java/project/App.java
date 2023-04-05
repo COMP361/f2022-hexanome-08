@@ -7,8 +7,19 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -63,8 +74,6 @@ public class App extends Application {
     }
   };
 
-  private static final String defaultImageUrl =
-      "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_960_720.jpg";
   private static GameRequestSender gameRequestSender = null;
   private static LobbyRequestSender lobbyRequestSender = null;
   private static Stage primaryStage;
@@ -262,13 +271,64 @@ public class App extends Application {
    * @return Image
    */
   public static Image getPlayerImage(String playerName) {
-    Image playerImage;
-    try {
-      playerImage = new Image(String.format("project/pictures/ta_pictures/%s.png", playerName));
-    } catch (Exception e) {
-      playerImage = new Image(defaultImageUrl);
+    String userPicPath = "project/pictures/user_pictures/";
+    String randomPicPath = "project/pictures/random_pictures/";
+    List<String> userPicNames = getPictureNames(userPicPath);
+    List<String> randomPicNames = getPictureNames(randomPicPath);
+    if (userPicNames.contains(playerName)) {
+      return new Image(userPicPath + playerName + ".png");
+    } else {
+      // randomly pick one out of random list
+      if (randomPicNames.size() > 0) {
+        int randomIndex = new Random().nextInt(randomPicNames.size());
+        String randomPicName = randomPicNames.get(randomIndex);
+        return new Image(randomPicPath + randomPicName + ".png");
+      } else {
+        // ran out of pics!
+        throw new RuntimeException("No random pictures available for you!");
+      }
     }
-    return playerImage;
+  }
+
+  ///*
+  //  Move and rename the random picture out of random folder, assign it to a player.
+  // */
+  //private static void moveAndRenamePicture(String sourcePath, String targetPath)
+  //    throws IOException, URISyntaxException {
+  //  ClassLoader classLoader = App.class.getClassLoader();
+  //  URI sourceUri = classLoader.getResource(sourcePath).toURI();
+  //  Path source = Paths.get(sourceUri);
+  //
+  //  Path resourceRoot = source.getParent().getParent().getParent();
+  //  Path target = resourceRoot.resolve(targetPath);
+  //  Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+  //}
+
+  private static List<String> getPictureNames(String resourcePath) {
+    try {
+      URI uri = App.class
+          .getClassLoader()
+          .getResource(resourcePath)
+          .toURI();
+      Path path = Paths.get(uri);
+
+      try (Stream<Path> resourceStream = Files.list(path)) {
+        return resourceStream
+            .filter(Files::isRegularFile)
+            .filter(Files::isRegularFile)
+            .map(Path::getFileName)
+            .map(Path::toString)
+            .map(fileName -> fileName.substring(0, fileName.lastIndexOf('.')))
+            .collect(Collectors.toList());
+      } catch (IOException e) {
+        e.printStackTrace();
+        throw new RuntimeException(e.getMessage());
+      }
+
+    } catch (URISyntaxException | NullPointerException e) {
+      e.printStackTrace();
+      throw new RuntimeException(e.getMessage());
+    }
   }
 
   public static EnumMap<Colour, String> getColourStringMap() {

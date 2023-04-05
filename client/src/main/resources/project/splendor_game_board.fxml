@@ -30,7 +30,7 @@
                         <ImageView fitHeight="125.0" fitWidth="125.0" layoutY="25.0" pickOnBounds="true"
                                    preserveRatio="true">
                             <image>
-                                <Image url="@pictures/ta_pictures/marianick.png"/>
+                                <Image url="@pictures/user_pictures/marianick.png"/>
                             </image>
                         </ImageView>
                         <HBox layoutX="140.0" layoutY="31.0" maxHeight="-Infinity" maxWidth="-Infinity"
@@ -85,7 +85,7 @@
                         <ImageView fitHeight="122.0" fitWidth="123.0" layoutX="877.0" layoutY="29.0" pickOnBounds="true"
                                    preserveRatio="true">
                             <image>
-                                <Image url="@pictures/ta_pictures/linus.png"/>
+                                <Image url="@pictures/user_pictures/linus.png"/>
                             </image>
                         </ImageView>
                         <Circle fill="#e3f2ac" layoutX="878.0" layoutY="95.0" radius="16.0" stroke="BLACK"
@@ -101,7 +101,7 @@
                         <ImageView fitHeight="122.0" fitWidth="137.0" layoutY="-105.0" pickOnBounds="true"
                                    preserveRatio="true">
                             <image>
-                                <Image url="@pictures/ta_pictures/julia.png"/>
+                                <Image url="@pictures/user_pictures/julia.png"/>
                             </image>
                         </ImageView>
                         <Circle centerX="40.0" centerY="20.0" fill="#acdef4" layoutX="70.0" layoutY="-70.0"
@@ -678,7 +678,7 @@
                                                 <ImageView fitHeight="123.0" fitWidth="137.0" layoutX="26.0"
                                                            layoutY="80.0" pickOnBounds="true" preserveRatio="true">
                                                     <image>
-                                                        <Image url="@pictures/ta_pictures/khabiir.png"/>
+                                                        <Image url="@pictures/user_pictures/khabiir.png"/>
                                                     </image>
                                                 </ImageView>
                                                 <Circle fill="#e3f2ac" layoutX="50.0" layoutY="200.0" radius="16.0"

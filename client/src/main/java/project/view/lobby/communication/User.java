@@ -1,5 +1,8 @@
 package project.view.lobby.communication;
 
+import javafx.scene.image.Image;
+import project.App;
+
 /**
  * User class used to store user info locally.
  */
@@ -10,18 +13,20 @@ public class User {
   private final String authority;
   private String accessToken;
 
+  private Image playerImage = null;
+
   /**
    * Constructor of a user instance.
    *
-   * @param pusername    username
-   * @param paccessToken user access token
-   * @param pauthority   user authority
+   * @param username    username
+   * @param accessToken user access token
+   * @param authority   user authority
    */
-  public User(String pusername, String paccessToken, String refreshToken, String pauthority) {
-    username = pusername;
-    accessToken = paccessToken;
+  public User(String username, String accessToken, String refreshToken, String authority) {
+    this.username = username;
+    this.accessToken = accessToken;
     this.refreshToken = refreshToken;
-    authority = pauthority;
+    this.authority = authority;
   }
 
   public String getUsername() {
@@ -44,5 +49,15 @@ public class User {
     return refreshToken;
   }
 
-
+  /**
+   * Get the image of the player.
+   *
+   * @return image of the player.
+   */
+  public Image getPlayerImage() {
+    if (playerImage == null) {
+      playerImage = App.getPlayerImage(username);
+    }
+    return playerImage;
+  }
 }

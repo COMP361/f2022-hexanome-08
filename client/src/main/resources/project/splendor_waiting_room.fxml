@@ -88,25 +88,25 @@
                 <ImageView fitHeight="137.0" fitWidth="144.0" layoutX="132.0" layoutY="153.0" pickOnBounds="true"
                            preserveRatio="true">
                     <image>
-                        <Image url="@pictures/ta_pictures/marianick-modified.png"/>
+                        <Image url="@pictures/user_pictures/marianick-modified.png"/>
                     </image>
                 </ImageView>
                 <ImageView fitHeight="138.0" fitWidth="138.0" layoutX="331.0" layoutY="153.0" pickOnBounds="true"
                            preserveRatio="true">
                     <image>
-                        <Image url="@pictures/ta_pictures/linus-modified.png"/>
+                        <Image url="@pictures/user_pictures/linus-modified.png"/>
                     </image>
                 </ImageView>
                 <ImageView fitHeight="139.0" fitWidth="139.0" layoutX="531.0" layoutY="152.0" pickOnBounds="true"
                            preserveRatio="true">
                     <image>
-                        <Image url="@pictures/ta_pictures/khabiir-modified.png"/>
+                        <Image url="@pictures/user_pictures/khabiir-modified.png"/>
                     </image>
                 </ImageView>
                 <ImageView fitHeight="141.0" fitWidth="138.0" layoutX="731.0" layoutY="153.0" pickOnBounds="true"
                            preserveRatio="true">
                     <image>
-                        <Image url="@pictures/ta_pictures/maximilian-modified.png"/>
+                        <Image url="@pictures/user_pictures/maximilian-modified.png"/>
                     </image>
                 </ImageView>
                 <Text layoutX="157.0" layoutY="319.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You (Host)">
