@@ -62,6 +62,11 @@ public class GameBoardLayoutConfig {
     return appWidth;
   }
 
+  /**
+   * set the app width.
+   *
+   * @param appWidth the width
+   */
   public void setAppWidth(double appWidth) {
     this.appWidth = appWidth;
   }
@@ -70,6 +75,11 @@ public class GameBoardLayoutConfig {
     return appHeight;
   }
 
+  /**
+   * set the app height.
+   *
+   * @param appHeight the height
+   */
   public void setAppHeight(double appHeight) {
     this.appHeight = appHeight;
   }
@@ -102,6 +112,11 @@ public class GameBoardLayoutConfig {
     return tokenBankLayoutX;
   }
 
+  /**
+   * set the bank layout of x.
+   *
+   * @param tokenBankLayoutX layout x
+   */
   public void setTokenBankLayoutX(double tokenBankLayoutX) {
     this.tokenBankLayoutX = tokenBankLayoutX;
   }
@@ -114,6 +129,11 @@ public class GameBoardLayoutConfig {
     this.tokenBankLayoutY = tokenBankLayoutY;
   }
 
+  /**
+   * get the layout of x.
+   *
+   * @return the layout
+   */
   public double getTopPlayerLayoutX() {
     return topPlayerLayoutX;
   }
@@ -122,6 +142,11 @@ public class GameBoardLayoutConfig {
     this.topPlayerLayoutX = topPlayerLayoutX;
   }
 
+  /**
+   * get the layout.
+   *
+   * @return the layout
+   */
   public double getTopPlayerLayoutY() {
     return topPlayerLayoutY;
   }
@@ -134,6 +159,11 @@ public class GameBoardLayoutConfig {
     return btmPlayerLayoutX;
   }
 
+  /**
+   * set the bottom player layout of x.
+   *
+   * @param btmPlayerLayoutX a double
+   */
   public void setBtmPlayerLayoutX(double btmPlayerLayoutX) {
     this.btmPlayerLayoutX = btmPlayerLayoutX;
   }
@@ -142,6 +172,11 @@ public class GameBoardLayoutConfig {
     return btmPlayerLayoutY;
   }
 
+  /**
+   * set the player layout of y.
+   *
+   * @param btmPlayerLayoutY a double
+   */
   public void setBtmPlayerLayoutY(double btmPlayerLayoutY) {
     this.btmPlayerLayoutY = btmPlayerLayoutY;
   }
@@ -182,6 +217,11 @@ public class GameBoardLayoutConfig {
     return baseCardBoardLayoutX;
   }
 
+  /**
+   * set the board layout of x.
+   *
+   * @param baseCardBoardLayoutX a double
+   */
   public void setBaseCardBoardLayoutX(double baseCardBoardLayoutX) {
     this.baseCardBoardLayoutX = baseCardBoardLayoutX;
   }
@@ -190,6 +230,11 @@ public class GameBoardLayoutConfig {
     return baseCardBoardLayoutY;
   }
 
+  /**
+   * set the layout of Y.
+   *
+   * @param baseCardBoardLayoutY the layout we want
+   */
   public void setBaseCardBoardLayoutY(double baseCardBoardLayoutY) {
     this.baseCardBoardLayoutY = baseCardBoardLayoutY;
   }
@@ -266,6 +311,11 @@ public class GameBoardLayoutConfig {
     this.nobleHeight = nobleHeight;
   }
 
+  /**
+   * get the bank width.
+   *
+   * @return a double
+   */
   public double getTokenBankWidth() {
     return tokenBankWidth;
   }
@@ -282,6 +332,11 @@ public class GameBoardLayoutConfig {
     this.tokenBankHeight = tokenBankHeight;
   }
 
+  /**
+   * get the top player width.
+   *
+   * @return a double
+   */
   public double getTopPlayerWidth() {
     return topPlayerWidth;
   }
@@ -290,6 +345,11 @@ public class GameBoardLayoutConfig {
     this.topPlayerWidth = topPlayerWidth;
   }
 
+  /**
+   * get the top player height.
+   *
+   * @return a double
+   */
   public double getTopPlayerHeight() {
     return topPlayerHeight;
   }
@@ -302,6 +362,11 @@ public class GameBoardLayoutConfig {
     return btmPlayerWidth;
   }
 
+  /**
+   * set the bottom player width.
+   *
+   * @param btmPlayerWidth width
+   */
   public void setBtmPlayerWidth(double btmPlayerWidth) {
     this.btmPlayerWidth = btmPlayerWidth;
   }
@@ -310,6 +375,11 @@ public class GameBoardLayoutConfig {
     return btmPlayerHeight;
   }
 
+  /**
+   * set the bottom player height.
+   *
+   * @param btmPlayerHeight the height
+   */
   public void setBtmPlayerHeight(double btmPlayerHeight) {
     this.btmPlayerHeight = btmPlayerHeight;
   }

@@ -170,7 +170,7 @@ public class App extends Application {
    * Close all popups of primary stage.
    */
   public static void closeAllPopUps() {
-    System.out.println("All windows: " + Window.getWindows());
+    //System.out.println("All windows: " + Window.getWindows());
     for (Window window : Window.getWindows()) {
       if (window instanceof Stage) {
         Stage popup = (Stage) window;

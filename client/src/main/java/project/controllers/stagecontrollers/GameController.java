@@ -653,9 +653,6 @@ public class GameController implements Initializable {
 
             //ALWAYS, highlight the correct player gui based on the new game info
             // busy waiting, for the map to be set
-            while (nameToPlayerInfoGuiMap.size() < curGameInfo.getPlayerNames().size()) {
-              Thread.sleep(50);
-            }
             highlightPlayerInfoGui(curGameInfo);
 
             // these additional things can only happen if not in watch mode
