@@ -61,10 +61,10 @@ public class ActionGenerator {
   private Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
 
   /**
+   * Constructor of Action generator.
    *
-   *
-   * @param playerActionMaps
-   * @param tableTop
+   * @param playerActionMaps playerActionMaps
+   * @param tableTop tableTop
    */
   public ActionGenerator(Map<String, Map<String, Action>> playerActionMaps, TableTop tableTop) {
     this.playerActionMaps = playerActionMaps;
