@@ -19,7 +19,7 @@ Let's start with the setting up the servers and database using `docker`:
 
 #### docker compose up
 Follow the steps by typing the command into your `terminal` (`cmd` if you are using windows)
-1. git clone this [repository](https://github.com/RuoyuDeng/M8-Docker-BGP.git) by typing: `git clone git@github.com:RuoyuDeng/M8-Docker-BGP.git`
+1. git clone this [repository](https://github.com/RuoyuDeng/M8-Docker-BGP.git) by typing: `git clone https://github.com/RuoyuDeng/M8-Docker-BGP.git`
 2. Then you cd into the directory: `cd M8-Docker-BGP`
 3. Run the update submodules script
    1. For mac/linux, type: `./updatesubmodules.sh`
