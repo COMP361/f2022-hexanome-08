@@ -634,8 +634,7 @@ public class GameController implements Initializable {
             longPullResponse = gameRequestSender.sendGetGameInfoRequest(gameId, hashedResponse);
             responseCode = longPullResponse.getStatus();
             if (Thread.currentThread().isInterrupted()) {
-              throw new InterruptedException(
-                  "GameInfo Thread: " + Thread.currentThread().getName()
+              throw new InterruptedException("GameInfo Thread: " + Thread.currentThread().getName()
                       + " terminated");
             }
           }
@@ -646,6 +645,9 @@ public class GameController implements Initializable {
             String responseInJsonString = longPullResponse.getBody();
             Gson gsonParser = SplendorDevHelper.getInstance().getGson();
             GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
+            // first thing of the turn, close all popups
+            Platform.runLater(App::closeAllPopUps);
+
             // if the game is over, load the game over pop up page
             showFinishGamePopUp(curGameInfo);
 

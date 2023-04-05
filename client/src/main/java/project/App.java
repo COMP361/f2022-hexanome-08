@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -154,6 +155,21 @@ public class App extends Application {
 
     // show the popup window
     newStage.show();
+  }
+
+  /**
+   * Close all popups of primary stage.
+   */
+  public static void closeAllPopUps() {
+    System.out.println("All windows: " + Window.getWindows());
+    for (Window window : Window.getWindows()) {
+      if (window instanceof Stage) {
+        Stage popup = (Stage) window;
+        if (popup.getOwner() == primaryStage) {
+          popup.close();
+        }
+      }
+    }
   }
 
   /**
