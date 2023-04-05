@@ -5,14 +5,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="resCardPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="resCardPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label alignment="CENTER" layoutX="300.0" layoutY="20.0" prefHeight="32.0" prefWidth="301.0" text="My Reserved Cards">
+        <Label alignment="CENTER" layoutX="350.0" layoutY="14.0" prefHeight="32.0" prefWidth="301.0" text="My Reserved Cards">
             <font>
                 <Font name="Arial Black" size="22.0" />
             </font>
         </Label>
-        <HBox fx:id="reservedDevCardsHbox" layoutX="280.0" layoutY="100.0" prefHeight="150.0" prefWidth="340.0" spacing="20.0" style="-fx-border-color: blue; -fx-border-width: 5;" />
-        <HBox fx:id="reservedNoblesHbox" layoutX="180.0" layoutY="280.0" prefHeight="150.0" prefWidth="540.0" spacing="10.0" style="-fx-border-color: green; -fx-border-width: 6;" />
+        <HBox fx:id="reservedDevCardsHbox" layoutX="330.0" layoutY="101.0" prefHeight="150.0" prefWidth="340.0" spacing="20.0" style="-fx-border-color: blue; -fx-border-width: 5;" />
+        <HBox fx:id="reservedNoblesHbox" layoutX="230.0" layoutY="293.0" prefHeight="150.0" prefWidth="540.0" spacing="10.0" style="-fx-border-color: green; -fx-border-width: 6;" />
     </children>
 </Pane>

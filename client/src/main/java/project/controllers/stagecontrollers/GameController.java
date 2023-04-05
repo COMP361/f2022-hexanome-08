@@ -398,18 +398,17 @@ public class GameController implements Initializable {
         Platform.runLater(() -> {
           App.loadPopUpWithController("free_card_pop_up.fxml",
               new BurnCardController(gameId, playerActionMap),
-              config.getLargePopUpWidth(),
-              config.getLargePopUpHeight());
+              config.getSelectFreeCardWidth(),
+              config.getSelectFreeCardHeight());
         });
       });
 
       // do a pop up right now
       Platform.runLater(() -> {
-
         App.loadPopUpWithController("free_card_pop_up.fxml",
             new BurnCardController(gameId, playerActionMap),
-            config.getLargePopUpWidth(),
-            config.getLargePopUpHeight());
+            config.getSelectFreeCardWidth(),
+            config.getSelectFreeCardHeight());
       });
     }
   }
