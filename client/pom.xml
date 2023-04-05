@@ -51,7 +51,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>20</version>
+            <version>19.0.2.1</version>
 <!--            <classifier>win</classifier>-->
 <!--            <classifier>mac-arm64</classifier>-->
 <!--            <classifier>mac-arm64</classifier>-->
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>20</version>
+            <version>19.0.2.1</version>
 <!--            <classifier>win</classifier>-->
 <!--            <classifier>mac-arm64</classifier>-->
 <!--            <classifier>mac-arm64</classifier>-->
@@ -153,25 +153,25 @@
                 </executions>
             </plugin>
             <!-- add docs -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.4.1</version>
-                <configuration>
-                    <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-                    <reportOutputDirectory>${project.reporting.outputDirectory}/docs
-                    </reportOutputDirectory>
-                    <destDir>docs</destDir>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-javadoc-plugin</artifactId>-->
+<!--                <version>3.4.1</version>-->
+<!--                <configuration>-->
+<!--                    <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>-->
+<!--                    <reportOutputDirectory>${project.reporting.outputDirectory}/docs-->
+<!--                    </reportOutputDirectory>-->
+<!--                    <destDir>docs</destDir>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>attach-javadocs</id>-->
+<!--                        <goals>-->
+<!--                            <goal>jar</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>
