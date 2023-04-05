@@ -77,17 +77,12 @@ public class GameController implements Initializable {
   private Button myCardButton;
   @FXML
   private Button saveButton;
-
   @FXML
   private Button pendingActionButton;
-
   @FXML
   private Button myReservedCardsButton;
   @FXML
   private Button quitButton;
-  private String lastTurnPlayerName;
-  private NobleBoardGui nobleBoard;
-  private TokenBankGui tokenBankGui;
   private List<String> sortedPlayerNames = new ArrayList<>();
   private Thread playerInfoThread;
   private Thread mainGameUpdateThread;
@@ -598,9 +593,7 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("game_over.fxml",
             new GameOverPopUpController(mainGameUpdateThread,
-                playerInfoThread,
-                curGameInfo.getWinners(),
-                false),
+                playerInfoThread, curGameInfo.getWinners(), gameId, false),
             config.getSmallPopUpWidth(),
             config.getSmallPopUpHeight());
       });
@@ -709,7 +702,7 @@ public class GameController implements Initializable {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       App.loadPopUpWithController("save_game.fxml",
-          new SaveGamePopUpController(gameInfo, gameId, playerInfoThread, mainGameUpdateThread),
+          new SaveGamePopUpController(gameInfo, gameId),
           config.getSmallPopUpWidth(),
           config.getSmallPopUpHeight());
     };
@@ -721,9 +714,7 @@ public class GameController implements Initializable {
     return event -> {
       App.loadPopUpWithController("quit_game.fxml",
           new GameOverPopUpController(mainGameUpdateThread,
-              playerInfoThread,
-              new ArrayList<>(),
-              true),
+              playerInfoThread, new ArrayList<>(), gameId, true),
           config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
     };
   }

@@ -23,8 +23,6 @@ import project.view.lobby.communication.Savegame;
 public class SaveGamePopUpController implements Initializable {
   private final GameInfo gameInfo;
   private final long gameId;
-  private final Thread playerInfoThread;
-  private final Thread mainGameUpdateThread;
   @FXML
   private TextField saveGameIdTextField;
   @FXML
@@ -38,15 +36,10 @@ public class SaveGamePopUpController implements Initializable {
    *
    * @param gameInfo             gameInfo
    * @param gameId               gameId
-   * @param playerInfoThread     playerInfoThread
-   * @param mainGameUpdateThread mainGameUpdateThread
    */
-  public SaveGamePopUpController(GameInfo gameInfo, long gameId,
-                                 Thread playerInfoThread, Thread mainGameUpdateThread) {
+  public SaveGamePopUpController(GameInfo gameInfo, long gameId) {
     this.gameInfo = gameInfo;
     this.gameId = gameId;
-    this.playerInfoThread = playerInfoThread;
-    this.mainGameUpdateThread = mainGameUpdateThread;
 
   }
 

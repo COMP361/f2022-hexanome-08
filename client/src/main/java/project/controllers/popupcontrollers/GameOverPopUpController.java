@@ -1,5 +1,6 @@
 package project.controllers.popupcontrollers;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -11,7 +12,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import project.App;
+import project.connection.GameRequestSender;
 import project.controllers.stagecontrollers.LobbyController;
+import project.view.lobby.communication.Savegame;
 
 /**
  * The buttons aside the player.
@@ -24,18 +27,20 @@ public class GameOverPopUpController implements Initializable {
   private final List<String> winnerNames;
   private final boolean optionToCancel;
 
+  private final long gameId;
+
   @FXML
   private Label winnersLabel;
   @FXML
   private Button byeButton;
 
-  public GameOverPopUpController(Thread mainGameUpdateThread,
-                                 Thread playerInfoThread,
-                                 List<String> winnerNames,
+  public GameOverPopUpController(Thread mainGameUpdateThread, Thread playerInfoThread,
+                                 List<String> winnerNames, long gameId,
                                  boolean optionToCancel) {
     this.mainGameUpdateThread = mainGameUpdateThread;
     this.playerInfoThread = playerInfoThread;
     this.winnerNames = winnerNames;
+    this.gameId = gameId;
     this.optionToCancel = optionToCancel;
   }
 
@@ -53,6 +58,18 @@ public class GameOverPopUpController implements Initializable {
       // once player clicks on quit button, stop the threads and load the lobby for them
       mainGameUpdateThread.interrupt();
       playerInfoThread.interrupt();
+
+      try {
+        GameRequestSender sender = App.getGameRequestSender();
+        // a dummy save game instance to the save game API
+        // once received this, we know we should terminate the game
+        Savegame savegame = new Savegame(new String[0], "", "");
+        sender.sendSaveGameRequest(gameId, savegame);
+      } catch (UnirestException e) {
+        e.printStackTrace();
+        throw new RuntimeException("could not quit the game!");
+      }
+
       // typical closing pop up logic
       Button button = (Button) event.getSource();
       Stage window = (Stage) button.getScene().getWindow();

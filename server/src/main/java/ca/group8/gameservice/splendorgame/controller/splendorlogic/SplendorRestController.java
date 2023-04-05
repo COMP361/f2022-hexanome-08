@@ -117,7 +117,9 @@ public class SplendorRestController {
   }
 
   /**
-   * step to save the game.
+   * step to end the game, if the saved game info contains an empty save game id.
+   * we know that we should not save this game, and the game should be deleted.
+   * If the id is not empty, then we should save it, and the game is not terminated.
    *
    * @param gameId gameId
    * @param saveGameInfo saveGameInfo
@@ -129,37 +131,38 @@ public class SplendorRestController {
       "/splendortrade/api/games/{gameId}/savegame",
       "/splendorcity/api/games/{gameId}/savegame"}, consumes = "application/json; charset=utf-8")
   public ResponseEntity<String> saveGame(@PathVariable long gameId,
-                                         @RequestBody Savegame saveGameInfo,
-                                         @RequestParam(value = "player_name") String playerName,
-                                         @RequestParam(value = "access_token") String accessToken) {
+                                        @RequestBody Savegame saveGameInfo,
+                                        @RequestParam(value = "player_name") String playerName,
+                                        @RequestParam(value = "access_token") String accessToken) {
     try {
-      // ModelAccessException can happen if gameId is not found
-      //String creatorName = gameManager.getGameById(gameId).getCreator();
-
       // check if the request is sent by the creator or not
       // if not, do not allow to save it
-
       // allow save game for any player in that game, not just creator!
       gameValidator.gameIdPlayerNameValidCheck(accessToken, playerName, gameId);
-      logger.warn("Got save request successfully from: " + playerName);
-
       // save the game detailed info to our game server as json file
       // and the metadata Savegame to LS, might throw model access exception
       // if duplicate game is saved
-      gameManager.saveGame(saveGameInfo, gameId);
-      //// forcing this game to be finished
-      //GameInfo curGame = gameManager.getGameById(gameId);
-      //curGame.setFinished();
-      //// immediately tell the client, game is over
-      //gameInfoBroadcastContentManager.get(gameId).touch();
-      //// remove anything related to this game from game manager
-      //// implicitly tell LS to delete this session
-      //gameManager.deleteGame(gameId);
-      //
-      //// remove the broadcast content manager which controls the
-      //// long polling updates after letting clients know the game is finished
-      //gameInfoBroadcastContentManager.remove(gameId);
-      //allPlayerInfoBroadcastContentManager.remove(gameId);
+
+      // the save game has empty save game id, this game is forced to terminate
+      if (saveGameInfo.getSavegameid().isEmpty()) {
+        // forcing this game to be finished
+        GameInfo curGame = gameManager.getGameById(gameId);
+        curGame.setFinished();
+        // immediately tell the client, game is over
+        gameInfoBroadcastContentManager.get(gameId).touch();
+        // remove anything related to this game from game manager
+        // implicitly tell LS to delete this session
+        gameManager.deleteGame(gameId);
+
+        // remove the broadcast content manager which controls the
+        // long polling updates after letting clients know the game is finished
+        gameInfoBroadcastContentManager.remove(gameId);
+        allPlayerInfoBroadcastContentManager.remove(gameId);
+      } else {
+        // the save game has non-empty save game id, this game is just saved, not forced to quit
+        gameManager.saveGame(saveGameInfo, gameId);
+      }
+
       return ResponseEntity.status(HttpStatus.OK).body("");
     } catch (ModelAccessException e) {
       logger.warn(e.getMessage());
