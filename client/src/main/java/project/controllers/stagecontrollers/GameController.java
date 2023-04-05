@@ -646,16 +646,20 @@ public class GameController implements Initializable {
             Gson gsonParser = SplendorDevHelper.getInstance().getGson();
             GameInfo curGameInfo = gsonParser.fromJson(responseInJsonString, GameInfo.class);
             // first thing of the turn, close all popups
-            Platform.runLater(App::closeAllPopUps);
+            Platform.runLater(() -> {
+              App.closeAllPopUps();
+              App.popupCloseLatch.countDown();
+            });
+
+
+            try {
+              App.popupCloseLatch.await();
+            } catch (InterruptedException e) {
+              e.printStackTrace();
+            }
 
             // if the game is over, load the game over pop up page
             showFinishGamePopUp(curGameInfo);
-
-            //ALWAYS, highlight the correct player gui based on the new game info
-            // busy waiting, for the map to be set
-            while (nameToPlayerInfoGuiMap.size() < curGameInfo.getPlayerNames().size()) {
-              Thread.sleep(50);
-            }
             highlightPlayerInfoGui(curGameInfo);
 
             // these additional things can only happen if not in watch mode

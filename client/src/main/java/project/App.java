@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Application;
@@ -62,6 +63,8 @@ public class App extends Application {
   private static final Colour[] baseColours = new Colour[] {
       Colour.RED, Colour.BLACK, Colour.WHITE, Colour.BLUE, Colour.GREEN
   };
+
+  public static CountDownLatch popupCloseLatch = new CountDownLatch(1);
 
   private static final EnumMap<Colour, String> colourStringMap = new EnumMap<>(Colour.class) {
     {
@@ -170,7 +173,6 @@ public class App extends Application {
    * Close all popups of primary stage.
    */
   public static void closeAllPopUps() {
-    System.out.println("All windows: " + Window.getWindows());
     for (Window window : Window.getWindows()) {
       if (window instanceof Stage) {
         Stage popup = (Stage) window;
@@ -289,20 +291,6 @@ public class App extends Application {
       }
     }
   }
-
-  ///*
-  //  Move and rename the random picture out of random folder, assign it to a player.
-  // */
-  //private static void moveAndRenamePicture(String sourcePath, String targetPath)
-  //    throws IOException, URISyntaxException {
-  //  ClassLoader classLoader = App.class.getClassLoader();
-  //  URI sourceUri = classLoader.getResource(sourcePath).toURI();
-  //  Path source = Paths.get(sourceUri);
-  //
-  //  Path resourceRoot = source.getParent().getParent().getParent();
-  //  Path target = resourceRoot.resolve(targetPath);
-  //  Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
-  //}
 
   private static List<String> getPictureNames(String resourcePath) {
     try {

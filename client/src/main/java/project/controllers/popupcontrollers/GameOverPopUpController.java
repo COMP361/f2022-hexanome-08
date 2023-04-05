@@ -44,8 +44,7 @@ public class GameOverPopUpController implements Initializable {
    * @param optionToCancel optionToCancel
    */
   public GameOverPopUpController(Thread mainGameUpdateThread, Thread playerInfoThread,
-                                 List<String> winnerNames, long gameId,
-                                 boolean optionToCancel) {
+                                 List<String> winnerNames, long gameId, boolean optionToCancel) {
     this.mainGameUpdateThread = mainGameUpdateThread;
     this.playerInfoThread = playerInfoThread;
     this.winnerNames = winnerNames;
