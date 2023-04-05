@@ -217,12 +217,10 @@ public class CardExtraAction extends Action {
   public void burnActionHelper(PlayerInGame curPlayer,
                                ActionInterpreter associatedActionInterpreter) {
 
-    DevelopmentCard cardToBurn = (DevelopmentCard) this.curCard;
     final int burnNumber = associatedActionInterpreter.getBurnCardCount();
-    int gemNumber = cardToBurn.getGemNumber();
+    DevelopmentCard cardToBurn = (DevelopmentCard) this.curCard;
     //make it negative since you're taking away points
     int prestigePoints = -1 * cardToBurn.getPrestigePoints();
-
     //remove burned card from purchaseHand and remove its prestige points
     // if the current dev card is paired, we also need to remove the satchel card in hand
     if (cardToBurn.isPaired()) {
@@ -230,8 +228,8 @@ public class CardExtraAction extends Action {
     }
     curPlayer.getPurchasedHand().removeDevelopmentCard(cardToBurn);
     curPlayer.changePrestigePoints(prestigePoints);
-
     //remove the gems from burned card from total amount needed to burn
+    int gemNumber = cardToBurn.getGemNumber();
     associatedActionInterpreter.removeBurnCardCount(gemNumber);
     ActionGenerator actionGenerator = associatedActionInterpreter.getActionGenerator();
     Logger logger = LoggerFactory.getLogger(ActionInterpreter.class);
