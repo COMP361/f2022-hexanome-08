@@ -68,14 +68,17 @@ public class LobbyController extends AbstractLobbyController {
             170);
         return;
       }
-      String gameName = gameNameMapping.get(displayGameName);
+
+      // split the "display name: save game id" or "display name"
+      // to an array of [display name, save game id]
+      // or [display name]
+      String[] gameNameParts = displayGameName.split(":\\s*");
+      String gameName = gameNameMapping.get(gameNameParts[0]);
       String saveGameId = "";
-      // display name can be a game service name or a saved id, do that check
-      if (allSaveGamesMap.containsKey(displayGameName)) {
-        // then we need to get the service name and save game id from here
-        Savegame savegame = allSaveGamesMap.get(displayGameName);
+      if (gameNameParts.length == 2) {
+        saveGameId = gameNameParts[1];
+        Savegame savegame = allSaveGamesMap.get(saveGameId);
         gameName = savegame.getGamename();
-        saveGameId = savegame.getSavegameid();
       }
 
       String accessToken = curUser.getAccessToken();
@@ -175,7 +178,7 @@ public class LobbyController extends AbstractLobbyController {
         for (Savegame savegame : savegames) {
           allSaveGamesMap.put(savegame.getSavegameid(), savegame);
           // adding all saved game ids to a separate list
-          saveGameIds.add(savegame.getSavegameid());
+          saveGameIds.add(g.getDisplayName() + ": " + savegame.getSavegameid());
         }
       }
     }

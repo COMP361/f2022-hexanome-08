@@ -48,6 +48,13 @@
 //  //}
 //
 //  @Test
+//  public void test1() {
+//    String s = "abc: cde";
+//    String s2 = "abc";
+//    String[] parts = s2.split(":\\s*");
+//    System.out.println(Arrays.toString(parts));
+//  }
+//  @Test
 //  public void testPositionEquals() {
 //    Position p1 = new Position(0,0);
 //    Position p2 = new Position(0, 0);
