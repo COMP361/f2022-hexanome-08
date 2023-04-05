@@ -319,7 +319,7 @@ public class App extends Application {
       try {
         App.getLobbyServiceRequestSender().updateOnePlayerColour(
             App.getUser().getAccessToken(),
-            App.getUser().getUsername(),
+            player.getName(),
             colorString
         );
         // depending on the flag, decide which page are we on to refresh
