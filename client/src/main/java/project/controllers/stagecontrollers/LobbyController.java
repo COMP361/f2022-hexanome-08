@@ -196,7 +196,7 @@ public class LobbyController extends AbstractLobbyController {
   private void pageSpecificActionBind() {
     settingButton.setOnAction(event -> {
       // before leaving the lobby page, make sure to stop the update thread
-      sessionUpdateThread.interrupt();
+      super.getSessionUpdateThread().interrupt();
       App.loadNewSceneToPrimaryStage("setting_page.fxml", new SettingPageController());
     });
 
@@ -210,7 +210,7 @@ public class LobbyController extends AbstractLobbyController {
       adminZoneButton.setTextFill(Color.WHITE);
       adminZoneButton.setOnAction(event -> {
         // before leaving the lobby page, make sure to stop the update thread
-        sessionUpdateThread.interrupt();
+        super.getSessionUpdateThread().interrupt();
         App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
       });
     }
@@ -234,8 +234,8 @@ public class LobbyController extends AbstractLobbyController {
 
     // Set up the thread to keep updating sessions
     initializeSessionUpdateThread(createSessionGuiUpdateThread());
-    sessionUpdateThread.setDaemon(true);
-    sessionUpdateThread.start();
+    super.getSessionUpdateThread().setDaemon(true);
+    super.getSessionUpdateThread().start();
   }
 
 

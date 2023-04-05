@@ -14,22 +14,21 @@ import project.view.lobby.communication.Player;
 /**
  * AbstractLobbyController.
  */
-public class AbstractLobbyController implements Initializable {
+public abstract class AbstractLobbyController implements Initializable {
   @FXML
-  protected ImageView userImageView;
-
-  @FXML
-  protected VBox playerVisualInfoVbox;
+  private ImageView userImageView;
 
   @FXML
-  protected Label userNameLabel;
+  private VBox playerVisualInfoVbox;
 
   @FXML
-  protected Button logOutButton;
+  private Label userNameLabel;
+  @FXML
+  private Button logOutButton;
 
-  protected Thread sessionUpdateThread = null;
+  private Thread sessionUpdateThread = null;
 
-  protected Thread refreshTokenThread = null;
+  private Thread refreshTokenThread = null;
 
   protected void initializeSessionUpdateThread(Thread sessionUpdateThread) {
     if (this.sessionUpdateThread == null) {
@@ -41,6 +40,10 @@ public class AbstractLobbyController implements Initializable {
     if (this.refreshTokenThread == null) {
       this.refreshTokenThread = refreshTokenThread;
     }
+  }
+
+  public Thread getSessionUpdateThread() {
+    return sessionUpdateThread;
   }
 
   @Override
