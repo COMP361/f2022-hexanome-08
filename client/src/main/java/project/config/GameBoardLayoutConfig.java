@@ -66,6 +66,11 @@ public class GameBoardLayoutConfig {
     this.appWidth = appWidth;
   }
 
+  /**
+   * App height.
+   *
+   * @return a double app height
+   */
   public double getAppHeight() {
     return appHeight;
   }
