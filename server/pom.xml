@@ -178,21 +178,24 @@
                             </execution>
                         </executions>
                     </plugin>
-
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>3.4.1</version>
+                        <configuration>
+                            <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                            <reportOutputDirectory>${project.reporting.outputDirectory}/docs
+                            </reportOutputDirectory>
+                            <destDir>docs</destDir>
+                        </configuration>
                         <executions>
                             <execution>
+                                <id>attach-javadocs</id>
                                 <goals>
-                                    <goal>javadoc</goal>
+                                    <goal>jar</goal>
                                 </goals>
                             </execution>
                         </executions>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/javadoc</outputDirectory>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -206,7 +209,7 @@
         </profile>
         <!--dev profile is intended for native deployment of Xox, with no calls to other services on startup-->
 
-        <!--test profile is intended for testing of Splendor server, no checkstyle enforced-->
+        <!--test profile is intended for testing of Splendor server, no checkstyle, javadoc enforced-->
         <profile>
             <id>test</id>
             <properties>
@@ -222,7 +225,7 @@
                 <packaging.type>jar</packaging.type>
             </properties>
         </profile>
-        <!--prod profile is intended for dockerized deployment of Xox.-->
+        <!--prod profile is intended for dockerized deployment of Splendor server, force checkstyle.-->
         <profile>
             <id>prod</id>
             <build>

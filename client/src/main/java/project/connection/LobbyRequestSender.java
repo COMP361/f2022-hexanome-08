@@ -95,7 +95,6 @@ public class LobbyRequestSender {
    *
    * @param refreshToken refresh access token
    * @return A string that is the new access token
-   * @throws UnirestException in case of a failed request
    */
   public String sendRefreshTokenRequest(String refreshToken) {
     try {

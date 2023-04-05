@@ -342,57 +342,34 @@ public class GameBoardLayoutConfig {
     return leftPlayerHeight;
   }
 
-  public void setLeftPlayerHeight(double leftPlayerHeight) {
-    this.leftPlayerHeight = leftPlayerHeight;
-  }
-
   public double getBaseCardBoardWidth() {
     return baseCardBoardWidth;
-  }
-
-  public void setBaseCardBoardWidth(double baseCardBoardWidth) {
-    this.baseCardBoardWidth = baseCardBoardWidth;
   }
 
   public double getBaseCardBoardHeight() {
     return baseCardBoardHeight;
   }
 
-  public void setBaseCardBoardHeight(double baseCardBoardHeight) {
-    this.baseCardBoardHeight = baseCardBoardHeight;
-  }
 
   public double getPacWidth() {
     return pacWidth;
   }
 
-  public void setPacWidth(double pacWidth) {
-    this.pacWidth = pacWidth;
-  }
 
   public double getPacHeight() {
     return pacHeight;
   }
 
-  public void setPacHeight(double pacHeight) {
-    this.pacHeight = pacHeight;
-  }
 
   public double getCardActionWidth() {
     return cardActionWidth;
   }
 
-  public void setCardActionWidth(double cardActionWidth) {
-    this.cardActionWidth = cardActionWidth;
-  }
 
   public double getCardActionHeight() {
     return cardActionHeight;
   }
 
-  public void setCardActionHeight(double cardActionHeight) {
-    this.cardActionHeight = cardActionHeight;
-  }
 
   public double getSmallPopUpWidth() {
     return smallPopUpWidth;
@@ -406,17 +383,13 @@ public class GameBoardLayoutConfig {
     return exitGameWidth;
   }
 
-  public void setExitGameWidth(double exitGameWidth) {
-    this.exitGameWidth = exitGameWidth;
-  }
+
 
   public double getExitGameHeight() {
     return exitGameHeight;
   }
 
-  public void setExitGameHeight(double exitGameHeight) {
-    this.exitGameHeight = exitGameHeight;
-  }
+
 
   public double getLargePopUpWidth() {
     return largePopUpWidth;

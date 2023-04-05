@@ -18,11 +18,18 @@ public class GameServerParameters {
   private String webSupport;
 
   /**
-   * name, displayName, location, max, min, webSupport.
+   * Constructor of GameServerParameters.
+   *
+   * @param name game service name
+   * @param displayName game display name
+   * @param location game host location
+   * @param maxSessionPlayers maxSessionPlayers
+   * @param minSessionPlayers minSessionPlayers
+   * @param webSupport bool for webSupport or not
    */
   public GameServerParameters(String name, String displayName, String location,
-                              int maxSessionPlayers,
-                              int minSessionPlayers, String webSupport) {
+                              int maxSessionPlayers, int minSessionPlayers,
+                              String webSupport) {
     this.name = name;
     this.displayName = displayName;
     this.location = location;

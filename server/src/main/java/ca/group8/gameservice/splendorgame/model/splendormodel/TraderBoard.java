@@ -49,7 +49,7 @@ public class TraderBoard extends Board {
   /**
    * Get all powers of all players.
    *
-   * @return a map from String to Map< PowerEffect,Power >
+   * @return a map with value as string, key as another map of PowerEffect -> Power
    */
   public Map<String, Map<PowerEffect, Power>> getAllPlayerPowers() {
     return allPlayerPowers;

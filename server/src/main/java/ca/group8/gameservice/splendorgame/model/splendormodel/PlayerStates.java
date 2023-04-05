@@ -34,11 +34,8 @@ public class PlayerStates implements BroadcastContent {
    *
    * @param name The name associated with a PlayerInGame object
    * @return the PlayerInGame object associated with the name parameter
-   * @throws SplendorLogicException if you request a player who is not in the playersInfo map..
    */
   public PlayerInGame getOnePlayerInGame(String name) {
-    //throw an exception if name (method argument) is not a player in playersInfo.
-    //get playerInGame object from playersInfo list
     return playersInfo.get(name);
   }
 
