@@ -3,5 +3,5 @@
   "defaultPassword": "abc123_ABC123",
   "useDefaultUserInfo": "true",
   "hostIp": "10.122.104.148",
-  "useLocalHost": "false"
+  "useLocalHost": "true"
 }
