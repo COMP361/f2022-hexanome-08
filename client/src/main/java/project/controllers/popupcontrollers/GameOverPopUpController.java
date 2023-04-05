@@ -34,6 +34,15 @@ public class GameOverPopUpController implements Initializable {
   @FXML
   private Button byeButton;
 
+  /**
+   * GameOverPopUpController.
+   *
+   * @param mainGameUpdateThread mainGameUpdateThread
+   * @param playerInfoThread playerInfoThread
+   * @param winnerNames winnerNames
+   * @param gameId gameId
+   * @param optionToCancel optionToCancel
+   */
   public GameOverPopUpController(Thread mainGameUpdateThread, Thread playerInfoThread,
                                  List<String> winnerNames, long gameId,
                                  boolean optionToCancel) {
