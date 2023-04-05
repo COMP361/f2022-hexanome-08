@@ -68,16 +68,22 @@ public class GameOverPopUpController implements Initializable {
       mainGameUpdateThread.interrupt();
       playerInfoThread.interrupt();
 
-      try {
-        GameRequestSender sender = App.getGameRequestSender();
-        // a dummy save game instance to the save game API
-        // once received this, we know we should terminate the game
-        Savegame savegame = new Savegame(new String[0], "", "");
-        sender.sendSaveGameRequest(gameId, savegame);
-      } catch (UnirestException e) {
-        e.printStackTrace();
-        throw new RuntimeException("could not quit the game!");
+      // if we have the option to cancel, then this is a quit game popup
+      // some  requests need to be sent to game server
+      if (optionToCancel) {
+        try {
+          GameRequestSender sender = App.getGameRequestSender();
+          // a dummy save game instance to the save game API
+          // once received this, we know we should terminate the game
+          Savegame savegame = new Savegame(new String[0], "", "");
+          sender.sendSaveGameRequest(gameId, savegame);
+        } catch (UnirestException e) {
+          e.printStackTrace();
+          throw new RuntimeException("could not quit the game!");
+        }
       }
+      // otherwise, this is a game over popup, no request sent
+
 
       // typical closing pop up logic
       Button button = (Button) event.getSource();
