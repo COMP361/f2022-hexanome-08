@@ -11,6 +11,9 @@ import javafx.scene.layout.VBox;
 import project.App;
 import project.view.lobby.communication.Player;
 
+/**
+ * AbstractLobbyController.
+ */
 public class AbstractLobbyController implements Initializable {
   @FXML
   protected ImageView userImageView;

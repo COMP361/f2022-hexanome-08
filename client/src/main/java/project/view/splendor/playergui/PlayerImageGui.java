@@ -7,11 +7,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import project.controllers.guielementcontroller.PlayerImageGuiController;
 
+/**
+ * PlayerImageGui.
+ */
 public class PlayerImageGui extends Group {
 
   private final PlayerImageGuiController controller;
 
 
+  /**
+   * PlayerImageGui.
+   *
+   * @param gameId gameId
+   * @param playerName playerName
+   * @param armCode armCode
+   */
   public PlayerImageGui(long gameId, String playerName, int armCode) {
     FXMLLoader fxmlLoader =
         new FXMLLoader(getClass().getResource("/project/player_image.fxml"));
@@ -38,6 +48,11 @@ public class PlayerImageGui extends Group {
     controller.getReservedCardsCountText().setText("" + reservedCardsCount);
   }
 
+  /**
+   * setHighlightRectangle.
+   *
+   * @param highlight highlight
+   */
   public void setHighlightRectangle(boolean highlight) {
     Rectangle highlightRectangle = controller.getHighlightRectangle();
     if (highlight) {

@@ -26,6 +26,9 @@ import project.view.lobby.communication.GameParameters;
 import project.view.lobby.communication.Player;
 import project.view.lobby.communication.Role;
 
+/**
+ * AdminPageController.
+ */
 public class AdminPageController extends AbstractLobbyController {
 
   private List<Player> allRegisteredPlayers = new ArrayList<>();

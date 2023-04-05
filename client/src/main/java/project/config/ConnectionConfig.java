@@ -1,5 +1,8 @@
 package project.config;
 
+/**
+ * ConnectionConfig.
+ */
 public class ConnectionConfig {
   private final String defaultUserName;
   private final String defaultPassword;
@@ -7,7 +10,15 @@ public class ConnectionConfig {
   private final String hostIp;
   private final boolean useLocalHost;
 
-
+  /**
+   * ConnectionConfig.
+   *
+   * @param defaultUserName defaultUserName
+   * @param defaultPassword defaultPassword
+   * @param useDefaultUserInfo useDefaultUserInfo
+   * @param hostIp hostIp
+   * @param useLocalHost useLocalHost
+   */
   public ConnectionConfig(String defaultUserName, String defaultPassword,
                           boolean useDefaultUserInfo,
                           String hostIp, boolean useLocalHost) {
@@ -30,6 +41,11 @@ public class ConnectionConfig {
     return useDefaultUserInfo;
   }
 
+  /**
+   * gotHostIp.
+   *
+   * @return string
+   */
   public String getHostIp() {
     if (useLocalHost) {
       return "127.0.0.1";

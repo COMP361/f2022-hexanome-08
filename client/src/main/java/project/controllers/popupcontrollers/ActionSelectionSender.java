@@ -7,6 +7,9 @@ import javafx.stage.Stage;
 import project.App;
 import project.connection.GameRequestSender;
 
+/**
+ * ActionSelectionSender.
+ */
 public class ActionSelectionSender {
 
   private final long gameId;

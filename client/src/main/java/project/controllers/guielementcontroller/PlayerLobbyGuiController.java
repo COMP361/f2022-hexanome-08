@@ -13,6 +13,9 @@ import project.App;
 import project.config.GameBoardLayoutConfig;
 import project.view.lobby.communication.Player;
 
+/**
+ * PlayerLobbyGuiController.
+ */
 public class PlayerLobbyGuiController implements Initializable {
 
   private final Player player;
@@ -35,6 +38,11 @@ public class PlayerLobbyGuiController implements Initializable {
     this.player = player;
   }
 
+  /**
+   * getColourStringFromColourPicker.
+   *
+   * @return string
+   */
   public String getColourStringFromColourPicker() {
     // Get the selected color from the ColorPicker
     Color chosenColor = colorPicker.getValue();

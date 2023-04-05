@@ -55,6 +55,9 @@ public class SessionGuiManager extends VBox {
   }
 
 
+  /**
+   * setupSessionGuiOrder.
+   */
   public void setupSessionGuiOrder() {
     List<SessionGui> containsUserSessionList = new ArrayList<>();
     List<SessionGui> otherUserSessionList = new ArrayList<>();

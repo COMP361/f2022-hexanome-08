@@ -12,6 +12,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import project.App;
 
+/**
+ * BonusTokenPopUpController.
+ */
 public class BonusTokenPopUpController extends ActionSelectionSender implements Initializable {
 
   private final Map<String, Action> playerActionMap;
