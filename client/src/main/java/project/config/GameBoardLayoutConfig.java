@@ -114,6 +114,11 @@ public class GameBoardLayoutConfig {
     this.tokenBankLayoutY = tokenBankLayoutY;
   }
 
+  /**
+   * get the top player layout of x.
+   *
+   * @return a double of layout
+   */
   public double getTopPlayerLayoutX() {
     return topPlayerLayoutX;
   }
