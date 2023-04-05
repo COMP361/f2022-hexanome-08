@@ -48,6 +48,8 @@ public class GameManager {
 
   /**
    * Construct a new GameManager instance (initialize all maps to empty HashMaps).
+   *
+   * @param lobbyCommunicator an object that is in charge of communicating with lobby
    */
   public GameManager(@Autowired LobbyCommunicator lobbyCommunicator) {
     this.lobbyCommunicator = lobbyCommunicator;
@@ -63,10 +65,11 @@ public class GameManager {
    * Sync the game service saved game with LS.
    * It makes more sense to have LS to align with game service becasuse game
    * service contains the actual data (not just the metadata as LS does)
+   *
+   * @throws ModelAccessException Inconsistency between meta/actual game data!
    */
   @PostConstruct
   public void syncSavedGames() throws ModelAccessException {
-
     try {
       Map<String, SavedGameState> savedGames = readSavedGameDataFromFile();
       // skip all steps if we do not have info in file
@@ -127,6 +130,7 @@ public class GameManager {
    *
    * @param gameId game id
    * @return one instance of GameInfo object
+   * @throws ModelAccessException threw when No registered game with that ID
    */
   public GameInfo getGameById(long gameId) throws ModelAccessException {
     if (!getActiveGames().containsKey(gameId)) {
@@ -147,6 +151,10 @@ public class GameManager {
 
   /**
    * Check whether current player is in game or not.
+   *
+   * @param gameId game id
+   * @param playerName player name
+   * @return whether current player is in game or not.
    */
   public boolean containsPlayer(long gameId, String playerName) {
     return activePlayers.get(gameId).getPlayersInfo().containsKey(playerName);
@@ -273,6 +281,7 @@ public class GameManager {
    *
    * @param savegame a class that stores metadata to save a game
    * @param gameId   the game id used to retrieve info needed to store the game
+   * @throws ModelAccessException in case the game id has existed before
    */
   public void saveGame(Savegame savegame, long gameId) throws ModelAccessException {
 

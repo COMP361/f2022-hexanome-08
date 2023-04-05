@@ -108,6 +108,7 @@ public class BaseBoard extends Board {
    * Quickly set the card at that position to null, as a representation of removing it.
    *
    * @param cardPosition x and y: x stands for the level and y stands for the index
+   * @return development card that is removed.
    */
   public DevelopmentCard removeCard(Position cardPosition) {
     int level = cardPosition.getX();

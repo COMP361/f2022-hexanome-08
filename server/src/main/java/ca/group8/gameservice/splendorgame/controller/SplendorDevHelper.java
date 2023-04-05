@@ -12,9 +12,8 @@ import java.util.EnumMap;
 
 /**
  * A helper singleton class that helps to resolve all abstract.
- * serializing & deserializing json problems for splendor game.
- *
- * <p>Every abstract class was serialized/deserialized using the repository from:
+ * serializing and deserializing json problems for splendor game.
+ * Every abstract class was serialized/deserialized using the repository from:
  * https://medium.com/@iliamsharipov_56660/handling-polymorphism-with-gson-f4a702014ffe.
  * Thank him so much!!!!!!!!!!!!!!!
  */

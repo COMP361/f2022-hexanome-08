@@ -33,8 +33,12 @@ import io.github.isharipov.gson.adapters.JsonType;
     }
 )
 public abstract class Action {
-
   String type;
+
+  /**
+   * Abstract constructor for Action.
+   */
+  public Action() {}
 
   abstract void execute(TableTop curTableTop, PlayerInGame playerInGame,
                         ActionGenerator actionListGenerator,

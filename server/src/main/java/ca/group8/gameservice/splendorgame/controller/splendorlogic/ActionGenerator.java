@@ -60,6 +60,12 @@ public class ActionGenerator {
 
   private Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
 
+  /**
+   *
+   *
+   * @param playerActionMaps
+   * @param tableTop
+   */
   public ActionGenerator(Map<String, Map<String, Action>> playerActionMaps, TableTop tableTop) {
     this.playerActionMaps = playerActionMaps;
     this.tableTop = tableTop;
@@ -285,7 +291,8 @@ public class ActionGenerator {
    * Set up the initial actions for curPlayerInfo.
    * PurchaseActions, ReserveAction and TakeTokenAction
    *
-   * @param curPlayerInfo current player's associated player info
+   * @param curPlayerInfo the player whom we are updating action map for.
+   * @param curTurnPlayerName current turn player's name
    */
   public void setInitialActions(PlayerInGame curPlayerInfo, String curTurnPlayerName) {
     if (!curTurnPlayerName.equals(curPlayerInfo.getName())) {
@@ -492,6 +499,7 @@ public class ActionGenerator {
    * Update the actions of which noble to claim.
    *
    * @param noblePositions noblePositions
+   * @param noblesUnlocked list of nobles unlocked
    * @param playerInGame   playerInGame
    */
   public void updateClaimNobleActions(List<Position> noblePositions, List<NobleCard> noblesUnlocked,

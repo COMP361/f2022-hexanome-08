@@ -34,6 +34,7 @@ public class GameInfo implements BroadcastContent {
    *
    * @param extensions  extensions that are used in the game.
    * @param playerNames players who are playing the game
+   * @param creator creator of the game
    */
   public GameInfo(List<Extension> extensions, List<String> playerNames, String creator) {
     this.playerNames = playerNames;
@@ -119,6 +120,7 @@ public class GameInfo implements BroadcastContent {
    * match with the ones who saved this game before.
    *
    * @param newPlayerNames the current player names who want to play this game
+   * @param creator the creator of the new game loaded from saved game
    */
   public void renamePlayers(List<String> newPlayerNames, String creator) {
     this.creator = creator;
