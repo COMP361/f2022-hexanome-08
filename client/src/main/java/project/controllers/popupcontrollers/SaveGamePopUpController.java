@@ -46,14 +46,21 @@ public class SaveGamePopUpController implements Initializable {
   private EventHandler<ActionEvent> createOnClickSaveButton(Savegame savegame) {
     return event -> {
       GameRequestSender sender = App.getGameRequestSender();
-      // first save it, and then delete the current session to LS
-      try {
-        sender.sendSaveGameRequest(gameId, savegame);
-        Button button = (Button) event.getSource();
-        Stage curWindow = (Stage) button.getScene().getWindow();
-        curWindow.close();
-      } catch (UnirestException e) {
-        errorMsgLabel.setText(e.getMessage());
+      String inputSaveGameId = savegame.getSavegameid();
+      String pattern = "^[a-zA-Z0-9\\s]+$";
+      if (inputSaveGameId.matches(pattern) && inputSaveGameId.length() <= 35) {
+        // first save it, and then delete the current session to LS
+        try {
+          sender.sendSaveGameRequest(gameId, savegame);
+          Button button = (Button) event.getSource();
+          Stage curWindow = (Stage) button.getScene().getWindow();
+          curWindow.close();
+        } catch (UnirestException e) {
+          errorMsgLabel.setText(e.getMessage());
+          saveGameIdTextField.clear();
+        }
+      } else {
+        errorMsgLabel.setText("Please respect save game id format!");
         saveGameIdTextField.clear();
       }
     };
