@@ -10,6 +10,9 @@ import project.App;
 import project.config.GameBoardLayoutConfig;
 import project.view.lobby.communication.Player;
 
+/**
+ * SettingPageController.
+ */
 public class SettingPageController extends AbstractLobbyController {
   private final GameBoardLayoutConfig config = App.getGuiLayouts();
   @FXML

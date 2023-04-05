@@ -10,6 +10,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import project.App;
 
+/**
+ * ColourWealthGuiController.
+ */
 public class ColourWealthGuiController implements Initializable {
 
   private final Colour colour;

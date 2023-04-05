@@ -26,7 +26,13 @@ public class ActOnNoblePopUpController extends ActionSelectionSender implements 
   @FXML
   private Text nobleActionText;
 
-
+  /**
+   * ActOnNoblePopUpController.
+   *
+   * @param gameId gameId
+   * @param playerActionMap playerActionMap
+   * @param isReserve isReserve
+   */
   public ActOnNoblePopUpController(long gameId, Map<String, Action> playerActionMap,
                                    boolean isReserve) {
     super(gameId);

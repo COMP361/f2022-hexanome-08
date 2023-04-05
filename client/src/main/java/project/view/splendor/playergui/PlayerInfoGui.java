@@ -72,6 +72,11 @@ public class PlayerInfoGui {
     }
   }
 
+  /**
+   * setGemsInHand.
+   *
+   * @param gemsInHand gemsInHand
+   */
   public void setGemsInHand(EnumMap<Colour, Integer> gemsInHand) {
     for (Colour colour : gemsInHand.keySet()) {
       ColourWealthGui colourWealthGui = colourWealthGuiMap.get(colour);
@@ -92,6 +97,12 @@ public class PlayerInfoGui {
     playerImageGui.setReservedCardsCountText(reservedCardCount);
   }
 
+  /**
+   * setup.
+   *
+   * @param layoutX layoutX
+   * @param layoutY layoutY
+   */
   public void setup(double layoutX, double layoutY) {
     // set the layout of the GUI
     container.setLayoutX(layoutX);

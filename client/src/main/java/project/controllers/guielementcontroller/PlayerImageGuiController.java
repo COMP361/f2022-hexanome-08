@@ -18,6 +18,9 @@ import project.App;
 import project.connection.GameRequestSender;
 import project.controllers.popupcontrollers.PurchaseHandController;
 
+/**
+ * PlayerImageGuiController.
+ */
 public class PlayerImageGuiController implements Initializable {
 
   private final String playerName;
@@ -42,6 +45,13 @@ public class PlayerImageGuiController implements Initializable {
   @FXML
   private Circle pointsCircle;
 
+  /**
+   * PlayerImageGuiController.
+   *
+   * @param gameId gameId
+   * @param playerName playerName
+   * @param armCode armCode
+   */
   public PlayerImageGuiController(long gameId, String playerName, int armCode) {
     this.gameId = gameId;
     this.playerName = playerName;

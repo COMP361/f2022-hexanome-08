@@ -306,6 +306,12 @@ public class LobbyRequestSender {
 
 
   // /api/users : GET
+  /**
+   * getPlayers.
+   *
+   * @param accessToken accessToken
+   * @return list
+   */
   public Player[] getPlayers(String accessToken) {
     String url = String.format("%s/api/users", lobbyUrl);
     Player[] result = new Player[0];
@@ -326,6 +332,14 @@ public class LobbyRequestSender {
   }
 
   // /api/users/{users} : GET
+
+  /**
+   * getOnePlayer.
+   *
+   * @param accessToken accessToken
+   * @param playerName playerName
+   * @return player
+   */
   public Player getOnePlayer(String accessToken, String playerName) {
     String url = String.format("%s/api/users/%s", lobbyUrl, playerName);
     Player result = null;
@@ -350,6 +364,15 @@ public class LobbyRequestSender {
   // /api/users/{users} : PUT
   //TODO: This Unirest Exception should be handled correctly to display something
   // that warns the admin about failure of creating a new user
+
+  /**
+   * putOneNewPlayer.
+   *
+   * @param accessToken accessToken
+   * @param playerName playerName
+   * @param player player
+   * @throws UnirestException UnirestException
+   */
   public void putOneNewPlayer(String accessToken, String playerName, Player player)
       throws UnirestException {
     String url = String.format("%s/api/users/%s", lobbyUrl, playerName);
@@ -369,6 +392,14 @@ public class LobbyRequestSender {
   // /api/users/{users} : DELETE
   //TODO: This Unirest Exception should be handled correctly to display something
   // that warns the admin about failure of deleting an existing user
+
+  /**
+   * deleteOnePlayer.
+   *
+   * @param accessToken accessToken
+   * @param playerName playerName
+   * @throws UnirestException UnirestException
+   */
   public void deleteOnePlayer(String accessToken, String playerName)
       throws UnirestException {
     String url = String.format("%s/api/users/%s", lobbyUrl, playerName);
@@ -384,6 +415,16 @@ public class LobbyRequestSender {
   // /api/users/{users}/password : POST
   //TODO: This Unirest Exception should be handled correctly to display something
   // that warns the admin/user about failure of updating one's password (does not obey the rule)
+
+  /**
+   * updateOnePlayerPassword.
+   *
+   * @param accessToken accessToken
+   * @param playerName playerName
+   * @param oldPassword oldPassword
+   * @param nextPassword nextPassword
+   * @throws UnirestException UnirestException
+   */
   public void updateOnePlayerPassword(String accessToken, String playerName,
                                       String oldPassword, String nextPassword)
       throws UnirestException {
@@ -405,6 +446,15 @@ public class LobbyRequestSender {
   // /api/users/{users}/colour : POST
   //TODO: This Unirest Exception should be handled correctly to display something
   // that warns the admin/user about failure of updating one's colour
+
+  /**
+   * updateOnePlayerColour.
+   *
+   * @param accessToken accessToken
+   * @param playerName playerName
+   * @param colourCode colourCode
+   * @throws UnirestException UnirestException
+   */
   public void updateOnePlayerColour(String accessToken, String playerName, String colourCode)
       throws UnirestException {
     String url = String.format("%s/api/users/%s/colour", lobbyUrl, playerName);
@@ -423,6 +473,14 @@ public class LobbyRequestSender {
   /*
   /api/gameservices/{gameservice}: DELETE
   Sending delete request to LS to force unregister a game
+   */
+
+  /**
+   * unregisterOneGameService.
+   *
+   * @param accessToken accessToken
+   * @param gameServerName gameServerName
+   * @throws UnirestException UnirestException
    */
   public void unregisterOneGameService(String accessToken, String gameServerName)
       throws UnirestException {

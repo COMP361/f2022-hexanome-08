@@ -6,10 +6,19 @@ import javafx.scene.layout.HBox;
 import project.controllers.guielementcontroller.PlayerLobbyGuiController;
 import project.view.lobby.communication.Player;
 
+
+/**
+ * PlayerLobbyGui.
+ */
 public class PlayerLobbyGui extends HBox {
   private final Player player;
   private final PlayerLobbyGuiController controller;
 
+  /**
+   *  PlayerLobbyGui.
+   *
+   * @param player player
+   */
   public PlayerLobbyGui(Player player) {
     this.player = player;
     FXMLLoader fxmlLoader = new FXMLLoader(getClass()

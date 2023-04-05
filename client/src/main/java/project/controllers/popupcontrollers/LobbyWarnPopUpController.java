@@ -6,6 +6,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
+/**
+ * LobbyWarnPopUpController.
+ */
 public class LobbyWarnPopUpController implements Initializable {
 
   private final String errorMsg;

@@ -6,9 +6,17 @@ import javafx.scene.layout.HBox;
 import project.controllers.guielementcontroller.RegisteredGameGuiController;
 import project.view.lobby.communication.GameParameters;
 
+/**
+ * RegisteredGameGui.
+ */
 public class RegisteredGameGui extends HBox {
   private final GameParameters gameParameters;
 
+  /**
+   *  RegisteredGameGui.
+   *
+   * @param gameParameters gameParameters
+   */
   public RegisteredGameGui(GameParameters gameParameters) {
     this.gameParameters = gameParameters;
     FXMLLoader fxmlLoader = new FXMLLoader(getClass()

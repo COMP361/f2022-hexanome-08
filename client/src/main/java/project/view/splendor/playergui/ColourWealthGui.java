@@ -6,12 +6,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import project.controllers.guielementcontroller.ColourWealthGuiController;
 
+/**
+ * ColourWealthGui.
+ */
 public class ColourWealthGui extends Group {
 
   private final Colour colour;
 
   private final ColourWealthGuiController controller;
 
+  /**
+   * ColourWealthGui.
+   *
+   * @param colour colour
+   */
   public ColourWealthGui(Colour colour) {
     this.colour = colour;
     FXMLLoader fxmlLoader =

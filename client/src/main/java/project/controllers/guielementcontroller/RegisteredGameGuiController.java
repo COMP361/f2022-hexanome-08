@@ -14,6 +14,9 @@ import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.controllers.stagecontrollers.AdminPageController;
 import project.view.lobby.communication.GameParameters;
 
+/**
+ * RegisteredGameGuiController.
+ */
 public class RegisteredGameGuiController implements Initializable {
   private final GameParameters gameParameters;
   @FXML

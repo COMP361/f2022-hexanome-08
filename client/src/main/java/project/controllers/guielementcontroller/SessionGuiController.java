@@ -8,6 +8,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import project.view.lobby.communication.Session;
 
+/**
+ * SessionGuiController.
+ */
 public class SessionGuiController implements Initializable {
 
   private final Session session;

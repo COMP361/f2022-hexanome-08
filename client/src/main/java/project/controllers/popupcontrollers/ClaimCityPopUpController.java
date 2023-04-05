@@ -12,6 +12,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import project.App;
 
+/**
+ * ClaimCityPopUpController.
+ */
 public class ClaimCityPopUpController extends ActionSelectionSender implements Initializable {
 
   private final Map<String, Action> playerActionMap;

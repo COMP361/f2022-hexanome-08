@@ -72,6 +72,11 @@ public class App extends Application {
 
   private static ConnectionConfig connectionConfig;
 
+  /**
+   * main.
+   *
+   * @param args args
+   */
   public static void main(String[] args) {
     // mute annoying logging msgs to console
     ch.qos.logback.classic.Logger rootLogger =
@@ -234,6 +239,12 @@ public class App extends Application {
     return String.format("project/pictures/cities/%s.png", cityCard.getCardName());
   }
 
+  /**
+   * getPlayerImage.
+   *
+   * @param playerName playerName
+   * @return Image
+   */
   public static Image getPlayerImage(String playerName) {
     Image playerImage;
     try {
@@ -270,6 +281,12 @@ public class App extends Application {
     });
   }
 
+  /**
+   * colorToColourString.
+   *
+   * @param chosenColor chosenColor
+   * @return string
+   */
   public static String colorToColourString(Color chosenColor) {
     // Convert the color to a 16-byte encoded string
     return String.format("%02X%02X%02X%02X",
@@ -280,6 +297,15 @@ public class App extends Application {
   }
 
 
+  /**
+   * bindColourUpdateAction.
+   *
+   * @param player player
+   * @param colorPicker colorPicker
+   * @param refreshSettingPage refreshSettingPage
+   * @param colorUpdateButton colorUpdateButton
+   * @param config config
+   */
   public static void bindColourUpdateAction(Player player, ColorPicker colorPicker,
                                             boolean refreshSettingPage, Button colorUpdateButton,
                                             GameBoardLayoutConfig config) {
@@ -318,6 +344,14 @@ public class App extends Application {
     });
   }
 
+  /**
+   * bindPasswordUpdateAction.
+   *
+   * @param player player
+   * @param passwordField passwordField
+   * @param passwordUpdateButton passwordUpdateButton
+   * @param config config
+   */
   public static void bindPasswordUpdateAction(Player player, PasswordField passwordField,
                                               Button passwordUpdateButton,
                                               GameBoardLayoutConfig config) {
@@ -347,6 +381,14 @@ public class App extends Application {
     });
   }
 
+  /**
+   * bindDeleteUserAction.
+   *
+   * @param player player
+   * @param deletePlayerButton deletePlayerButton
+   * @param backToLogInPage backToLogInPage
+   * @param config config
+   */
   public static void bindDeleteUserAction(Player player, Button deletePlayerButton,
                                           boolean backToLogInPage, GameBoardLayoutConfig config) {
     deletePlayerButton.setOnAction(event -> {

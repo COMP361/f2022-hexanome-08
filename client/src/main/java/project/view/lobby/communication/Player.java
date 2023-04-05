@@ -18,6 +18,14 @@ public class Player {
 
   }
 
+  /**
+   *  Player.
+   *
+   * @param name name
+   * @param preferredColour preferredColour
+   * @param password password
+   * @param role role
+   */
   public Player(String name, String preferredColour, String password, Role role) {
     this.name = name;
     this.preferredColour = preferredColour;
