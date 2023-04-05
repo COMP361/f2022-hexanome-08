@@ -55,12 +55,8 @@ public class DevelopmentCard extends Card {
    * Get the dev card instance that is paired to this card.
    *
    * @return dev card instance that is paired to this card
-   * @throws SplendorGameException exception during game running
    */
-  public DevelopmentCard getPairedCard() throws SplendorGameException {
-    if (!isPaired || pairedCard == null) {
-      throw new SplendorGameException("Card is not paired yet");
-    }
+  public DevelopmentCard getPairedCard() {
     return pairedCard;
   }
 

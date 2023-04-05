@@ -98,7 +98,7 @@ public class PlayerImageGuiController implements Initializable {
         PlayerStates playerStates = SplendorDevHelper.getInstance().getGson()
             .fromJson(response.getBody(), PlayerStates.class);
         PlayerInGame playerInGame = playerStates.getOnePlayerInGame(playerName);
-        App.loadPopUpWithController("my_development_cards.fxml",
+        App.loadPopUpWithController("purchase_hand.fxml",
             new PurchaseHandController(gameId, playerInGame, new HashMap<>()),
             App.getGuiLayouts().getLargePopUpWidth(),
             App.getGuiLayouts().getLargePopUpHeight());

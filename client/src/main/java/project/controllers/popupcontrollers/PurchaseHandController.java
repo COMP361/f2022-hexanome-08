@@ -37,7 +37,7 @@ import project.view.splendor.boardgui.ActionIdPair;
 
 /**
  * Purchase controller class, controls the visual updates happening in purchase hand.
- * associated with "my_development_cards.fxml"
+ * associated with "purchase_hand.fxml"
  */
 public class PurchaseHandController implements Initializable {
 
@@ -62,6 +62,9 @@ public class PurchaseHandController implements Initializable {
 
   @FXML
   private Label ownershipLabel;
+
+  @FXML
+  private Label cardCountLabel;
 
   /**
    * PurchaseHandController.
@@ -238,6 +241,9 @@ public class PurchaseHandController implements Initializable {
       String title = String.format("%s's Development Cards and Nobles", playerInGame.getName());
       ownershipLabel.setText(title);
     }
+
+    cardCountLabel.setText(cardCountLabel.getText() + " " +
+        playerInGame.getPurchasedHand().getDevelopmentCards().size());
 
     Map<String, Action> satchelActions = new HashMap<>();
     for (String actionId : playerActions.keySet()) {

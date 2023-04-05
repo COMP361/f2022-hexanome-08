@@ -133,7 +133,7 @@ public class GameController implements Initializable {
       String playerName = viewerName;
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
-      App.loadPopUpWithController("my_reserved_cards.fxml",
+      App.loadPopUpWithController("reserve_hand.fxml",
           new ReservedHandController(reservedHand, playerActions, gameId),
           config.getLargePopUpWidth(),
           config.getLargePopUpHeight());
@@ -142,7 +142,7 @@ public class GameController implements Initializable {
   }
 
   /**
-   * Whenever MyPurchaseCard button is clicked, we load "my_development_cards.fxml".
+   * Whenever MyPurchaseCard button is clicked, we load "purchase_hand.fxml".
    * The gui display logic is controlled by a PurchaseHandController.
    * We shall get a new PlayerInGame for curPlayer everytime the player clicks on this button.
    *
@@ -163,7 +163,7 @@ public class GameController implements Initializable {
       String playerName = viewerName;
       Map<String, Action> playerActions = gameInfo.getPlayerActionMaps().get(playerName);
 
-      App.loadPopUpWithController("my_development_cards.fxml",
+      App.loadPopUpWithController("purchase_hand.fxml",
           new PurchaseHandController(gameId, playerInGame, playerActions),
           config.getLargePopUpWidth(),
           config.getLargePopUpHeight());
@@ -367,7 +367,7 @@ public class GameController implements Initializable {
       pendingActionButton.setDisable(false);
       pendingActionButton.setOnAction(event -> {
         Platform.runLater(() -> {
-          App.loadPopUpWithController("my_development_cards.fxml",
+          App.loadPopUpWithController("purchase_hand.fxml",
               new PurchaseHandController(gameId, playerInGame, playerActionMap),
               config.getLargePopUpWidth(),
               config.getLargePopUpHeight());
@@ -376,7 +376,7 @@ public class GameController implements Initializable {
 
       // do a pop up right now
       Platform.runLater(() -> {
-        App.loadPopUpWithController("my_development_cards.fxml",
+        App.loadPopUpWithController("purchase_hand.fxml",
             new PurchaseHandController(gameId, playerInGame, playerActionMap),
             config.getLargePopUpWidth(),
             config.getLargePopUpHeight());
