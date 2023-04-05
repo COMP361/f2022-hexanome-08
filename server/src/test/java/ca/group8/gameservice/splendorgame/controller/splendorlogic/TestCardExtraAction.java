@@ -107,6 +107,7 @@ public class TestCardExtraAction {
     pairedCard.pairCard(satchelCard);
     // add this card to player's hand (2 BLUE gems)
     playerInGame.getPurchasedHand().addDevelopmentCard(pairedCard);
+    playerInGame.getPurchasedHand().addDevelopmentCard(satchelCard);
     Position cardToBurnPosition = new Position(0, 0);
     CardExtraAction burnCardAction = new CardExtraAction(pairedCard, CardEffect.BURN_CARD, cardToBurnPosition);
     burnCardAction.execute(gameInfo.getTableTop(), playerInGame, actionGenerator, actionInterpreter);
