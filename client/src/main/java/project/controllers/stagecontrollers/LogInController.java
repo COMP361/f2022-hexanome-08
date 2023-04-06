@@ -2,6 +2,8 @@ package project.controllers.stagecontrollers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -110,15 +112,41 @@ public class LogInController implements Initializable {
     });
   }
 
+  static class InvalidLogInCondition extends BooleanBinding {
+    private final ObservableValue<String> userName;
+    private final ObservableValue<String> password;
 
+    public InvalidLogInCondition(ObservableValue<String> userName,
+                                 ObservableValue<String> password) {
+      this.userName = userName;
+      this.password = password;
+      bind(userName, password);
+    }
+
+    @Override
+    protected boolean computeValue() {
+      String userName = this.userName.getValue();
+      String password = this.password.getValue();
+      return (userName != null && userName.trim().isEmpty())
+          || (password != null && password.trim().isEmpty());
+    }
+  }
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     setDefaultLogInInfo();
+
+    ObservableValue<Boolean> invalidLoginInfoCondition = new InvalidLogInCondition(
+        userName.textProperty(),
+        userPassword.textProperty());
+
+    logInButton.disableProperty().bind(invalidLoginInfoCondition);
+
     // enable log-in by pressing ENTER
     logInButton.setDefaultButton(true);
     logInButton.setOnAction(event -> {
       doLogIn();
     });
+
     // guarantee to execute the termination of program in javafx thread
     quitButton.setOnAction(event -> {
       // before quiting, also terminate the refresh token thread
