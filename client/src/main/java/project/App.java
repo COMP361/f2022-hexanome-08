@@ -131,7 +131,6 @@ public class App extends Application {
    * @param controller       controller class of the popup
    * @param popUpStageWidth  window width
    * @param popUpStageHeight window height
-   * @throws IOException in case fxml is not found
    */
   public static void loadPopUpWithController(String fxmlName, Object controller,
                                              double popUpStageWidth, double popUpStageHeight) {
@@ -186,7 +185,6 @@ public class App extends Application {
    *
    * @param fxmlName   fxml file name
    * @param controller controller class of the popup
-   * @throws IOException in case fxml is not found
    */
   public static void loadNewSceneToPrimaryStage(String fxmlName, Object controller) {
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));

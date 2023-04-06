@@ -30,6 +30,11 @@ public abstract class AbstractLobbyController implements Initializable {
 
   private Thread refreshTokenThread = null;
 
+  /**
+   * Constructor of AbstractLobbyController.
+   */
+  public AbstractLobbyController() {}
+
   protected void initializeSessionUpdateThread(Thread sessionUpdateThread) {
     if (this.sessionUpdateThread == null) {
       this.sessionUpdateThread = sessionUpdateThread;
