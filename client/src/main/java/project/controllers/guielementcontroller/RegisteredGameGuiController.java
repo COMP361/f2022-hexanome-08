@@ -26,6 +26,11 @@ public class RegisteredGameGuiController implements Initializable {
   @FXML
   private Label displayNameLabel;
 
+  /**
+   * RegisteredGameGuiController.
+   *
+   * @param gameParameters gameParameters
+   */
   public RegisteredGameGuiController(GameParameters gameParameters) {
     this.gameParameters = gameParameters;
   }

@@ -27,6 +27,11 @@ public class SessionGuiController implements Initializable {
   @FXML
   private Button btmButton;
 
+  /**
+   * SessionGuiController.
+   *
+   * @param session session
+   */
   public SessionGuiController(Session session) {
     this.session = session;
   }

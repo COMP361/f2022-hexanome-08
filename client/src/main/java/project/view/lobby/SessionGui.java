@@ -54,11 +54,19 @@ public class SessionGui extends HBox {
     }
   }
 
+  /**
+   * set up.
+   */
   public void setup() {
     setSessionButtons();
 
   }
 
+  /**
+   * getCurSession.
+   *
+   * @return session
+   */
   public Session getCurSession() {
     return curSession;
   }
@@ -67,10 +75,20 @@ public class SessionGui extends HBox {
     this.curSession = newSession;
   }
 
+  /**
+   * getCurSessionId.
+   *
+   * @return id
+   */
   public Long getCurSessionId() {
     return curSessionId;
   }
 
+  /**
+   * get user.
+   *
+   * @return user
+   */
   public User getCurUser() {
     return curUser;
   }

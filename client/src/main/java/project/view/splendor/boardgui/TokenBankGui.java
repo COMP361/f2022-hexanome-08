@@ -36,6 +36,8 @@ public class TokenBankGui extends HBox {
 
   /**
    * Construct the Token Bank GUI.
+   *
+   * @param gameId gameId
    */
   public TokenBankGui(long gameId) {
     this.gameId = gameId;
@@ -302,6 +304,7 @@ public class TokenBankGui extends HBox {
   /**
    * Set up the TokenBank GUI object.
    *
+   * @param takeTokenActionMap action map
    * @param bankMap the enum map of price
    * @param layoutX layout x
    * @param layoutY layout y

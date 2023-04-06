@@ -19,7 +19,11 @@ public class Savegame {
   String savegameid;
 
   /**
-   * Constructor.
+   * save game.
+   *
+   * @param players players
+   * @param gamename gamename
+   * @param savegameid savegameid
    */
   public Savegame(String[] players, String gamename, String savegameid) {
     this.players = players;
@@ -27,9 +31,17 @@ public class Savegame {
     this.savegameid = savegameid;
   }
 
+  /**
+   * save the game.
+   */
   public Savegame() {
   }
 
+  /**
+   * get Players.
+   *
+   * @return list of players
+   */
   public String[] getPlayers() {
     return players;
   }
@@ -38,14 +50,29 @@ public class Savegame {
     this.players = players;
   }
 
+  /**
+   * getGamename.
+   *
+   * @return game name
+   */
   public String getGamename() {
     return gamename;
   }
 
+  /**
+   * set Game name.
+   *
+   * @param gamename game name
+   */
   public void setGamename(String gamename) {
     this.gamename = gamename;
   }
 
+  /**
+   * getSavegameid.
+   *
+   * @return string
+   */
   public String getSavegameid() {
     return savegameid;
   }
