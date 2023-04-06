@@ -29,6 +29,7 @@ public class CardExtraAction extends Action {
    *
    * @param curCard    DevelopmentCard which "unlocks" this extra action
    * @param cardEffect The type of extra action
+   * @param position position of extra action
    */
   public CardExtraAction(Card curCard, CardEffect cardEffect, Position position) {
     assert curCard != null;
@@ -55,13 +56,31 @@ public class CardExtraAction extends Action {
     }
   }
 
+  /**
+   * getCurCard.
+   *
+   * @return current card
+   */
+
   public Card getCurCard() {
     return curCard;
   }
 
+  /**
+   * getCardPosition.
+   *
+   * @return card position
+   */
+
   public Position getCardPosition() {
     return position;
   }
+
+  /**
+   * getPosition.
+   *
+   * @return current position
+   */
 
   public Position getPosition() {
     return position;
@@ -72,6 +91,7 @@ public class CardExtraAction extends Action {
    *
    * @param curTableTop curTableTop
    * @param curPlayer curPlayer
+   * @param actionGenerator actionGenerator
    */
   public void reserveNobleActionHelper(TableTop curTableTop,
                                        PlayerInGame curPlayer,

@@ -5,6 +5,10 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public class FivePointsPower extends Power {
 
+  /**
+   * Constructor.
+   */
+
   public FivePointsPower() {
     super(PowerEffect.FIVE_POINTS);
     super.type = this.getClass().getSimpleName();

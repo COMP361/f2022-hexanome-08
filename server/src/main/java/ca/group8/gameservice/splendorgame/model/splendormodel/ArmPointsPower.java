@@ -5,6 +5,10 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public class ArmPointsPower extends Power {
 
+  /**
+   * Constructor.
+   */
+
   public ArmPointsPower() {
     super(PowerEffect.ARM_POINTS);
     super.type = this.getClass().getSimpleName();

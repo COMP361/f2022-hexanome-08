@@ -5,5 +5,39 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public enum Colour {
   // Colour.ORIENT is for the orient dev card with no color
-  RED, BLUE, GREEN, WHITE, BLACK, GOLD, ORIENT
+
+  /**
+  Red.
+   */
+  RED,
+
+  /**
+   Blue.
+   */
+  BLUE,
+
+  /**
+   Green.
+   */
+  GREEN,
+
+  /**
+   White.
+   */
+  WHITE,
+
+  /**
+   Black.
+   */
+  BLACK,
+
+  /**
+   Gold.
+   */
+  GOLD,
+
+  /**
+   Orient.
+   */
+  ORIENT
 }

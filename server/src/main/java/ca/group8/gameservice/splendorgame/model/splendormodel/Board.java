@@ -15,6 +15,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 /**
+ * Constructor.
  * The super abstract class that defines the behavior of all extension boards.
  *
  * <p>Every abstract class was serialized/deserialized using the repository from:
@@ -32,11 +33,15 @@ import org.json.simple.parser.ParseException;
 
     }
 )
+
+
 public abstract class Board {
 
   String type;
 
-  // update the board
+  /**
+   * method to update board.
+   */
   public abstract void update();
 
   /**

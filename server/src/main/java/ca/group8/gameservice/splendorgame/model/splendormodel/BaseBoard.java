@@ -124,9 +124,21 @@ public class BaseBoard extends Board {
     return resultCard;
   }
 
+  /**
+   * getDecks.
+   *
+   * @return a map containing all decks
+   */
+
   public Map<Integer, List<DevelopmentCard>> getDecks() {
     return decks;
   }
+
+  /**
+   * getCardsOnBoard.
+   *
+   * @return a map containing cards on board
+   */
 
   public Map<Integer, DevelopmentCard[]> getCardsOnBoard() {
     return cardsOnBoard;

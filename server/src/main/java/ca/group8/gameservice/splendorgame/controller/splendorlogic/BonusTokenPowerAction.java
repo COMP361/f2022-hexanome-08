@@ -39,9 +39,21 @@ public class BonusTokenPowerAction extends Action {
     actionListGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
   }
 
+  /**
+   * getColour.
+   *
+   * @return colour of bonus token power action
+   */
+
   public Colour getColour() {
     return colour;
   }
+
+  /**
+   * getPlayer.
+   *
+   * @return current player
+   */
 
   public PlayerInGame getPlayer() {
     return player;

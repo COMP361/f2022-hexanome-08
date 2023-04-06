@@ -5,6 +5,10 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public class ExtraTokenPower extends Power {
 
+  /**
+   * Constructor.
+   */
+
   public ExtraTokenPower() {
     super(PowerEffect.EXTRA_TOKEN);
     super.type = this.getClass().getSimpleName();

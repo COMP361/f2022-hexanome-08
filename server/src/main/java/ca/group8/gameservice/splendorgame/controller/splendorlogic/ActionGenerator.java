@@ -61,10 +61,10 @@ public class ActionGenerator {
   private Logger logger = LoggerFactory.getLogger(ActionGenerator.class);
 
   /**
+   * Method to generate actions for players.
    *
-   *
-   * @param playerActionMaps
-   * @param tableTop
+   * @param playerActionMaps map represents possible player actions
+   * @param tableTop current tabletop
    */
   public ActionGenerator(Map<String, Map<String, Action>> playerActionMaps, TableTop tableTop) {
     this.playerActionMaps = playerActionMaps;
@@ -671,10 +671,19 @@ public class ActionGenerator {
     playerActionMaps.put(playerName, actionMap);
   }
 
-
+  /**
+  * A getter method to get possible player actions form action map.
+  *
+  * @return action map of player
+  */
   public Map<String, Map<String, Action>> getPlayerActionMaps() {
     return playerActionMaps;
   }
+  /**
+   * A getter method to get table top.
+   *
+   * @return tabletop
+   */
 
   public TableTop getTableTop() {
     return tableTop;

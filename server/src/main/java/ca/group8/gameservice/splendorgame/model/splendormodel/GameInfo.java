@@ -83,34 +83,81 @@ public class GameInfo implements BroadcastContent {
     return new ArrayList<>(winners);
   }
 
+  /**
+   * addWinner.
+   *
+   * @param playerName player name
+   */
+
   public void addWinner(String playerName) {
     winners.add(playerName);
   }
+
+  /**
+   * setWinners.
+   *
+   * @param winners list of potential winners
+   */
 
   public void setWinners(List<String> winners) {
     this.winners = winners;
   }
 
+  /**
+   * getFirstPlayerName.
+   *
+   * @return first player name
+   */
+
   public String getFirstPlayerName() {
     return firstPlayerName;
   }
+
+  /**
+   * getPlayerNames.
+   *
+   * @return player names
+   */
 
   public List<String> getPlayerNames() {
     return playerNames;
   }
 
+  /**
+   * getTableTop.
+   *
+   * @return tabletop
+   */
+
   public TableTop getTableTop() {
     return tableTop;
   }
+
+  /**
+   * getExtensions.
+   *
+   * @return list of extensions
+   */
 
   public List<Extension> getExtensions() {
     return extensions;
   }
 
+  /**
+   * getPlayerActionMaps.
+   *
+   * @return player action maps
+   */
+
   public Map<String, Map<String, Action>> getPlayerActionMaps() {
     return playerActionMaps;
   }
 
+  /**
+   * getCreator.
+   *
+   * @return creator
+   */
   public String getCreator() {
     return creator;
   }

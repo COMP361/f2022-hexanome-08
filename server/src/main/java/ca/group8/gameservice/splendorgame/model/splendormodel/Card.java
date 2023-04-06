@@ -29,7 +29,11 @@ public abstract class Card {
   String type;
 
   /**
-   * * params include prestige points, price and name.
+   * Constructor.
+   *
+   * @param paramPrestigePoints representing prestige points
+   * @param paramPrice represnting price of card
+   * @param paramCardName representing card name
    */
   public Card(int paramPrestigePoints, EnumMap<Colour, Integer> paramPrice, String paramCardName) {
     prestigePoints = paramPrestigePoints;
@@ -37,14 +41,35 @@ public abstract class Card {
     cardName = paramCardName;
   }
 
+
+  /**
+   * getPrestigePoints.
+   *
+   * @return prestige points
+   */
+
   public int getPrestigePoints() {
 
     return prestigePoints;
   }
 
+
+  /**
+   * getPrice.
+   *
+   * @return enum map of card price
+   */
+
   public EnumMap<Colour, Integer> getPrice() {
     return price;
   }
+
+
+  /**
+   * getCardName.
+   *
+   * @return card name
+   */
 
   public String getCardName() {
     return cardName;
