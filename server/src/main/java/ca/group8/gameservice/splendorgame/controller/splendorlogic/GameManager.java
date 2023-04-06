@@ -333,10 +333,10 @@ public class GameManager {
 
 
   /**
-   * Read a map of String -> SavedGameState (which stores gameInfo, playerStates, interpreter).
+   * Read a map of String to SavedGameState (which stores gameInfo, playerStates, interpreter).
    * out of the json file.
    *
-   * @return a map of String -> SavedGameState, if file is empty, return null
+   * @return a map of String to SavedGameState, if file is empty, return null
    * @throws IOException in case the json file is missing.
    */
   public Map<String, SavedGameState> readSavedGameDataFromFile() throws IOException {

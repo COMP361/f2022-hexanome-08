@@ -124,7 +124,7 @@ public class OrientBoard extends Board {
 
   /**
    * Refill any null position on the board (3 of len = 2 DevelopmentCard array).
-   * must make sure once the card is purchased, make the corresponding slot (index) -> null
+   * must make sure once the card is purchased, make the corresponding slot (index) to null
    */
   @Override
   public void update() {

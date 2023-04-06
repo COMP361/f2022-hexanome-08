@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * This class stores the cards/decks with level 1->3 on base board and the nobles.
+ * This class stores the cards/decks with level 1 to 3 on base board and the nobles.
  */
 public class BaseBoard extends Board {
 
@@ -167,7 +167,7 @@ public class BaseBoard extends Board {
 
   /**
    * Refill any null position on the board (3 of len = 4 DevelopmentCard array).
-   * must make sure once the card is purchased, make the corresponding slot (index) -> null
+   * must make sure once the card is purchased, make the corresponding slot (index) to null
    */
   @Override
   public void update() {
