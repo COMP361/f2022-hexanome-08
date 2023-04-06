@@ -62,6 +62,11 @@ public class PlayerImageGuiController implements Initializable {
     this.armCode = armCode;
   }
 
+  /**
+   * getCurrentPointsText.
+   *
+   * @return text
+   */
   public Text getCurrentPointsText() {
     return currentPointsText;
   }
