@@ -6,6 +6,11 @@ package project;
 public class Main {
 
   /**
+   * Constructor of Main.
+   */
+  public Main()  {}
+
+  /**
    * Main method, calls App's main method.
    *
    * @param args args

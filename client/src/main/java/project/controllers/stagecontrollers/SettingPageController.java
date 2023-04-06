@@ -32,6 +32,11 @@ public class SettingPageController extends AbstractLobbyController {
   @FXML
   private Button deletePlayerButton;
 
+  /**
+   * Constructor of SettingPageController.
+   */
+  public SettingPageController() {}
+
   private void pageSpecificActionBind() {
     adminZoneButton.setVisible(false);
     // potentially enable admin zone button functionality

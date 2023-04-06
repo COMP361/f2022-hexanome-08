@@ -83,6 +83,11 @@ public class App extends Application {
   private static ConnectionConfig connectionConfig;
 
   /**
+   * Constructor of javafx app.
+   */
+  public App() {}
+
+  /**
    * main.
    *
    * @param args args

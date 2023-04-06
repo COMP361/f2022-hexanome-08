@@ -12,6 +12,27 @@ public class GameParameters {
   private String webSupport;
 
   /**
+   * Constructor of GameParameters.
+   *
+   * @param maxSessionPlayers maxSessionPlayers
+   * @param minSessionPlayers minSessionPlayers
+   * @param displayName       displayName
+   * @param name              name
+   * @param location          location
+   * @param webSupport        webSupport
+   */
+  public GameParameters(int maxSessionPlayers, int minSessionPlayers, String displayName,
+                        String name,
+                        String location, String webSupport) {
+    this.maxSessionPlayers = maxSessionPlayers;
+    this.minSessionPlayers = minSessionPlayers;
+    this.displayName = displayName;
+    this.name = name;
+    this.location = location;
+    this.webSupport = webSupport;
+  }
+
+  /**
    * getMaxSessionPlayers.
    *
    * @return int

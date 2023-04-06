@@ -37,6 +37,11 @@ public class LogInController implements Initializable {
   private Button quitButton;
 
   /**
+   * Constructor of LogInController.
+   */
+  public LogInController() {}
+
+  /**
    * The logic of handling log in. The methods check if the user has input both username and user
    * password or not
    */

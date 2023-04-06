@@ -50,6 +50,11 @@ public class LobbyController extends AbstractLobbyController {
   @FXML
   private Button settingButton;
 
+  /**
+   * Constructor of LobbyController.
+   */
+  public LobbyController() {}
+
   private EventHandler<ActionEvent> createClickOnCreateButton() {
     return event -> {
       LobbyRequestSender lobbyRequestSender = App.getLobbyServiceRequestSender();

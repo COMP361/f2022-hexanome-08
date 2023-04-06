@@ -8,6 +8,13 @@ import java.util.List;
 public class PlayerLocations {
   private List<String> locations;
 
+
+  /**
+   * Constructor of PlayerLocations.
+   */
+  public PlayerLocations() {}
+
+
   /**
    * getLocations.
    *
