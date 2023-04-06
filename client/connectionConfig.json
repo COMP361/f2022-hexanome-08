@@ -1,7 +1,7 @@
 {
   "defaultUserName": "ruoyu",
   "defaultPassword": "abc123_ABC123",
-  "useDefaultUserInfo": "true",
-  "hostIp": "76.66.139.161",
+  "useDefaultUserInfo": "false",
+  "hostIp": "10.122.72.107",
   "useLocalHost": "false"
 }
