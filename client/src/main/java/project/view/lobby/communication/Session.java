@@ -32,10 +32,20 @@ public class Session {
     playerLocations = new HashMap<>();
   }
 
+  /**
+   * getGameParameters.
+   *
+   * @return GameParameters
+   */
   public GameParameters getGameParameters() {
     return gameParameters;
   }
 
+  /**
+   * getCreator.
+   *
+   * @return creater
+   */
   public String getCreator() {
     return creator;
   }
@@ -44,14 +54,29 @@ public class Session {
     return launched;
   }
 
+  /**
+   * getPlayers.
+   *
+   * @return players
+   */
   public ArrayList<String> getPlayers() {
     return players;
   }
 
+  /**
+   * getSavegameid.
+   *
+   * @return string
+   */
   public String getSavegameid() {
     return savegameid;
   }
 
+  /**
+   * getPlayerLocations.
+   *
+   * @return the map
+   */
   public Map<String, String> getPlayerLocations() {
     return playerLocations;
   }

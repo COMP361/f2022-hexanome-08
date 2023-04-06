@@ -33,10 +33,18 @@ public class PlayerLobbyGui extends HBox {
     }
   }
 
+  /**
+   * getPlayer.
+   *
+   * @return Player
+   */
   public Player getPlayer() {
     return player;
   }
 
+  /**
+   * setBorderColour.
+   */
   public void setBorderColour() {
     String colourString = controller.getColourStringFromColourPicker();
     this.setStyle("-fx-border-width:5; -fx-border-color:#" + colourString);

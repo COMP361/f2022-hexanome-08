@@ -71,6 +71,11 @@ public class SessionGui extends HBox {
     return curSession;
   }
 
+  /**
+   * setCurSession.
+   *
+   * @param newSession newSession
+   */
   public void setCurSession(Session newSession) {
     this.curSession = newSession;
   }

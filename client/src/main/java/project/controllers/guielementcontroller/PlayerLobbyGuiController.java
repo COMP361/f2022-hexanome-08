@@ -34,6 +34,11 @@ public class PlayerLobbyGuiController implements Initializable {
   @FXML
   private Button deletePlayerButton;
 
+  /**
+   * PlayerLobbyGuiController.
+   *
+   * @param player player
+   */
   public PlayerLobbyGuiController(Player player) {
     this.player = player;
   }

@@ -323,6 +323,7 @@ public class TokenBankGui extends HBox {
   /**
    * Set up the TokenBank GUI object.
    *
+   * @param returnTokenActionMap returnTokenActionMap
    * @param bankMap the enum map of price
    * @param layoutX layout x
    * @param layoutY layout y

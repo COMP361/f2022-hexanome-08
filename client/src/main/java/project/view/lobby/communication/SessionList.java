@@ -37,6 +37,11 @@ public class SessionList {
     return sessions.get(sessionId);
   }
 
+  /**
+   * getSessionIds.
+   *
+   * @return the set
+   */
   public Set<Long> getSessionIds() {
     return sessions.keySet();
   }

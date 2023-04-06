@@ -46,6 +46,11 @@ public class Savegame {
     return players;
   }
 
+  /**
+   * setPlayers.
+   *
+   * @param players players
+   */
   public void setPlayers(String[] players) {
     this.players = players;
   }
@@ -77,6 +82,11 @@ public class Savegame {
     return savegameid;
   }
 
+  /**
+   * setSavegameid.
+   *
+   * @param savegameid savegameid
+   */
   public void setSavegameid(String savegameid) {
     this.savegameid = savegameid;
   }
