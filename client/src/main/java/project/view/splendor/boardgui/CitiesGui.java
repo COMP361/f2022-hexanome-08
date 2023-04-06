@@ -20,6 +20,7 @@ public class CitiesGui extends VBox {
    *
    * @param cityWidth  provide the width of the city image
    * @param cityHeight provide the height of the city image
+   * @param citySpace  citySpace
    */
   public CitiesGui(double cityWidth, double cityHeight, double citySpace) {
     this.cityWidth = cityWidth;
@@ -27,14 +28,29 @@ public class CitiesGui extends VBox {
     this.citySpace = citySpace;
   }
 
+  /**
+   * getCityWidth.
+   *
+   * @return double
+   */
   public double getCityWidth() {
     return cityWidth;
   }
 
+  /**
+   * getCityHeight.
+   *
+   * @return double
+   */
   public double getCityHeight() {
     return cityHeight;
   }
 
+  /**
+   * getCitySpace.
+   *
+   * @return double
+   */
   public double getCitySpace() {
     return citySpace;
   }

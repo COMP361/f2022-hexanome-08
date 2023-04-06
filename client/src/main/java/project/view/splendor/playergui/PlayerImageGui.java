@@ -53,6 +53,11 @@ public class PlayerImageGui extends Group {
     controller.getReservedNobleCountText().setText("" + reservedNobleCount);
   }
 
+  /**
+   * setReservedCardsCountText.
+   *
+   * @param reservedCardsCount reservedCardsCount
+   */
   public void setReservedCardsCountText(int reservedCardsCount) {
     controller.getReservedCardsCountText().setText("" + reservedCardsCount);
   }

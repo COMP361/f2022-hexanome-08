@@ -25,10 +25,12 @@ public class PlayerInfoGui {
   private final long gameId;
 
   /**
-   * Construct new visual display of player.
+   *  Construct new visual display of player.
    *
+   * @param gameId gameId
    * @param playerPosition the position the player will be on the client's display.
-   * @param playerName     represents the player's name as a String.
+   * @param playerName represents the player's name as a String.
+   * @param armCode armCode
    */
   public PlayerInfoGui(long gameId, PlayerPosition playerPosition, String playerName, int armCode) {
     this.gameId = gameId;
@@ -43,18 +45,38 @@ public class PlayerInfoGui {
     }
   }
 
+  /**
+   * getPlayerPosition.
+   *
+   * @return PlayerPosition
+   */
   public PlayerPosition getPlayerPosition() {
     return playerPosition;
   }
 
+  /**
+   * getPlayerName.
+   *
+   * @return string
+   */
   public String getPlayerName() {
     return playerName;
   }
 
+  /**
+   * getContainer.
+   *
+   * @return pane
+   */
   public Pane getContainer() {
     return container;
   }
 
+  /**
+   * setNewPrestigePoints.
+   *
+   * @param newPoints newPoints
+   */
   public void setNewPrestigePoints(int newPoints) {
     playerImageGui.setCurrentPointsText(newPoints);
   }
@@ -85,6 +107,11 @@ public class PlayerInfoGui {
     }
   }
 
+  /**
+   * setHighlight.
+   *
+   * @param highlightChoice highlightChoice
+   */
   public void setHighlight(boolean highlightChoice) {
     playerImageGui.setHighlightRectangle(highlightChoice);
   }

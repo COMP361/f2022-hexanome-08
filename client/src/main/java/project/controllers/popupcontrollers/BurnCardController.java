@@ -26,6 +26,12 @@ public class BurnCardController extends ActionSelectionSender implements Initial
   @FXML
   private Text title;
 
+  /**
+   * BurnCardController.
+   *
+   * @param gameId gameId
+   * @param playerActionMap playerActionMap
+   */
   public BurnCardController(long gameId, Map<String, Action> playerActionMap) {
     super(gameId);
     this.playerActionMap = playerActionMap;

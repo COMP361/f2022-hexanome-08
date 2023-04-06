@@ -10,6 +10,9 @@ import javafx.scene.image.ImageView;
  */
 public interface DevelopmentCardBoardGui {
 
+  /**
+   * set up the board.
+   */
   void setup();
 
   List<ImageView> getAllCardsGui();

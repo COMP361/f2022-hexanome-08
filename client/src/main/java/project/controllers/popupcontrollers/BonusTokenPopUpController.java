@@ -22,6 +22,12 @@ public class BonusTokenPopUpController extends ActionSelectionSender implements 
   private HBox availableTokensHbox;
 
 
+  /**
+   * BonusTokenPopUpController.
+   *
+   * @param gameId gameId
+   * @param playerActionMap playerActionMap
+   */
   public BonusTokenPopUpController(long gameId, Map<String, Action> playerActionMap) {
     super(gameId);
     this.playerActionMap = playerActionMap;

@@ -33,6 +33,11 @@ public class Player {
     this.role = role;
   }
 
+  /**
+   * getName.
+   *
+   * @return string
+   */
   public String getName() {
     return name;
   }
@@ -46,6 +51,11 @@ public class Player {
     this.name = name;
   }
 
+  /**
+   * getPassword.
+   *
+   * @return String
+   */
   public String getPassword() {
     return password;
   }
@@ -59,6 +69,11 @@ public class Player {
     this.password = password;
   }
 
+  /**
+   * getPreferredColour.
+   *
+   * @return String
+   */
   public String getPreferredColour() {
     return preferredColour;
   }

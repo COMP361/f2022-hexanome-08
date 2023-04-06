@@ -148,10 +148,20 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     }
   }
 
+  /**
+   * setCards.
+   *
+   * @param cards cards
+   */
   public void setCards(DevelopmentCard[] cards) {
     this.cards = cards;
   }
 
+  /**
+   * setDeck.
+   *
+   * @param deck deck
+   */
   public void setDeck(List<DevelopmentCard> deck) {
     this.deck = deck;
   }

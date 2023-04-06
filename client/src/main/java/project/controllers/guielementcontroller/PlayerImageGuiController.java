@@ -71,6 +71,11 @@ public class PlayerImageGuiController implements Initializable {
     return currentPointsText;
   }
 
+  /**
+   * getReservedNobleCountText.
+   *
+   * @return Text
+   */
   public Text getReservedNobleCountText() {
     return reservedNobleCountText;
   }
