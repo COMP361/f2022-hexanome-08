@@ -209,54 +209,123 @@ public class App extends Application {
     user.setAccessToken(newAccessToken);
   }
 
+  /**
+   * Static getter for a list of all the colours in the Colour enum.
+   *
+   * @return a list of colours
+   */
   public static Colour[] getAllColours() {
     return allColours;
   }
 
+  /**
+   * Static getter for a list of all the base colours in the Colour enum.
+   *
+   * @return list of only the base colours
+   */
   public static Colour[] getBaseColours() {
     return baseColours;
   }
 
+  /**
+   * Static getter.
+   *
+   * @return user
+   */
   public static User getUser() {
     return user;
   }
 
+  /**
+   * Sets the user passed in the parameter as the user.
+   *
+   * @param newUser new user to be set as user.
+   */
   public static void setUser(User newUser) {
     user = newUser;
   }
 
+  /**
+   * Static getter.
+   *
+   * @return the game board layout configuration
+   */
   public static GameBoardLayoutConfig getGuiLayouts() {
     return guiLayouts;
   }
 
+  /**
+   * Static getter.
+   *
+   * @return the connection configuration
+   */
   public static ConnectionConfig getConnectionConfig() {
     return connectionConfig;
   }
 
+  /**
+   * Static getter.
+   *
+   * @param cardName name of the noble whose path you want to get
+   * @return the path to the picture of the noble
+   */
   public static String getNoblePath(String cardName) {
     return String.format("project/pictures/noble/%s.png", cardName);
   }
 
-  // Note that arm code can only be 1,2,3,4
+
+  /**
+   * Static getter.
+   * Note that arm code can only be 1,2,3,4.
+   *
+   * @param armCode specific shield whose location you want to get
+   * @return the path to the shield
+   */
   public static String getArmPath(int armCode) {
     assert armCode >= 1 && armCode <= 4;
     return String.format("project/pictures/power/arm%s.png", armCode);
   }
 
+  /**
+   * Static getter.
+   *
+   * @param cardName name of the orient card whose path you want to get
+   * @param level level of the orient card whose path you want to get
+   * @return path of the orient card
+   */
   public static String getOrientCardPath(String cardName, int level) {
     assert level >= 1 && level <= 3;
     return String.format("project/pictures/orient/%d/%s.png", level, cardName);
   }
 
+  /**
+   * Static getter.
+   *
+   * @param cardName name of the base card whose path you want to get
+   * @param level level of the base card whose path you want to get
+   * @return path of the base card
+   */
   public static String getBaseCardPath(String cardName, int level) {
     assert level >= 1 && level <= 3;
     return String.format("project/pictures/level%d/%s.png", level, cardName);
   }
 
+  /**
+   * Static getter.
+   *
+   * @param colour colour of the token whose image you want to get
+   * @return path of the image of the token
+   */
   public static String getTokenPath(Colour colour) {
     return String.format("project/pictures/token/%s_tokens.png", colour.toString().toLowerCase());
   }
 
+  /**
+   * Static getter.
+   *
+   * @param cityCard city whose image you want to get
+   * @return path to the image of the city
+   */
   public static String getCityPath(CityCard cityCard) {
     return String.format("project/pictures/cities/%s.png", cityCard.getCardName());
   }
@@ -287,6 +356,26 @@ public class App extends Application {
     }
   }
 
+  ///*
+  //  Move and rename the random picture out of random folder, assign it to a player.
+  // */
+  //private static void moveAndRenamePicture(String sourcePath, String targetPath)
+  //    throws IOException, URISyntaxException {
+  //  ClassLoader classLoader = App.class.getClassLoader();
+  //  URI sourceUri = classLoader.getResource(sourcePath).toURI();
+  //  Path source = Paths.get(sourceUri);
+  //
+  //  Path resourceRoot = source.getParent().getParent().getParent();
+  //  Path target = resourceRoot.resolve(targetPath);
+  //  Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+  //}
+
+  /**
+   * Compiles a list of all the names of the images at a certain path.
+   *
+   * @param resourcePath specific path
+   * @return list of the names of the images present at that path
+   */
   private static List<String> getPictureNames(String resourcePath) {
     try {
       URI uri = App.class
@@ -314,6 +403,11 @@ public class App extends Application {
     }
   }
 
+  /**
+   * Static getter.
+   *
+   * @return enum map from colour to string of the colour name
+   */
   public static EnumMap<Colour, String> getColourStringMap() {
     return new EnumMap<>(colourStringMap);
   }

@@ -134,6 +134,7 @@ public class LobbyRequestSender {
    * @param accessToken  access token
    * @param gameName     game name
    * @param saveGameName save game name
+   * @param userName user name
    * @throws UnirestException in case unirest failed to send a request
    */
   public void sendCreateSessionRequest(String userName,
