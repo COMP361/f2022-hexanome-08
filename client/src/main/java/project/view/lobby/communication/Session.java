@@ -50,6 +50,11 @@ public class Session {
     return creator;
   }
 
+  /**
+   *  isLaunched.
+   *
+   * @return boolean
+   */
   public boolean isLaunched() {
     return launched;
   }

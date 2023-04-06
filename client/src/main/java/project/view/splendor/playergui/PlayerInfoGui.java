@@ -116,10 +116,20 @@ public class PlayerInfoGui {
     playerImageGui.setHighlightRectangle(highlightChoice);
   }
 
+  /**
+   * setReservedNobleCount.
+   *
+   * @param reservedNobleCount reservedNobleCount
+   */
   public void setReservedNobleCount(int reservedNobleCount) {
     playerImageGui.setReservedNobleCountText(reservedNobleCount);
   }
 
+  /**
+   * setReservedCardCount.
+   *
+   * @param reservedCardCount reservedCardCount
+   */
   public void setReservedCardCount(int reservedCardCount) {
     playerImageGui.setReservedCardsCountText(reservedCardCount);
   }

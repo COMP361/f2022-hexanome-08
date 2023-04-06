@@ -67,7 +67,8 @@ public class User {
   }
 
   /**
-   * getRefreshToken
+   * getRefreshToken.
+   *
    * @return token
    */
   public String getRefreshToken() {

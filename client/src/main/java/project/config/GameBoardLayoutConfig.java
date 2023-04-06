@@ -627,10 +627,20 @@ public class GameBoardLayoutConfig {
     this.btmPlayerHeight = btmPlayerHeight;
   }
 
+  /**
+   * getRightPlayerWidth.
+   *
+   * @return height
+   */
   public double getRightPlayerWidth() {
     return rightPlayerWidth;
   }
 
+  /**
+   * setRightPlayerWidth.
+   *
+   * @param rightPlayerWidth rightPlayerWidth
+   */
   public void setRightPlayerWidth(double rightPlayerWidth) {
     this.rightPlayerWidth = rightPlayerWidth;
   }
@@ -639,6 +649,11 @@ public class GameBoardLayoutConfig {
     return rightPlayerHeight;
   }
 
+  /**
+   * setRightPlayerHeight.
+   *
+   * @param rightPlayerHeight rightPlayerHeight
+   */
   public void setRightPlayerHeight(double rightPlayerHeight) {
     this.rightPlayerHeight = rightPlayerHeight;
   }
@@ -647,6 +662,11 @@ public class GameBoardLayoutConfig {
     return leftPlayerWidth;
   }
 
+  /**
+   * setLeftPlayerWidth.
+   *
+   * @param leftPlayerWidth leftPlayerWidth
+   */
   public void setLeftPlayerWidth(double leftPlayerWidth) {
     this.leftPlayerWidth = leftPlayerWidth;
   }
@@ -683,11 +703,20 @@ public class GameBoardLayoutConfig {
     return cardActionHeight;
   }
 
-
+  /**
+   * getSmallPopUpWidth.
+   *
+   * @return double
+   */
   public double getSmallPopUpWidth() {
     return smallPopUpWidth;
   }
 
+  /**
+   * getSmallPopUpHeight.
+   *
+   * @return doublr
+   */
   public double getSmallPopUpHeight() {
     return smallPopUpHeight;
   }
@@ -712,10 +741,20 @@ public class GameBoardLayoutConfig {
     return largePopUpHeight;
   }
 
+  /**
+   * getSelectFreeCardWidth.
+   *
+   * @return double
+   */
   public double getSelectFreeCardWidth() {
     return selectFreeCardWidth;
   }
 
+  /**
+   * getSelectFreeCardHeight.
+   *
+   * @return double
+   */
   public double getSelectFreeCardHeight() {
     return selectFreeCardHeight;
   }

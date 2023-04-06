@@ -34,10 +34,21 @@ public class LobbyRequestSender {
     gameNameMapping = new HashMap<>();
   }
 
+  /**
+   * get Game Name Mapping.
+   *
+   * @return a map
+   */
   public Map<String, String> getGameNameMapping() {
     return new HashMap<>(gameNameMapping);
   }
 
+  /**
+   * addGameNameMapping.
+   *
+   * @param gameDisplayName gameDisplayName
+   * @param gameName gameName
+   */
   public void addGameNameMapping(String gameDisplayName, String gameName) {
     assert !gameNameMapping.containsKey(gameDisplayName);
     gameNameMapping.put(gameDisplayName, gameName);

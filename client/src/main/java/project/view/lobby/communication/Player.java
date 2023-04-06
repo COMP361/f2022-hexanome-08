@@ -14,6 +14,9 @@ public class Player {
 
   private Role role;
 
+  /**
+   * player info.
+   */
   public Player() {
 
   }

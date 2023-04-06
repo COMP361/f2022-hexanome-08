@@ -46,6 +46,11 @@ public class NobleBoardGui extends VBox {
     return nobleImageHeight;
   }
 
+  /**
+   * getNobleImageSpace.
+   *
+   * @return double
+   */
   public double getNobleImageSpace() {
     return nobleImageSpace;
   }

@@ -15,6 +15,12 @@ public class GameRequestSender {
   private final String gameUrl;
   private String gameServiceName;
 
+  /**
+   * GameRequestSender.
+   *
+   * @param gameUrl gameUrl
+   * @param gameServiceName gameServiceName
+   */
   public GameRequestSender(String gameUrl, String gameServiceName) {
     this.gameUrl = gameUrl;
     this.gameServiceName = gameServiceName;
@@ -171,6 +177,11 @@ public class GameRequestSender {
 
   }
 
+  /**
+   * getGameUrl.
+   *
+   * @return url
+   */
   public String getGameUrl() {
     return gameUrl;
   }
@@ -178,10 +189,20 @@ public class GameRequestSender {
 
   // TODO: Delete Request (later)
 
+  /**
+   * getGameServiceName.
+   *
+   * @return name
+   */
   public String getGameServiceName() {
     return gameServiceName;
   }
 
+  /**
+   * setGameServiceName.
+   *
+   * @param gameServiceName gameServiceName
+   */
   public void setGameServiceName(String gameServiceName) {
     assert gameServiceName != null && !gameServiceName.equals("");
     this.gameServiceName = gameServiceName;

@@ -18,6 +18,12 @@ public class LobbyWarnPopUpController implements Initializable {
   @FXML
   private Label errorMessageTitle;
 
+  /**
+   * LobbyWarnPopUpController.
+   *
+   * @param errorMsg errorMsg
+   * @param errorMsgTitle errorMsgTitle
+   */
   public LobbyWarnPopUpController(String errorMsg, String errorMsgTitle) {
     this.errorMsg = errorMsg;
     this.errorMsgTitle = errorMsgTitle;
