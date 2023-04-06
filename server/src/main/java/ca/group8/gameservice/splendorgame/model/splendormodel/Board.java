@@ -37,6 +37,11 @@ import org.json.simple.parser.ParseException;
 
 public abstract class Board {
 
+  /**
+   * Abstract constructor of board.
+   */
+  public Board() {}
+
   String type;
 
   /**

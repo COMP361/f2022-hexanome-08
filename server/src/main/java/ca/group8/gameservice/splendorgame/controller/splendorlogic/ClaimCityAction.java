@@ -17,7 +17,6 @@ public class ClaimCityAction extends Action {
   /**
    * Constructor.
    */
-
   public ClaimCityAction(CityCard cityCard) {
     super.type = this.getClass().getSimpleName();
     this.cityCard = cityCard;

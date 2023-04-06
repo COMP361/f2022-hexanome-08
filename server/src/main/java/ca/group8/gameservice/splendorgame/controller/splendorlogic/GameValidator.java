@@ -56,6 +56,7 @@ public class GameValidator {
    *
    * @param gameId       game id
    * @param launcherInfo launcher info that contains info about the session to start
+   * @throws ModelAccessException thrown when the launcher info is invalid.
    */
   public void validLauncherInfo(long gameId, LauncherInfo launcherInfo)
       throws ModelAccessException {
