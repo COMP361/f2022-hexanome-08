@@ -62,10 +62,18 @@ public class GameInfo implements BroadcastContent {
     return currentPlayer;
   }
 
+  /**
+   * Returns true if game is finished, false otherwise.
+   *
+   * @return boolean of if the game is finished
+   */
   public boolean isFinished() {
     return isFinished;
   }
 
+  /**
+   * Sets isFinished to true.
+   */
   public void setFinished() {
     isFinished = true;
   }
@@ -79,16 +87,20 @@ public class GameInfo implements BroadcastContent {
     currentPlayer = playerNames.get((index + 1) % playerNames.size());
   }
 
+  /**
+   * Creates a new ArrayList and returns it.
+   *
+   * @return List of winners
+   */
   public List<String> getWinners() {
     return new ArrayList<>(winners);
   }
 
   /**
-   * addWinner.
+   * Add a player to winners list.
    *
-   * @param playerName player name
+   * @param playerName name of player who won
    */
-
   public void addWinner(String playerName) {
     winners.add(playerName);
   }

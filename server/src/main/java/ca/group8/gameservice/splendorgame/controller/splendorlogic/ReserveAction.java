@@ -84,11 +84,21 @@ public class ReserveAction extends Action {
     actionGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
   }
 
+  /**
+   * Get card position.
+   *
+   * @return card position
+   */
   public Position getCardPosition() {
     assert cardPosition != null;
     return cardPosition;
   }
 
+  /**
+   * Gets card being reserved.
+   *
+   * @return card being reserved
+   */
   public DevelopmentCard getCurCard() {
     assert curCard != null;
     return curCard;

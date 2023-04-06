@@ -27,11 +27,20 @@ public class ReturnTokenAction extends Action {
     extraTokenCount = extraTokens;
   }
 
+  /**
+   * Returns Map of tokens being returned.
+   *
+   * @return Map of tokens
+   */
   public EnumMap<Colour, Integer> getTokens() {
     return tokensToReturn;
   }
 
-
+  /**
+   * Gets tokens above 10 in token hand.
+   *
+   * @return int of tokens above 10
+   */
   public int getExtraTokenCount() {
     return extraTokenCount;
   }

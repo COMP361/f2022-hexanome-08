@@ -69,6 +69,7 @@ public class OrientBoard extends Board {
    * Quickly set the card at that position to null, as a representation of removing it.
    *
    * @param cardPosition x and y: x stands for the level and y stands for the index
+   * @return card from given position
    */
   public DevelopmentCard removeCard(Position cardPosition) {
     int level = cardPosition.getX();
@@ -102,10 +103,20 @@ public class OrientBoard extends Board {
     }
   }
 
+  /**
+   * Gets decks.
+   *
+   * @return Map of all decks
+   */
   public Map<Integer, List<DevelopmentCard>> getDecks() {
     return decks;
   }
 
+  /**
+   * Gets cards on board.
+   *
+   * @return Map of cards on board
+   */
   public Map<Integer, DevelopmentCard[]> getCardsOnBoard() {
     return cardsOnBoard;
   }

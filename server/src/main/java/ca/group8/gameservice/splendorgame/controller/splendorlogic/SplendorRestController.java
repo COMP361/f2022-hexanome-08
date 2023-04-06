@@ -56,6 +56,10 @@ public class SplendorRestController {
 
   /**
    * Constructor.
+   *
+   * @param gameManager game manager
+   * @param gameValidator game validator
+   * @param longPollTimeOut long of poll time out
    */
   public SplendorRestController(
       @Autowired GameManager gameManager,
@@ -70,11 +74,21 @@ public class SplendorRestController {
     this.logger = LoggerFactory.getLogger(SplendorRestController.class);
   }
 
+  /**
+   * Test of hello world.
+   *
+   * @return string of hello world
+   */
   @GetMapping(value = "/test")
   public String helloWorld() {
     return "Hello, World!";
   }
 
+  /**
+   * Game test.
+   *
+   * @return string of test
+   */
   @GetMapping(value = {"/splendortrade", "/splendorbase", "/splendorcity"})
   public String gameTest3() {
     return "Hello, splendor games!";
@@ -124,6 +138,7 @@ public class SplendorRestController {
    * @param gameId gameId
    * @param saveGameInfo saveGameInfo
    * @param accessToken accessToken
+   * @param playerName player's name
    * @return ResponseEntity
    */
   @PutMapping(value = {
@@ -217,6 +232,10 @@ public class SplendorRestController {
 
   /**
    * Long polling for the game board content, optional hash value.
+   *
+   * @param gameId game id
+   * @param hash hash code
+   * @return response entity
    */
   @GetMapping(value = {
       "/splendortrade/api/games/{gameId}/playerStates",
@@ -249,7 +268,10 @@ public class SplendorRestController {
   }
 
   /**
-   * Get players.
+   * Gets players.
+   *
+   * @param gameId game id
+   * @return response entity
    */
   @GetMapping(value = {"/splendortrade/api/games/{gameId}/players",
       "/splendorbase/api/games/{gameId}/players",
@@ -279,9 +301,14 @@ public class SplendorRestController {
   }
 
 
-
   /**
    * Select action.
+   *
+   * @param gameId game id
+   * @param playerName player name
+   * @param actionId action id
+   * @param accessToken access token
+   * @return response entity
    */
   @PostMapping(value = {
       "/splendortrade/api/games/{gameId}/players/{playerName}/actions/{actionId}",

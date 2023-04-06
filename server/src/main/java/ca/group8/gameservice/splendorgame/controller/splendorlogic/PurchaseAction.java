@@ -187,19 +187,38 @@ public class PurchaseAction extends Action {
 
   }
 
+  /**
+   * Gets tokens to be paid.
+   *
+   * @return Map of cost
+   */
   public EnumMap<Colour, Integer> getTokensToBePaid() {
     return tokensToBePaid;
   }
 
-
+  /**
+   * Gets card's position.
+   *
+   * @return Position of card
+   */
   public Position getCardPosition() {
     return cardPosition;
   }
 
+  /**
+   * Gets current card being purchased.
+   *
+   * @return DevelopmentCard being purchased
+   */
   public DevelopmentCard getCurCard() {
     return curCard;
   }
 
+  /**
+   * Gets number of gold tokens needed to make purchase.
+   *
+   * @return int of gold required.
+   */
   public int getGoldCardsRequired() {
     return goldCardsRequired;
   }

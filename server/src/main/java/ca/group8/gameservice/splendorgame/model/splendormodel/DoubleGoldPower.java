@@ -5,6 +5,9 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public class DoubleGoldPower extends Power {
 
+  /**
+   * Constructor.
+   */
   public DoubleGoldPower() {
     super(PowerEffect.DOUBLE_GOLD);
     super.type = this.getClass().getSimpleName();

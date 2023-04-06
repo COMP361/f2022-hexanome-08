@@ -22,10 +22,20 @@ public class SavedGameState {
     this.playerStates = playerStates;
   }
 
+  /**
+   * Gets info of game.
+   *
+   * @return GameInfo
+   */
   public GameInfo getGameInfo() {
     return gameInfo;
   }
 
+  /**
+   * Gets states of all players.
+   *
+   * @return player states
+   */
   public PlayerStates getPlayerStates() {
     return playerStates;
   }
@@ -36,6 +46,7 @@ public class SavedGameState {
    * match with the ones who saved this game before.
    *
    * @param playerNames the current player names who want to play this game
+   * @param creator creator of game
    */
   public void renamePlayers(List<String> playerNames, String creator) {
     // since we relinked the references, the name changing happen in

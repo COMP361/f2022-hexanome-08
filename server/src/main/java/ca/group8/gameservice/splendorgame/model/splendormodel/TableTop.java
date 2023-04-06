@@ -15,6 +15,9 @@ public class TableTop implements BroadcastContent {
 
   /**
    * Constructor.
+   *
+   * @param playerNames list of games
+   * @param gameExtensions list of extensions
    */
   public TableTop(List<String> playerNames, List<Extension> gameExtensions) {
     int playerCount = playerNames.size();
@@ -86,7 +89,11 @@ public class TableTop implements BroadcastContent {
     return bank;
   }
 
-
+  /**
+   * Get all game boards.
+   *
+   * @return map of game boards
+   */
   public Map<Extension, Board> getGameBoards() {
     return gameBoards;
   }

@@ -14,12 +14,21 @@ public class PurchasedHand {
   private final List<NobleCard> nobleCards;
 
 
+  /**
+   * Constructor.
+   */
   public PurchasedHand() {
     this.developmentCards = new ArrayList<>();
     this.nobleCards = new ArrayList<>();
   }
 
   //TODO: Add exception checks (if card==null, throw an exception, etc...)
+
+  /**
+   * Adds DevelopmentCard to purchased hand.
+   *
+   * @param card being purchased
+   */
   public void addDevelopmentCard(DevelopmentCard card) {
     developmentCards.add(card);
   }
@@ -29,16 +38,25 @@ public class PurchasedHand {
    *
    * @param card card
    */
-
   public void addNobleCard(NobleCard card) {
     nobleCards.add(card);
   }
 
+  /**
+   * Removes Development Card from purchased hand.
+   *
+   * @param card being removed
+   */
   public void removeDevelopmentCard(DevelopmentCard card) {
     assert developmentCards.contains(card);
     developmentCards.remove(card);
   }
 
+  /**
+   * Removed noble from purchased hand.
+   *
+   * @param card being removed
+   */
   public void removeNobleCard(NobleCard card) {
     assert nobleCards.contains(card);
     nobleCards.remove(card);
@@ -53,6 +71,11 @@ public class PurchasedHand {
     return developmentCards.size();
   }
 
+  /**
+   * Gets List of purchased cards.
+   *
+   * @return unmodifiableList of cards
+   */
   public List<DevelopmentCard> getDevelopmentCards() {
     return Collections.unmodifiableList(developmentCards);
   }
@@ -105,6 +128,11 @@ public class PurchasedHand {
     return gemCount;
   }
 
+  /**
+   * Gets all visited nobles.
+   *
+   * @return List of visited nobles.
+   */
   public List<NobleCard> getNobleCards() {
     return Collections.unmodifiableList(nobleCards);
   }
