@@ -95,7 +95,6 @@ public class LobbyRequestSender {
    *
    * @param refreshToken refresh access token
    * @return A string that is the new access token
-   * @throws UnirestException in case of a failed request
    */
   public String sendRefreshTokenRequest(String refreshToken) {
     try {
@@ -135,6 +134,7 @@ public class LobbyRequestSender {
    * @param accessToken  access token
    * @param gameName     game name
    * @param saveGameName save game name
+   * @param userName user name
    * @throws UnirestException in case unirest failed to send a request
    */
   public void sendCreateSessionRequest(String userName,

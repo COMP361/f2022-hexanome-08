@@ -29,14 +29,29 @@ public class ConnectionConfig {
     this.useLocalHost = useLocalHost;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return default user name
+   */
   public String getDefaultUserName() {
     return defaultUserName;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return default password
+   */
   public String getDefaultPassword() {
     return defaultPassword;
   }
 
+  /**
+   * Getter method for boolean value.
+   *
+   * @return true if the default user info should be used
+   */
   public boolean isUseDefaultUserInfo() {
     return useDefaultUserInfo;
   }

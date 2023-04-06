@@ -26,7 +26,6 @@ public class GameRequestSender {
    * @param gameId               game id
    * @param hashPreviousResponse hashed Previous Response
    * @return A http response with JSON string as the body
-   * @throws UnirestException in case of a failed request
    */
   public HttpResponse<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse) {
     HttpResponse<String> response = null;

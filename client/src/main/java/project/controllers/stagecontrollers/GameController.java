@@ -95,6 +95,7 @@ public class GameController implements Initializable {
    * GameController for the main page.
    *
    * @param gameId gameId
+   * @param viewerName name of watch only user
    */
   public GameController(long gameId, String viewerName) {
     this.gameId = gameId;

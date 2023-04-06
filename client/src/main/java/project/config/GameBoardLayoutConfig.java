@@ -55,6 +55,9 @@ public class GameBoardLayoutConfig {
   private double selectFreeCardWidth;
   private double selectFreeCardHeight;
 
+  /**
+   * Constructor.
+   */
   public GameBoardLayoutConfig() {
   }
 
@@ -328,122 +331,272 @@ public class GameBoardLayoutConfig {
     this.leftPlayerLayoutY = leftPlayerLayoutY;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the x coordinate of the base card board layout
+   */
   public double getBaseCardBoardLayoutX() {
     return baseCardBoardLayoutX;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param baseCardBoardLayoutX double of the new x coordinate of the base card board layout
+   */
   public void setBaseCardBoardLayoutX(double baseCardBoardLayoutX) {
     this.baseCardBoardLayoutX = baseCardBoardLayoutX;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the y coordinate of the base card board layout
+   */
   public double getBaseCardBoardLayoutY() {
     return baseCardBoardLayoutY;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param baseCardBoardLayoutY double of the new y coordinate of the base card board layout
+   */
   public void setBaseCardBoardLayoutY(double baseCardBoardLayoutY) {
     this.baseCardBoardLayoutY = baseCardBoardLayoutY;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the x coordinate of the orient card board layout
+   */
   public double getOrientCardBoardLayoutX() {
     return orientCardBoardLayoutX;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param orientCardBoardLayoutX double of the new x coordinate of the orient card board layout
+   */
   public void setOrientCardBoardLayoutX(double orientCardBoardLayoutX) {
     this.orientCardBoardLayoutX = orientCardBoardLayoutX;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the y coordinate of the orient card board layout
+   */
   public double getOrientCardBoardLayoutY() {
     return orientCardBoardLayoutY;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param orientCardBoardLayoutY double of the new y coordinate of the orient card board layout
+   */
   public void setOrientCardBoardLayoutY(double orientCardBoardLayoutY) {
     this.orientCardBoardLayoutY = orientCardBoardLayoutY;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return  double of the x coordinate of the pac board layout
+   */
   public double getPacBoardLayoutX() {
     return pacBoardLayoutX;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param powerAndCityBoardLayoutX double of the new x coordinate of the pac board layout
+   */
   public void setPacBoardLayoutX(double powerAndCityBoardLayoutX) {
     this.pacBoardLayoutX = powerAndCityBoardLayoutX;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the y coordinate of the pac board layout
+   */
   public double getPacBoardLayoutY() {
     return pacBoardLayoutY;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param powerAndCityBoardLayoutY double of the new y coordinate of the pac board layout
+   */
   public void setPacBoardLayoutY(double powerAndCityBoardLayoutY) {
     this.pacBoardLayoutY = powerAndCityBoardLayoutY;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the width of a city's display
+   */
   public double getCityWidth() {
     return cityWidth;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param cityWidth double of the new width of a city's display
+   */
   public void setCityWidth(double cityWidth) {
     this.cityWidth = cityWidth;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the height of a city's display
+   */
   public double getCityHeight() {
     return cityHeight;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param cityHeight double of the new height of a city's display
+   */
   public void setCityHeight(double cityHeight) {
     this.cityHeight = cityHeight;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the spacing between the cities' layout
+   */
   public double getCitySpace() {
     return citySpace;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param citySpace new double of the spacing between the cities' layout
+   */
   public void setCitySpace(double citySpace) {
     this.citySpace = citySpace;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the width of a noble card display
+   */
   public double getNobleWidth() {
     return nobleWidth;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param nobleWidth new double of the width of a noble card display
+   */
   public void setNobleWidth(double nobleWidth) {
     this.nobleWidth = nobleWidth;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the height of a noble card display
+   */
   public double getNobleHeight() {
     return nobleHeight;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param nobleHeight new double of the height of a noble card display
+   */
   public void setNobleHeight(double nobleHeight) {
     this.nobleHeight = nobleHeight;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the width of the token bank display
+   */
   public double getTokenBankWidth() {
     return tokenBankWidth;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param tokenBankWidth new double of the width of the token bank display
+   */
   public void setTokenBankWidth(double tokenBankWidth) {
     this.tokenBankWidth = tokenBankWidth;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the height of the token bank display
+   */
   public double getTokenBankHeight() {
     return tokenBankHeight;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param tokenBankHeight new double of the height of the token bank display
+   */
   public void setTokenBankHeight(double tokenBankHeight) {
     this.tokenBankHeight = tokenBankHeight;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the width of the top player display
+   */
   public double getTopPlayerWidth() {
     return topPlayerWidth;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param topPlayerWidth new double of the width of the top player display
+   */
   public void setTopPlayerWidth(double topPlayerWidth) {
     this.topPlayerWidth = topPlayerWidth;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the height of the top player display
+   */
   public double getTopPlayerHeight() {
     return topPlayerHeight;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param topPlayerHeight new double of the height of the top player display
+   */
   public void setTopPlayerHeight(double topPlayerHeight) {
     this.topPlayerHeight = topPlayerHeight;
   }
