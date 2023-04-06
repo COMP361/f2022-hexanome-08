@@ -131,6 +131,7 @@ public class LogInController implements Initializable {
           || (password != null && password.trim().isEmpty());
     }
   }
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     setDefaultLogInInfo();
