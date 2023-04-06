@@ -130,9 +130,9 @@ public class GameBoardLayoutConfig {
   }
 
   /**
-   * get the layout of x.
+   * get the top player layout of x.
    *
-   * @return the layout
+   * @return a double of layout
    */
   public double getTopPlayerLayoutX() {
     return topPlayerLayoutX;
