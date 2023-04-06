@@ -25,6 +25,11 @@ public class PlayerStates implements BroadcastContent {
     }
   }
 
+  /**
+   * Gets player's info.
+   *
+   * @return Map of players in game
+   */
   public Map<String, PlayerInGame> getPlayersInfo() {
     return playersInfo;
   }

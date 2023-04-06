@@ -15,6 +15,8 @@ public class TokenHand {
   /**
    * Relies on Game Info to know how many players are in the game.
    * Initialize all token values to zero.
+   *
+   * @param initialTokenAmount amount before taking tokens
    */
   public TokenHand(int initialTokenAmount) {
     allTokens = SplendorDevHelper.getInstance().getRawTokenColoursMap();
@@ -37,6 +39,8 @@ public class TokenHand {
 
   /**
    * Removes a Map of Tokens from the tokenHand.
+   *
+   * @param paramTokens tokens to remove
    */
   public void removeToken(EnumMap<Colour, Integer> paramTokens) {
     //verify that this number of gems can be removed (meaning new sum will not be less than 0)
@@ -51,16 +55,26 @@ public class TokenHand {
     }
   }
 
+  /**
+   * Gets amount of gold tokens.
+   *
+   * @return int of gold tokens
+   */
   public int getGoldTokenNumber() {
     return allTokens.get(Colour.GOLD);
   }
 
+  /**
+   * Get total tokens.
+   *
+   * @return map of all tokens
+   */
   public EnumMap<Colour, Integer> getAllTokens() {
     return allTokens;
   }
 
   /**
-   *getTokenTotalCount.
+   * Get Token Total Count.
    *
    * @return int
    */

@@ -5,6 +5,9 @@ package ca.group8.gameservice.splendorgame.model.splendormodel;
  */
 public class TwoPlusOnePower extends Power {
 
+  /**
+   * Constructor.
+   */
   public TwoPlusOnePower() {
     super(PowerEffect.TWO_PLUS_ONE);
     super.type = this.getClass().getSimpleName();

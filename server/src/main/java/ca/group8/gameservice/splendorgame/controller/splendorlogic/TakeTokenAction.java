@@ -25,6 +25,11 @@ public class TakeTokenAction extends Action {
     this.tokensTaken = tokens;
   }
 
+  /**
+   * Gets tokens being taken.
+   *
+   * @return map of tokens
+   */
   public EnumMap<Colour, Integer> getTokens() {
     return tokensTaken;
   }

@@ -139,12 +139,22 @@ public class GameManager {
     return activeGames.get(gameId);
   }
 
+  /**
+   * Get the ActionInterpreter for a given Id.
+   *
+   * @param gameId specified game
+   * @return ActionInterpreter for specified game
+   */
   public ActionInterpreter getGameActionInterpreter(long gameId) {
     assert gameActionInterpreters.containsKey(gameId);
     return gameActionInterpreters.get(gameId);
   }
 
-
+  /**
+   * Gets the map of active games.
+   *
+   * @return Map activesGames
+   */
   public Map<Long, GameInfo> getActiveGames() {
     return activeGames;
   }

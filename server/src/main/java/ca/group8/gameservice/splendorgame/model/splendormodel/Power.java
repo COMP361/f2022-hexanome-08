@@ -44,20 +44,37 @@ public abstract class Power {
    */
   public abstract boolean validityCheck(PlayerInGame playerInfo);
 
+  /**
+   * Boolean of if power is unlocked.
+   *
+   * @return boolean
+   */
   public boolean isUnlocked() {
     return unlocked;
   }
 
   //Do not make these methods [unlock() & lock()]public as they should only be called directly by
   // an inheriting power class (ex. TwoPlusOnePower).
+
+  /**
+   * Unlocks a power.
+   */
   public void unlock() {
     unlocked = true;
   }
 
+  /**
+   * Locks a power.
+   */
   public void lock() {
     unlocked = false;
   }
 
+  /**
+   * Gets the power effect.
+   *
+   * @return PowerEffect
+   */
   public PowerEffect getPowerEffect() {
     return powerEffect;
   }

@@ -23,6 +23,8 @@ public class PlayerInGame {
 
   /**
    * Constructor.
+   *
+   * @param name player's name
    */
   public PlayerInGame(String name) {
     this.name = name;
@@ -57,26 +59,56 @@ public class PlayerInGame {
     }
   }
 
+  /**
+   * Gets player's token hand.
+   *
+   * @return player's TokenHand
+   */
   public TokenHand getTokenHand() {
     return tokenHand;
   }
 
+  /**
+   * Gets PurchasedHand.
+   *
+   * @return player's PurchasedHand
+   */
   public PurchasedHand getPurchasedHand() {
     return purchasedHand;
   }
 
+  /**
+   * Gets player's reserved hand.
+   *
+   * @return player's ReservedHand
+   */
   public ReservedHand getReservedHand() {
     return reservedHand;
   }
 
+  /**
+   * Gets player's name.
+   *
+   * @return String name
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Sets player's name.
+   *
+   * @param name of player
+   */
   public void setName(String name) {
     this.name = name;
   }
 
+  /**
+   * Gets player's prestige points.
+   *
+   * @return int of prestige points.
+   */
   public int getPrestigePoints() {
     return prestigePoints;
   }
@@ -90,6 +122,11 @@ public class PlayerInGame {
     prestigePoints += amount;
   }
 
+  /**
+   * Removed given number from prestige points.
+   *
+   * @param amount to take away
+   */
   public void removePrestigePoints(int amount) {
     prestigePoints -= amount;
   }
@@ -98,6 +135,8 @@ public class PlayerInGame {
    * Returns map of total gems (out of all dev cards) a player has.
    * Guarantee to return a map with only RED, BLUE, WHITE, BLACK AND GREEN and gold
    * for the purpose of double_gold card in orient
+   *
+   * @return Map of total gems
    */
   public EnumMap<Colour, Integer> getTotalGems() {
     EnumMap<Colour, Integer> totalGems = SplendorDevHelper.getInstance().getRawTokenColoursMap();
@@ -128,7 +167,9 @@ public class PlayerInGame {
   }
 
   /**
-   * Gems plus tokens.
+   * Gets player's tokens plus gems.
+   *
+   * @return Map of wealth
    */
   public EnumMap<Colour, Integer> getWealth() {
     Logger logger = LoggerFactory.getLogger(PlayerInGame.class);
