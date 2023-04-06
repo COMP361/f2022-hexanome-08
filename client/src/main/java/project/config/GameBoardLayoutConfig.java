@@ -58,58 +58,128 @@ public class GameBoardLayoutConfig {
   public GameBoardLayoutConfig() {
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the width of the application window
+   */
   public double getAppWidth() {
     return appWidth;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param appWidth double of the width of the application window
+   */
   public void setAppWidth(double appWidth) {
     this.appWidth = appWidth;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the height of the application window
+   */
   public double getAppHeight() {
     return appHeight;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param appHeight double of the height of the application window
+   */
   public void setAppHeight(double appHeight) {
     this.appHeight = appHeight;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the x coordinate of the displayed image of the noble
+   */
   public double getNobleLayoutX() {
     return nobleLayoutX;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param nobleLayoutX double of the new x coordinate of the displayed image of the noble
+   */
   public void setNobleLayoutX(double nobleLayoutX) {
     this.nobleLayoutX = nobleLayoutX;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the y coordinate of the displayed image of the noble
+   */
   public double getNobleLayoutY() {
     return nobleLayoutY;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param nobleLayoutY double of the new y coordinate of the displayed image of the noble
+   */
   public void setNobleLayoutY(double nobleLayoutY) {
     this.nobleLayoutY = nobleLayoutY;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the spacing between displayed noble images
+   */
   public double getNobleSpace() {
     return nobleSpace;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param nobleSpace new spacing between displayed noble images
+   */
   public void setNobleSpace(double nobleSpace) {
     this.nobleSpace = nobleSpace;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the x coordinate of the token bank display
+   */
   public double getTokenBankLayoutX() {
     return tokenBankLayoutX;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param tokenBankLayoutX double of the new x coordinate of the token bank display
+   */
   public void setTokenBankLayoutX(double tokenBankLayoutX) {
     this.tokenBankLayoutX = tokenBankLayoutX;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the y coordinate of the token bank display
+   */
   public double getTokenBankLayoutY() {
     return tokenBankLayoutY;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param tokenBankLayoutY double of the new y coordinate of the token bank display
+   */
   public void setTokenBankLayoutY(double tokenBankLayoutY) {
     this.tokenBankLayoutY = tokenBankLayoutY;
   }
@@ -123,62 +193,137 @@ public class GameBoardLayoutConfig {
     return topPlayerLayoutX;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param topPlayerLayoutX  double of the new x coordinate of the top player layout
+   */
   public void setTopPlayerLayoutX(double topPlayerLayoutX) {
     this.topPlayerLayoutX = topPlayerLayoutX;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the x coordinate of the top player layout
+   */
   public double getTopPlayerLayoutY() {
     return topPlayerLayoutY;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param topPlayerLayoutY double of the new y coordinate of the top player layout
+   */
   public void setTopPlayerLayoutY(double topPlayerLayoutY) {
     this.topPlayerLayoutY = topPlayerLayoutY;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the y coordinate of the top player layout
+   */
   public double getBtmPlayerLayoutX() {
     return btmPlayerLayoutX;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param btmPlayerLayoutX double of the new x coordinate of the bottom player layout
+   */
   public void setBtmPlayerLayoutX(double btmPlayerLayoutX) {
     this.btmPlayerLayoutX = btmPlayerLayoutX;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the y coordinate of the bottom player layout
+   */
   public double getBtmPlayerLayoutY() {
     return btmPlayerLayoutY;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param btmPlayerLayoutY double of the new y coordinate of the bottom player layout
+   */
   public void setBtmPlayerLayoutY(double btmPlayerLayoutY) {
     this.btmPlayerLayoutY = btmPlayerLayoutY;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the x coordinate of the right player layout
+   */
   public double getRightPlayerLayoutX() {
     return rightPlayerLayoutX;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param rightPlayerLayoutX double of the new x coordinate of the right player layout
+   */
   public void setRightPlayerLayoutX(double rightPlayerLayoutX) {
     this.rightPlayerLayoutX = rightPlayerLayoutX;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the y coordinate of the right player layout
+   */
   public double getRightPlayerLayoutY() {
     return rightPlayerLayoutY;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param rightPlayerLayoutY double of the new y coordinate of the right player layout
+   */
   public void setRightPlayerLayoutY(double rightPlayerLayoutY) {
     this.rightPlayerLayoutY = rightPlayerLayoutY;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the x coordinate of the left player layout
+   */
   public double getLeftPlayerLayoutX() {
     return leftPlayerLayoutX;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param leftPlayerLayoutX double of the new x coordinate of the left player layout
+   */
   public void setLeftPlayerLayoutX(double leftPlayerLayoutX) {
     this.leftPlayerLayoutX = leftPlayerLayoutX;
   }
 
+  /**
+   * Getter method.
+   *
+   * @return double of the y coordinate of the left player layout
+   */
   public double getLeftPlayerLayoutY() {
     return leftPlayerLayoutY;
   }
 
+  /**
+   * Setter method.
+   *
+   * @param leftPlayerLayoutY double of the new y coordinate of the left player layout
+   */
   public void setLeftPlayerLayoutY(double leftPlayerLayoutY) {
     this.leftPlayerLayoutY = leftPlayerLayoutY;
   }
