@@ -15,15 +15,20 @@ public class Bank {
   private final int initialValue; //this is the value all gems (excl. gold) are initialized to
 
   /**
+   * Constructor.
    * Relies on Game Info to know how many players are in the game
    * Initalization values:
    * 5 gold tokens always
    * 4 players -- 7 of all gems (excl. gold)
    * 3 players -- 5 of all gems (excl. gold)
    * 2 players -- 4 of all gems (excl. gold)
+   *
+   * @param numPlayers representing number of players in game
    */
+
   //TODO: Do we want to have this param?? Or should we implement this logic in GameState
   //TODO: and pass an integer value to Bank representing the initial gem values.
+
   public Bank(int numPlayers) {
     this.allTokens = SplendorDevHelper.getInstance().getRawTokenColoursMap();
     if (numPlayers == 2) {
@@ -80,6 +85,11 @@ public class Bank {
     }
   }
 
+  /**
+   * getAllTokens.
+   *
+   * @return an enum map containing all tokens
+   */
 
   public EnumMap<Colour, Integer> getAllTokens() {
     return allTokens;
@@ -99,6 +109,12 @@ public class Bank {
         .mapToInt(Map.Entry::getValue)
         .sum();
   }
+
+  /**
+   * getInitialValue.
+   *
+   * @return a number indicating inital value of bank
+   */
 
   public int getInitialValue() {
     return initialValue;

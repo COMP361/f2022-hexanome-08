@@ -153,6 +153,7 @@ public class LobbyCommunicator {
    * @param accessToken     access token of the player
    * @param gameServiceName splendorbase, splendorcity, ... (game service names)
    * @return an array of Savegame to one specific game service, can be empty
+   * @throws UnirestException failed to perform REST to LS.
    */
   public Savegame[] getAllSavedGames(String accessToken, String gameServiceName)
       throws UnirestException {
@@ -181,6 +182,7 @@ public class LobbyCommunicator {
    * send a request to LS to save the Savegame.
    *
    * @param savegame the Savegame instance
+   * @throws UnirestException failed to send REST request to LS
    */
   public void putSaveGame(Savegame savegame) throws UnirestException {
     String serviceName = savegame.getGamename();

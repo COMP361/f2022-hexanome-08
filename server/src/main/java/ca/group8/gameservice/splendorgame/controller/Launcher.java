@@ -12,7 +12,15 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 public class Launcher extends SpringBootServletInitializer {
 
   /**
-   * Main.
+   * Constructor of spring boot application launcher.
+   */
+  public Launcher() {}
+
+  /**
+   * start point of spring boot application.
+   *
+   * @param args arguments
+   * @throws FileNotFoundException file not found exception.
    */
   public static void main(String[] args) throws FileNotFoundException {
 

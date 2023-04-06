@@ -57,10 +57,22 @@ public class ClaimNobleAction extends Action {
 
   }
 
+  /**
+   * getCurCard.
+   *
+   * @return current Noble card
+   */
+
   public NobleCard getCurCard() {
     assert curCard != null;
     return curCard;
   }
+
+  /**
+   * getCardPosition.
+   *
+   * @return Noble card position
+   */
 
   public Position getCardPosition() {
     assert curPosition != null;

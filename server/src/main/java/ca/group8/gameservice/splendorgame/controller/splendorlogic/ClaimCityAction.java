@@ -14,6 +14,9 @@ public class ClaimCityAction extends Action {
 
   private final CityCard cityCard;
 
+  /**
+   * Constructor.
+   */
   public ClaimCityAction(CityCard cityCard) {
     super.type = this.getClass().getSimpleName();
     this.cityCard = cityCard;
@@ -27,6 +30,12 @@ public class ClaimCityAction extends Action {
     // after assigning, terminate
     actionGenerator.getPlayerActionMaps().put(playerInGame.getName(), new HashMap<>());
   }
+
+  /**
+   * getCityCard.
+   *
+   * @return City card
+   */
 
   public CityCard getCityCard() {
     return cityCard;

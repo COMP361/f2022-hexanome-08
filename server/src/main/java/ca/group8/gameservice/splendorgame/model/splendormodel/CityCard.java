@@ -27,6 +27,12 @@ public class CityCard extends Card {
     this.anyColourCount = anyColourCount;
   }
 
+  /**
+   * getAnyColourCount.
+   *
+   * @return any colour count
+   */
+
   public int getAnyColourCount() {
     return anyColourCount;
   }

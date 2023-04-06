@@ -333,15 +333,33 @@ public class ActionInterpreter {
     gameInfo.setWinners(finalWinners);
   }
 
+  /**
+   * A getter method to return action generator.
+   *
+   * @return action generator
+   */
+
   public ActionGenerator getActionGenerator() {
     assert actionGenerator != null;
     return actionGenerator;
   }
 
+  /**
+   * A getter method to return game info.
+   *
+   * @return current game info
+   */
+
   public GameInfo getGameInfo() {
     assert gameInfo != null;
     return gameInfo;
   }
+
+  /**
+   * A getter method to get player states.
+   *
+   * @return current player states
+   */
 
   public PlayerStates getPlayerStates() {
     assert playerStates != null;
@@ -367,27 +385,63 @@ public class ActionInterpreter {
     }
   }
 
+  /**
+   * A getter method to get stashed card.
+   *
+   * @return development card of stashed card
+   */
+
   public DevelopmentCard getStashedCard() {
     assert stashedCard != null;
     return stashedCard;
   }
 
+  /**
+   * A setter method to stashed card.
+   *
+   * @param stashedCard representing stashed card
+   */
+
   public void setStashedCard(DevelopmentCard stashedCard) {
     this.stashedCard = stashedCard;
   }
+
+  /**
+   * A setter method to level of free card.
+   *
+   * @param newLevel representing level of card
+   */
 
   public void setFreeCardLevel(int newLevel) {
     assert newLevel < 3 && newLevel >= 0; //Cannot have a free card that is level 3 or above.
     freeCardLevel = newLevel;
   }
 
+  /**
+   * A getter method to get possible burn card count.
+   *
+   * @return integer of burn count
+   */
+
   public int getBurnCardCount() {
     return burnCardCount;
   }
 
+  /**
+   * A getter method to get the color of a card to burn.
+   *
+   * @return a colour representing the card
+   */
+
   public Colour getBurnCardColour() {
     return burnCardColour;
   }
+
+  /**
+   * A method to subtract burn card count.
+   *
+   * @param number representing how much to remove
+   */
 
   public void removeBurnCardCount(int number) {
     burnCardCount -= number;

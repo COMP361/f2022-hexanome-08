@@ -24,8 +24,17 @@ public class DevelopmentCard extends Card {
   private DevelopmentCard pairedCard;
 
   /**
-   * prestige points, price, name, level, colour, isPaired, pairID, gem number.
+   * Constructor.
+   *
+   * @param paramPrestigePoints prestige points
+   * @param paramPrice price
+   * @param paramCardName card name
+   * @param level level
+   * @param gemColour colour
+   * @param gemNumber number
+   * @param purchaseEffects purchase effects
    */
+
   public DevelopmentCard(int paramPrestigePoints, EnumMap<Colour, Integer> paramPrice,
                          String paramCardName, int level, Colour gemColour, int gemNumber,
                          List<CardEffect> purchaseEffects) {
@@ -39,13 +48,31 @@ public class DevelopmentCard extends Card {
     this.purchaseEffects = Collections.unmodifiableList(purchaseEffects);
   }
 
+  /**
+   * getLevel.
+   *
+   * @return level
+   */
+
   public int getLevel() {
     return level;
   }
 
+  /**
+   * getGemColour.
+   *
+   * @return gem colour
+   */
+
   public Colour getGemColour() {
     return gemColour;
   }
+
+  /**
+   * isPaired.
+   *
+   * @return boolean of whether card is paired or not
+   */
 
   public Boolean isPaired() {
     return isPaired;
@@ -60,6 +87,11 @@ public class DevelopmentCard extends Card {
     return pairedCard;
   }
 
+  /**
+   * setPairedCard.
+   *
+   * @param card card
+   */
   public void setPairedCard(DevelopmentCard card) {
     pairedCard = card;
   }
@@ -73,6 +105,12 @@ public class DevelopmentCard extends Card {
     return gemNumber;
   }
 
+  /**
+   * setIsPaired.
+   *
+   * @param value value
+   */
+
   public void setIsPaired(boolean value) {
     isPaired = value;
   }
@@ -83,6 +121,7 @@ public class DevelopmentCard extends Card {
    *
    * @return list of purchaseEffects, can be empty
    */
+
   public List<CardEffect> getPurchaseEffects() {
     return purchaseEffects;
   }
@@ -91,7 +130,6 @@ public class DevelopmentCard extends Card {
    * pair a dev card with purchaseEffect containing SATCHEL to this card.
    *
    * @param pairedCard the card with purchaseEffect containing SATCHEL
-   * @post gemNumber increment by 1, isPaired set to true, pairedCard gets assigned
    */
   public void pairCard(DevelopmentCard pairedCard) {
     if (pairedCard != null && pairedCard.purchaseEffects.contains(CardEffect.SATCHEL)) {
@@ -127,6 +165,9 @@ public class DevelopmentCard extends Card {
    * canBeBought.
    *
    * @param hasDoubleGoldPower hasDoubleGoldPower
+   * @param curPlayerInfo curPlayer Info
+   *
+   * @return map of cards that can be bought
    */
   public EnumMap<Colour, Integer> canBeBought(boolean hasDoubleGoldPower,
                                               PlayerInGame curPlayerInfo) {

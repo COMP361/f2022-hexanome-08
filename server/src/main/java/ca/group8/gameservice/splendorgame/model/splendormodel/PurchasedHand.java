@@ -24,6 +24,12 @@ public class PurchasedHand {
     developmentCards.add(card);
   }
 
+  /**
+   * addNoble.
+   *
+   * @param card card
+   */
+
   public void addNobleCard(NobleCard card) {
     nobleCards.add(card);
   }
@@ -38,6 +44,11 @@ public class PurchasedHand {
     nobleCards.remove(card);
   }
 
+  /**
+   * getSize.
+   *
+   * @return size of purchased hand
+   */
   public int getSize() {
     return developmentCards.size();
   }

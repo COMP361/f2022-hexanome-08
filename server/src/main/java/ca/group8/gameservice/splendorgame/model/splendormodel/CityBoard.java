@@ -76,9 +76,21 @@ public class CityBoard extends Board {
     }
   }
 
+  /**
+   * getAllCityCards.
+   *
+   * @return all city cards
+   */
+
   public CityCard[] getAllCityCards() {
     return allCityCards;
   }
+
+  /**
+   * getPlayerCities.
+   *
+   * @return map of player cities
+   */
 
   public Map<String, CityCard> getPlayerCities() {
     return playerCities;

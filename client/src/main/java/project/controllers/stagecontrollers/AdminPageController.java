@@ -75,6 +75,11 @@ public class AdminPageController extends AbstractLobbyController {
 
   private final GameBoardLayoutConfig config = App.getGuiLayouts();
 
+  /**
+   * Constructor of AdminPageController.
+   */
+  public AdminPageController() {}
+
 
   private void pageSpecificActionBind() {
     settingButton.setOnAction(event -> {
