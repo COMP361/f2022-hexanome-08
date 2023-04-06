@@ -75,10 +75,20 @@ public class PlayerImageGuiController implements Initializable {
     return reservedNobleCountText;
   }
 
+  /**
+   * getReservedCardsCountText.
+   *
+   * @return text
+   */
   public Text getReservedCardsCountText() {
     return reservedCardsCountText;
   }
 
+  /**
+   * getHighlightRectangle.
+   *
+   * @return Rectangle
+   */
   public Rectangle getHighlightRectangle() {
     return highlightRectangle;
   }

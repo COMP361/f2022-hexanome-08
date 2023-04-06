@@ -35,11 +35,20 @@ public class PlayerImageGui extends Group {
     }
   }
 
-
+  /**
+   * setCurrentPointsText.
+   *
+   * @param newPoints newPoints
+   */
   public void setCurrentPointsText(int newPoints) {
     controller.getCurrentPointsText().setText("" + newPoints);
   }
 
+  /**
+   * setReservedNobleCountText.
+   *
+   * @param reservedNobleCount reservedNobleCount
+   */
   public void setReservedNobleCountText(int reservedNobleCount) {
     controller.getReservedNobleCountText().setText("" + reservedNobleCount);
   }

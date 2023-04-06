@@ -37,6 +37,11 @@ public class Player {
     return name;
   }
 
+  /**
+   * setName.
+   *
+   * @param name name
+   */
   public void setName(String name) {
     this.name = name;
   }
@@ -45,6 +50,11 @@ public class Player {
     return password;
   }
 
+  /**
+   * setPassword.
+   *
+   * @param password password
+   */
   public void setPassword(String password) {
     this.password = password;
   }
@@ -53,14 +63,29 @@ public class Player {
     return preferredColour;
   }
 
+  /**
+   * setPreferredColour.
+   *
+   * @param preferredColour preferredColour
+   */
   public void setPreferredColour(String preferredColour) {
     this.preferredColour = preferredColour;
   }
 
+  /**
+   * getRole.
+   *
+   * @return role
+   */
   public Role getRole() {
     return role;
   }
 
+  /**
+   * setRole.
+   *
+   * @param role role
+   */
   public void setRole(Role role) {
     this.role = role;
   }
