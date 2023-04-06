@@ -35,18 +35,33 @@ public abstract class AbstractLobbyController implements Initializable {
    */
   public AbstractLobbyController() {}
 
+  /**
+   * initializeSessionUpdateThread.
+   *
+   * @param sessionUpdateThread sessionUpdateThread
+   */
   protected void initializeSessionUpdateThread(Thread sessionUpdateThread) {
     if (this.sessionUpdateThread == null) {
       this.sessionUpdateThread = sessionUpdateThread;
     }
   }
 
+  /**
+   * initializeRefreshTokenThread.
+   *
+   * @param refreshTokenThread refreshTokenThread
+   */
   protected void initializeRefreshTokenThread(Thread refreshTokenThread) {
     if (this.refreshTokenThread == null) {
       this.refreshTokenThread = refreshTokenThread;
     }
   }
 
+  /**
+   * getSessionUpdateThread.
+   *
+   * @return thread
+   */
   public Thread getSessionUpdateThread() {
     return sessionUpdateThread;
   }

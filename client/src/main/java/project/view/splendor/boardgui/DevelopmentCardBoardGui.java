@@ -15,9 +15,26 @@ public interface DevelopmentCardBoardGui {
    */
   void setup();
 
+  /**
+   * getAllCardsGui.
+   *
+   * @return List
+   */
   List<ImageView> getAllCardsGui();
 
+  /**
+   * getOneCardGui.
+   *
+   * @param cardIndex cardIndex
+   * @return imageVIEW
+   */
   ImageView getOneCardGui(int cardIndex);
 
+  /**
+   * bindActionToCardAndDeck.
+   *
+   * @param positionToActionMap positionToActionMap
+   * @param gameId gameId
+   */
   void bindActionToCardAndDeck(Map<Position, List<ActionIdPair>> positionToActionMap, long gameId);
 }

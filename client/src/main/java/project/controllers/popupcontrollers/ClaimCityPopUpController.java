@@ -21,6 +21,12 @@ public class ClaimCityPopUpController extends ActionSelectionSender implements I
   @FXML
   private VBox unlockedCityCardsVbox;
 
+  /**
+   * ClaimCityPopUpController.
+   *
+   * @param gameId gameId
+   * @param playerActionMap playerActionMap
+   */
   public ClaimCityPopUpController(long gameId, Map<String, Action> playerActionMap) {
     super(gameId);
     this.playerActionMap = playerActionMap;

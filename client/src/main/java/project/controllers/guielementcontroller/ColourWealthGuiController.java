@@ -25,15 +25,29 @@ public class ColourWealthGuiController implements Initializable {
   @FXML
   private Rectangle backgroundRectangle;
 
+  /**
+   * ColourWealthGuiController.
+   *
+   * @param colour colour
+   */
   public ColourWealthGuiController(Colour colour) {
     this.colour = colour;
   }
 
-
+  /**
+   * getGemCountText.
+   *
+   * @return text
+   */
   public Text getGemCountText() {
     return gemCountText;
   }
 
+  /**
+   * getTokenCountText.
+   *
+   * @return text
+   */
   public Text getTokenCountText() {
     return tokenCountText;
   }

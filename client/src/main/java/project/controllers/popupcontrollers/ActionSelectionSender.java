@@ -14,10 +14,21 @@ public class ActionSelectionSender {
 
   private final long gameId;
 
+  /**
+   * ActionSelectionSender.
+   *
+   * @param gameId gameId
+   */
   public ActionSelectionSender(long gameId) {
     this.gameId = gameId;
   }
 
+  /**
+   * createOnActionSelectionClick.
+   *
+   * @param actionId actionId
+   * @return event handler
+   */
   protected EventHandler<MouseEvent> createOnActionSelectionClick(String actionId) {
     return event -> {
       GameRequestSender gameRequestSender = App.getGameRequestSender();

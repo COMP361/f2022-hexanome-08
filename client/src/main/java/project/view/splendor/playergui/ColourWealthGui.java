@@ -34,16 +34,31 @@ public class ColourWealthGui extends Group {
     }
   }
 
+  /**
+   * setGemCountText.
+   *
+   * @param newGemCount newGemCount
+   */
   public void setGemCountText(int newGemCount) {
 
     controller.getGemCountText().setText("" + newGemCount);
   }
 
+  /**
+   * setTokenCountText.
+   *
+   * @param newTokenCount newTokenCount
+   */
   public void setTokenCountText(int newTokenCount) {
 
     controller.getTokenCountText().setText("" + newTokenCount);
   }
 
+  /**
+   * getColour.
+   *
+   * @return colour
+   */
   public Colour getColour() {
     return colour;
   }

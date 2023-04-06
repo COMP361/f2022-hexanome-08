@@ -601,6 +601,11 @@ public class GameBoardLayoutConfig {
     this.topPlayerHeight = topPlayerHeight;
   }
 
+  /**
+   * getBtmPlayerWidth.
+   *
+   * @return double
+   */
   public double getBtmPlayerWidth() {
     return btmPlayerWidth;
   }
@@ -614,6 +619,11 @@ public class GameBoardLayoutConfig {
     this.btmPlayerWidth = btmPlayerWidth;
   }
 
+  /**
+   * getBtmPlayerHeight.
+   *
+   * @return double
+   */
   public double getBtmPlayerHeight() {
     return btmPlayerHeight;
   }
@@ -645,6 +655,11 @@ public class GameBoardLayoutConfig {
     this.rightPlayerWidth = rightPlayerWidth;
   }
 
+  /**
+   * getRightPlayerHeight.
+   *
+   * @return height
+   */
   public double getRightPlayerHeight() {
     return rightPlayerHeight;
   }
@@ -658,6 +673,11 @@ public class GameBoardLayoutConfig {
     this.rightPlayerHeight = rightPlayerHeight;
   }
 
+  /**
+   * getLeftPlayerWidth.
+   *
+   * @return double
+   */
   public double getLeftPlayerWidth() {
     return leftPlayerWidth;
   }
@@ -671,34 +691,65 @@ public class GameBoardLayoutConfig {
     this.leftPlayerWidth = leftPlayerWidth;
   }
 
+  /**
+   * getLeftPlayerHeight.
+   *
+   * @return double
+   */
   public double getLeftPlayerHeight() {
     return leftPlayerHeight;
   }
 
+  /**
+   * getBaseCardBoardWidth.
+   *
+   * @return double
+   */
   public double getBaseCardBoardWidth() {
     return baseCardBoardWidth;
   }
 
+  /**
+   * getBaseCardBoardHeight.
+   *
+   * @return double
+   */
   public double getBaseCardBoardHeight() {
     return baseCardBoardHeight;
   }
 
-
+  /**
+   * getPacWidth.
+   *
+   * @return width
+   */
   public double getPacWidth() {
     return pacWidth;
   }
 
-
+  /**
+   * getPacHeight.
+   *
+   * @return height
+   */
   public double getPacHeight() {
     return pacHeight;
   }
 
-
+  /**
+   * getCardActionWidth.
+   *
+   * @return double
+   */
   public double getCardActionWidth() {
     return cardActionWidth;
   }
 
-
+  /**
+   * getCardActionHeight.
+   *
+   * @return double
+   */
   public double getCardActionHeight() {
     return cardActionHeight;
   }
@@ -721,22 +772,40 @@ public class GameBoardLayoutConfig {
     return smallPopUpHeight;
   }
 
+  /**
+   * getExitGameWidth.
+   *
+   * @return double
+   */
   public double getExitGameWidth() {
     return exitGameWidth;
   }
 
 
-
+  /**
+   * getExitGameHeight.
+   *
+   * @return double
+   */
   public double getExitGameHeight() {
     return exitGameHeight;
   }
 
 
-
+  /**
+   * getLargePopUpWidth.
+   *
+   * @return double
+   */
   public double getLargePopUpWidth() {
     return largePopUpWidth;
   }
 
+  /**
+   * getLargePopUpHeight.
+   *
+   * @return double
+   */
   public double getLargePopUpHeight() {
     return largePopUpHeight;
   }
