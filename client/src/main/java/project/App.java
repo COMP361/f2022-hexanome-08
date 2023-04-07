@@ -342,23 +342,31 @@ public class App extends Application {
    * @return Image
    */
   public static Image getPlayerImage(String playerName) {
-    String userPicPath = "project/pictures/user_pictures/";
-    String randomPicPath = "project/pictures/random_pictures/";
-    List<String> userPicNames = getPictureNames(userPicPath);
-    List<String> randomPicNames = getPictureNames(randomPicPath);
-    if (userPicNames.contains(playerName)) {
-      return new Image(userPicPath + playerName + ".png");
-    } else {
-      // randomly pick one out of random list
-      if (randomPicNames.size() > 0) {
-        int randomIndex = new Random().nextInt(randomPicNames.size());
-        String randomPicName = randomPicNames.get(randomIndex);
-        return new Image(randomPicPath + randomPicName + ".png");
-      } else {
-        // ran out of pics!
-        throw new RuntimeException("No random pictures available for you!");
-      }
+    try {
+      String userPicPath = "user_pictures/" + playerName + ".png";
+      File imageFile = new File(userPicPath);
+      return new Image(imageFile.toURI().toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException();
     }
+    //String userPicPath = "project/pictures/user_pictures/";
+    //String randomPicPath = "project/pictures/random_pictures/";
+    //List<String> userPicNames = getPictureNames(userPicPath);
+    //List<String> randomPicNames = getPictureNames(randomPicPath);
+    //if (userPicNames.contains(playerName)) {
+    //  return new Image(userPicPath + playerName + ".png");
+    //} else {
+    //  // randomly pick one out of random list
+    //  if (randomPicNames.size() > 0) {
+    //    int randomIndex = new Random().nextInt(randomPicNames.size());
+    //    String randomPicName = randomPicNames.get(randomIndex);
+    //    return new Image(randomPicPath + randomPicName + ".png");
+    //  } else {
+    //    // ran out of pics!
+    //    throw new RuntimeException("No random pictures available for you!");
+    //  }
+    //}
   }
 
   ///*
