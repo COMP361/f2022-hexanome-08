@@ -82,6 +82,8 @@ public class App extends Application {
 
   private static ConnectionConfig connectionConfig;
 
+  private static File connectionConfigFile;
+
   /**
    * Constructor of javafx app.
    */
@@ -268,6 +270,11 @@ public class App extends Application {
     return connectionConfig;
   }
 
+  public static File getConnectionConfigFile() {
+    return connectionConfigFile;
+  }
+
+
   /**
    * Static getter.
    *
@@ -343,9 +350,10 @@ public class App extends Application {
    */
   public static Image getPlayerImage(String playerName) {
     try {
-      String userPicPath = "user_pictures/" + playerName + ".png";
-      File imageFile = new File(userPicPath);
-      return new Image(imageFile.toURI().toString());
+      String userPicPath = "project/pictures/user_pictures/" + playerName + ".png";
+      //File imageFile = new File(userPicPath);
+      //return new Image(imageFile.toURI().toString());
+      return new Image(userPicPath);
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException();
@@ -601,13 +609,13 @@ public class App extends Application {
     System.setProperty("com.apple.macos.useScreenMenuBar", "true");
     primaryStage = stage;
     File gameConfigFile = new File("appConfig.json");
-    File connectConfigFile = new File("connectionConfig.json");
+    connectionConfigFile = new File("connectionConfig.json");
 
 
     try {
       String gameConfigString = FileUtils.readFileToString(gameConfigFile, StandardCharsets.UTF_8);
       String connectConfigJson
-          = FileUtils.readFileToString(connectConfigFile, StandardCharsets.UTF_8);
+          = FileUtils.readFileToString(connectionConfigFile, StandardCharsets.UTF_8);
       guiLayouts = new Gson().fromJson(gameConfigString, GameBoardLayoutConfig.class);
       connectionConfig = new Gson().fromJson(connectConfigJson, ConnectionConfig.class);
     } catch (FileNotFoundException e) {

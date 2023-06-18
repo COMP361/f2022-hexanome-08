@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import project.App;
 import project.config.ConnectionConfig;
 import project.connection.LobbyRequestSender;
+import project.controllers.popupcontrollers.AppSettingPageController;
 import project.view.lobby.communication.User;
 
 /**
@@ -35,6 +36,9 @@ public class LogInController implements Initializable {
 
   @FXML
   private Button quitButton;
+
+  @FXML
+  private Button settingButton;
 
   /**
    * Constructor of LogInController.
@@ -151,6 +155,17 @@ public class LogInController implements Initializable {
     logInButton.setDefaultButton(true);
     logInButton.setOnAction(event -> {
       doLogIn();
+    });
+
+
+    // give setting button function to make a pop-up (display connection config info)
+    settingButton.setOnAction(event -> {
+      AppSettingPageController controller = new AppSettingPageController(App.getConnectionConfig());
+      App.loadPopUpWithController("app_setting_page.fxml", controller,
+          App.getGuiLayouts().getLargePopUpWidth(),
+          App.getGuiLayouts().getLargePopUpHeight());
+
+
     });
 
     // guarantee to execute the termination of program in javafx thread

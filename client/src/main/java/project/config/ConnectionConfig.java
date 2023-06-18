@@ -4,11 +4,12 @@ package project.config;
  * ConnectionConfig.
  */
 public class ConnectionConfig {
-  private final String defaultUserName;
-  private final String defaultPassword;
-  private final boolean useDefaultUserInfo;
-  private final String hostIp;
-  private final boolean useLocalHost;
+  private String defaultUserName;
+  private String defaultPassword;
+  private boolean useDefaultUserInfo;
+  private String hostIp;
+
+  private boolean useLocalHost;
 
   /**
    * ConnectionConfig.
@@ -36,6 +37,11 @@ public class ConnectionConfig {
    */
   public String getDefaultUserName() {
     return defaultUserName;
+  }
+
+
+  public boolean isUseLocalHost() {
+    return useLocalHost;
   }
 
   /**
@@ -66,6 +72,26 @@ public class ConnectionConfig {
       return "127.0.0.1";
     }
     return hostIp;
+  }
+
+  public void setDefaultUserName(String defaultUserName) {
+    this.defaultUserName = defaultUserName;
+  }
+
+  public void setDefaultPassword(String defaultPassword) {
+    this.defaultPassword = defaultPassword;
+  }
+
+  public void setUseDefaultUserInfo(boolean useDefaultUserInfo) {
+    this.useDefaultUserInfo = useDefaultUserInfo;
+  }
+
+  public void setHostIp(String hostIp) {
+    this.hostIp = hostIp;
+  }
+
+  public void setUseLocalHost(boolean useLocalHost) {
+    this.useLocalHost = useLocalHost;
   }
 
 }

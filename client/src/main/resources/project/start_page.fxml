@@ -37,6 +37,11 @@
                         <Font name="Arial Black" size="25.0" />
                     </font>
                 </Label>
+            <Button fx:id="settingButton" layoutX="197.0" layoutY="423.0" mnemonicParsing="false" prefWidth="224.0" style="-fx-background-color: #cde8ff;" text="Connection Settings" AnchorPane.rightAnchor="382.0" AnchorPane.topAnchor="423.0">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Button>
             </children>
         </AnchorPane>
     </center>
