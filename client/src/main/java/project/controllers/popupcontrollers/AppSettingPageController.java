@@ -64,8 +64,8 @@ public class AppSettingPageController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     // the update buttons should be re-activated or greyed out accordingly
-    defaultUserNameUpdateButton.setDisable(!connectionConfig.isUseDefaultUserInfo());
-    defaultPasswordUpdateButton.setDisable(!connectionConfig.isUseDefaultUserInfo());
+    defaultUserNameUpdateButton.setDisable(connectionConfig.isUseDefaultUserInfo());
+    defaultPasswordUpdateButton.setDisable(connectionConfig.isUseDefaultUserInfo());
 
     // bind actions to default log in section
     defaultLogInToggleButton.setOnAction(event -> {
@@ -81,11 +81,8 @@ public class AppSettingPageController implements Initializable {
       defaultUserNameUpdateButton.setDisable(!inUse);
       defaultPasswordUpdateButton.setDisable(!inUse);
 
-      // if the info after being acted on has changed, update the file
-      if (connectionConfig.isUseDefaultUserInfo() != inUse) {
-        connectionConfig.setUseDefaultUserInfo(inUse);
-        updateConnectionConfigFile();
-      }
+      connectionConfig.setUseDefaultUserInfo(inUse);
+      updateConnectionConfigFile();
     });
     defaultUserNameTextField.setPromptText(connectionConfig.getDefaultUserName());
     defaultPasswordField.setPromptText(connectionConfig.getDefaultPassword());
@@ -138,10 +135,8 @@ public class AppSettingPageController implements Initializable {
 
       hostIpUpdateButton.setDisable(usingHostIp);
 
-      if (connectionConfig.isUseLocalHost() != usingHostIp) {
-        connectionConfig.setUseLocalHost(usingHostIp);
-        updateConnectionConfigFile();
-      }
+      connectionConfig.setUseLocalHost(usingHostIp);
+      updateConnectionConfigFile();
       defaultHostIpTextField.setPromptText(connectionConfig.getHostIp());
     });
 
