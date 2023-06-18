@@ -116,6 +116,18 @@ public class AppSettingPageController implements Initializable {
 
     // the update button for host ip
     hostIpUpdateButton.setDisable(connectionConfig.isUseLocalHost());
+    hostIpUpdateButton.setOnAction(event -> {
+      if (defaultHostIpTextField.getText() != null &&
+      !defaultHostIpTextField.getText().isEmpty()) {
+        connectionConfig.setHostIp(defaultHostIpTextField.getText());
+        updateConnectionConfigFile();
+      }
+      defaultHostIpTextField.clear();
+      defaultHostIpTextField.setPromptText(connectionConfig.getHostIp());
+    });
+
+
+    // the toggle button of using local ip update functionality or not
     localIpToggleButton.setOnAction(event -> {
       boolean usingHostIp = localIpToggleButton.isSelected();
       if (usingHostIp) {
@@ -134,7 +146,6 @@ public class AppSettingPageController implements Initializable {
     });
 
     defaultHostIpTextField.setPromptText(connectionConfig.getHostIp());
-
 
   }
 }
