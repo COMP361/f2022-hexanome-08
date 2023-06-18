@@ -666,6 +666,12 @@ public class GameController implements Initializable {
             // first thing of the turn, close all popups
             Platform.runLater(App::closeAllPopUps);
 
+            while (nameToPlayerInfoGuiMap.size() < curGameInfo.getPlayerNames().size()) {
+              Thread.sleep(50);
+            }
+            // after busy waiting, highlight the current turn player
+            highlightPlayerInfoGui(curGameInfo);
+
             // if the game is over, load the game over pop up page
             showFinishGamePopUp(curGameInfo);
 
