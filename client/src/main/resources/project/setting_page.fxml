@@ -90,9 +90,14 @@
                </font>
             </Label>
       
-                    <Button fx:id="deletePlayerButton" layoutX="198.0" layoutY="269.0" mnemonicParsing="false" prefHeight="79.0" prefWidth="265.0" style="-fx-background-color: e50916;" text="Delete" textFill="WHITE">
+                    <Button fx:id="deletePlayerButton" layoutX="70.0" layoutY="250.0" mnemonicParsing="false" prefHeight="120.0" prefWidth="250.0" style="-fx-background-color: e50916;" text="Delete" textFill="WHITE">
                <font>
-                  <Font name="Arial Black" size="46.0" />
+                  <Font name="Arial Black" size="40.0" />
+               </font>
+            </Button>
+            <Button fx:id="connectionSettingsButton" layoutX="350.0" layoutY="250.0" mnemonicParsing="false" prefHeight="120.0" prefWidth="250.0" style="-fx-background-color: blue;" text="Connection &#10;Settings" textFill="WHITE">
+               <font>
+                  <Font name="Arial Black" size="31.0" />
                </font>
             </Button>
          </children>

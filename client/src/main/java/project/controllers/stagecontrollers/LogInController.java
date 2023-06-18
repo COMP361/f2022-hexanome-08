@@ -164,8 +164,6 @@ public class LogInController implements Initializable {
       App.loadPopUpWithController("app_setting_page.fxml", controller,
           App.getGuiLayouts().getLargePopUpWidth(),
           App.getGuiLayouts().getLargePopUpHeight());
-
-
     });
 
     // guarantee to execute the termination of program in javafx thread

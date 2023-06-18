@@ -9,6 +9,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.paint.Color;
 import project.App;
 import project.config.GameBoardLayoutConfig;
+import project.controllers.popupcontrollers.AppSettingPageController;
 import project.view.lobby.communication.Player;
 
 /**
@@ -31,6 +32,9 @@ public class SettingPageController extends AbstractLobbyController {
   private Button colorUpdateButton;
   @FXML
   private Button deletePlayerButton;
+
+  @FXML
+  private Button connectionSettingsButton;
 
   /**
    * Constructor of SettingPageController.
@@ -78,16 +82,24 @@ public class SettingPageController extends AbstractLobbyController {
     // bind the actions to delete user (flag indicating staying at admin page)
     App.bindDeleteUserAction(player, deletePlayerButton, true, config);
 
-    String warn = "THE DELETION CAN NOT BE REVERSED!!!";
-    App.bindToolTip(warn, 15, deletePlayerButton, 20);
+    //String warn = "THE DELETION CAN NOT BE REVERSED!!!";
+    //App.bindToolTip(warn, 15, deletePlayerButton, 20);
 
-    //deletePlayerButton.setDisable(true);
-    //if (!App.getUser().getAuthority().equals("ROLE_ADMIN")) {
-    //  deletePlayerButton.setDisable(false);
-    //  App.bindDeleteUserAction(player, deletePlayerButton, true, config);
-    //
-    //  String warn = "THE DELETION CAN NOT BE REVERSED!!!";
-    //  App.bindToolTip(warn, 15, deletePlayerButton, 20);
-    //}
+    deletePlayerButton.setDisable(true);
+    if (!App.getUser().getAuthority().equals("ROLE_ADMIN")) {
+      deletePlayerButton.setDisable(false);
+      App.bindDeleteUserAction(player, deletePlayerButton, true, config);
+
+      String warn = "THE DELETION CAN NOT BE REVERSED!!!";
+      App.bindToolTip(warn, 15, deletePlayerButton, 20);
+    }
+
+    // open up connection setting pop up
+    connectionSettingsButton.setOnAction(event -> {
+      AppSettingPageController controller = new AppSettingPageController(App.getConnectionConfig());
+      App.loadPopUpWithController("app_setting_page.fxml", controller,
+          App.getGuiLayouts().getLargePopUpWidth(),
+          App.getGuiLayouts().getLargePopUpHeight());
+    });
   }
 }
