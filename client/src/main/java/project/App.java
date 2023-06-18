@@ -5,8 +5,10 @@ import ca.mcgill.comp361.splendormodel.model.Colour;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -29,14 +32,21 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -85,6 +95,10 @@ public class App extends Application {
   private static ConnectionConfig connectionConfig;
 
   private static File connectionConfigFile;
+
+
+
+  private static Stage currentPopupStage = null;
 
   /**
    * Constructor of javafx app.
@@ -145,6 +159,15 @@ public class App extends Application {
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
     fxmlLoader.setController(controller);
     Stage newStage = new Stage();
+    // reset the current pop up stage buffer
+    newStage.setOnCloseRequest((WindowEvent event) -> {
+      currentPopupStage = null;
+    });
+
+    if (currentPopupStage == null) {
+      currentPopupStage = newStage;
+    }
+
     try {
       Scene popupScene = new Scene(fxmlLoader.load(), popUpStageWidth, popUpStageHeight);
       newStage.setScene(popupScene);
@@ -283,6 +306,10 @@ public class App extends Application {
     return connectionConfigFile;
   }
 
+
+  public static Stage getCurrentPopupStage() {
+    return currentPopupStage;
+  }
 
   /**
    * Static getter.
@@ -606,6 +633,9 @@ public class App extends Application {
     });
 
   }
+
+
+
 
   /**
    * Override the start() method to launch the whole project.

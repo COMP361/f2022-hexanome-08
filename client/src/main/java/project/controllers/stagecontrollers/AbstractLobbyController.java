@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import project.App;
+import project.controllers.popupcontrollers.UploadImagePopUpController;
 import project.view.lobby.communication.Player;
 
 /**
@@ -69,6 +70,15 @@ public abstract class AbstractLobbyController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     // regular display set up for all users (admin or player)
+    userImageView.setOnMouseClicked(event -> {
+      App.loadPopUpWithController(
+          "upload_image_page.fxml",
+          new UploadImagePopUpController(),
+          App.getGuiLayouts().getLargePopUpWidth(),
+          App.getGuiLayouts().getLargePopUpHeight()
+      );
+
+    });
     userImageView.setImage(App.getPlayerImage(App.getUser().getUsername()));
     userNameLabel.setText("Current user: " + App.getUser().getUsername());
 
