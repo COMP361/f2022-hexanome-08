@@ -29,7 +29,9 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -144,7 +146,14 @@ public class App extends Application {
     fxmlLoader.setController(controller);
     Stage newStage = new Stage();
     try {
-      newStage.setScene(new Scene(fxmlLoader.load(), popUpStageWidth, popUpStageHeight));
+      Scene popupScene = new Scene(fxmlLoader.load(), popUpStageWidth, popUpStageHeight);
+      newStage.setScene(popupScene);
+      // Adding the key event to the Scene
+      popupScene.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+        if (keyEvent.getCode() == KeyCode.ESCAPE) {
+          newStage.close();
+        }
+      });
     } catch (IOException e) {
       e.printStackTrace();
     }
