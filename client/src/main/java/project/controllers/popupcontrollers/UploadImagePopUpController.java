@@ -3,7 +3,6 @@ package project.controllers.popupcontrollers;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
