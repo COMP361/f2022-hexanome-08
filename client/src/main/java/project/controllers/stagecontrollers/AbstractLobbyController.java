@@ -1,16 +1,19 @@
 package project.controllers.stagecontrollers;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import project.App;
 import project.controllers.popupcontrollers.UploadImagePopUpController;
 import project.view.lobby.communication.Player;
+import project.view.lobby.communication.User;
 
 /**
  * AbstractLobbyController.
@@ -79,7 +82,15 @@ public abstract class AbstractLobbyController implements Initializable {
       );
 
     });
-    userImageView.setImage(App.getPlayerImage(App.getUser().getUsername()));
+    User user = App.getUser();
+    try {
+      Image userImage = App.getLobbyServiceRequestSender()
+              .getUserImage(user.getAccessToken(), user.getUsername());
+      userImageView.setImage(userImage);
+    } catch (UnirestException e) {
+      throw new RuntimeException(e);
+    }
+
     userNameLabel.setText("Current user: " + App.getUser().getUsername());
 
     Player player = App.getLobbyServiceRequestSender().getOnePlayer(

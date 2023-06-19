@@ -6,10 +6,13 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import project.App;
@@ -525,6 +528,29 @@ public class LobbyRequestSender {
     if (response.getStatus() != 200) {
       throw new UnirestException(response.getBody());
     }
+  }
+
+
+  /**
+   * Helps user to retrieve their images on LS.
+   *
+   * @param accessToken
+   * @param userName
+   * @return
+   * @throws UnirestException
+   */
+  public Image getUserImage(String accessToken, String userName) throws UnirestException {
+    // Call the API
+    String url = String.format("%s/api/users/images/%s", lobbyUrl, userName);
+    HttpResponse<InputStream> response = Unirest.get(url)
+        .queryString("access_token", accessToken)
+        .asBinary();
+    if (response.getStatus() != 200) {
+      throw new UnirestException("");
+    }
+    // Get the InputStream from the response
+    InputStream inputStream = response.getBody();
+    return new Image(inputStream);
   }
 
 }

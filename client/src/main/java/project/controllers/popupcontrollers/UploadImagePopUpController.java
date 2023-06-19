@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -17,7 +18,9 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import project.App;
+import project.controllers.stagecontrollers.LobbyController;
 import project.view.lobby.communication.User;
 
 
@@ -97,6 +100,10 @@ public class UploadImagePopUpController implements Initializable {
       }
     });
 
+    // bind nullity of image view to both confirm button and reset button
+    confirmUploadButton.disableProperty().bind(Bindings.isNull(previewImageView.imageProperty()));
+    resetUploadButton.disableProperty().bind(Bindings.isNull(previewImageView.imageProperty()));
+
     confirmUploadButton.setOnAction(uploadEvent -> {
       if (imageFile != null) {
         try {
@@ -113,7 +120,12 @@ public class UploadImagePopUpController implements Initializable {
           imageFile = null;
           previewImageView.setImage(null);
 
-          instructionLabel.setText("Upload Successfully!\nClick to upload again");
+          // close the upload pop up
+          Stage curWindow = (Stage) confirmUploadButton.getScene().getWindow();
+          curWindow.close();
+
+          // return to the lobby page
+          App.loadNewSceneToPrimaryStage("lobby_page.fxml", new LobbyController());
 
         } catch (UnirestException e) {
           e.printStackTrace();
