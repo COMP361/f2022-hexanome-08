@@ -603,7 +603,11 @@ public class GameController implements Initializable {
       Platform.runLater(() -> {
         App.loadPopUpWithController("game_over.fxml",
             new GameOverPopUpController(mainGameUpdateThread,
-                playerInfoThread, curGameInfo.getWinners(), gameId, false),
+                playerInfoThread,
+                curGameInfo.getWinners(),
+                gameId,
+                false,
+                inWatchMode),
             config.getSmallPopUpWidth(),
             config.getSmallPopUpHeight());
       });
@@ -732,8 +736,13 @@ public class GameController implements Initializable {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
       App.loadPopUpWithController("quit_game.fxml",
-          new GameOverPopUpController(mainGameUpdateThread,
-              playerInfoThread, new ArrayList<>(), gameId, true),
+          new GameOverPopUpController(
+              mainGameUpdateThread,
+              playerInfoThread,
+              new ArrayList<>(),
+              gameId,
+              true,
+              inWatchMode),
           config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
     };
   }

@@ -27,6 +27,8 @@ public class GameOverPopUpController implements Initializable {
   private final List<String> winnerNames;
   private final boolean optionToCancel;
 
+  private final boolean isInViewerMode;
+
   private final long gameId;
 
   @FXML
@@ -43,13 +45,18 @@ public class GameOverPopUpController implements Initializable {
    * @param gameId gameId
    * @param optionToCancel optionToCancel
    */
-  public GameOverPopUpController(Thread mainGameUpdateThread, Thread playerInfoThread,
-                                 List<String> winnerNames, long gameId, boolean optionToCancel) {
+  public GameOverPopUpController(Thread mainGameUpdateThread,
+                                 Thread playerInfoThread,
+                                 List<String> winnerNames,
+                                 long gameId,
+                                 boolean optionToCancel,
+                                 boolean isInViewerMode) {
     this.mainGameUpdateThread = mainGameUpdateThread;
     this.playerInfoThread = playerInfoThread;
     this.winnerNames = winnerNames;
     this.gameId = gameId;
     this.optionToCancel = optionToCancel;
+    this.isInViewerMode = isInViewerMode;
   }
 
   /**
@@ -68,8 +75,8 @@ public class GameOverPopUpController implements Initializable {
       playerInfoThread.interrupt();
 
       // if we have the option to cancel, then this is a quit game popup
-      // some  requests need to be sent to game server
-      if (optionToCancel) {
+      // some  requests need to be sent to game server IF NOT in viewer mode.
+      if (optionToCancel && !isInViewerMode) {
         try {
           GameRequestSender sender = App.getGameRequestSender();
           // a dummy save game instance to the save game API

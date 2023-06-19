@@ -380,77 +380,9 @@ public class App extends Application {
    */
   public static Image getPlayerImage(String playerName) {
     try {
-      String userPicPath = "project/pictures/user_pictures/" + playerName + ".png";
-      //File imageFile = new File(userPicPath);
-      //return new Image(imageFile.toURI().toString());
-      return new Image(userPicPath);
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException();
-    }
-    //String userPicPath = "project/pictures/user_pictures/";
-    //String randomPicPath = "project/pictures/random_pictures/";
-    //List<String> userPicNames = getPictureNames(userPicPath);
-    //List<String> randomPicNames = getPictureNames(randomPicPath);
-    //if (userPicNames.contains(playerName)) {
-    //  return new Image(userPicPath + playerName + ".png");
-    //} else {
-    //  // randomly pick one out of random list
-    //  if (randomPicNames.size() > 0) {
-    //    int randomIndex = new Random().nextInt(randomPicNames.size());
-    //    String randomPicName = randomPicNames.get(randomIndex);
-    //    return new Image(randomPicPath + randomPicName + ".png");
-    //  } else {
-    //    // ran out of pics!
-    //    throw new RuntimeException("No random pictures available for you!");
-    //  }
-    //}
-  }
-
-  ///*
-  //  Move and rename the random picture out of random folder, assign it to a player.
-  // */
-  //private static void moveAndRenamePicture(String sourcePath, String targetPath)
-  //    throws IOException, URISyntaxException {
-  //  ClassLoader classLoader = App.class.getClassLoader();
-  //  URI sourceUri = classLoader.getResource(sourcePath).toURI();
-  //  Path source = Paths.get(sourceUri);
-  //
-  //  Path resourceRoot = source.getParent().getParent().getParent();
-  //  Path target = resourceRoot.resolve(targetPath);
-  //  Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
-  //}
-
-  /**
-   * Compiles a list of all the names of the images at a certain path.
-   *
-   * @param resourcePath specific path
-   * @return list of the names of the images present at that path
-   */
-  private static List<String> getPictureNames(String resourcePath) {
-    try {
-      URI uri = App.class
-          .getClassLoader()
-          .getResource(resourcePath)
-          .toURI();
-      Path path = Paths.get(uri);
-
-      try (Stream<Path> resourceStream = Files.list(path)) {
-        return resourceStream
-            .filter(Files::isRegularFile)
-            .filter(Files::isRegularFile)
-            .map(Path::getFileName)
-            .map(Path::toString)
-            .map(fileName -> fileName.substring(0, fileName.lastIndexOf('.')))
-            .collect(Collectors.toList());
-      } catch (IOException e) {
-        e.printStackTrace();
-        throw new RuntimeException(e.getMessage());
-      }
-
-    } catch (URISyntaxException | NullPointerException e) {
-      e.printStackTrace();
-      throw new RuntimeException(e.getMessage());
+      return getLobbyServiceRequestSender().getUserImage(getUser().getAccessToken(), playerName);
+    } catch (UnirestException e) {
+      throw new RuntimeException(e);
     }
   }
 

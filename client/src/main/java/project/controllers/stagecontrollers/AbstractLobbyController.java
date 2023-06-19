@@ -82,15 +82,11 @@ public abstract class AbstractLobbyController implements Initializable {
       );
 
     });
-    User user = App.getUser();
-    try {
-      Image userImage = App.getLobbyServiceRequestSender()
-              .getUserImage(user.getAccessToken(), user.getUsername());
-      userImageView.setImage(userImage);
-    } catch (UnirestException e) {
-      throw new RuntimeException(e);
-    }
 
+    String content = "Click to upload new picture!";
+    App.bindToolTip(content, 15, userImageView, 20);
+
+    userImageView.setImage(App.getPlayerImage(App.getUser().getUsername()));
     userNameLabel.setText("Current user: " + App.getUser().getUsername());
 
     Player player = App.getLobbyServiceRequestSender().getOnePlayer(
