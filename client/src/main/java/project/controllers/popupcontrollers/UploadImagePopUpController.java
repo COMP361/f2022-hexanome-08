@@ -93,7 +93,6 @@ public class UploadImagePopUpController implements Initializable {
       FileChooser fileChooser = new FileChooser();
       fileChooser.getExtensionFilters().add(
           new FileChooser.ExtensionFilter("Image Files", "*.png"));
-
       imageFile = fileChooser.showOpenDialog(App.getCurrentPopupStage());
       if (imageFile != null) {
         loadFile(imageFile, previewImageView);
@@ -122,7 +121,7 @@ public class UploadImagePopUpController implements Initializable {
 
           // close the upload pop up
           Stage curWindow = (Stage) confirmUploadButton.getScene().getWindow();
-          curWindow.close();
+          App.closePopupStage(curWindow);
 
           // return to the lobby page
           App.loadNewSceneToPrimaryStage("lobby_page.fxml", new LobbyController());

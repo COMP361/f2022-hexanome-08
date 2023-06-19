@@ -146,6 +146,12 @@ public class App extends Application {
     return gameRequestSender;
   }
 
+  // close the popup stage and reset the popup window buffer
+  public static void closePopupStage(Stage stage) {
+    stage.close();
+    currentPopupStage = null;
+  }
+
   /**
    * Show a popup Stage with the corresponding fxml file, controller class, and the width/height.
    *
@@ -161,7 +167,7 @@ public class App extends Application {
     Stage newStage = new Stage();
     // reset the current pop up stage buffer
     newStage.setOnCloseRequest((WindowEvent event) -> {
-      currentPopupStage = null;
+      closePopupStage(newStage);
     });
 
     if (currentPopupStage == null) {
@@ -174,7 +180,7 @@ public class App extends Application {
       // Adding the key event to the Scene
       popupScene.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
         if (keyEvent.getCode() == KeyCode.ESCAPE) {
-          newStage.close();
+          closePopupStage(newStage);
         }
       });
     } catch (IOException e) {
