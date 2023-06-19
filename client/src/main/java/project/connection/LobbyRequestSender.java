@@ -5,6 +5,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -501,6 +502,28 @@ public class LobbyRequestSender {
         .asString();
     if (response.getStatus() != 200) {
       throw new UnirestException("Failed to force unregister a game!");
+    }
+  }
+
+
+  /**
+   * Helps user to upload the file to the LS.
+   *
+   * @param accessToken
+   * @param userName
+   * @param imageFile
+   * @throws UnirestException
+   */
+  public void uploadUserImage(String accessToken, String userName, File imageFile)
+      throws UnirestException {
+    String url = String.format("%s/api/users/images/%s", lobbyUrl, userName);
+    HttpResponse<String> response = Unirest.post(url)
+        .queryString("access_token", accessToken)
+        .field("file", imageFile)
+        .asString();
+
+    if (response.getStatus() != 200) {
+      throw new UnirestException(response.getBody());
     }
   }
 
