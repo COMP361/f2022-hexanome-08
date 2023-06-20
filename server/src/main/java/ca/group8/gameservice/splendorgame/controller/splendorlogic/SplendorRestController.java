@@ -247,7 +247,7 @@ public class SplendorRestController {
   public ResponseEntity<String> updateNewWinningPoints(
       @PathVariable long gameId,
       @RequestParam(value = "access_token") String accessToken,
-      @RequestParam(value = "creatorName") String creatorName,
+      @RequestParam(value = "creator_name") String creatorName,
       @RequestParam(value = "new_points") int newPoints) {
 
     try {
@@ -268,8 +268,9 @@ public class SplendorRestController {
             .body("Invalid new winning points provided! (accept 15 to 100)");
       }
 
-
       updateGameInfo.setWinningPoints(newPoints);
+      // inform client side immediately
+      gameInfoBroadcastContentManager.get(gameId).touch();
       return ResponseEntity
           .status(HttpStatus.OK)
           .body("New winning points: " + newPoints + " updated successfully!");
