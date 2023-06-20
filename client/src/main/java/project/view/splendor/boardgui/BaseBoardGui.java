@@ -23,6 +23,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.StageStyle;
 import project.App;
 import project.config.GameBoardLayoutConfig;
 import project.controllers.popupcontrollers.LobbyWarnPopUpController;
@@ -105,7 +106,8 @@ public class BaseBoardGui implements BoardGui {
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(msg, title),
             360,
-            170);
+            170,
+            StageStyle.UTILITY);
       });
 
       Platform.runLater(() -> {

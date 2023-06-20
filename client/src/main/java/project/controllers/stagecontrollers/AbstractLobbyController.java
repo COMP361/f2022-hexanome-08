@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.StageStyle;
 import project.App;
 import project.controllers.popupcontrollers.UploadImagePopUpController;
 import project.view.lobby.communication.Player;
@@ -78,7 +79,8 @@ public abstract class AbstractLobbyController implements Initializable {
           "upload_image_page.fxml",
           new UploadImagePopUpController(),
           App.getGuiLayouts().getLargePopUpWidth(),
-          App.getGuiLayouts().getLargePopUpHeight()
+          App.getGuiLayouts().getLargePopUpHeight(),
+          StageStyle.UTILITY
       );
 
     });

@@ -21,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import project.App;
 import project.view.splendor.boardgui.ActionIdPair;
 
@@ -114,8 +115,12 @@ public class ReservedHandController implements Initializable {
 
       ImageView imageView = (ImageView) event.getSource();
       Stage window = (Stage) imageView.getScene().getWindow();
-      App.loadPopUpWithController("card_action.fxml",
-          new CardActionController(gameId, allActions, window), 360, 170);
+      App.loadPopUpWithController(
+          "card_action.fxml",
+          new CardActionController(gameId, allActions, window),
+          360,
+          170,
+          StageStyle.UTILITY);
     };
   }
 

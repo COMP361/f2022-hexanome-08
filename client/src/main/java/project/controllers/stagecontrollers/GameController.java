@@ -35,6 +35,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.StageStyle;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.config.GameBoardLayoutConfig;
@@ -140,7 +141,8 @@ public class GameController implements Initializable {
       App.loadPopUpWithController("reserve_hand.fxml",
           new ReservedHandController(reservedHand, playerActions, gameId),
           config.getLargePopUpWidth(),
-          config.getLargePopUpHeight());
+          config.getLargePopUpHeight(),
+          StageStyle.UTILITY);
 
     };
   }
@@ -170,7 +172,8 @@ public class GameController implements Initializable {
       App.loadPopUpWithController("purchase_hand.fxml",
           new PurchaseHandController(gameId, playerInGame, playerActions),
           config.getLargePopUpWidth(),
-          config.getLargePopUpHeight());
+          config.getLargePopUpHeight(),
+          StageStyle.UTILITY);
     };
   }
 
@@ -347,7 +350,8 @@ public class GameController implements Initializable {
           App.loadPopUpWithController("noble_action_pop_up.fxml",
               new ActOnNoblePopUpController(gameId, playerActionMap, false),
               config.getSmallPopUpWidth() / 3 * 5,
-              config.getSmallPopUpHeight());
+              config.getSmallPopUpHeight(),
+              StageStyle.UTILITY);
         });
       });
 
@@ -355,7 +359,8 @@ public class GameController implements Initializable {
         App.loadPopUpWithController("noble_action_pop_up.fxml",
             new ActOnNoblePopUpController(gameId, playerActionMap, false),
             config.getSmallPopUpWidth() / 3 * 5,
-            config.getSmallPopUpHeight());
+            config.getSmallPopUpHeight(),
+            StageStyle.UTILITY);
       });
     }
   }
@@ -381,7 +386,8 @@ public class GameController implements Initializable {
           App.loadPopUpWithController("purchase_hand.fxml",
               new PurchaseHandController(gameId, playerInGame, playerActionMap),
               config.getLargePopUpWidth(),
-              config.getLargePopUpHeight());
+              config.getLargePopUpHeight(),
+              StageStyle.UTILITY);
         });
       });
 
@@ -390,7 +396,8 @@ public class GameController implements Initializable {
         App.loadPopUpWithController("purchase_hand.fxml",
             new PurchaseHandController(gameId, playerInGame, playerActionMap),
             config.getLargePopUpWidth(),
-            config.getLargePopUpHeight());
+            config.getLargePopUpHeight(),
+            StageStyle.UTILITY);
       });
     }
   }
@@ -410,7 +417,8 @@ public class GameController implements Initializable {
           App.loadPopUpWithController("free_card_pop_up.fxml",
               new BurnCardController(gameId, playerActionMap),
               config.getSelectFreeCardWidth(),
-              config.getSelectFreeCardHeight());
+              config.getSelectFreeCardHeight(),
+              StageStyle.UTILITY);
         });
       });
 
@@ -419,7 +427,8 @@ public class GameController implements Initializable {
         App.loadPopUpWithController("free_card_pop_up.fxml",
             new BurnCardController(gameId, playerActionMap),
             config.getSelectFreeCardWidth(),
-            config.getSelectFreeCardHeight());
+            config.getSelectFreeCardHeight(),
+            StageStyle.UTILITY);
       });
     }
   }
@@ -440,7 +449,8 @@ public class GameController implements Initializable {
           App.loadPopUpWithController("free_card_pop_up.fxml",
               new FreeCardPopUpController(gameId, playerActionMap),
               config.getSelectFreeCardWidth(),
-              config.getSelectFreeCardHeight());
+              config.getSelectFreeCardHeight(),
+              StageStyle.UTILITY);
         });
       });
 
@@ -449,7 +459,8 @@ public class GameController implements Initializable {
         App.loadPopUpWithController("free_card_pop_up.fxml",
             new FreeCardPopUpController(gameId, playerActionMap),
             config.getSelectFreeCardWidth(),
-            config.getSelectFreeCardHeight());
+            config.getSelectFreeCardHeight(),
+            StageStyle.UTILITY);
       });
     }
   }
@@ -471,7 +482,8 @@ public class GameController implements Initializable {
           App.loadPopUpWithController("noble_action_pop_up.fxml",
               new ActOnNoblePopUpController(gameId, playerActionMap, true),
               config.getSmallPopUpWidth() / 3 * 5,
-              config.getSmallPopUpHeight());
+              config.getSmallPopUpHeight(),
+              StageStyle.UTILITY);
         });
       });
 
@@ -480,7 +492,8 @@ public class GameController implements Initializable {
         App.loadPopUpWithController("noble_action_pop_up.fxml",
             new ActOnNoblePopUpController(gameId, playerActionMap, true),
             config.getSmallPopUpWidth() / 3 * 5,
-            config.getSmallPopUpHeight());
+            config.getSmallPopUpHeight(),
+            StageStyle.UTILITY);
       });
     }
   }
@@ -499,7 +512,8 @@ public class GameController implements Initializable {
           App.loadPopUpWithController("bonus_token_pop_up.fxml",
               new BonusTokenPopUpController(gameId, playerActionMap),
               600,
-              170);
+              170,
+              StageStyle.UTILITY);
         });
       });
 
@@ -508,7 +522,8 @@ public class GameController implements Initializable {
         App.loadPopUpWithController("bonus_token_pop_up.fxml",
             new BonusTokenPopUpController(gameId, playerActionMap),
             600,
-            170);
+            170,
+            StageStyle.UTILITY);
       });
     }
   }
@@ -527,7 +542,8 @@ public class GameController implements Initializable {
           App.loadPopUpWithController("claim_city_pop_up.fxml",
               new ClaimCityPopUpController(gameId, playerActionMap),
               300,
-              400);
+              400,
+              StageStyle.UTILITY);
         });
       });
 
@@ -536,7 +552,8 @@ public class GameController implements Initializable {
         App.loadPopUpWithController("claim_city_pop_up.fxml",
             new ClaimCityPopUpController(gameId, playerActionMap),
             300,
-            400);
+            400,
+            StageStyle.UTILITY);
       });
     }
 
@@ -609,7 +626,8 @@ public class GameController implements Initializable {
                 false,
                 inWatchMode),
             config.getSmallPopUpWidth(),
-            config.getSmallPopUpHeight());
+            config.getSmallPopUpHeight(),
+            StageStyle.UNDECORATED);
       });
     }
   }
@@ -727,7 +745,8 @@ public class GameController implements Initializable {
       App.loadPopUpWithController("save_game.fxml",
           new SaveGamePopUpController(gameInfo, gameId),
           config.getSmallPopUpWidth(),
-          config.getSmallPopUpHeight());
+          config.getSmallPopUpHeight(),
+          StageStyle.UTILITY);
     };
   }
 
@@ -743,7 +762,9 @@ public class GameController implements Initializable {
               gameId,
               true,
               inWatchMode),
-          config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
+          config.getSmallPopUpWidth(),
+          config.getSmallPopUpHeight(),
+          StageStyle.UTILITY);
     };
   }
 

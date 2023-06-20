@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.StageStyle;
 import org.json.JSONObject;
 import project.App;
 import project.config.ConnectionConfig;
@@ -164,7 +165,8 @@ public class LogInController implements Initializable {
       AppSettingPageController controller = new AppSettingPageController(App.getConnectionConfig());
       App.loadPopUpWithController("app_setting_page.fxml", controller,
           App.getGuiLayouts().getLargePopUpWidth(),
-          App.getGuiLayouts().getLargePopUpHeight());
+          App.getGuiLayouts().getLargePopUpHeight(),
+          StageStyle.UTILITY);
     });
 
     // guarantee to execute the termination of program in javafx thread

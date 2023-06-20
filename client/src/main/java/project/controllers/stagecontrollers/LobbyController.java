@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.paint.Color;
+import javafx.stage.StageStyle;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.connection.LobbyRequestSender;
@@ -71,7 +72,8 @@ public class LobbyController extends AbstractLobbyController {
                     + "\nIf there is no game, ask the admin in person\nto create one!",
                 "NO GAME CHOSEN"),
             360,
-            170);
+            170,
+            StageStyle.UTILITY);
         return;
       }
 

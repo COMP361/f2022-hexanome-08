@@ -150,7 +150,8 @@ public class App extends Application {
    * @param popUpStageHeight window height
    */
   public static void loadPopUpWithController(String fxmlName, Object controller,
-                                             double popUpStageWidth, double popUpStageHeight) {
+                                             double popUpStageWidth, double popUpStageHeight,
+                                             StageStyle stageStyle) {
     FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
     fxmlLoader.setController(controller);
     Stage newStage = new Stage();
@@ -180,19 +181,11 @@ public class App extends Application {
     newStage.setAlwaysOnTop(true);
     // establish a relationship between two window (popup and primary)
     newStage.initOwner(primaryStage);
-    // block user from clicking on the main stage
-    if (controller instanceof GameOverPopUpController) {
-      // ban the close button on the game over pop up
-      GameOverPopUpController gameOverPopUpController = (GameOverPopUpController) controller;
-      if (!gameOverPopUpController.isOptionToCancel()) {
-        newStage.initStyle(StageStyle.UNDECORATED);
-      } else {
-        newStage.initStyle(StageStyle.UTILITY);
-      }
-    } else {
-      // disable the full screen (green one) button for mac
-      newStage.initStyle(StageStyle.UTILITY);
-    }
+
+    // set stage style
+    newStage.initStyle(stageStyle);
+
+    // freeze the main stage when popup is shown
     newStage.initModality(Modality.WINDOW_MODAL);
 
     // show the popup window
@@ -477,7 +470,8 @@ public class App extends Application {
       App.loadPopUpWithController("lobby_warn.fxml",
           new LobbyWarnPopUpController(msg, title),
           config.getSmallPopUpWidth(),
-          config.getSmallPopUpHeight());
+          config.getSmallPopUpHeight(),
+          StageStyle.UTILITY);
     });
   }
 
@@ -513,7 +507,8 @@ public class App extends Application {
       App.loadPopUpWithController("lobby_warn.fxml",
           new LobbyWarnPopUpController(msg, title),
           config.getSmallPopUpWidth(),
-          config.getSmallPopUpHeight());
+          config.getSmallPopUpHeight(),
+          StageStyle.UTILITY);
       passwordField.clear();
     });
   }
@@ -553,7 +548,8 @@ public class App extends Application {
       App.loadPopUpWithController("lobby_warn.fxml",
           new LobbyWarnPopUpController(msg, title),
           config.getSmallPopUpWidth(),
-          config.getSmallPopUpHeight());
+          config.getSmallPopUpHeight(),
+          StageStyle.UTILITY);
     });
 
   }

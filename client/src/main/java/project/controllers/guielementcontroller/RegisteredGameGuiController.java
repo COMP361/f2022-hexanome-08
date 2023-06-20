@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.StageStyle;
 import project.App;
 import project.config.GameBoardLayoutConfig;
 import project.connection.LobbyRequestSender;
@@ -57,14 +58,16 @@ public class RegisteredGameGuiController implements Initializable {
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(msg, title),
             config.getSmallPopUpWidth(),
-            config.getSmallPopUpHeight());
+            config.getSmallPopUpHeight(),
+            StageStyle.UTILITY);
       } catch (UnirestException e) {
         title = "Delete Game Service Error";
         msg = "Game Service can not be removed from Lobby Service database!";
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(msg, title),
             config.getSmallPopUpWidth(),
-            config.getSmallPopUpHeight());
+            config.getSmallPopUpHeight(),
+            StageStyle.UTILITY);
       }
 
     });

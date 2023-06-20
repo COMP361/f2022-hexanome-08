@@ -22,6 +22,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
+import javafx.stage.StageStyle;
 import project.App;
 import project.controllers.popupcontrollers.CardActionController;
 import project.controllers.popupcontrollers.DeckActionController;
@@ -99,7 +100,8 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
                                                             List<ActionIdPair> allActions) {
     return event -> {
       App.loadPopUpWithController("card_action.fxml",
-          new CardActionController(gameId, allActions, null), 360, 170);
+          new CardActionController(gameId, allActions, null),
+          360, 170, StageStyle.UTILITY);
     };
   }
 
@@ -108,7 +110,8 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
       App.loadPopUpWithController("deck_action.fxml",
           new DeckActionController(gameId, actionId),
           App.getGuiLayouts().getSmallPopUpWidth(),
-          App.getGuiLayouts().getSmallPopUpHeight());
+          App.getGuiLayouts().getSmallPopUpHeight(),
+          StageStyle.UTILITY);
     };
   }
 

@@ -105,7 +105,7 @@ public class SessionGui extends HBox {
       // the board is updating pretending this watcher is the first player name
       // but there is no functionality provided to one but the quit button
       App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
-      App.loadNewSceneToPrimaryStage("splendor_base_game_board.fxml",
+      App.loadNewSceneToPrimaryStage("game_board.fxml",
           new GameController(curSessionId, null));
       lobbyUpdateThread.interrupt();
     };
@@ -119,7 +119,7 @@ public class SessionGui extends HBox {
       App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
 
       // pass a meaningful username, so that we know that person can play
-      App.loadNewSceneToPrimaryStage("splendor_base_game_board.fxml",
+      App.loadNewSceneToPrimaryStage("game_board.fxml",
           new GameController(curSessionId, App.getUser().getUsername()));
       // when we click Play, we need to stop the lobby thread from keep monitoring
       // the changes

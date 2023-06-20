@@ -23,6 +23,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
+import javafx.stage.StageStyle;
 import project.App;
 import project.config.GameBoardLayoutConfig;
 import project.controllers.popupcontrollers.CardActionController;
@@ -112,7 +113,8 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     return event -> {
       App.loadPopUpWithController("card_action.fxml",
           new CardActionController(gameId, allActions, null),
-          config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
+          config.getSmallPopUpWidth(), config.getSmallPopUpHeight(),
+          StageStyle.UTILITY);
     };
   }
 
@@ -121,7 +123,8 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     return event -> {
       App.loadPopUpWithController("deck_action.fxml",
           new DeckActionController(gameId, actionId),
-          config.getSmallPopUpWidth(), config.getSmallPopUpHeight());
+          config.getSmallPopUpWidth(), config.getSmallPopUpHeight(),
+          StageStyle.UTILITY);
     };
   }
 

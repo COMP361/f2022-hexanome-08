@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.paint.Color;
+import javafx.stage.StageStyle;
 import project.App;
 import project.config.GameBoardLayoutConfig;
 import project.controllers.popupcontrollers.AppSettingPageController;
@@ -99,7 +100,8 @@ public class SettingPageController extends AbstractLobbyController {
       AppSettingPageController controller = new AppSettingPageController(App.getConnectionConfig());
       App.loadPopUpWithController("app_setting_page.fxml", controller,
           App.getGuiLayouts().getLargePopUpWidth(),
-          App.getGuiLayouts().getLargePopUpHeight());
+          App.getGuiLayouts().getLargePopUpHeight(),
+          StageStyle.UTILITY);
     });
   }
 }

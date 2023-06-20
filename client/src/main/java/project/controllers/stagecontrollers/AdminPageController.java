@@ -16,6 +16,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.StageStyle;
 import project.App;
 import project.config.GameBoardLayoutConfig;
 import project.connection.LobbyRequestSender;
@@ -150,14 +151,16 @@ public class AdminPageController extends AbstractLobbyController {
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(msg, title),
             config.getSmallPopUpWidth(),
-            config.getSmallPopUpHeight());
+            config.getSmallPopUpHeight(),
+            StageStyle.UTILITY);
       } catch (UnirestException e) {
         title = "Add New Player Error";
         msg = "Player could not be added to the Lobby Service database";
         App.loadPopUpWithController("lobby_warn.fxml",
             new LobbyWarnPopUpController(msg, title),
             config.getSmallPopUpWidth(),
-            config.getSmallPopUpHeight());
+            config.getSmallPopUpHeight(),
+            StageStyle.UTILITY);
       }
     });
   }

@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.StageStyle;
 import project.App;
 import project.connection.GameRequestSender;
 import project.controllers.popupcontrollers.PurchaseHandController;
@@ -126,7 +127,8 @@ public class PlayerImageGuiController implements Initializable {
         App.loadPopUpWithController("purchase_hand.fxml",
             new PurchaseHandController(gameId, playerInGame, new HashMap<>()),
             App.getGuiLayouts().getLargePopUpWidth(),
-            App.getGuiLayouts().getLargePopUpHeight());
+            App.getGuiLayouts().getLargePopUpHeight(),
+            StageStyle.UTILITY);
       });
     }
 
