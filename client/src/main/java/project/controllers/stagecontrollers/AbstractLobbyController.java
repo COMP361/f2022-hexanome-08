@@ -1,20 +1,17 @@
 package project.controllers.stagecontrollers;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import project.App;
-import project.controllers.popupcontrollers.UploadImagePopUpController;
+import project.controllers.popupcontrollers.lobbypopup.UploadImagePopUpController;
 import project.view.lobby.communication.Player;
-import project.view.lobby.communication.User;
 
 /**
  * AbstractLobbyController.

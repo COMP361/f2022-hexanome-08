@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
 import project.App;
 import project.config.GameBoardLayoutConfig;
-import project.controllers.popupcontrollers.AppSettingPageController;
+import project.controllers.popupcontrollers.lobbypopup.AppSettingPageController;
 import project.view.lobby.communication.Player;
 
 /**

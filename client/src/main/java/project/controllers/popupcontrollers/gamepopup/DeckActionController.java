@@ -1,4 +1,4 @@
-package project.controllers.popupcontrollers;
+package project.controllers.popupcontrollers.gamepopup;
 
 import java.net.URL;
 import java.util.ResourceBundle;

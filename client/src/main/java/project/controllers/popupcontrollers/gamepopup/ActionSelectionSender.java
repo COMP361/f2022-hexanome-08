@@ -1,4 +1,4 @@
-package project.controllers.popupcontrollers;
+package project.controllers.popupcontrollers.gamepopup;
 
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;

@@ -1,4 +1,4 @@
-package project.controllers.popupcontrollers;
+package project.controllers.popupcontrollers.lobbypopup;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.File;

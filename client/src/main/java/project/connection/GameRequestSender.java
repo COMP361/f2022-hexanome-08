@@ -35,13 +35,14 @@ public class GameRequestSender {
    */
   public HttpResponse<String> sendGetGameInfoRequest(long gameId, String hashPreviousResponse) {
     HttpResponse<String> response = null;
+    String url = gameUrl + gameServiceName + "/api/games/" + gameId;
     try {
       if (hashPreviousResponse.equals("")) {
         // instant request
-        response = Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId).asString();
+        response = Unirest.get(url).asString();
       } else {
         // long polling request
-        response = Unirest.get(gameUrl + gameServiceName + "/api/games/" + gameId)
+        response = Unirest.get(url)
             .queryString("hash", hashPreviousResponse)
             .asString();
       }

@@ -1,4 +1,4 @@
-package project.controllers.popupcontrollers;
+package project.controllers.popupcontrollers.gamepopup;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.net.URL;

@@ -40,15 +40,15 @@ import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.config.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
-import project.controllers.popupcontrollers.ActOnNoblePopUpController;
-import project.controllers.popupcontrollers.BonusTokenPopUpController;
-import project.controllers.popupcontrollers.BurnCardController;
-import project.controllers.popupcontrollers.ClaimCityPopUpController;
-import project.controllers.popupcontrollers.FreeCardPopUpController;
-import project.controllers.popupcontrollers.GameOverPopUpController;
-import project.controllers.popupcontrollers.PurchaseHandController;
-import project.controllers.popupcontrollers.ReservedHandController;
-import project.controllers.popupcontrollers.SaveGamePopUpController;
+import project.controllers.popupcontrollers.gamepopup.ActOnNoblePopUpController;
+import project.controllers.popupcontrollers.gamepopup.BonusTokenPopUpController;
+import project.controllers.popupcontrollers.gamepopup.BurnCardController;
+import project.controllers.popupcontrollers.gamepopup.ClaimCityPopUpController;
+import project.controllers.popupcontrollers.gamepopup.FreeCardPopUpController;
+import project.controllers.popupcontrollers.gamepopup.GameOverPopUpController;
+import project.controllers.popupcontrollers.gamepopup.PurchaseHandController;
+import project.controllers.popupcontrollers.gamepopup.ReservedHandController;
+import project.controllers.popupcontrollers.lobbypopup.SaveGamePopUpController;
 import project.view.splendor.boardgui.BaseBoardGui;
 import project.view.splendor.boardgui.BoardGui;
 import project.view.splendor.boardgui.CityBoardGui;
@@ -809,7 +809,6 @@ public class GameController implements Initializable {
     Gson gsonParser = SplendorDevHelper.getInstance().getGson();
     GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
     currentPlayerLabel.setText("Current Player:\n" + curGameInfo.getCurrentPlayer());
-
     // information about viewer's perspective
     if (viewerName == null) {
       viewerName = curGameInfo.getFirstPlayerName();

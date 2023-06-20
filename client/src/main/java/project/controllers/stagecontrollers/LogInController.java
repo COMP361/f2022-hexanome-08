@@ -3,8 +3,6 @@ package project.controllers.stagecontrollers;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,7 +15,7 @@ import org.json.JSONObject;
 import project.App;
 import project.config.ConnectionConfig;
 import project.connection.LobbyRequestSender;
-import project.controllers.popupcontrollers.AppSettingPageController;
+import project.controllers.popupcontrollers.lobbypopup.AppSettingPageController;
 import project.view.lobby.communication.User;
 
 /**

@@ -9,9 +9,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.StageStyle;
 import project.App;
 import project.connection.LobbyRequestSender;
 import project.controllers.guielementcontroller.SessionGuiController;
+import project.controllers.popupcontrollers.lobbypopup.GameConfigPopUpController;
 import project.controllers.stagecontrollers.GameController;
 import project.view.lobby.communication.Session;
 import project.view.lobby.communication.User;
@@ -118,9 +120,16 @@ public class SessionGui extends HBox {
       // send correct REST requests to our backend in a right path name (splendorbase, city...)
       App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
 
+      App.loadPopUpWithController(
+          "game_config.fxml",
+          new GameConfigPopUpController(curSessionId, App.getUser().getUsername()),
+          App.getGuiLayouts().getLargePopUpWidth(),
+          App.getGuiLayouts().getLargePopUpHeight(),
+          StageStyle.UNDECORATED);
+
       // pass a meaningful username, so that we know that person can play
-      App.loadNewSceneToPrimaryStage("game_board.fxml",
-          new GameController(curSessionId, App.getUser().getUsername()));
+      //App.loadNewSceneToPrimaryStage("game_board.fxml",
+      //    new GameController(curSessionId, App.getUser().getUsername()));
       // when we click Play, we need to stop the lobby thread from keep monitoring
       // the changes
       lobbyUpdateThread.interrupt();

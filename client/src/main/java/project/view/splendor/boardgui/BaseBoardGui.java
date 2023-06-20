@@ -26,7 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.StageStyle;
 import project.App;
 import project.config.GameBoardLayoutConfig;
-import project.controllers.popupcontrollers.LobbyWarnPopUpController;
+import project.controllers.popupcontrollers.lobbypopup.LobbyWarnPopUpController;
 
 /**
  * Display the baseboardGUI.

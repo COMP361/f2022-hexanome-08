@@ -18,7 +18,7 @@ import javafx.scene.text.Text;
 import javafx.stage.StageStyle;
 import project.App;
 import project.connection.GameRequestSender;
-import project.controllers.popupcontrollers.PurchaseHandController;
+import project.controllers.popupcontrollers.gamepopup.PurchaseHandController;
 
 /**
  * PlayerImageGuiController.

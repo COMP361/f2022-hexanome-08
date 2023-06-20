@@ -1,4 +1,4 @@
-package project.controllers.popupcontrollers;
+package project.controllers.popupcontrollers.lobbypopup;
 
 import com.google.gson.Gson;
 import java.io.IOException;

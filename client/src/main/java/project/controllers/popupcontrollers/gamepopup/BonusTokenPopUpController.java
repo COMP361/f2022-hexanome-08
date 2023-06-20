@@ -1,4 +1,4 @@
-package project.controllers.popupcontrollers;
+package project.controllers.popupcontrollers.gamepopup;
 
 import ca.mcgill.comp361.splendormodel.actions.Action;
 import ca.mcgill.comp361.splendormodel.actions.BonusTokenPowerAction;

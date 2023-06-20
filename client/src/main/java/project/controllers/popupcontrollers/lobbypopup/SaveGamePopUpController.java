@@ -1,4 +1,4 @@
-package project.controllers.popupcontrollers;
+package project.controllers.popupcontrollers.lobbypopup;
 
 import ca.mcgill.comp361.splendormodel.model.GameInfo;
 import com.mashape.unirest.http.exceptions.UnirestException;

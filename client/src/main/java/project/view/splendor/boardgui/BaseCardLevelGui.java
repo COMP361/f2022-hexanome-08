@@ -26,8 +26,8 @@ import javafx.scene.text.Text;
 import javafx.stage.StageStyle;
 import project.App;
 import project.config.GameBoardLayoutConfig;
-import project.controllers.popupcontrollers.CardActionController;
-import project.controllers.popupcontrollers.DeckActionController;
+import project.controllers.popupcontrollers.gamepopup.CardActionController;
+import project.controllers.popupcontrollers.gamepopup.DeckActionController;
 
 /**
  * Gui class that represents a level of cards.

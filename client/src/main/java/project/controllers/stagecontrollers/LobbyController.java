@@ -23,7 +23,7 @@ import javafx.stage.StageStyle;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.connection.LobbyRequestSender;
-import project.controllers.popupcontrollers.LobbyWarnPopUpController;
+import project.controllers.popupcontrollers.lobbypopup.LobbyWarnPopUpController;
 import project.view.lobby.SessionGui;
 import project.view.lobby.SessionGuiManager;
 import project.view.lobby.communication.GameParameters;

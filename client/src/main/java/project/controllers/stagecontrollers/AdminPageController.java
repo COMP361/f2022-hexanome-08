@@ -20,7 +20,7 @@ import javafx.stage.StageStyle;
 import project.App;
 import project.config.GameBoardLayoutConfig;
 import project.connection.LobbyRequestSender;
-import project.controllers.popupcontrollers.LobbyWarnPopUpController;
+import project.controllers.popupcontrollers.lobbypopup.LobbyWarnPopUpController;
 import project.view.lobby.PlayerLobbyGui;
 import project.view.lobby.RegisteredGameGui;
 import project.view.lobby.communication.GameParameters;
