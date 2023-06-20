@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+
 <AnchorPane prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox layoutX="116.0" layoutY="100.0" prefHeight="400.0" prefWidth="400.0" style="-fx-border-color: blue; -fx-border-width: 8;">
@@ -78,5 +79,10 @@
             </HBox>
          </children>
       </VBox>
+      <Button fx:id="backToLogInButton" layoutX="700.0" layoutY="460.0" mnemonicParsing="false" style="-fx-background-color: blue;" text="Back To Log In Page" textFill="WHITE">
+         <font>
+            <Font name="Arial Black" size="19.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

@@ -43,6 +43,7 @@ import project.config.ConnectionConfig;
 import project.config.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
+import project.controllers.popupcontrollers.AppSettingPageController;
 import project.controllers.popupcontrollers.GameOverPopUpController;
 import project.controllers.popupcontrollers.LobbyWarnPopUpController;
 import project.controllers.stagecontrollers.AdminPageController;
@@ -536,12 +537,9 @@ public class App extends Application {
         // if we should go back to log in page (deleted at setting page)
         // then load the start page, otherwise refresh the admin zon
         if (backToLogInPage) {
-          // Reset the App user to null
-          App.setUser(null);
-          // jump back to start page
-          App.loadNewSceneToPrimaryStage("start_page.fxml", new LogInController());
+          backToLogInPage();
         } else {
-          App.loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
+          loadNewSceneToPrimaryStage("admin_zone.fxml", new AdminPageController());
         }
 
         title = "Delete Player Confirmation";
@@ -561,6 +559,16 @@ public class App extends Application {
   }
 
 
+  /**
+   * Reset user, and load the login page fxml.
+   *
+   */
+  public static void backToLogInPage() {
+    // Reset the App user to null
+    App.setUser(null);
+    // jump back to start page
+    App.loadNewSceneToPrimaryStage("start_page.fxml", new LogInController());
+  }
 
 
   /**

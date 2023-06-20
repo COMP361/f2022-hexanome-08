@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 import project.App;
 import project.config.ConnectionConfig;
@@ -42,6 +43,9 @@ public class AppSettingPageController implements Initializable {
   @FXML
   private Button hostIpUpdateButton;
 
+  @FXML
+  private Button backToLogInButton;
+
 
 
   public AppSettingPageController(ConnectionConfig connectionConfig) {
@@ -63,9 +67,33 @@ public class AppSettingPageController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    // back to log in page button
+    backToLogInButton.setOnAction(event -> {
+      Stage curWindow = (Stage) backToLogInButton.getScene().getWindow();
+      curWindow.close();
+      App.backToLogInPage();
+    });
+
+
+
     // the update buttons should be re-activated or greyed out accordingly
-    defaultUserNameUpdateButton.setDisable(connectionConfig.isUseDefaultUserInfo());
-    defaultPasswordUpdateButton.setDisable(connectionConfig.isUseDefaultUserInfo());
+    defaultUserNameUpdateButton.setDisable(!connectionConfig.isUseDefaultUserInfo());
+    defaultPasswordUpdateButton.setDisable(!connectionConfig.isUseDefaultUserInfo());
+
+    defaultLogInToggleButton.setSelected(connectionConfig.isUseDefaultUserInfo());
+    if (defaultLogInToggleButton.isSelected()) {
+      defaultLogInToggleButton.setText("ON");
+    } else {
+      defaultLogInToggleButton.setText("OFF");
+    }
+
+    localIpToggleButton.setSelected(connectionConfig.isUseLocalHost());
+    if (localIpToggleButton.isSelected()) {
+      localIpToggleButton.setText("ON");
+    } else {
+      localIpToggleButton.setText("OFF");
+    }
+
 
     // bind actions to default log in section
     defaultLogInToggleButton.setOnAction(event -> {

@@ -3,6 +3,8 @@ package project.controllers.stagecontrollers;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -150,7 +152,6 @@ public class LogInController implements Initializable {
         userPassword.textProperty());
 
     logInButton.disableProperty().bind(invalidLoginInfoCondition);
-
     // enable log-in by pressing ENTER
     logInButton.setDefaultButton(true);
     logInButton.setOnAction(event -> {

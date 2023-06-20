@@ -108,11 +108,8 @@ public abstract class AbstractLobbyController implements Initializable {
         refreshTokenThread = null;
       }
 
-      // Reset the App user to null
-      App.setUser(null);
-
       // jump back to start page
-      App.loadNewSceneToPrimaryStage("start_page.fxml", new LogInController());
+      App.backToLogInPage();
     });
   }
 }
