@@ -231,6 +231,58 @@ public class SplendorRestController {
   }
 
   /**
+   * Update the winning points of a currently launched game.
+   *
+   * @param gameId game id
+   * @param accessToken access token
+   * @param creatorName creator name
+   * @param newPoints points that one wants to update
+   * @return response
+   */
+  @PostMapping(value = {
+      "/splendortrade/api/games/{gameId}",
+      "/splendorbase/api/games/{gameId}",
+      "/splendorcity/api/games/{gameId}"
+  })
+  public ResponseEntity<String> updateNewWinningPoints(
+      @PathVariable long gameId,
+      @RequestParam(value = "access_token") String accessToken,
+      @RequestParam(value = "creatorName") String creatorName,
+      @RequestParam(value = "new_points") int newPoints) {
+
+    try {
+      gameValidator.gameIdPlayerNameValidCheck(accessToken, creatorName, gameId);
+      GameInfo updateGameInfo = gameManager.getGameById(gameId);
+
+      // check if it's indeed the creator
+      if (!updateGameInfo.getCreator().equals(creatorName)) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body("Must be creator to modify winning points!");
+      }
+
+      // check if the update points given is valid
+      if (!(newPoints >= 15 && newPoints <= 100)) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body("Invalid new winning points provided! (accept 15 to 100)");
+      }
+
+
+      updateGameInfo.setWinningPoints(newPoints);
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body("New winning points: " + newPoints + " updated successfully!");
+
+    } catch (ModelAccessException e) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+  }
+
+
+
+  /**
    * Long polling for the game board content, optional hash value.
    *
    * @param gameId game id

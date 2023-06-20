@@ -260,7 +260,7 @@ public class ActionInterpreter {
       } else {
         // regular winning check
         int points = playerInGame.getPrestigePoints();
-        playerWonTheGame = points >= 15;
+        playerWonTheGame = points >= gameInfo.getWinningPoints();
       }
 
       // the boolean value will be decided differently based on

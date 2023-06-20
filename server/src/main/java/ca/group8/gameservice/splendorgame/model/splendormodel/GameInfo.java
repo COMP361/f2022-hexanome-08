@@ -25,6 +25,10 @@ public class GameInfo implements BroadcastContent {
   private List<String> playerNames;
   private String firstPlayerName; //should be Player Name of first player.
   private boolean isFinished;
+
+  private int winningPoints = -1;
+
+
   private Map<String, Map<String, Action>> playerActionMaps = new HashMap<>();
 
 
@@ -163,6 +167,16 @@ public class GameInfo implements BroadcastContent {
 
   public Map<String, Map<String, Action>> getPlayerActionMaps() {
     return playerActionMaps;
+  }
+
+
+  public int getWinningPoints() {
+    return winningPoints;
+  }
+
+
+  public void setWinningPoints(int winningPoints) {
+    this.winningPoints = winningPoints;
   }
 
   /**
