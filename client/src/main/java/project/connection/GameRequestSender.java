@@ -20,7 +20,7 @@ public class GameRequestSender {
   /**
    * GameRequestSender.
    *
-   * @param gameUrl gameUrl
+   * @param gameUrl         gameUrl
    * @param gameServiceName gameServiceName
    */
   public GameRequestSender(String gameUrl, String gameServiceName) {
@@ -152,8 +152,8 @@ public class GameRequestSender {
           playerName,
           actionId);
       HttpResponse<String> response = Unirest.post(url)
-              .queryString("access_token", accessToken)
-              .asString();
+          .queryString("access_token", accessToken)
+          .asString();
     } catch (UnirestException e) {
       e.printStackTrace();
     }
@@ -217,7 +217,7 @@ public class GameRequestSender {
     String url = String.format("%s/api/games/%s", gameUrl + gameServiceName, gameId);
     try {
       HttpResponse<String> response = Unirest.post(url)
-          .queryString("access_token",accessToken)
+          .queryString("access_token", accessToken)
           .queryString("creator_name", creatorName)
           .queryString("new_points", newPoints)
           .asString();

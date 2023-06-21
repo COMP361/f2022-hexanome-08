@@ -25,7 +25,7 @@ public class BonusTokenPopUpController extends ActionSelectionSender implements 
   /**
    * BonusTokenPopUpController.
    *
-   * @param gameId gameId
+   * @param gameId          gameId
    * @param playerActionMap playerActionMap
    */
   public BonusTokenPopUpController(long gameId, Map<String, Action> playerActionMap) {

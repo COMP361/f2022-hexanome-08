@@ -44,7 +44,8 @@ public class LogInController implements Initializable {
   /**
    * Constructor of LogInController.
    */
-  public LogInController() {}
+  public LogInController() {
+  }
 
   /**
    * The logic of handling log in. The methods check if the user has input both username and user
@@ -122,26 +123,6 @@ public class LogInController implements Initializable {
     });
   }
 
-  static class InvalidLogInCondition extends BooleanBinding {
-    private final ObservableValue<String> userName;
-    private final ObservableValue<String> password;
-
-    public InvalidLogInCondition(ObservableValue<String> userName,
-                                 ObservableValue<String> password) {
-      this.userName = userName;
-      this.password = password;
-      bind(userName, password);
-    }
-
-    @Override
-    protected boolean computeValue() {
-      String userName = this.userName.getValue();
-      String password = this.password.getValue();
-      return (userName != null && userName.trim().isEmpty())
-          || (password != null && password.trim().isEmpty());
-    }
-  }
-
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     setDefaultLogInInfo();
@@ -173,5 +154,25 @@ public class LogInController implements Initializable {
       //Platform.exit();
       System.exit(0);
     });
+  }
+
+  static class InvalidLogInCondition extends BooleanBinding {
+    private final ObservableValue<String> userName;
+    private final ObservableValue<String> password;
+
+    public InvalidLogInCondition(ObservableValue<String> userName,
+                                 ObservableValue<String> password) {
+      this.userName = userName;
+      this.password = password;
+      bind(userName, password);
+    }
+
+    @Override
+    protected boolean computeValue() {
+      String userName = this.userName.getValue();
+      String password = this.password.getValue();
+      return (userName != null && userName.trim().isEmpty())
+          || (password != null && password.trim().isEmpty());
+    }
   }
 }

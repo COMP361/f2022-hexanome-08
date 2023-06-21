@@ -13,7 +13,7 @@ public class RegisteredGameGui extends HBox {
   private final GameParameters gameParameters;
 
   /**
-   *  RegisteredGameGui.
+   * RegisteredGameGui.
    *
    * @param gameParameters gameParameters
    */

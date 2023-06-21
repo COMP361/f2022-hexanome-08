@@ -13,7 +13,7 @@ public class ActionIdPair {
    * ActionIdPair.
    *
    * @param actionId actionId
-   * @param action action
+   * @param action   action
    */
   public ActionIdPair(String actionId, Action action) {
     this.actionId = actionId;

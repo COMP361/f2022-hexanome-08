@@ -28,7 +28,7 @@ public class FreeCardPopUpController extends ActionSelectionSender implements In
   /**
    * FreeCardPopUpController.
    *
-   * @param gameId gameId
+   * @param gameId          gameId
    * @param playerActionMap playerActionMap
    */
   public FreeCardPopUpController(long gameId, Map<String, Action> playerActionMap) {

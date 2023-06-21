@@ -12,7 +12,8 @@ public class PlayerLocations {
   /**
    * Constructor of PlayerLocations.
    */
-  public PlayerLocations() {}
+  public PlayerLocations() {
+  }
 
 
   /**

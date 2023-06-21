@@ -32,8 +32,8 @@ import javafx.util.Duration;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import project.config.UserConfig;
 import project.config.GameBoardLayoutConfig;
+import project.config.UserConfig;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
 import project.controllers.popupcontrollers.lobbypopup.LobbyWarnPopUpController;
@@ -82,7 +82,8 @@ public class App extends Application {
   /**
    * Constructor of javafx app.
    */
-  public App() {}
+  public App() {
+  }
 
   /**
    * main.
@@ -130,7 +131,6 @@ public class App extends Application {
     stage.close();
     currentPopupStage = null;
   }
-
 
 
   /**
@@ -320,7 +320,7 @@ public class App extends Application {
    * Static getter.
    *
    * @param cardName name of the orient card whose path you want to get
-   * @param level level of the orient card whose path you want to get
+   * @param level    level of the orient card whose path you want to get
    * @return path of the orient card
    */
   public static String getOrientCardPath(String cardName, int level) {
@@ -332,7 +332,7 @@ public class App extends Application {
    * Static getter.
    *
    * @param cardName name of the base card whose path you want to get
-   * @param level level of the base card whose path you want to get
+   * @param level    level of the base card whose path you want to get
    * @return path of the base card
    */
   public static String getBaseCardPath(String cardName, int level) {
@@ -428,11 +428,11 @@ public class App extends Application {
   /**
    * bindColourUpdateAction.
    *
-   * @param player player
-   * @param colorPicker colorPicker
+   * @param player             player
+   * @param colorPicker        colorPicker
    * @param refreshSettingPage refreshSettingPage
-   * @param colorUpdateButton colorUpdateButton
-   * @param config config
+   * @param colorUpdateButton  colorUpdateButton
+   * @param config             config
    */
   public static void bindColourUpdateAction(Player player, ColorPicker colorPicker,
                                             boolean refreshSettingPage, Button colorUpdateButton,
@@ -476,10 +476,10 @@ public class App extends Application {
   /**
    * bindPasswordUpdateAction.
    *
-   * @param player player
-   * @param passwordField passwordField
+   * @param player               player
+   * @param passwordField        passwordField
    * @param passwordUpdateButton passwordUpdateButton
-   * @param config config
+   * @param config               config
    */
   public static void bindPasswordUpdateAction(Player player, PasswordField passwordField,
                                               Button passwordUpdateButton,
@@ -514,10 +514,10 @@ public class App extends Application {
   /**
    * bindDeleteUserAction.
    *
-   * @param player player
+   * @param player             player
    * @param deletePlayerButton deletePlayerButton
-   * @param backToLogInPage backToLogInPage
-   * @param config config
+   * @param backToLogInPage    backToLogInPage
+   * @param config             config
    */
   public static void bindDeleteUserAction(Player player, Button deletePlayerButton,
                                           boolean backToLogInPage, GameBoardLayoutConfig config) {
@@ -555,7 +555,6 @@ public class App extends Application {
 
   /**
    * Reset user, and load the login page fxml.
-   *
    */
   public static void backToLogInPage() {
     // Reset the App user to null

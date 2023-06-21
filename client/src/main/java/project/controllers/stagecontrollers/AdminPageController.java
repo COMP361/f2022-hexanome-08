@@ -32,54 +32,40 @@ import project.view.lobby.communication.Role;
  */
 public class AdminPageController extends AbstractLobbyController {
 
+  private final GameBoardLayoutConfig config = App.getGuiLayouts();
   private List<Player> allRegisteredPlayers = new ArrayList<>();
-
-  private List<GameParameters> allRegisteredGameServices = new ArrayList<>();
-
+  private final List<GameParameters> allRegisteredGameServices = new ArrayList<>();
   // registered game service part
   @FXML
   private ScrollPane allRegisteredGameScrollPane;
-
   @FXML
   private VBox allRegisteredGameVbox;
-
-
   // app user related fields
   @FXML
   private ScrollPane allPlayersScrollPane;
-
   @FXML
   private VBox allPlayersVbox;
-
   @FXML
   private Button settingButton;
-
   @FXML
   private Button lobbyPageButton;
-
   // new user related fields
   @FXML
   private ChoiceBox<String> rolesChoiceBox;
-
   @FXML
   private ColorPicker newUserColourPicker;
-
-
   @FXML
   private TextField userName;
-
   @FXML
   private PasswordField userPassword;
-
   @FXML
   private Button addUserButton;
-
-  private final GameBoardLayoutConfig config = App.getGuiLayouts();
 
   /**
    * Constructor of AdminPageController.
    */
-  public AdminPageController() {}
+  public AdminPageController() {
+  }
 
 
   private void pageSpecificActionBind() {

@@ -19,27 +19,19 @@ import project.controllers.stagecontrollers.GameController;
 
 public class GameConfigPopUpController implements Initializable {
 
+  private final long gameId;
+  private final String viewerName;
+  private final boolean inWatchMode;
+  private final boolean isCreator;
+  private final GameInfo firstGameInfo;
   @FXML
   private Label instructionLabel;
-
   @FXML
   private TextField maxPointsTextField;
-
   @FXML
   private Button confirmMaxPointsButton;
-
   @FXML
   private Label warnLabel;
-
-  private final long gameId;
-
-  private final String viewerName;
-
-  private final boolean inWatchMode;
-
-  private final boolean isCreator;
-
-  private final GameInfo firstGameInfo;
 
   public GameConfigPopUpController(long gameId, String viewerName) {
     this.gameId = gameId;
@@ -54,9 +46,9 @@ public class GameConfigPopUpController implements Initializable {
   private boolean validInput(String input) {
     String userInput = input.trim();
     if (userInput.matches("^-?\\d+$")) {
-     // safely parse to integer
-     int pointsInput = Integer.parseInt(userInput);
-     return pointsInput >= 15 && pointsInput <= 100;
+      // safely parse to integer
+      int pointsInput = Integer.parseInt(userInput);
+      return pointsInput >= 15 && pointsInput <= 100;
     } else {
       return false;
     }
@@ -71,15 +63,15 @@ public class GameConfigPopUpController implements Initializable {
       String hashedResponse = "";
       HttpResponse<String> longPullResponse = null;
 
-      while(!Thread.currentThread().isInterrupted()) {
+      while (!Thread.currentThread().isInterrupted()) {
         try {
           int responseCode = 408;
           while (responseCode == 408) {
             longPullResponse = gameRequestSender.sendGetGameInfoRequest(gameId, hashedResponse);
             responseCode = longPullResponse.getStatus();
             if (Thread.currentThread().isInterrupted()) {
-              throw new InterruptedException("Game Config Thread: " +
-                  Thread.currentThread().getName() + " terminated");
+              throw new InterruptedException("Game Config Thread: "
+                  + Thread.currentThread().getName() + " terminated");
             }
           }
           if (responseCode == 200) {

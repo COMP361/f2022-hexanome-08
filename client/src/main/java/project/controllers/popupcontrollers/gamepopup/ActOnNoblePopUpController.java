@@ -29,9 +29,9 @@ public class ActOnNoblePopUpController extends ActionSelectionSender implements 
   /**
    * ActOnNoblePopUpController.
    *
-   * @param gameId gameId
+   * @param gameId          gameId
    * @param playerActionMap playerActionMap
-   * @param isReserve isReserve
+   * @param isReserve       isReserve
    */
   public ActOnNoblePopUpController(long gameId, Map<String, Action> playerActionMap,
                                    boolean isReserve) {

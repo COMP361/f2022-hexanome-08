@@ -66,6 +66,8 @@ public class GameController implements Initializable {
   private final Map<String, PlayerInfoGui> nameToPlayerInfoGuiMap = new HashMap<>();
   private final Map<String, Integer> nameToArmCodeMap = new HashMap<>();
   private final Map<Extension, BoardGui> extensionBoardGuiMap = new HashMap<>();
+  private final boolean inWatchMode;
+  private final GameInfo firstGameInfo;
   @FXML
   private AnchorPane playerBoardAnchorPane;
   @FXML
@@ -83,29 +85,20 @@ public class GameController implements Initializable {
   private Button myReservedCardsButton;
   @FXML
   private Button quitButton;
-
   @FXML
   private Label currentPlayerLabel;
-
   @FXML
   private Label winConditionLabel;
-
   private List<String> sortedPlayerNames = new ArrayList<>();
   private Thread playerInfoThread;
   private Thread mainGameUpdateThread;
-
   private String viewerName;
-
-  private final boolean inWatchMode;
-
-  private final GameInfo firstGameInfo;
-
 
 
   /**
    * GameController for the main page.
    *
-   * @param gameId gameId
+   * @param gameId     gameId
    * @param viewerName name of watch only user
    */
   public GameController(long gameId, String viewerName) {
@@ -665,7 +658,7 @@ public class GameController implements Initializable {
             responseCode = longPullResponse.getStatus();
             if (Thread.currentThread().isInterrupted()) {
               throw new InterruptedException("GameInfo Thread: " + Thread.currentThread().getName()
-                      + " terminated");
+                  + " terminated");
             }
           }
           if (responseCode == 200) {
@@ -802,8 +795,8 @@ public class GameController implements Initializable {
     if (gameServiceName.equals("splendorcity")) {
       winConditionLabel.setText(winConditionLabel.getText() + "1 City");
     } else {
-      winConditionLabel.setText(winConditionLabel.getText() +
-          String.format("%s points", firstGameInfo.getWinningPoints()));
+      winConditionLabel.setText(winConditionLabel.getText()
+          + String.format("%s points", firstGameInfo.getWinningPoints()));
     }
 
 

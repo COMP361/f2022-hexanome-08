@@ -29,7 +29,7 @@ public class BurnCardController extends ActionSelectionSender implements Initial
   /**
    * BurnCardController.
    *
-   * @param gameId gameId
+   * @param gameId          gameId
    * @param playerActionMap playerActionMap
    */
   public BurnCardController(long gameId, Map<String, Action> playerActionMap) {

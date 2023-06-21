@@ -111,8 +111,8 @@ public class SessionGui extends HBox {
       App.getGameRequestSender().setGameServiceName(gameServiceName);
       GameInfo curGameInfo = App.getGameRequestSender().getInstantGameInfo(curSessionId);
 
-      if (gameServiceName.equals("splendorcity") ||
-          curGameInfo.getWinningPoints() > 0) {
+      if (gameServiceName.equals("splendorcity")
+          || curGameInfo.getWinningPoints() > 0) {
         // if it's city game OR the game has been configured, load the game page immediately
         App.loadNewSceneToPrimaryStage("game_board.fxml",
             new GameController(curSessionId, App.getUser().getUsername()));

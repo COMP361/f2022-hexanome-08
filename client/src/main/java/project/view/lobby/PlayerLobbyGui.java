@@ -15,7 +15,7 @@ public class PlayerLobbyGui extends HBox {
   private final PlayerLobbyGuiController controller;
 
   /**
-   *  PlayerLobbyGui.
+   * PlayerLobbyGui.
    *
    * @param player player
    */

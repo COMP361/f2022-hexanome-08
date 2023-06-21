@@ -34,8 +34,8 @@ public class SaveGamePopUpController implements Initializable {
   /**
    * Controller ofr save game pop up.
    *
-   * @param gameInfo             gameInfo
-   * @param gameId               gameId
+   * @param gameInfo gameInfo
+   * @param gameId   gameId
    */
   public SaveGamePopUpController(GameInfo gameInfo, long gameId) {
     this.gameInfo = gameInfo;

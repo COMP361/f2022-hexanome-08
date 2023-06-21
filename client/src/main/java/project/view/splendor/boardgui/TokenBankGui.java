@@ -306,9 +306,9 @@ public class TokenBankGui extends HBox {
    * Set up the TokenBank GUI object.
    *
    * @param takeTokenActionMap action map
-   * @param bankMap the enum map of price
-   * @param layoutX layout x
-   * @param layoutY layout y
+   * @param bankMap            the enum map of price
+   * @param layoutX            layout x
+   * @param layoutY            layout y
    */
   public void setup(Map<String, TakeTokenAction> takeTokenActionMap,
                     EnumMap<Colour, Integer> bankMap, double layoutX, double layoutY) {
@@ -325,9 +325,9 @@ public class TokenBankGui extends HBox {
    * Set up the TokenBank GUI object.
    *
    * @param returnTokenActionMap returnTokenActionMap
-   * @param bankMap the enum map of price
-   * @param layoutX layout x
-   * @param layoutY layout y
+   * @param bankMap              the enum map of price
+   * @param layoutX              layout x
+   * @param layoutY              layout y
    */
   public void setupReturnToken(Map<String, ReturnTokenAction> returnTokenActionMap,
                                EnumMap<Colour, Integer> bankMap, double layoutX, double layoutY) {

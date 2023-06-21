@@ -110,8 +110,8 @@ public class AppSettingPageController implements Initializable {
     // username update logic
     defaultUserNameUpdateButton.setOnAction(event -> {
       // if text input is not null or empty string, overwrite the old username
-      if (defaultUserNameTextField.getText() != null &&
-          !defaultUserNameTextField.getText().isEmpty()) {
+      if (defaultUserNameTextField.getText() != null
+          && !defaultUserNameTextField.getText().isEmpty()) {
         userConfig.setDefaultUserName(defaultUserNameTextField.getText());
         updateUserConfigFile();
         defaultUserNameTextField.clear();
@@ -121,8 +121,8 @@ public class AppSettingPageController implements Initializable {
 
     // user password update logic
     defaultPasswordUpdateButton.setOnAction(event -> {
-      if (defaultPasswordField.getText() != null &&
-          !defaultPasswordField.getText().isEmpty()) {
+      if (defaultPasswordField.getText() != null
+          && !defaultPasswordField.getText().isEmpty()) {
         userConfig.setDefaultPassword(defaultPasswordField.getText());
         updateUserConfigFile();
         defaultPasswordField.clear();
@@ -146,8 +146,8 @@ public class AppSettingPageController implements Initializable {
     // the update button for host ip
     hostIpUpdateButton.setDisable(userConfig.isUseLocalHost());
     hostIpUpdateButton.setOnAction(event -> {
-      if (defaultHostIpTextField.getText() != null &&
-          !defaultHostIpTextField.getText().isEmpty()) {
+      if (defaultHostIpTextField.getText() != null
+          && !defaultHostIpTextField.getText().isEmpty()) {
         userConfig.setHostIp(defaultHostIpTextField.getText());
         updateUserConfigFile();
       }
@@ -218,6 +218,7 @@ public class AppSettingPageController implements Initializable {
     });
 
   }
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     // back to log in page button
@@ -227,7 +228,9 @@ public class AppSettingPageController implements Initializable {
       App.backToLogInPage();
     });
 
-    backgroundPane.setOnMouseClicked(event -> {backgroundPane.requestFocus();});
+    backgroundPane.setOnMouseClicked(event -> {
+      backgroundPane.requestFocus();
+    });
     setupDefaultLoginSettings();
     setupDefaultIpSettings();
     setupMusicVolumeSettings();

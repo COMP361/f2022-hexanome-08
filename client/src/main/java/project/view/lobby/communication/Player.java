@@ -22,12 +22,12 @@ public class Player {
   }
 
   /**
-   *  Player.
+   * Player.
    *
-   * @param name name
+   * @param name            name
    * @param preferredColour preferredColour
-   * @param password password
-   * @param role role
+   * @param password        password
+   * @param role            role
    */
   public Player(String name, String preferredColour, String password, Role role) {
     this.name = name;

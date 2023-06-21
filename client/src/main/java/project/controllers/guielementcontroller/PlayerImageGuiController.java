@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.StageStyle;
@@ -54,9 +53,9 @@ public class PlayerImageGuiController implements Initializable {
   /**
    * PlayerImageGuiController.
    *
-   * @param gameId gameId
+   * @param gameId     gameId
    * @param playerName playerName
-   * @param armCode armCode
+   * @param armCode    armCode
    */
   public PlayerImageGuiController(long gameId, String playerName, int armCode) {
     this.gameId = gameId;

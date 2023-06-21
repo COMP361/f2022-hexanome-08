@@ -35,7 +35,8 @@ public abstract class AbstractLobbyController implements Initializable {
   /**
    * Constructor of AbstractLobbyController.
    */
-  public AbstractLobbyController() {}
+  public AbstractLobbyController() {
+  }
 
   /**
    * initializeSessionUpdateThread.

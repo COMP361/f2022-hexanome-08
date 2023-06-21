@@ -60,7 +60,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
   }
 
   /**
-   *  getLevel.
+   * getLevel.
    *
    * @return level
    */

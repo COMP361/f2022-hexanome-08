@@ -50,7 +50,7 @@ public class LobbyRequestSender {
    * addGameNameMapping.
    *
    * @param gameDisplayName gameDisplayName
-   * @param gameName gameName
+   * @param gameName        gameName
    */
   public void addGameNameMapping(String gameDisplayName, String gameName) {
     assert !gameNameMapping.containsKey(gameDisplayName);
@@ -148,7 +148,7 @@ public class LobbyRequestSender {
    * @param accessToken  access token
    * @param gameName     game name
    * @param saveGameName save game name
-   * @param userName user name
+   * @param userName     user name
    * @throws UnirestException in case unirest failed to send a request
    */
   public void sendCreateSessionRequest(String userName,
@@ -320,6 +320,7 @@ public class LobbyRequestSender {
 
 
   // /api/users : GET
+
   /**
    * getPlayers.
    *
@@ -351,7 +352,7 @@ public class LobbyRequestSender {
    * getOnePlayer.
    *
    * @param accessToken accessToken
-   * @param playerName playerName
+   * @param playerName  playerName
    * @return player
    */
   public Player getOnePlayer(String accessToken, String playerName) {
@@ -383,8 +384,8 @@ public class LobbyRequestSender {
    * putOneNewPlayer.
    *
    * @param accessToken accessToken
-   * @param playerName playerName
-   * @param player player
+   * @param playerName  playerName
+   * @param player      player
    * @throws UnirestException UnirestException
    */
   public void putOneNewPlayer(String accessToken, String playerName, Player player)
@@ -411,7 +412,7 @@ public class LobbyRequestSender {
    * deleteOnePlayer.
    *
    * @param accessToken accessToken
-   * @param playerName playerName
+   * @param playerName  playerName
    * @throws UnirestException UnirestException
    */
   public void deleteOnePlayer(String accessToken, String playerName)
@@ -433,9 +434,9 @@ public class LobbyRequestSender {
   /**
    * updateOnePlayerPassword.
    *
-   * @param accessToken accessToken
-   * @param playerName playerName
-   * @param oldPassword oldPassword
+   * @param accessToken  accessToken
+   * @param playerName   playerName
+   * @param oldPassword  oldPassword
    * @param nextPassword nextPassword
    * @throws UnirestException UnirestException
    */
@@ -465,8 +466,8 @@ public class LobbyRequestSender {
    * updateOnePlayerColour.
    *
    * @param accessToken accessToken
-   * @param playerName playerName
-   * @param colourCode colourCode
+   * @param playerName  playerName
+   * @param colourCode  colourCode
    * @throws UnirestException UnirestException
    */
   public void updateOnePlayerColour(String accessToken, String playerName, String colourCode)
@@ -492,7 +493,7 @@ public class LobbyRequestSender {
   /**
    * unregisterOneGameService.
    *
-   * @param accessToken accessToken
+   * @param accessToken    accessToken
    * @param gameServerName gameServerName
    * @throws UnirestException UnirestException
    */

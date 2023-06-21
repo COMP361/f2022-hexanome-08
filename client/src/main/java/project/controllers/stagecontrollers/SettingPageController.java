@@ -40,7 +40,8 @@ public class SettingPageController extends AbstractLobbyController {
   /**
    * Constructor of SettingPageController.
    */
-  public SettingPageController() {}
+  public SettingPageController() {
+  }
 
   private void pageSpecificActionBind() {
     adminZoneButton.setVisible(false);

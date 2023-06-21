@@ -21,7 +21,7 @@ public class LobbyWarnPopUpController implements Initializable {
   /**
    * LobbyWarnPopUpController.
    *
-   * @param errorMsg errorMsg
+   * @param errorMsg      errorMsg
    * @param errorMsgTitle errorMsgTitle
    */
   public LobbyWarnPopUpController(String errorMsg, String errorMsgTitle) {

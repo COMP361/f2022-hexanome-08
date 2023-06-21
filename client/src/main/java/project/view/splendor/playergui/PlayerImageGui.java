@@ -18,9 +18,9 @@ public class PlayerImageGui extends Group {
   /**
    * PlayerImageGui.
    *
-   * @param gameId gameId
+   * @param gameId     gameId
    * @param playerName playerName
-   * @param armCode armCode
+   * @param armCode    armCode
    */
   public PlayerImageGui(long gameId, String playerName, int armCode) {
     FXMLLoader fxmlLoader =

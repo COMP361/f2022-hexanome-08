@@ -43,7 +43,7 @@ public class ReservedHandController implements Initializable {
    *
    * @param reservedHand  reservedHand
    * @param playerActions playerActions
-   * @param gameId gameId
+   * @param gameId        gameId
    */
   public ReservedHandController(ReservedHand reservedHand, Map<String, Action> playerActions,
                                 long gameId) {

@@ -4,13 +4,15 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<Pane fx:id="purchaseContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<Pane xmlns:fx="http://javafx.com/fxml/1" fx:id="purchaseContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity" prefHeight="180.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/19">
     <children>
-        <Text fx:id="title" layoutX="28.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose one development card to take for free :)" textAlignment="CENTER" wrappingWidth="665.015625">
+        <Text fx:id="title" layoutX="28.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              text="Choose one development card to take for free :)" textAlignment="CENTER" wrappingWidth="665.015625">
             <font>
-                <Font name="Arial Black" size="22.0" />
+                <Font name="Arial Black" size="22.0"/>
             </font>
         </Text>
-        <HBox fx:id="freeCardsHbox" layoutX="21.0" layoutY="53.0" prefHeight="100.0" prefWidth="680.0" />
+        <HBox fx:id="freeCardsHbox" layoutX="21.0" layoutY="53.0" prefHeight="100.0" prefWidth="680.0"/>
     </children>
 </Pane>

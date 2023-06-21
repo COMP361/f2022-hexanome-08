@@ -40,7 +40,7 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
    *
    * @param level provides the level of the Orient Cards.
    * @param cards provides the list of cards you want displayed in the GUI.
-   * @param deck deck
+   * @param deck  deck
    */
   public OrientCardLevelGui(int level, DevelopmentCard[] cards, List<DevelopmentCard> deck) {
     this.level = level;

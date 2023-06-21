@@ -18,10 +18,10 @@ public class User {
   /**
    * Constructor of a user instance.
    *
-   * @param username    username
-   * @param accessToken user access token
+   * @param username     username
+   * @param accessToken  user access token
    * @param refreshToken refresh Token
-   * @param authority   user authority
+   * @param authority    user authority
    */
   public User(String username, String accessToken, String refreshToken, String authority) {
     this.username = username;

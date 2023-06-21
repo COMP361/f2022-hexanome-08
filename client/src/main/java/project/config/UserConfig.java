@@ -42,9 +42,16 @@ public class UserConfig {
     return defaultUserName;
   }
 
+  public void setDefaultUserName(String defaultUserName) {
+    this.defaultUserName = defaultUserName;
+  }
 
   public boolean isUseLocalHost() {
     return useLocalHost;
+  }
+
+  public void setUseLocalHost(boolean useLocalHost) {
+    this.useLocalHost = useLocalHost;
   }
 
   public double getMusicVolume() {
@@ -55,7 +62,6 @@ public class UserConfig {
     this.musicVolume = musicVolume;
   }
 
-
   /**
    * Getter method.
    *
@@ -65,6 +71,10 @@ public class UserConfig {
     return defaultPassword;
   }
 
+  public void setDefaultPassword(String defaultPassword) {
+    this.defaultPassword = defaultPassword;
+  }
+
   /**
    * Getter method for boolean value.
    *
@@ -72,6 +82,10 @@ public class UserConfig {
    */
   public boolean isUseDefaultUserInfo() {
     return useDefaultUserInfo;
+  }
+
+  public void setUseDefaultUserInfo(boolean useDefaultUserInfo) {
+    this.useDefaultUserInfo = useDefaultUserInfo;
   }
 
   /**
@@ -86,24 +100,8 @@ public class UserConfig {
     return hostIp;
   }
 
-  public void setDefaultUserName(String defaultUserName) {
-    this.defaultUserName = defaultUserName;
-  }
-
-  public void setDefaultPassword(String defaultPassword) {
-    this.defaultPassword = defaultPassword;
-  }
-
-  public void setUseDefaultUserInfo(boolean useDefaultUserInfo) {
-    this.useDefaultUserInfo = useDefaultUserInfo;
-  }
-
   public void setHostIp(String hostIp) {
     this.hostIp = hostIp;
-  }
-
-  public void setUseLocalHost(boolean useLocalHost) {
-    this.useLocalHost = useLocalHost;
   }
 
 }

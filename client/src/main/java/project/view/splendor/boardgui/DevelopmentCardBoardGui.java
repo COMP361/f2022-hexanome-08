@@ -34,7 +34,7 @@ public interface DevelopmentCardBoardGui {
    * bindActionToCardAndDeck.
    *
    * @param positionToActionMap positionToActionMap
-   * @param gameId gameId
+   * @param gameId              gameId
    */
   void bindActionToCardAndDeck(Map<Position, List<ActionIdPair>> positionToActionMap, long gameId);
 }

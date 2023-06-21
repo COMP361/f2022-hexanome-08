@@ -199,7 +199,7 @@ public class GameBoardLayoutConfig {
   /**
    * Setter method.
    *
-   * @param topPlayerLayoutX  double of the new x coordinate of the top player layout
+   * @param topPlayerLayoutX double of the new x coordinate of the top player layout
    */
   public void setTopPlayerLayoutX(double topPlayerLayoutX) {
     this.topPlayerLayoutX = topPlayerLayoutX;
@@ -406,7 +406,7 @@ public class GameBoardLayoutConfig {
   /**
    * Getter method.
    *
-   * @return  double of the x coordinate of the pac board layout
+   * @return double of the x coordinate of the pac board layout
    */
   public double getPacBoardLayoutX() {
     return pacBoardLayoutX;

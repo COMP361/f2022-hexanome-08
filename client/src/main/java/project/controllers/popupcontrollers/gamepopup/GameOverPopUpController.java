@@ -40,10 +40,10 @@ public class GameOverPopUpController implements Initializable {
    * GameOverPopUpController.
    *
    * @param mainGameUpdateThread mainGameUpdateThread
-   * @param playerInfoThread playerInfoThread
-   * @param winnerNames winnerNames
-   * @param gameId gameId
-   * @param optionToCancel optionToCancel
+   * @param playerInfoThread     playerInfoThread
+   * @param winnerNames          winnerNames
+   * @param gameId               gameId
+   * @param optionToCancel       optionToCancel
    */
   public GameOverPopUpController(Thread mainGameUpdateThread,
                                  Thread playerInfoThread,

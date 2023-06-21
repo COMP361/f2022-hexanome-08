@@ -21,8 +21,8 @@ public class Savegame {
   /**
    * save game.
    *
-   * @param players players
-   * @param gamename gamename
+   * @param players    players
+   * @param gamename   gamename
    * @param savegameid savegameid
    */
   public Savegame(String[] players, String gamename, String savegameid) {

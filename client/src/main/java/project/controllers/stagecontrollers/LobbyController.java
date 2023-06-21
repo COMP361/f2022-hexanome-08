@@ -54,7 +54,8 @@ public class LobbyController extends AbstractLobbyController {
   /**
    * Constructor of LobbyController.
    */
-  public LobbyController() {}
+  public LobbyController() {
+  }
 
   private EventHandler<ActionEvent> createClickOnCreateButton() {
     return event -> {

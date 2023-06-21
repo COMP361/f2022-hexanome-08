@@ -24,7 +24,7 @@ public class ClaimCityPopUpController extends ActionSelectionSender implements I
   /**
    * ClaimCityPopUpController.
    *
-   * @param gameId gameId
+   * @param gameId          gameId
    * @param playerActionMap playerActionMap
    */
   public ClaimCityPopUpController(long gameId, Map<String, Action> playerActionMap) {
