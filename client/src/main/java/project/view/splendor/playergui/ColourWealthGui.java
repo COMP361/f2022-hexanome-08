@@ -23,7 +23,7 @@ public class ColourWealthGui extends Group {
   public ColourWealthGui(Colour colour) {
     this.colour = colour;
     FXMLLoader fxmlLoader =
-        new FXMLLoader(getClass().getResource("/project/colour_wealth.fxml"));
+        new FXMLLoader(getClass().getResource("/project/fxml_files/colour_wealth.fxml"));
     controller = new ColourWealthGuiController(colour);
     fxmlLoader.setController(controller);
     fxmlLoader.setRoot(this);

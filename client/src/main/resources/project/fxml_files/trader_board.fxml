@@ -15,7 +15,7 @@
         <ImageView fitHeight="110.0" fitWidth="125.0" layoutX="10.0" layoutY="8.0" pickOnBounds="true"
                    preserveRatio="true">
             <image>
-                <Image url="@pictures/power/p1.png"/>
+                <Image url="@../pictures/power/p1.png"/>
             </image>
         </ImageView>
         <ImageView fitHeight="27.0" fitWidth="22.0" layoutX="67.0" layoutY="14.0" pickOnBounds="true"
@@ -34,7 +34,7 @@
             <ImageView fitHeight="110.0" fitWidth="162.0" layoutX="10.0" layoutY="8.0" pickOnBounds="true"
                        preserveRatio="true">
                 <image>
-                    <Image url="@pictures/power/p2.png"/>
+                    <Image url="@../pictures/power/p2.png"/>
                 </image>
             </ImageView>
             <ImageView fitHeight="27.0" fitWidth="22.0" layoutX="67.0" layoutY="14.0" pickOnBounds="true"
@@ -62,7 +62,7 @@
             <ImageView fitHeight="110.0" fitWidth="125.0" layoutX="10.0" layoutY="8.0" pickOnBounds="true"
                        preserveRatio="true">
                 <image>
-                    <Image url="@pictures/power/p3.png"/>
+                    <Image url="@../pictures/power/p3.png"/>
                 </image>
             </ImageView>
             <ImageView fitHeight="27.0" fitWidth="22.0" layoutX="67.0" layoutY="14.0" pickOnBounds="true"
@@ -90,7 +90,7 @@
             <ImageView fitHeight="110.0" fitWidth="125.0" layoutX="10.0" layoutY="8.0" pickOnBounds="true"
                        preserveRatio="true">
                 <image>
-                    <Image url="@pictures/power/p4.png"/>
+                    <Image url="@../pictures/power/p4.png"/>
                 </image>
             </ImageView>
             <ImageView fitHeight="27.0" fitWidth="22.0" layoutX="67.0" layoutY="14.0" pickOnBounds="true"
@@ -118,7 +118,7 @@
             <ImageView fitHeight="110.0" fitWidth="125.0" layoutX="10.0" layoutY="8.0" pickOnBounds="true"
                        preserveRatio="true">
                 <image>
-                    <Image url="@pictures/power/p5.png"/>
+                    <Image url="@../pictures/power/p5.png"/>
                 </image>
             </ImageView>
             <ImageView fitHeight="27.0" fitWidth="22.0" layoutX="67.0" layoutY="14.0" pickOnBounds="true"

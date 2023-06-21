@@ -5,7 +5,6 @@ import ca.mcgill.comp361.splendormodel.model.Colour;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.EnumMap;
@@ -21,6 +20,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -75,8 +76,7 @@ public class App extends Application {
 
   private static File connectionConfigFile;
 
-
-
+  private static MediaPlayer gameMusicPlayer;
   private static Stage currentPopupStage = null;
 
   /**
@@ -131,6 +131,8 @@ public class App extends Application {
     currentPopupStage = null;
   }
 
+
+
   /**
    * Show a popup Stage with the corresponding fxml file, controller class, and the width/height.
    *
@@ -142,7 +144,7 @@ public class App extends Application {
   public static void loadPopUpWithController(String fxmlName, Object controller,
                                              double popUpStageWidth, double popUpStageHeight,
                                              StageStyle stageStyle) {
-    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
+    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml_files/" + fxmlName));
     fxmlLoader.setController(controller);
     Stage newStage = new Stage();
     // reset the current pop up stage buffer
@@ -205,7 +207,7 @@ public class App extends Application {
    * @param controller controller class of the popup
    */
   public static void loadNewSceneToPrimaryStage(String fxmlName, Object controller) {
-    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxmlName));
+    FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("fxml_files/" + fxmlName));
     fxmlLoader.setController(controller);
     double width = primaryStage.getScene().getWidth();
     double height = primaryStage.getScene().getHeight();
@@ -559,30 +561,20 @@ public class App extends Application {
   }
 
 
-  /**
-   * Override the start() method to launch the whole project.
-   *
-   * @param stage The default stage to display
-   * @throws IOException when fxml not found
-   */
-  @Override
-  public void start(Stage stage) throws IOException {
-    System.setProperty("com.apple.macos.useScreenMenuBar", "true");
-    primaryStage = stage;
+  private void setupConfigFiles() throws IOException {
     File gameConfigFile = new File("appConfig.json");
     connectionConfigFile = new File("connectionConfig.json");
 
+    String gameConfigString = FileUtils.readFileToString(gameConfigFile, StandardCharsets.UTF_8);
+    String connectConfigJson
+        = FileUtils.readFileToString(connectionConfigFile, StandardCharsets.UTF_8);
+    guiLayouts = new Gson().fromJson(gameConfigString, GameBoardLayoutConfig.class);
+    connectionConfig = new Gson().fromJson(connectConfigJson, ConnectionConfig.class);
+  }
 
-    try {
-      String gameConfigString = FileUtils.readFileToString(gameConfigFile, StandardCharsets.UTF_8);
-      String connectConfigJson
-          = FileUtils.readFileToString(connectionConfigFile, StandardCharsets.UTF_8);
-      guiLayouts = new Gson().fromJson(gameConfigString, GameBoardLayoutConfig.class);
-      connectionConfig = new Gson().fromJson(connectConfigJson, ConnectionConfig.class);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    FXMLLoader startPageLoader = new FXMLLoader(App.class.getResource("start_page.fxml"));
+  private void setupStage() throws IOException {
+    FXMLLoader startPageLoader =
+        new FXMLLoader(App.class.getResource("fxml_files/start_page.fxml"));
     // assign controller of log in page
     startPageLoader.setController(new LogInController());
     primaryStage.setTitle("Welcome to Splendor!");
@@ -595,6 +587,45 @@ public class App extends Application {
         guiLayouts.getAppHeight());
     primaryStage.setScene(scene);
     primaryStage.show();
+  }
+
+  private void setupMediaPlayer() {
+    // instantiating Media and MediaPlayer
+    Media media = new Media(App.class.getResource("splendor_music.mp3").toExternalForm());
+    gameMusicPlayer = new MediaPlayer(media);
+
+    // by setting this property to true, the audio will be played
+    // in an infinite loop
+    gameMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+
+    // play the music
+    gameMusicPlayer.play();
+  }
+
+  /**
+   * Override the start() method to launch the whole project.
+   *
+   * @param stage The default stage to display
+   */
+  @Override
+  public void start(Stage stage) {
+    System.setProperty("com.apple.macos.useScreenMenuBar", "true");
+    primaryStage = stage;
+
+    try {
+      // set up configuration file (note that stage relies on config file to load)
+      setupConfigFiles();
+
+      // set up stage windows
+      setupStage();
+
+      // set up media player
+      setupMediaPlayer();
+    } catch (IOException e) {
+      throw new RuntimeException(e.getMessage());
+    }
+
+
   }
 
 }

@@ -38,7 +38,7 @@ public class TraderBoardGui extends VBox implements BoardGui {
     this.gameId = gameId;
     this.nameToArmCodeMap = nameToArmCodeMap;
     FXMLLoader fxmlLoader =
-        new FXMLLoader(getClass().getResource("/project/trader_board.fxml"));
+        new FXMLLoader(getClass().getResource("/project/fxml_files/trader_board.fxml"));
 
     fxmlLoader.setRoot(this);
     try {

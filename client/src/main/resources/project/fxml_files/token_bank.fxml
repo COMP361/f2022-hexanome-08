@@ -15,7 +15,7 @@
          xmlns="http://javafx.com/javafx/19" fx:controller="project.App">
     <Group>
         <ImageView fitHeight="100.0" fitWidth="100.0">
-            <Image url="@pictures/token/red_tokens.png"/>
+            <Image url="@../pictures/token/red_tokens.png"/>
         </ImageView>
         <Button layoutX="69.0" layoutY="12.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="17.0" text="+">
             <font>
@@ -44,7 +44,7 @@
         <children>
             <ImageView fitHeight="100.0" fitWidth="100.0">
                 <image>
-                    <Image url="@pictures/token/black_tokens.png"/>
+                    <Image url="@../pictures/token/black_tokens.png"/>
                 </image>
             </ImageView>
             <Button layoutX="69.0" layoutY="12.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="17.0" text="+">
@@ -75,7 +75,7 @@
         <children>
             <ImageView fitHeight="100.0" fitWidth="100.0">
                 <image>
-                    <Image url="@pictures/token/white_tokens.png"/>
+                    <Image url="@../pictures/token/white_tokens.png"/>
                 </image>
             </ImageView>
             <Button layoutX="69.0" layoutY="12.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="17.0" text="+">
@@ -106,7 +106,7 @@
         <children>
             <ImageView fitHeight="100.0" fitWidth="100.0">
                 <image>
-                    <Image url="@pictures/token/blue_tokens.png"/>
+                    <Image url="@../pictures/token/blue_tokens.png"/>
                 </image>
             </ImageView>
             <Button layoutX="69.0" layoutY="12.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="17.0" text="+">
@@ -137,7 +137,7 @@
         <children>
             <ImageView fitHeight="100.0" fitWidth="100.0">
                 <image>
-                    <Image url="@pictures/token/green_tokens.png"/>
+                    <Image url="@../pictures/token/green_tokens.png"/>
                 </image>
             </ImageView>
             <Button layoutX="69.0" layoutY="12.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="17.0" text="+">
@@ -171,7 +171,7 @@
                 <children>
                     <ImageView fitHeight="100.0" fitWidth="100.0">
                         <image>
-                            <Image url="@pictures/token/gold_tokens.png"/>
+                            <Image url="@../pictures/token/gold_tokens.png"/>
                         </image>
                     </ImageView>
                     <Text fill="WHITE" layoutX="38.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="5">

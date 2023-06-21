@@ -20,7 +20,7 @@ public class RegisteredGameGui extends HBox {
   public RegisteredGameGui(GameParameters gameParameters) {
     this.gameParameters = gameParameters;
     FXMLLoader fxmlLoader = new FXMLLoader(getClass()
-        .getResource("/project/game_service_gui.fxml"));
+        .getResource("/project/fxml_files/game_service_gui.fxml"));
     fxmlLoader.setRoot(this);
     fxmlLoader.setController(new RegisteredGameGuiController(gameParameters));
     try {

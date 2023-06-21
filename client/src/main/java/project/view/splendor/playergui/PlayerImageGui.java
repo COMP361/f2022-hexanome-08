@@ -24,7 +24,7 @@ public class PlayerImageGui extends Group {
    */
   public PlayerImageGui(long gameId, String playerName, int armCode) {
     FXMLLoader fxmlLoader =
-        new FXMLLoader(getClass().getResource("/project/player_image.fxml"));
+        new FXMLLoader(getClass().getResource("/project/fxml_files/player_image.fxml"));
     fxmlLoader.setRoot(this);
     controller = new PlayerImageGuiController(gameId, playerName, armCode);
     fxmlLoader.setController(controller);

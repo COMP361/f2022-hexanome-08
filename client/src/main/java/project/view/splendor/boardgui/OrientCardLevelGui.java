@@ -47,7 +47,7 @@ public class OrientCardLevelGui extends HBox implements DevelopmentCardBoardGui 
     this.cards = cards;
     this.deck = deck;
     FXMLLoader fxmlLoader =
-        new FXMLLoader(getClass().getResource("/project/orient_card_template.fxml"));
+        new FXMLLoader(getClass().getResource("/project/fxml_files/orient_card_template.fxml"));
     fxmlLoader.setRoot(this);
     try {
       fxmlLoader.load();

@@ -42,7 +42,8 @@ public class TokenBankGui extends HBox {
   public TokenBankGui(long gameId) {
     this.gameId = gameId;
     // TODO: The fxml associated with this class, must be bind to controller = project.App
-    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/project/token_bank.fxml"));
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
+        "/project/fxml_files/token_bank.fxml"));
     fxmlLoader.setRoot(this);
     try {
       fxmlLoader.load();

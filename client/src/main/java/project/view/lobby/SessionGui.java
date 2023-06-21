@@ -47,7 +47,7 @@ public class SessionGui extends HBox {
     this.curUser = curUser;
     this.lobbyUpdateThread = lobbyUpdateThread;
     FXMLLoader fxmlLoader = new FXMLLoader(getClass()
-        .getResource("/project/session_gui.fxml"));
+        .getResource("/project/fxml_files/session_gui.fxml"));
     fxmlLoader.setRoot(this);
     fxmlLoader.setController(new SessionGuiController(curSession));
     try {

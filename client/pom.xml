@@ -17,6 +17,7 @@
     </repositories>
 
     <dependencies>
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -47,6 +48,11 @@
             <version>2.10</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>19.0.2.1</version>
+        </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>

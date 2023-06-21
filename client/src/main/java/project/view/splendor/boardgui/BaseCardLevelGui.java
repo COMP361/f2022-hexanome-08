@@ -50,7 +50,7 @@ public class BaseCardLevelGui extends HBox implements DevelopmentCardBoardGui {
     this.cards = cards;
     this.deck = deck;
     FXMLLoader fxmlLoader =
-        new FXMLLoader(getClass().getResource("/project/base_card_template.fxml"));
+        new FXMLLoader(getClass().getResource("/project/fxml_files/base_card_template.fxml"));
     fxmlLoader.setRoot(this);
     try {
       fxmlLoader.load();

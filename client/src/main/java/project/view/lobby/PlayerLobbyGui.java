@@ -22,7 +22,7 @@ public class PlayerLobbyGui extends HBox {
   public PlayerLobbyGui(Player player) {
     this.player = player;
     FXMLLoader fxmlLoader = new FXMLLoader(getClass()
-        .getResource("/project/player_lobby_gui.fxml"));
+        .getResource("/project/fxml_files/player_lobby_gui.fxml"));
     fxmlLoader.setRoot(this);
     controller = new PlayerLobbyGuiController(player);
     fxmlLoader.setController(controller);
