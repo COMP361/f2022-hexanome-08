@@ -598,6 +598,7 @@ public class App extends Application {
     // instantiating Media and MediaPlayer
     Media media = new Media(App.class.getResource("splendor_music.mp3").toExternalForm());
     gameMusicPlayer = new MediaPlayer(media);
+    gameMusicPlayer.setVolume(userConfig.getMusicVolume());
 
     // by setting this property to true, the audio will be played
     // in an infinite loop

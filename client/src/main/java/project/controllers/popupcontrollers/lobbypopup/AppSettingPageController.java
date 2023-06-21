@@ -192,7 +192,6 @@ public class AppSettingPageController implements Initializable {
     });
 
     // default volume ratio
-    mediaPlayer.setVolume(userConfig.getMusicVolume());
     musicVolumeSlider.setValue(mediaPlayer.getVolume() * 100);
     musicVolumeTextField.setText(String.format("%.0f", musicVolumeSlider.getValue()));
 
