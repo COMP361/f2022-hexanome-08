@@ -32,7 +32,7 @@ import javafx.util.Duration;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import project.config.ConnectionConfig;
+import project.config.UserConfig;
 import project.config.GameBoardLayoutConfig;
 import project.connection.GameRequestSender;
 import project.connection.LobbyRequestSender;
@@ -72,7 +72,7 @@ public class App extends Application {
   private static User user;
   private static GameBoardLayoutConfig guiLayouts;
 
-  private static ConnectionConfig connectionConfig;
+  private static UserConfig userConfig;
 
   private static File connectionConfigFile;
 
@@ -104,7 +104,7 @@ public class App extends Application {
    */
   public static LobbyRequestSender getLobbyServiceRequestSender() {
     if (lobbyRequestSender == null) {
-      String lobbyUrl = String.format("http://%s:4242", connectionConfig.getHostIp());
+      String lobbyUrl = String.format("http://%s:4242", userConfig.getHostIp());
       lobbyRequestSender = new LobbyRequestSender(lobbyUrl);
     }
     return lobbyRequestSender;
@@ -119,7 +119,7 @@ public class App extends Application {
   public static GameRequestSender getGameRequestSender() {
 
     if (gameRequestSender == null) {
-      String gameUrl = String.format("http://%s:4246/", connectionConfig.getHostIp());
+      String gameUrl = String.format("http://%s:4246/", userConfig.getHostIp());
       gameRequestSender = new GameRequestSender(gameUrl, "");
     }
     return gameRequestSender;
@@ -280,8 +280,8 @@ public class App extends Application {
    *
    * @return the connection configuration
    */
-  public static ConnectionConfig getConnectionConfig() {
-    return connectionConfig;
+  public static UserConfig getConnectionConfig() {
+    return userConfig;
   }
 
   public static File getConnectionConfigFile() {
@@ -372,6 +372,10 @@ public class App extends Application {
     } catch (UnirestException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static MediaPlayer getGameMusicPlayer() {
+    return gameMusicPlayer;
   }
 
   /**
@@ -562,14 +566,14 @@ public class App extends Application {
 
 
   private void setupConfigFiles() throws IOException {
-    File gameConfigFile = new File("appConfig.json");
-    connectionConfigFile = new File("connectionConfig.json");
+    File gameConfigFile = new File("appGuiLayoutConfig.json");
+    connectionConfigFile = new File("appUserConfig.json");
 
     String gameConfigString = FileUtils.readFileToString(gameConfigFile, StandardCharsets.UTF_8);
     String connectConfigJson
         = FileUtils.readFileToString(connectionConfigFile, StandardCharsets.UTF_8);
     guiLayouts = new Gson().fromJson(gameConfigString, GameBoardLayoutConfig.class);
-    connectionConfig = new Gson().fromJson(connectConfigJson, ConnectionConfig.class);
+    userConfig = new Gson().fromJson(connectConfigJson, UserConfig.class);
   }
 
   private void setupStage() throws IOException {
@@ -590,6 +594,7 @@ public class App extends Application {
   }
 
   private void setupMediaPlayer() {
+    // play the music
     // instantiating Media and MediaPlayer
     Media media = new Media(App.class.getResource("splendor_music.mp3").toExternalForm());
     gameMusicPlayer = new MediaPlayer(media);
@@ -597,9 +602,6 @@ public class App extends Application {
     // by setting this property to true, the audio will be played
     // in an infinite loop
     gameMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-
-    // play the music
-    gameMusicPlayer.play();
   }
 
   /**
@@ -611,16 +613,18 @@ public class App extends Application {
   public void start(Stage stage) {
     System.setProperty("com.apple.macos.useScreenMenuBar", "true");
     primaryStage = stage;
-
     try {
       // set up configuration file (note that stage relies on config file to load)
       setupConfigFiles();
 
-      // set up stage windows
+      // set up media player (before stage shows)
+      setupMediaPlayer();
+
+      // set up stage windows and show the stage
       setupStage();
 
-      // set up media player
-      setupMediaPlayer();
+      // play the music
+      gameMusicPlayer.play();
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage());
     }

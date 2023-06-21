@@ -8,16 +8,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
 import project.App;
-import project.config.ConnectionConfig;
+import project.config.UserConfig;
 
 public class AppSettingPageController implements Initializable {
 
-  private final ConnectionConfig connectionConfig;
+  private final UserConfig userConfig;
 
   @FXML
   private ToggleButton defaultLogInToggleButton;
@@ -46,18 +49,26 @@ public class AppSettingPageController implements Initializable {
   @FXML
   private Button backToLogInButton;
 
+  @FXML
+  private Slider musicVolumeSlider;
+
+  @FXML
+  private TextField musicVolumeTextField;
+
+  @FXML
+  private AnchorPane backgroundPane;
 
 
-  public AppSettingPageController(ConnectionConfig connectionConfig) {
-    this.connectionConfig = connectionConfig;
+  public AppSettingPageController(UserConfig userConfig) {
+    this.userConfig = userConfig;
 
   }
 
-  private void updateConnectionConfigFile() {
+  private void updateUserConfigFile() {
     try {
       FileUtils.writeStringToFile(
           App.getConnectionConfigFile(),
-          new Gson().toJson(connectionConfig, ConnectionConfig.class)
+          new Gson().toJson(userConfig, UserConfig.class)
       );
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -65,35 +76,17 @@ public class AppSettingPageController implements Initializable {
   }
 
 
-  @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    // back to log in page button
-    backToLogInButton.setOnAction(event -> {
-      Stage curWindow = (Stage) backToLogInButton.getScene().getWindow();
-      curWindow.close();
-      App.backToLogInPage();
-    });
-
-
-
+  private void setupDefaultLoginSettings() {
     // the update buttons should be re-activated or greyed out accordingly
-    defaultUserNameUpdateButton.setDisable(!connectionConfig.isUseDefaultUserInfo());
-    defaultPasswordUpdateButton.setDisable(!connectionConfig.isUseDefaultUserInfo());
+    defaultUserNameUpdateButton.setDisable(!userConfig.isUseDefaultUserInfo());
+    defaultPasswordUpdateButton.setDisable(!userConfig.isUseDefaultUserInfo());
 
-    defaultLogInToggleButton.setSelected(connectionConfig.isUseDefaultUserInfo());
+    defaultLogInToggleButton.setSelected(userConfig.isUseDefaultUserInfo());
     if (defaultLogInToggleButton.isSelected()) {
       defaultLogInToggleButton.setText("ON");
     } else {
       defaultLogInToggleButton.setText("OFF");
     }
-
-    localIpToggleButton.setSelected(connectionConfig.isUseLocalHost());
-    if (localIpToggleButton.isSelected()) {
-      localIpToggleButton.setText("ON");
-    } else {
-      localIpToggleButton.setText("OFF");
-    }
-
 
     // bind actions to default log in section
     defaultLogInToggleButton.setOnAction(event -> {
@@ -109,20 +102,20 @@ public class AppSettingPageController implements Initializable {
       defaultUserNameUpdateButton.setDisable(!inUse);
       defaultPasswordUpdateButton.setDisable(!inUse);
 
-      connectionConfig.setUseDefaultUserInfo(inUse);
-      updateConnectionConfigFile();
+      userConfig.setUseDefaultUserInfo(inUse);
+      updateUserConfigFile();
     });
-    defaultUserNameTextField.setPromptText(connectionConfig.getDefaultUserName());
-    defaultPasswordField.setPromptText(connectionConfig.getDefaultPassword());
+    defaultUserNameTextField.setPromptText(userConfig.getDefaultUserName());
+    defaultPasswordField.setPromptText(userConfig.getDefaultPassword());
     // username update logic
     defaultUserNameUpdateButton.setOnAction(event -> {
       // if text input is not null or empty string, overwrite the old username
       if (defaultUserNameTextField.getText() != null &&
           !defaultUserNameTextField.getText().isEmpty()) {
-        connectionConfig.setDefaultUserName(defaultUserNameTextField.getText());
-        updateConnectionConfigFile();
+        userConfig.setDefaultUserName(defaultUserNameTextField.getText());
+        updateUserConfigFile();
         defaultUserNameTextField.clear();
-        defaultUserNameTextField.setPromptText(connectionConfig.getDefaultUserName());
+        defaultUserNameTextField.setPromptText(userConfig.getDefaultUserName());
       }
     });
 
@@ -130,25 +123,36 @@ public class AppSettingPageController implements Initializable {
     defaultPasswordUpdateButton.setOnAction(event -> {
       if (defaultPasswordField.getText() != null &&
           !defaultPasswordField.getText().isEmpty()) {
-        connectionConfig.setDefaultPassword(defaultPasswordField.getText());
-        updateConnectionConfigFile();
+        userConfig.setDefaultPassword(defaultPasswordField.getText());
+        updateUserConfigFile();
         defaultPasswordField.clear();
-        defaultPasswordField.setPromptText(connectionConfig.getDefaultPassword());
+        defaultPasswordField.setPromptText(userConfig.getDefaultPassword());
       }
 
     });
+  }
+
+  private void setupDefaultIpSettings() {
+    localIpToggleButton.setSelected(userConfig.isUseLocalHost());
+    if (localIpToggleButton.isSelected()) {
+      localIpToggleButton.setText("ON");
+    } else {
+      localIpToggleButton.setText("OFF");
+    }
+
+    defaultHostIpTextField.setPromptText(userConfig.getHostIp());
 
 
     // the update button for host ip
-    hostIpUpdateButton.setDisable(connectionConfig.isUseLocalHost());
+    hostIpUpdateButton.setDisable(userConfig.isUseLocalHost());
     hostIpUpdateButton.setOnAction(event -> {
       if (defaultHostIpTextField.getText() != null &&
-      !defaultHostIpTextField.getText().isEmpty()) {
-        connectionConfig.setHostIp(defaultHostIpTextField.getText());
-        updateConnectionConfigFile();
+          !defaultHostIpTextField.getText().isEmpty()) {
+        userConfig.setHostIp(defaultHostIpTextField.getText());
+        updateUserConfigFile();
       }
       defaultHostIpTextField.clear();
-      defaultHostIpTextField.setPromptText(connectionConfig.getHostIp());
+      defaultHostIpTextField.setPromptText(userConfig.getHostIp());
     });
 
 
@@ -163,12 +167,71 @@ public class AppSettingPageController implements Initializable {
 
       hostIpUpdateButton.setDisable(usingHostIp);
 
-      connectionConfig.setUseLocalHost(usingHostIp);
-      updateConnectionConfigFile();
-      defaultHostIpTextField.setPromptText(connectionConfig.getHostIp());
+      userConfig.setUseLocalHost(usingHostIp);
+      updateUserConfigFile();
+      defaultHostIpTextField.setPromptText(userConfig.getHostIp());
     });
 
-    defaultHostIpTextField.setPromptText(connectionConfig.getHostIp());
+  }
+
+  private void setupMusicVolumeSettings() {
+    MediaPlayer mediaPlayer = App.getGameMusicPlayer();
+    musicVolumeSlider.setMin(0);
+    musicVolumeSlider.setMax(100);
+    // change volume through sliding a slider
+    musicVolumeSlider.valueProperty().addListener(observable -> {
+      // slider has value changing from 0 -> 100
+      double displayVolume = musicVolumeSlider.getValue();
+      double actualVolumeValue = displayVolume / 100;
+
+      // after the volume has been changed, save it to user config file
+      mediaPlayer.setVolume(actualVolumeValue);
+      userConfig.setMusicVolume(actualVolumeValue);
+      updateUserConfigFile();
+      musicVolumeTextField.setText(String.format("%.0f", displayVolume));
+    });
+
+    // default volume ratio
+    mediaPlayer.setVolume(userConfig.getMusicVolume());
+    musicVolumeSlider.setValue(mediaPlayer.getVolume() * 100);
+    musicVolumeTextField.setText(String.format("%.0f", musicVolumeSlider.getValue()));
+
+    // change volume through entering number
+    musicVolumeTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+      // check if the new value is an integer
+      if (!newValue.matches("\\d*")) {
+        // remove non-digits
+        musicVolumeTextField.setText(newValue.replaceAll("[^\\d]", ""));
+      }
+      // check if the integer is in range
+      try {
+        int newVolume = Integer.parseInt(musicVolumeTextField.getText());
+        if (newVolume < 1 || newVolume > 100) {
+          // if not in range, revert to the old value
+          musicVolumeTextField.setText(oldValue);
+        } else {
+          // it is indeed in range, update the slider value
+          musicVolumeSlider.setValue(newVolume);
+        }
+      } catch (NumberFormatException e) {
+        musicVolumeTextField.setText("");
+      }
+    });
+
+  }
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    // back to log in page button
+    backToLogInButton.setOnAction(event -> {
+      Stage curWindow = (Stage) backToLogInButton.getScene().getWindow();
+      curWindow.close();
+      App.backToLogInPage();
+    });
+
+    backgroundPane.setOnMouseClicked(event -> {backgroundPane.requestFocus();});
+    setupDefaultLoginSettings();
+    setupDefaultIpSettings();
+    setupMusicVolumeSettings();
 
   }
 }

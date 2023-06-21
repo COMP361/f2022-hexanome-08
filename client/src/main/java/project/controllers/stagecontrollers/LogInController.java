@@ -13,7 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.StageStyle;
 import org.json.JSONObject;
 import project.App;
-import project.config.ConnectionConfig;
+import project.config.UserConfig;
 import project.connection.LobbyRequestSender;
 import project.controllers.popupcontrollers.lobbypopup.AppSettingPageController;
 import project.view.lobby.communication.User;
@@ -97,7 +97,7 @@ public class LogInController implements Initializable {
 
   // Mainly for debug usage
   private void setDefaultLogInInfo() {
-    ConnectionConfig config = App.getConnectionConfig();
+    UserConfig config = App.getConnectionConfig();
     if (config.isUseDefaultUserInfo()) {
       userName.setText(config.getDefaultUserName());
       userPassword.setText(config.getDefaultPassword());

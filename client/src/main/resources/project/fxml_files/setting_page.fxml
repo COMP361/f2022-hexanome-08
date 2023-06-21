@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+
 <AnchorPane maxHeight="900.0" maxWidth="1600.0" prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <HBox layoutX="459.0" layoutY="643.0" prefHeight="26.0" prefWidth="258.0" />
@@ -94,7 +95,7 @@
                   <Font name="Arial Black" size="40.0" />
                </font>
             </Button>
-            <Button fx:id="connectionSettingsButton" layoutX="350.0" layoutY="250.0" mnemonicParsing="false" prefHeight="120.0" prefWidth="250.0" style="-fx-background-color: blue;" text="Connection &#10;Settings" textFill="WHITE">
+            <Button fx:id="connectionSettingsButton" alignment="CENTER" contentDisplay="CENTER" layoutX="350.0" layoutY="250.0" mnemonicParsing="false" prefHeight="120.0" prefWidth="250.0" style="-fx-background-color: blue;" text="Game &#10;Settings" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Arial Black" size="31.0" />
                </font>

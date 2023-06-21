@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+
 <AnchorPane styleClass="bodyback" stylesheets="@splendor_background.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <TextField fx:id="userName" alignment="CENTER" layoutX="762.0" layoutY="390.0" promptText="username" style="-fx-background-color: #cde8ff;" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="490.0">
@@ -33,7 +34,7 @@
                 <Font name="Arial Black" size="25.0" />
             </font>
         </Label>
-        <Button fx:id="settingButton" layoutX="197.0" layoutY="423.0" mnemonicParsing="false" prefWidth="224.0" style="-fx-background-color: #cde8ff;" text="Connection Settings" AnchorPane.rightAnchor="382.0" AnchorPane.topAnchor="423.0">
+        <Button fx:id="settingButton" layoutX="197.0" layoutY="423.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="170.0" style="-fx-background-color: #cde8ff;" text="Game Settings" AnchorPane.rightAnchor="436.0" AnchorPane.topAnchor="423.0">
             <font>
                 <Font size="22.0" />
             </font>

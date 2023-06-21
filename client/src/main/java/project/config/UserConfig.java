@@ -3,31 +3,34 @@ package project.config;
 /**
  * ConnectionConfig.
  */
-public class ConnectionConfig {
+public class UserConfig {
   private String defaultUserName;
   private String defaultPassword;
   private boolean useDefaultUserInfo;
   private String hostIp;
 
   private boolean useLocalHost;
+  private double musicVolume;
 
   /**
    * ConnectionConfig.
    *
-   * @param defaultUserName defaultUserName
-   * @param defaultPassword defaultPassword
+   * @param defaultUserName    defaultUserName
+   * @param defaultPassword    defaultPassword
    * @param useDefaultUserInfo useDefaultUserInfo
-   * @param hostIp hostIp
-   * @param useLocalHost useLocalHost
+   * @param hostIp             hostIp
+   * @param useLocalHost       useLocalHost
+   * @param musicVolume
    */
-  public ConnectionConfig(String defaultUserName, String defaultPassword,
-                          boolean useDefaultUserInfo,
-                          String hostIp, boolean useLocalHost) {
+  public UserConfig(String defaultUserName, String defaultPassword,
+                    boolean useDefaultUserInfo,
+                    String hostIp, boolean useLocalHost, double musicVolume) {
     this.defaultUserName = defaultUserName;
     this.defaultPassword = defaultPassword;
     this.useDefaultUserInfo = useDefaultUserInfo;
     this.hostIp = hostIp;
     this.useLocalHost = useLocalHost;
+    this.musicVolume = musicVolume;
   }
 
   /**
@@ -43,6 +46,15 @@ public class ConnectionConfig {
   public boolean isUseLocalHost() {
     return useLocalHost;
   }
+
+  public double getMusicVolume() {
+    return musicVolume;
+  }
+
+  public void setMusicVolume(double musicVolume) {
+    this.musicVolume = musicVolume;
+  }
+
 
   /**
    * Getter method.
