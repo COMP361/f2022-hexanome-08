@@ -157,12 +157,14 @@ public class App extends Application {
     try {
       Scene popupScene = new Scene(fxmlLoader.load(), popUpStageWidth, popUpStageHeight);
       newStage.setScene(popupScene);
-      // Adding the key event to the Scene
-      popupScene.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-        if (keyEvent.getCode() == KeyCode.ESCAPE) {
-          closePopupStage(newStage);
-        }
-      });
+      // Adding the key event to the Scene, if the stage's style is not UNDECORATED
+      if (stageStyle != StageStyle.UNDECORATED) {
+        popupScene.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+          if (keyEvent.getCode() == KeyCode.ESCAPE) {
+            closePopupStage(newStage);
+          }
+        });
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }

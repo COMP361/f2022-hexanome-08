@@ -1,5 +1,6 @@
 package project.view.lobby;
 
+import ca.mcgill.comp361.splendormodel.model.GameInfo;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 import java.util.List;
@@ -101,35 +102,33 @@ public class SessionGui extends HBox {
   }
 
 
-  private EventHandler<ActionEvent> createWatchGameHandler() {
-    return event -> {
-      // we are loading a game play page for a watcher, who has only access to QUIT the game
-      // the board is updating pretending this watcher is the first player name
-      // but there is no functionality provided to one but the quit button
-      App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
-      App.loadNewSceneToPrimaryStage("game_board.fxml",
-          new GameController(curSessionId, null));
-      lobbyUpdateThread.interrupt();
-    };
-  }
-
-  private EventHandler<ActionEvent> createPlayGameHandler() {
+  private EventHandler<ActionEvent> createGameConfigHandler() {
     return event -> {
       // display the GUI with some basic information needed
       // whenever the user clicks play button, we will reset the game request sender to
       // send correct REST requests to our backend in a right path name (splendorbase, city...)
-      App.getGameRequestSender().setGameServiceName(curSession.getGameParameters().getName());
+      String gameServiceName = curSession.getGameParameters().getName();
+      App.getGameRequestSender().setGameServiceName(gameServiceName);
+      GameInfo curGameInfo = App.getGameRequestSender().getInstantGameInfo(curSessionId);
 
-      App.loadPopUpWithController(
-          "game_config.fxml",
-          new GameConfigPopUpController(curSessionId, App.getUser().getUsername()),
-          App.getGuiLayouts().getLargePopUpWidth(),
-          App.getGuiLayouts().getLargePopUpHeight(),
-          StageStyle.UNDECORATED);
+      if (gameServiceName.equals("splendorcity") ||
+          curGameInfo.getWinningPoints() > 0) {
+        // if it's city game OR the game has been configured, load the game page immediately
+        App.loadNewSceneToPrimaryStage("game_board.fxml",
+            new GameController(curSessionId, App.getUser().getUsername()));
 
-      // pass a meaningful username, so that we know that person can play
-      //App.loadNewSceneToPrimaryStage("game_board.fxml",
-      //    new GameController(curSessionId, App.getUser().getUsername()));
+      } else {
+        // otherwise, make creator to decide the max points
+        App.loadPopUpWithController(
+            "game_config.fxml",
+            new GameConfigPopUpController(curSessionId, App.getUser().getUsername()),
+            App.getGuiLayouts().getLargePopUpWidth(),
+            App.getGuiLayouts().getLargePopUpHeight(),
+            StageStyle.UTILITY
+        );
+
+      }
+
       // when we click Play, we need to stop the lobby thread from keep monitoring
       // the changes
       lobbyUpdateThread.interrupt();
@@ -207,11 +206,11 @@ public class SessionGui extends HBox {
       if (!curSessionPlayers.contains(curUserName)) {
         topButton.setVisible(true);
         topButton.setText("Watch");
-        topButton.setOnAction(createWatchGameHandler());
+        topButton.setOnAction(createGameConfigHandler());
       } else {
         topButton.setVisible(true);
         topButton.setText("Play");
-        topButton.setOnAction(createPlayGameHandler());
+        topButton.setOnAction(createGameConfigHandler());
       }
     } else {
       // otherwise, add diff buttons for creator OR player

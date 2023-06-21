@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+
 <AnchorPane fx:id="playerBoardAnchorPane" maxHeight="900.0" maxWidth="1600.0" prefHeight="900.0" prefWidth="1600.0" style="-fx-background-color: #ffebcd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox fx:id="nobleList" layoutX="950.0" layoutY="200.0" prefHeight="500.0" prefWidth="100.0" />
@@ -22,9 +23,14 @@
         <Button fx:id="pendingActionButton" layoutX="1070.0" layoutY="783.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="Pending Action" />
         <HBox fx:id="currentPlayer" alignment="TOP_RIGHT" layoutX="350.0" layoutY="710.0" maxHeight="100.0" maxWidth="700.0" prefHeight="100.0" prefWidth="700.0" />
         <Button fx:id="myCardButton" layoutX="200.0" layoutY="710.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" text="My Cards" />
-      <Label fx:id="currentPlayerLabel" alignment="TOP_LEFT" layoutX="16.0" layoutY="13.0" prefHeight="53.0" prefWidth="121.0" text="Current Player:">
+      <Label fx:id="currentPlayerLabel" alignment="TOP_LEFT" layoutX="15.0" layoutY="10.0" prefHeight="50.0" prefWidth="120.0" text="Current Player:" textFill="BLUE">
          <font>
             <Font name="Arial Black" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="winConditionLabel" layoutX="15.0" layoutY="830.0" prefHeight="59.0" prefWidth="191.0" text="Winning Condition:&#10;" textFill="RED">
+         <font>
+            <Font name="Arial Black" size="18.0" />
          </font>
       </Label>
     </children>

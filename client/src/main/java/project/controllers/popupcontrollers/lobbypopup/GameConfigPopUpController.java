@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import org.apache.commons.codec.digest.DigestUtils;
 import project.App;
 import project.connection.GameRequestSender;
+import project.controllers.stagecontrollers.GameController;
 
 public class GameConfigPopUpController implements Initializable {
 
@@ -43,7 +44,7 @@ public class GameConfigPopUpController implements Initializable {
   public GameConfigPopUpController(long gameId, String viewerName) {
     this.gameId = gameId;
     this.viewerName = viewerName;
-    this.firstGameInfo = getInstantGameInfo();
+    this.firstGameInfo = App.getGameRequestSender().getInstantGameInfo(gameId);
     // if viewer name is in the player name list, then it is NOT watch mode
     inWatchMode = !firstGameInfo.getPlayerNames().contains(viewerName);
     isCreator = !inWatchMode && firstGameInfo.getCreator().equals(viewerName);
@@ -59,14 +60,6 @@ public class GameConfigPopUpController implements Initializable {
     } else {
       return false;
     }
-  }
-
-  private GameInfo getInstantGameInfo() {
-    GameRequestSender gameRequestSender = App.getGameRequestSender();
-    HttpResponse<String> firstGameInfoResponse =
-        gameRequestSender.sendGetGameInfoRequest(gameId, "");
-    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
-    return gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
   }
 
   // spawn a new thread that does the following:
@@ -101,22 +94,21 @@ public class GameConfigPopUpController implements Initializable {
             // 1. interrupt the thread
             // 2. close the current pop up
             // 3. load the new game
-            //if (true) {
-            //  // 1. interrupt the thread
-            //  Thread.currentThread().interrupt();
-            //
-            //  // 2. close the current pop up
-            //  Platform.runLater(() -> {
-            //    App.closePopupStage(App.getCurrentPopupStage());
-            //  });
-            //
-            //  // 3. load the new game
-            //}
+            if (curGameInfo.getWinningPoints() > 0) {
+              // 1. interrupt the thread
+              Thread.currentThread().interrupt();
+
+              Platform.runLater(() -> {
+                // 2. close the current pop up
+                App.closePopupStage(App.getCurrentPopupStage());
+
+                // 3. load the new game
+                App.loadNewSceneToPrimaryStage("game_board.fxml",
+                    new GameController(gameId, App.getUser().getUsername()));
+              });
+            }
 
           }
-
-
-
 
         } catch (InterruptedException e) {
           System.out.println(Thread.currentThread().getName() + " is dead!");
@@ -133,14 +125,17 @@ public class GameConfigPopUpController implements Initializable {
     // otherwise do not approve this request
     confirmMaxPointsButton.setOnAction(event -> {
       if (validInput(maxPointsTextField.getText())) {
-        // TODO: Send a request
+        App.getGameRequestSender().updateWinningPoints(
+            gameId,
+            App.getUser().getAccessToken(),
+            App.getUser().getUsername(),
+            Integer.parseInt(maxPointsTextField.getText())
+        );
       } else {
         warnLabel.setText("Please enter an integer (15 to 100)!");
         maxPointsTextField.clear();
       }
     });
-
-
 
 
     if (!isCreator) {

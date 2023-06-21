@@ -1,6 +1,8 @@
 package project.connection;
 
+import ca.mcgill.comp361.splendormodel.model.GameInfo;
 import ca.mcgill.comp361.splendormodel.model.SplendorDevHelper;
+import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -52,26 +54,6 @@ public class GameRequestSender {
     }
     return response;
   }
-
-
-  ///**
-  // * Send the request and get back a list of strings encoded in one string.
-  // *
-  // * @param gameId game id
-  // * @return a list of player names
-  // */
-  //public String[] sendGetAllPlayerNamesList(long gameId) {
-  //  RestTemplate rest = new RestTemplate();
-  //  HttpHeaders headers = new HttpHeaders();
-  //  String body = "";
-  //  String url = String.format("%s/api/games/%s/players", gameUrl, gameId);
-  //
-  //  HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
-  //  ResponseEntity<String> responseEntity =
-  //      rest.exchange(url, HttpMethod.GET, requestEntity, String.class);
-  //  // TODO: Parse this raw string using Gson to an Array
-  //  return new Gson().fromJson(responseEntity.getBody(), String[].class);
-  //}
 
   /**
    * Send a save game request to our game service backend.
@@ -164,12 +146,12 @@ public class GameRequestSender {
   public void sendPlayerActionChoiceRequest(long gameId, String playerName,
                                             String accessToken, String actionId) {
     try {
-      HttpResponse<String> response =
-          Unirest.post(String.format("%s/api/games/%s/players/%s/actions/%s",
-                  gameUrl + gameServiceName,
-                  gameId,
-                  playerName,
-                  actionId))
+      String url = String.format("%s/api/games/%s/players/%s/actions/%s",
+          gameUrl + gameServiceName,
+          gameId,
+          playerName,
+          actionId);
+      HttpResponse<String> response = Unirest.post(url)
               .queryString("access_token", accessToken)
               .asString();
     } catch (UnirestException e) {
@@ -187,8 +169,6 @@ public class GameRequestSender {
     return gameUrl;
   }
 
-
-  // TODO: Delete Request (later)
 
   /**
    * getGameServiceName.
@@ -209,4 +189,44 @@ public class GameRequestSender {
     this.gameServiceName = gameServiceName;
   }
 
+
+  /**
+   * Get an instant response of game info from game server.
+   *
+   * @param gameId game id
+   * @return the game info
+   */
+  public GameInfo getInstantGameInfo(long gameId) {
+    HttpResponse<String> firstGameInfoResponse = sendGetGameInfoRequest(gameId, "");
+    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
+    return gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
+  }
+
+  /**
+   * Send POST request to update winning points.
+   *
+   * @param gameId
+   * @param accessToken
+   * @param creatorName
+   * @param newPoints
+   */
+  public void updateWinningPoints(long gameId,
+                                  String accessToken,
+                                  String creatorName,
+                                  int newPoints) {
+    String url = String.format("%s/api/games/%s", gameUrl + gameServiceName, gameId);
+    try {
+      HttpResponse<String> response = Unirest.post(url)
+          .queryString("access_token",accessToken)
+          .queryString("creator_name", creatorName)
+          .queryString("new_points", newPoints)
+          .asString();
+      if (response.getStatus() != 200) {
+        throw new UnirestException("Failed to change new points!");
+      }
+    } catch (UnirestException e) {
+      e.printStackTrace();
+    }
+
+  }
 }

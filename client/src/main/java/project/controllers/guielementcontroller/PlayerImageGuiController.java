@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -43,9 +44,9 @@ public class PlayerImageGuiController implements Initializable {
   @FXML
   private ImageView playerImageView;
   @FXML
-  private Circle reservedInfoCircle;
+  private StackPane reservedInfoStackPane;
   @FXML
-  private Circle pointsCircle;
+  private StackPane pointsStackPane;
 
   @FXML
   private Label playerNameLabel;
@@ -109,10 +110,10 @@ public class PlayerImageGuiController implements Initializable {
     playerNameLabel.setText(playerName);
     String tipInfo = "The number on the left is the number of reserved nobles\n"
         + "The number on the right is the number of reserved cards";
-    App.bindToolTip(tipInfo, 15, reservedInfoCircle, 20);
+    App.bindToolTip(tipInfo, 15, reservedInfoStackPane, 20);
 
-    String pointsInfo = "Player's prestige points out of 15";
-    App.bindToolTip(pointsInfo, 15, pointsCircle, 20);
+    String pointsInfo = "Player's current prestige points";
+    App.bindToolTip(pointsInfo, 15, pointsStackPane, 20);
 
     String playerImageViewTip = "Click on to see the player's purchased hand!";
     // only bind the tooltip except the current user's image view

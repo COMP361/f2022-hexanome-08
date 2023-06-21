@@ -87,13 +87,20 @@ public class GameController implements Initializable {
   @FXML
   private Label currentPlayerLabel;
 
+  @FXML
+  private Label winConditionLabel;
+
   private List<String> sortedPlayerNames = new ArrayList<>();
   private Thread playerInfoThread;
   private Thread mainGameUpdateThread;
 
-  private String viewerName = null;
+  private String viewerName;
 
-  private boolean inWatchMode = false;
+  private final boolean inWatchMode;
+
+  private final GameInfo firstGameInfo;
+
+
 
   /**
    * GameController for the main page.
@@ -104,24 +111,14 @@ public class GameController implements Initializable {
   public GameController(long gameId, String viewerName) {
     this.gameId = gameId;
     // set up for indicating this is a watch game or not
-    if (viewerName != null) {
-      this.viewerName = viewerName;
-    } else {
-      inWatchMode = true;
-    }
+    this.viewerName = viewerName;
+    this.firstGameInfo = App.getGameRequestSender().getInstantGameInfo(gameId);
+    this.inWatchMode = !firstGameInfo.getPlayerNames().contains(viewerName);
     this.playerInfoThread = null;
     this.mainGameUpdateThread = null;
   }
 
 
-  /**
-   * Opening the development cards pop up once "My Cards" button is pressed.
-   */
-
-  //@FXML
-  //protected void onExitGameClick() throws IOException {
-  //  App.setRoot("admin_lobby_page");
-  //}
   private EventHandler<ActionEvent> createOpenMyReserveCardClick() {
     GameBoardLayoutConfig config = App.getGuiLayouts();
     return event -> {
@@ -797,33 +794,36 @@ public class GameController implements Initializable {
   public void initialize(URL url, ResourceBundle resourceBundle) {
     // initially, there is no pending action at all!
     pendingActionButton.setDisable(true);
-    // ban the purchase cards and reserve cards button from the watcher
-    if (inWatchMode) {
-      myCardButton.setDisable(true);
-      myReservedCardsButton.setDisable(true);
+
+    currentPlayerLabel.setText("Current Player:\n" + firstGameInfo.getCurrentPlayer());
+
+    // win condition label
+    String gameServiceName = App.getGameRequestSender().getGameServiceName();
+    if (gameServiceName.equals("splendorcity")) {
+      winConditionLabel.setText(winConditionLabel.getText() + "1 City");
+    } else {
+      winConditionLabel.setText(winConditionLabel.getText() +
+          String.format("%s points", firstGameInfo.getWinningPoints()));
     }
 
-    GameRequestSender gameRequestSender = App.getGameRequestSender();
-    HttpResponse<String> firstGameInfoResponse =
-        gameRequestSender.sendGetGameInfoRequest(gameId, "");
-    Gson gsonParser = SplendorDevHelper.getInstance().getGson();
-    GameInfo curGameInfo = gsonParser.fromJson(firstGameInfoResponse.getBody(), GameInfo.class);
-    currentPlayerLabel.setText("Current Player:\n" + curGameInfo.getCurrentPlayer());
-    // information about viewer's perspective
-    if (viewerName == null) {
-      viewerName = curGameInfo.getFirstPlayerName();
-      // from now on, we can safely trust this viewerName as someone in the game
+
+    if (inWatchMode) {
+      // ban the purchase cards and reserve cards button from the watcher
+      myCardButton.setDisable(true);
+      myReservedCardsButton.setDisable(true);
+      // in watch mode, thus the viewer name must be replaced by someone in game
+      viewerName = firstGameInfo.getFirstPlayerName();
     }
 
     // enable the save game button for everyone (but the watchers) in the game
-    setupSaveGameButton(curGameInfo);
+    setupSaveGameButton(firstGameInfo);
 
     // sort player names based on different client views
-    sortAllPlayerNames(curGameInfo);
+    sortAllPlayerNames(firstGameInfo);
     // if we are playing the Trading Extension, initialize the map of player name
     // to their arm code index
-    List<Extension> extensionsPlaying = curGameInfo.getExtensions();
-    List<String> playerNames = curGameInfo.getPlayerNames();
+    List<Extension> extensionsPlaying = firstGameInfo.getExtensions();
+    List<String> playerNames = firstGameInfo.getPlayerNames();
     if (extensionsPlaying.contains(Extension.TRADING_POST)) {
       for (int i = 1; i <= playerNames.size(); i++) {
         nameToArmCodeMap.put(playerNames.get(i - 1), i);
