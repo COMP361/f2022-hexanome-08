@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
 import project.App;
 import project.config.GameBoardLayoutConfig;
-import project.controllers.popupcontrollers.lobbypopup.AppSettingPageController;
+import project.controllers.popupcontrollers.lobbypopup.GameSettingPageController;
 import project.view.lobby.communication.Player;
 
 /**
@@ -98,7 +98,7 @@ public class SettingPageController extends AbstractLobbyController {
 
     // open up connection setting pop up
     connectionSettingsButton.setOnAction(event -> {
-      AppSettingPageController controller = new AppSettingPageController(App.getConnectionConfig());
+      GameSettingPageController controller = new GameSettingPageController(App.getConnectionConfig());
       App.loadPopUpWithController("app_setting_page.fxml", controller,
           App.getGuiLayouts().getLargePopUpWidth(),
           App.getGuiLayouts().getLargePopUpHeight(),

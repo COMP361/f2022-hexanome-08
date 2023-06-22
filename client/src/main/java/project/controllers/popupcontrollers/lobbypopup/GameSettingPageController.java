@@ -18,7 +18,7 @@ import org.apache.commons.io.FileUtils;
 import project.App;
 import project.config.UserConfig;
 
-public class AppSettingPageController implements Initializable {
+public class GameSettingPageController implements Initializable {
 
   private final UserConfig userConfig;
 
@@ -59,7 +59,7 @@ public class AppSettingPageController implements Initializable {
   private AnchorPane backgroundPane;
 
 
-  public AppSettingPageController(UserConfig userConfig) {
+  public GameSettingPageController(UserConfig userConfig) {
     this.userConfig = userConfig;
 
   }
@@ -205,7 +205,7 @@ public class AppSettingPageController implements Initializable {
       // check if the integer is in range
       try {
         int newVolume = Integer.parseInt(musicVolumeTextField.getText());
-        if (newVolume < 1 || newVolume > 100) {
+        if (newVolume < 0 || newVolume > 100) {
           // if not in range, revert to the old value
           musicVolumeTextField.setText(oldValue);
         } else {

@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import project.App;
 import project.config.UserConfig;
 import project.connection.LobbyRequestSender;
-import project.controllers.popupcontrollers.lobbypopup.AppSettingPageController;
+import project.controllers.popupcontrollers.lobbypopup.GameSettingPageController;
 import project.view.lobby.communication.User;
 
 /**
@@ -141,7 +141,7 @@ public class LogInController implements Initializable {
 
     // give setting button function to make a pop-up (display connection config info)
     settingButton.setOnAction(event -> {
-      AppSettingPageController controller = new AppSettingPageController(App.getConnectionConfig());
+      GameSettingPageController controller = new GameSettingPageController(App.getConnectionConfig());
       App.loadPopUpWithController("app_setting_page.fxml", controller,
           App.getGuiLayouts().getLargePopUpWidth(),
           App.getGuiLayouts().getLargePopUpHeight(),
