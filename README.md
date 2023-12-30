@@ -234,6 +234,6 @@ Fill e.g. names + link to github profiles in list below.
 
  * Maximilian Schiedermeier - [https://github.com/m5c]
  * [Ruoyu Deng](https://github.com/RuoyuDeng)
- * ....
+ * [Julia Miklas](https://github.com/juliammikk)
 
 
