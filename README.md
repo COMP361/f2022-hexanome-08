@@ -1,7 +1,7 @@
 # COMP 361 Project
 
 ## What is this project?
-As a group of 7 people, we developed an online version of _Splendor_, a famous broad game. The backend server was implemented using Spring Boot framework, 
+As a group of 7 people, we developed an online version of _Splendor_, a famous board game. The backend server was implemented using Spring Boot framework, 
 and we used JavaFX as our frontend framework. 
 The game is deployed on a [lobby service](https://github.com/m5c/LobbyService), developed by the course instructor: [Maximilian Schiedermeier](https://github.com/m5c).
 
@@ -10,7 +10,7 @@ The game is deployed on a [lobby service](https://github.com/m5c/LobbyService), 
 1. Make sure you have [maven](https://maven.apache.org/download.cgi) installed on your machine. It is required to run
 the client.
 2. Download and install [docker desktop](https://www.docker.com/) so that you can run the server and database in some isolated containers.
-3. Due to copy right issue, we can not upload the game assets of the original game in this repository, thus you must download it
+3. Due to copy right issues, we can not upload the game assets of the original game in this repository, thus you must download it
 from [here](https://drive.google.com/drive/folders/1_qFamQnAU4fEEZqE0P-e6zrqeNkG2nRD). Download the folder `pictures` and
 store it somewhere on your machine. We will put it in the right place afterwards.
 
